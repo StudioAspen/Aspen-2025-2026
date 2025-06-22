@@ -2,6 +2,7 @@ using System;
 using UnityEditor;
 using UnityEngine;
 using System.IO;
+using Codice.Client.Common;
 
 namespace Aspen.Tools.Assets
 {
@@ -26,7 +27,8 @@ namespace Aspen.Tools.Assets
 			foreach (string assetPath in importedAssets)
 			{
 				// If an FBX file was imported into Assets/Art, create a prefab from the FBX file.
-				if (assetPath.EndsWith(".fbx", System.StringComparison.OrdinalIgnoreCase) && assetPath.StartsWith("Assets/Art"))
+				if (assetPath.EndsWith(".fbx", System.StringComparison.OrdinalIgnoreCase) 
+				    && (assetPath.StartsWith("Assets/Art/Models") || assetPath.StartsWith("Assets/Art/Rigs")))
 				{
 					CreatePrefabFromFBX(assetPath);
 				}
@@ -43,10 +45,11 @@ namespace Aspen.Tools.Assets
 			// Convert the fbx path to the prefab path
 			string fileName = Path.GetFileName(fbxPath);
 			string prefabPath = fbxPath
-				.Replace("Art", "Prefabs")
-				.Replace(fileName, $"Static/{fileName}")
-				.Replace(".fbx", ".prefab");
-			Directory.CreateDirectory(Path.GetDirectoryName(prefabPath));
+				.Replace($"/{Path.GetFileName(Path.GetDirectoryName(fbxPath))}", "")	// Remove asset-specific folder
+				.Replace("Art/Models", "Prefabs")										// Replace Art/Models folder with Prefabs
+				.Replace(fileName, $"Static/{fileName}")								// Add static folder before the asset file
+				.Replace(".fbx", ".prefab");											// Change .fbx extension to .prefab
+			Directory.CreateDirectory(Path.GetFullPath(Path.GetDirectoryName(prefabPath)));
 			
 			// If the prefab already exists, don't create one
 			if (AssetDatabase.LoadAssetAtPath<GameObject>(prefabPath) != null)
@@ -64,7 +67,7 @@ namespace Aspen.Tools.Assets
 			GameObject root = new GameObject();
 			GameObject tempInstance = (GameObject)PrefabUtility.InstantiatePrefab(fbxPrefab);
 			tempInstance.transform.parent = root.transform;
-			Debug.Log(AssetDatabase.IsValidFolder(Path.GetDirectoryName(prefabPath)));;
+			
 			PrefabUtility.SaveAsPrefabAsset(root, prefabPath);
 			GameObject.DestroyImmediate(root);
 			
