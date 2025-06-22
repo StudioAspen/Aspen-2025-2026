@@ -18,8 +18,6 @@ namespace Aspen.Tools.FileSync
 		/// </summary>
 		public static void SyncAll()
 		{
-			Debug.Log("Syncing all began.");
-			
 			SyncModels();
 			SyncAnimations();
 			SyncRigs();
@@ -32,10 +30,7 @@ namespace Aspen.Tools.FileSync
 		/// </summary>
 		public static void SyncModels()
 		{
-			Debug.Log("Syncing models began.");
-			
 			SyncFbxFiles(EXTERNAL_MODELS_DIR, INTERNAL_MODELS_DIR);
-			
 			Debug.Log("Syncing models completed.");
 		}
 		
@@ -44,10 +39,7 @@ namespace Aspen.Tools.FileSync
 		/// </summary>
 		public static void SyncAnimations()
 		{
-			Debug.Log("Syncing animations began.");
-			
 			SyncFbxFiles(EXTERNAL_ANIMATIONS_DIR, INTERNAL_ANIMATIONS_DIR);
-			
 			Debug.Log("Syncing animations completed.");
 		}
 		
@@ -56,10 +48,7 @@ namespace Aspen.Tools.FileSync
 		/// </summary>
 		public static void SyncRigs()
 		{
-			Debug.Log("Syncing rigs began.");
-			
 			SyncFbxFiles(EXTERNAL_RIGS_DIR, INTERNAL_RIGS_DIR);
-			
 			Debug.Log("Syncing rigs completed.");
 		}
 
