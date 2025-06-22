@@ -2,7 +2,6 @@ using System;
 using UnityEditor;
 using UnityEngine;
 using System.IO;
-using Aspen.Tools.Utils.FolderUtils;
 
 namespace Aspen.Tools.Assets
 {
@@ -47,7 +46,7 @@ namespace Aspen.Tools.Assets
 				.Replace("Art", "Prefabs")
 				.Replace(fileName, $"Static/{fileName}")
 				.Replace(".fbx", ".prefab");
-			FolderUtils.EnsureDirectoriesExist(Path.GetDirectoryName(prefabPath));
+			Directory.CreateDirectory(Path.GetDirectoryName(prefabPath));
 			
 			// If the prefab already exists, don't create one
 			if (AssetDatabase.LoadAssetAtPath<GameObject>(prefabPath) != null)
