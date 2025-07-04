@@ -1,4 +1,4 @@
-Shader "Hidden/ToonPost"
+Shader "Aspen/ToonPost"
 {
     SubShader
     {
