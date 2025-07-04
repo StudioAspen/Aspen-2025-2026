@@ -1,0 +1,71 @@
+OpenShadingLanguage 1.00
+# Compiled by oslc 1.14.4.0dev
+# options: -q -O2 -IC:/Users/blender/git/blender-v440/blender.git/intern/cycles/kernel/osl/shaders -IC:/Users/blender/git/blender-v440/blender.git/lib/windows_x64/osl/share/OSL/shaders -o C:/Users/blender/git/blender-v440/build_release/intern/cycles/kernel/osl/shaders/node_uv_map.oso
+shader node_uv_map
+param	int	from_dupli	0		%read{0,15} %write{2147483647,-1}
+param	string	attribute	""		%read{2,5} %write{2147483647,-1} %derivs
+param	string	bump_offset	"center"		%read{6,13} %write{2147483647,-1}
+oparam	point	UV	0 0 0		%read{10,19} %write{1,19} %derivs
+temp	int	$tmp1	%read{2147483647,-1} %write{1,1}
+const	string	$const1	"geom:dupli_uv"		%read{1,1} %write{2147483647,-1}
+const	string	$const2	""		%read{2,2} %write{2147483647,-1}
+temp	int	$tmp2	%read{3,3} %write{2,2}
+temp	int	$tmp3	%read{2147483647,-1} %write{4,4}
+const	string	$const3	"geom:uv"		%read{4,4} %write{2147483647,-1}
+temp	int	$tmp4	%read{2147483647,-1} %write{5,5}
+const	string	$const4	"dx"		%read{6,6} %write{2147483647,-1}
+temp	int	$tmp5	%read{7,7} %write{6,6}
+temp	int	$tmp6	%read{9,9} %write{8,8}
+const	int	$const5	0		%read{8,15} %write{2147483647,-1}
+temp	vector	$tmp7	%read{11,11} %write{10,10} %derivs
+const	float	$const6	0.100000001		%read{11,18} %write{2147483647,-1}
+temp	vector	$tmp8	%read{12,12} %write{11,11} %derivs
+const	string	$const7	"dy"		%read{13,13} %write{2147483647,-1}
+temp	int	$tmp9	%read{14,14} %write{13,13}
+temp	int	$tmp10	%read{16,16} %write{15,15}
+temp	vector	$tmp11	%read{18,18} %write{17,17} %derivs
+temp	vector	$tmp12	%read{19,19} %write{18,18} %derivs
+code ___main___
+# C:/Users/blender/git/blender-v440/blender.git/intern/cycles/kernel/osl/shaders/node_uv_map.osl:12
+#   if (from_dupli) {
+	if		from_dupli 2 6 	%filename{"C:/Users/blender/git/blender-v440/blender.git/intern/cycles/kernel/osl/shaders/node_uv_map.osl"} %line{12} %argrw{"r"}
+# C:/Users/blender/git/blender-v440/blender.git/intern/cycles/kernel/osl/shaders/node_uv_map.osl:13
+#     getattribute("geom:dupli_uv", UV);
+	getattribute	$tmp1 $const1 UV 	%line{13} %argrw{"wrw"}
+# C:/Users/blender/git/blender-v440/blender.git/intern/cycles/kernel/osl/shaders/node_uv_map.osl:16
+#     if (attribute == "")
+	eq		$tmp2 attribute $const2 	%line{16} %argrw{"wrr"}
+	if		$tmp2 5 6 	%argrw{"r"}
+# C:/Users/blender/git/blender-v440/blender.git/intern/cycles/kernel/osl/shaders/node_uv_map.osl:17
+#       getattribute("geom:uv", UV);
+	getattribute	$tmp3 $const3 UV 	%line{17} %argrw{"wrw"}
+# C:/Users/blender/git/blender-v440/blender.git/intern/cycles/kernel/osl/shaders/node_uv_map.osl:19
+#       getattribute(attribute, UV);
+	getattribute	$tmp4 attribute UV 	%line{19} %argrw{"wrw"}
+# C:/Users/blender/git/blender-v440/blender.git/intern/cycles/kernel/osl/shaders/node_uv_map.osl:22
+#   if (bump_offset == "dx") {
+	eq		$tmp5 bump_offset $const4 	%line{22} %argrw{"wrr"}
+	if		$tmp5 13 20 	%argrw{"r"}
+# C:/Users/blender/git/blender-v440/blender.git/intern/cycles/kernel/osl/shaders/node_uv_map.osl:23
+#     if (!from_dupli) {
+	eq		$tmp6 from_dupli $const5 	%line{23} %argrw{"wrr"}
+	if		$tmp6 13 13 	%argrw{"r"}
+# C:/Users/blender/git/blender-v440/blender.git/intern/cycles/kernel/osl/shaders/node_uv_map.osl:24
+#       UV += Dx(UV) * BUMP_DX;
+	Dx		$tmp7 UV 	%line{24} %argrw{"wr"} %argderivs{1}
+	mul		$tmp8 $tmp7 $const6 	%argrw{"wrr"}
+	add		UV UV $tmp8 	%argrw{"wrr"}
+# C:/Users/blender/git/blender-v440/blender.git/intern/cycles/kernel/osl/shaders/node_uv_map.osl:27
+#   else if (bump_offset == "dy") {
+	eq		$tmp9 bump_offset $const7 	%line{27} %argrw{"wrr"}
+	if		$tmp9 20 20 	%argrw{"r"}
+# C:/Users/blender/git/blender-v440/blender.git/intern/cycles/kernel/osl/shaders/node_uv_map.osl:28
+#     if (!from_dupli) {
+	eq		$tmp10 from_dupli $const5 	%line{28} %argrw{"wrr"}
+	if		$tmp10 20 20 	%argrw{"r"}
+# C:/Users/blender/git/blender-v440/blender.git/intern/cycles/kernel/osl/shaders/node_uv_map.osl:29
+#       UV += Dy(UV) * BUMP_DY;
+	Dy		$tmp11 UV 	%line{29} %argrw{"wr"} %argderivs{1}
+	mul		$tmp12 $tmp11 $const6 	%argrw{"wrr"}
+	add		UV UV $tmp12 	%argrw{"wrr"}
+	end
