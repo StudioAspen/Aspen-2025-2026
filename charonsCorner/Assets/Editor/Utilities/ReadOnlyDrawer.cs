@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using UnityEditor;
 using UnityEngine;
 using CharonsCorner.Utilities;
@@ -20,3 +21,4 @@ namespace CharonsCorner.Editor.Utilities
         }
     }
 }
+#endif
