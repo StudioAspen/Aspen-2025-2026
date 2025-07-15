@@ -6,7 +6,7 @@ using static CharonsCorner.Runtime.InputActions;
 namespace CharonsCorner.Runtime
 {
     [CreateAssetMenu(fileName = "InputReader", menuName = "CharonsCorner/Input/InputReader", order = 0)]
-    public class PlayerInputReader : ScriptableObject, IPlayerActions, IInputReader
+    public class PlayerInputReaderSO : ScriptableObject, IPlayerActions, IInputReader
     {
         public event UnityAction<Vector2> Move = delegate { };
         public event UnityAction<bool> Jump = delegate { };

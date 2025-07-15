@@ -10,7 +10,7 @@ namespace CharonsCorner.Runtime
         private Transform mainCamera;
 
         [Header("References")]
-        [SerializeField] private PlayerInputReader input;
+        [SerializeField] private PlayerInputReaderSO input;
 
         private Vector3 moveInput;
         private Vector3 cameraBasedMoveInput;
