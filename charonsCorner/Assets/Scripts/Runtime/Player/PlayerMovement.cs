@@ -1,5 +1,7 @@
 using CharonsCorner.Utilities;
+using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace CharonsCorner.Runtime
 {
@@ -7,9 +9,10 @@ namespace CharonsCorner.Runtime
     public class PlayerMovement : MonoBehaviour
     {
         private Rigidbody rigidBody;
+        private Transform mainCamera;
 
         [Header("References")]
-        [SerializeField] private Transform mainCamera;
+        [SerializeField] private PlayerInputReader input;
 
         [Header("Input Debug")]
         [SerializeField, ReadOnly] private Vector3 moveInput;
@@ -35,6 +38,20 @@ namespace CharonsCorner.Runtime
         private void Awake()
         {
             rigidBody = GetComponent<Rigidbody>();
+        }
+
+        private void Start()
+        {
+            mainCamera = Camera.main.transform;
+
+            input.Move += direction => moveInput = new Vector3(direction.x, 0, direction.y);
+            input.Jump += isJumpKeyPressed =>
+            {
+                if(isJumpKeyPressed)
+                    Jump();
+            };
+
+            input.EnableActions();
 
             Cursor.lockState = CursorLockMode.Locked;
         }
@@ -48,9 +65,6 @@ namespace CharonsCorner.Runtime
 
         private void Update()
         {
-            GetMoveInput();
-            GetJumpInput();
-
             CheckGrounded();
 
             currentSpeed = rigidBody.linearVelocity.magnitude;
@@ -67,24 +81,11 @@ namespace CharonsCorner.Runtime
             isGrounded = Physics.CheckSphere(transform.position + groundCheckDistance * Vector3.down, groundCheckRadius, groundLayerMask);
         }
 
-        private void GetMoveInput()
-        {
-            float horizontal = Input.GetAxis("Horizontal");
-            float vertical = Input.GetAxis("Vertical");
-            moveInput = new Vector3(horizontal, 0, vertical);
-        }
-
-        private void GetJumpInput()
+        private void Jump()
         {
             if (!isGrounded)
                 return;
 
-            if (Input.GetKeyDown(KeyCode.Space))
-                Jump();
-        }
-
-        private void Jump()
-        {
             float jumpForce = Mathf.Sqrt(2 * jumpHeight * Mathf.Abs(Physics.gravity.y));
             rigidBody.AddForce(Vector3.up * jumpForce, ForceMode.VelocityChange);
         }
