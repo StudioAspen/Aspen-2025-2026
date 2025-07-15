@@ -95,7 +95,7 @@ public class PlayerMovement : MonoBehaviour
         if (!isGrounded)
             torque = airRollDamp * -rigidBody.angularVelocity;
 
-        rigidBody.AddTorque(Time.fixedDeltaTime * torque, ForceMode.Force);
+        rigidBody.AddTorque(torque, ForceMode.VelocityChange);
 
         if (rigidBody.linearVelocity.magnitude > maxSpeed)
             rigidBody.linearVelocity = Vector3.ClampMagnitude(rigidBody.linearVelocity, maxSpeed);
