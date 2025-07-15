@@ -1,7 +1,6 @@
 using CharonsCorner.Utilities;
 using System;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 namespace CharonsCorner.Runtime
 {
