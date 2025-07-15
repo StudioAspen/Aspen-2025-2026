@@ -96,11 +96,22 @@ public class PlayerMovement : MonoBehaviour
 
         Vector3 desiredDirection = cameraBasedMoveInput.normalized;
 
-        Vector3 turnTorque = turnResponsiveness * Vector3.Cross(Vector3.up, desiredDirection);
+        Vector3 currentDirection = rigidBody.linearVelocity;
+        currentDirection.y = 0;
+        currentDirection.Normalize();
 
+        float directionChangeFactor = 1f;
+        if (rigidBody.linearVelocity.sqrMagnitude > 0.01f)
+        {
+            float angle = Vector3.Angle(currentDirection, desiredDirection);
+            directionChangeFactor = Mathf.InverseLerp(0f, 180f, angle); // Normalize angle (0° = no change, 180° = full change)
+        }
+
+        // Torque scales with how much you’re turning
+        Vector3 turnTorque = turnResponsiveness * directionChangeFactor * Vector3.Cross(Vector3.up, desiredDirection);
+
+        // Propulsion torque based on speed for snappy direction changes at low speed
         float speedFactor = Mathf.Clamp01(rigidBody.linearVelocity.magnitude / maxSpeed);
-        turnTorque *= Mathf.Lerp(1f, 0.25f, speedFactor);
-
         Vector3 propulsionTorque = rollAcceleration * Vector3.Cross(Vector3.up, desiredDirection) * (1f - speedFactor);
 
         Vector3 totalTorque = turnTorque + propulsionTorque;
@@ -110,6 +121,7 @@ public class PlayerMovement : MonoBehaviour
         else
             rigidBody.AddTorque(airRollDamp * -rigidBody.angularVelocity, ForceMode.VelocityChange);
 
+        // Cap final speed
         if (rigidBody.linearVelocity.magnitude > maxSpeed)
             rigidBody.linearVelocity = Vector3.ClampMagnitude(rigidBody.linearVelocity, maxSpeed);
     }
