@@ -23,7 +23,7 @@ namespace CharonsCorner.Runtime
             if (isHit)
                 return;
 
-            if (other.gameObject.TryGetComponent(out PinCollector collector))
+            if (other.gameObject.TryGetComponent(out PlayerPinCollector collector))
             {
                 isHit = true;
 

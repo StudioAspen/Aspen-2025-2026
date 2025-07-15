@@ -143,6 +143,17 @@ namespace CharonsCorner.Runtime
             return (forward * moveInput.z + right * moveInput.x).normalized;
         }
 
+        /// <summary>
+        /// Multiplies the player's roll speed by a given multiplier, maintaining direction.
+        /// </summary>
+        /// <param name="multiplier"></param>
+        public void MultiplyRollSpeed(float multiplier)
+        {
+            // Project current angular velocity onto XZ plane to ensure no Y spin
+            Vector3 angularVel = Vector3.ProjectOnPlane(rigidBody.angularVelocity, Vector3.up);
+            rigidBody.angularVelocity = multiplier * angularVel.magnitude * angularVel.normalized;
+        }
+
         private void OnCollisionEnter(Collision collision)
         {
             float impactForce = collision.impulse.magnitude;
