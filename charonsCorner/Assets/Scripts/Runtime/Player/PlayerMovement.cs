@@ -19,15 +19,15 @@ namespace CharonsCorner.Runtime
         [SerializeField, ReadOnly] private Vector3 cameraBasedMoveInput;
 
         [Header("Roll Config")]
-        [SerializeField] private float rollAcceleration = 0.5f;
-        [SerializeField] private float turnResponsiveness = 0.5f;
+        [SerializeField] private float rollAcceleration = 1f;
+        [SerializeField] private float turnResponsiveness = 1f;
         [SerializeField] private float airRollDamp = 0.02f;
         [SerializeField] private float maxSpeed = 25f;
         [SerializeField, ReadOnly] private float currentSpeed;
         [SerializeField, ReadOnly] private float currentRotationalSpeed;
 
         [Header("Jump Config")]
-        [SerializeField] private float jumpHeight = 2.5f;
+        [SerializeField] private float jumpHeight = 2f;
 
         [Header("Ground Check")]
         [SerializeField] private float groundCheckDistance = 0.2f;
