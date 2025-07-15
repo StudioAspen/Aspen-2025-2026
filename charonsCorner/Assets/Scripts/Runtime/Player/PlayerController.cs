@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 namespace CharonsCorner.Runtime
 {
     [RequireComponent(typeof(Rigidbody))]
-    public class PlayerMovement : MonoBehaviour
+    public class PlayerController : MonoBehaviour
     {
         private Rigidbody rigidBody;
         private Transform mainCamera;
@@ -14,9 +14,8 @@ namespace CharonsCorner.Runtime
         [Header("References")]
         [SerializeField] private PlayerInputReader input;
 
-        [Header("Input Debug")]
-        [SerializeField, ReadOnly] private Vector3 moveInput;
-        [SerializeField, ReadOnly] private Vector3 cameraBasedMoveInput;
+        private Vector3 moveInput;
+        private Vector3 cameraBasedMoveInput;
 
         [Header("Roll Config")]
         [SerializeField] private float rollAcceleration = 1f;
@@ -94,9 +93,6 @@ namespace CharonsCorner.Runtime
         {
             cameraBasedMoveInput = GetCameraBasedMoveInput();
 
-            if (moveInput == Vector3.zero)
-                return;
-
             Vector3 desiredDirection = cameraBasedMoveInput.normalized;
 
             Vector3 currentDirection = rigidBody.linearVelocity;
@@ -119,10 +115,16 @@ namespace CharonsCorner.Runtime
 
             Vector3 totalTorque = turnTorque + propulsionTorque;
 
-            if (isGrounded)
-                rigidBody.AddTorque(totalTorque, ForceMode.VelocityChange);
-            else
-                rigidBody.AddTorque(airRollDamp * -rigidBody.angularVelocity, ForceMode.VelocityChange);
+            if (moveInput == Vector3.zero)
+                totalTorque = Vector3.zero;
+
+            if (!isGrounded)
+                totalTorque = airRollDamp * -rigidBody.angularVelocity;
+
+            rigidBody.AddTorque(totalTorque, ForceMode.VelocityChange);
+
+            // To prevent y-axis spin
+            rigidBody.angularVelocity = Vector3.ProjectOnPlane(rigidBody.angularVelocity, Vector3.up);
 
             // Cap final speed
             if (rigidBody.linearVelocity.magnitude > maxSpeed)
