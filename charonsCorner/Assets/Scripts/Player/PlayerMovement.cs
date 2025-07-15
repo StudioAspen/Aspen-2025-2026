@@ -14,10 +14,11 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField, ReadOnly] private Vector3 cameraBasedMoveInput;
 
     [Header("Roll Config")]
-    [SerializeField] private float rollTorque = 500f;
-    [SerializeField] private float airRollDamp = 100f;
-    [SerializeField] private float maxSpeed = 100f;
+    [SerializeField] private float rollAcceleration = 0.5f;
+    [SerializeField] private float airRollDamp = 0.05f;
+    [SerializeField] private float maxSpeed = 25f;
     [SerializeField, ReadOnly] private float currentSpeed;
+    [SerializeField, ReadOnly] private float currentRotationalSpeed;
 
     [Header("Jump Config")]
     [SerializeField] private float jumpHeight = 2.5f;
@@ -50,6 +51,7 @@ public class PlayerMovement : MonoBehaviour
         CheckGrounded();
 
         currentSpeed = rigidBody.linearVelocity.magnitude;
+        currentRotationalSpeed = rigidBody.angularVelocity.magnitude;
     }
 
     private void FixedUpdate()
@@ -90,7 +92,7 @@ public class PlayerMovement : MonoBehaviour
 
         Vector3 torque = Vector3.zero;
         if(moveInput != Vector3.zero)
-            torque = rollTorque * Vector3.Cross(Vector3.up, cameraBasedMoveInput.normalized);
+            torque = rollAcceleration * Vector3.Cross(Vector3.up, cameraBasedMoveInput.normalized);
 
         if (!isGrounded)
             torque = airRollDamp * -rigidBody.angularVelocity;
