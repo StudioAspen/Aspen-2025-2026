@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.VFX;
 
-namespace Aspen.VFX
+namespace CharonsCorner.Runtime.VFX
 {
 	public class VisualEffectsPlayer : VFXPlayerBase
 	{

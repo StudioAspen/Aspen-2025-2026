@@ -1,7 +1,6 @@
-using Aspen;
 using UnityEngine;
 
-namespace Aspen.VFX
+namespace CharonsCorner.Runtime.VFX
 {
 	/// <summary>
 	/// Used to play visual effected created by Unity's Particle System

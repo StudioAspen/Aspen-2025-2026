@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Aspen.VFX
+namespace CharonsCorner.Runtime.VFX
 {
 	/// <summary>
 	/// A base class that can be inherited. Extend behavior for visual effects.
