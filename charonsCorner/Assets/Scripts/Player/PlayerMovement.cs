@@ -15,7 +15,8 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("Roll Config")]
     [SerializeField] private float rollAcceleration = 0.5f;
-    [SerializeField] private float airRollDamp = 0.05f;
+    [SerializeField] private float turnResponsiveness = 0.5f;
+    [SerializeField] private float airRollDamp = 0.02f;
     [SerializeField] private float maxSpeed = 25f;
     [SerializeField, ReadOnly] private float currentSpeed;
     [SerializeField, ReadOnly] private float currentRotationalSpeed;
@@ -90,14 +91,24 @@ public class PlayerMovement : MonoBehaviour
     {
         cameraBasedMoveInput = GetCameraBasedMoveInput();
 
-        Vector3 torque = Vector3.zero;
-        if(moveInput != Vector3.zero)
-            torque = rollAcceleration * Vector3.Cross(Vector3.up, cameraBasedMoveInput.normalized);
+        if (moveInput == Vector3.zero)
+            return;
 
-        if (!isGrounded)
-            torque = airRollDamp * -rigidBody.angularVelocity;
+        Vector3 desiredDirection = cameraBasedMoveInput.normalized;
 
-        rigidBody.AddTorque(torque, ForceMode.VelocityChange);
+        Vector3 turnTorque = turnResponsiveness * Vector3.Cross(Vector3.up, desiredDirection);
+
+        float speedFactor = Mathf.Clamp01(rigidBody.linearVelocity.magnitude / maxSpeed);
+        turnTorque *= Mathf.Lerp(1f, 0.25f, speedFactor);
+
+        Vector3 propulsionTorque = rollAcceleration * Vector3.Cross(Vector3.up, desiredDirection) * (1f - speedFactor);
+
+        Vector3 totalTorque = turnTorque + propulsionTorque;
+
+        if (isGrounded)
+            rigidBody.AddTorque(totalTorque, ForceMode.VelocityChange);
+        else
+            rigidBody.AddTorque(airRollDamp * -rigidBody.angularVelocity, ForceMode.VelocityChange);
 
         if (rigidBody.linearVelocity.magnitude > maxSpeed)
             rigidBody.linearVelocity = Vector3.ClampMagnitude(rigidBody.linearVelocity, maxSpeed);
