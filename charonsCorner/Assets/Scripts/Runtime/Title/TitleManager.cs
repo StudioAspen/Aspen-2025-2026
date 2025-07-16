@@ -11,13 +11,6 @@ namespace CharonsCorner.Runtime
 
         public void ShowSettings() => uiManager.ShowPanel(UIManager.PanelName.Settings);
 
-        public void QuitGame()
-        {
-            #if UNITY_EDITOR
-                UnityEditor.EditorApplication.isPlaying = false;
-            #else
-                Application.Quit();
-            #endif
-        }
+        public static void QuitGame() => GameManager.QuitGame();
     }
 }

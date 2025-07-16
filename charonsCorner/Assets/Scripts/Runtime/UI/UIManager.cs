@@ -1,8 +1,10 @@
 using AYellowpaper.SerializedCollections;
+using Eflatun.SceneReference;
 using NaughtyAttributes;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace CharonsCorner.Runtime
 {
@@ -21,6 +23,9 @@ namespace CharonsCorner.Runtime
         [SerializeField, SerializedDictionary("Panel Name", "Panel")] 
         private SerializedDictionary<PanelName, UIPanel> panels = new SerializedDictionary<PanelName, UIPanel>();
         [field: SerializeField, ReadOnly] public UIPanel CurrentPanel { get; private set; }
+
+        [Header("Loading")]
+        [SerializeField] private GameObject loadingPanel;
 
         public event Action<UIPanel> OnPanelChanged = delegate { };
 
@@ -68,5 +73,7 @@ namespace CharonsCorner.Runtime
 
             CurrentPanel = null;
         }
+
+        public void ShowLoadingPanel(bool show) => loadingPanel.SetActive(show);
     }
 }

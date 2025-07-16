@@ -1,4 +1,7 @@
+using Eflatun.SceneReference;
+using System;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace CharonsCorner.Runtime
 {
@@ -16,6 +19,27 @@ namespace CharonsCorner.Runtime
 
             instance = this;
             DontDestroyOnLoad(gameObject);
+
+            GameManager.Instance.OnSceneChanged += GameManager_OnSceneChanged;
+        }
+
+        private void OnDestroy()
+        {
+            GameManager.Instance.OnSceneChanged -= GameManager_OnSceneChanged;
+        }
+
+        private void GameManager_OnSceneChanged(SceneReference scene)
+        {
+            // Destroy all other EventSystems in the scene except this one
+            EventSystem[] eventSystems = FindObjectsByType<EventSystem>(FindObjectsSortMode.None);
+            foreach(EventSystem eventSystem in eventSystems)
+            {
+                if(eventSystem == null) 
+                    continue;
+
+                if (eventSystem != this)
+                    Destroy(eventSystem.gameObject);
+            }
         }
     }
 }

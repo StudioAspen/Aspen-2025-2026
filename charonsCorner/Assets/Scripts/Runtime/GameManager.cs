@@ -3,12 +3,14 @@ using NaughtyAttributes;
 using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Cysharp.Threading.Tasks;
 
 namespace CharonsCorner.Runtime
 {
     public enum GameState
     {
         Title,
+        Loading,
         Gameplay,
         Dialogue,
         Paused,
@@ -28,11 +30,6 @@ namespace CharonsCorner.Runtime
         [Header("References")]
         [SerializeField] private SceneReference titleScene;
         [SerializeField] private SceneReference tutorialScene;
-
-        [Header("Debug")]
-        [SerializeField] private SceneReference debugScene;
-        [Button("Switch To Debug Scene")]
-        public void SwitchScenesDebug() => SwitchScenes(debugScene);
 
         private void Awake()
         {
@@ -71,7 +68,13 @@ namespace CharonsCorner.Runtime
                     Time.timeScale = 1f;
                     UIManager.Instance.HideAllPanels();
                     InputManager.Instance.LockCursor(false);
-                    SwitchScenes(titleScene);
+                    break;
+                case GameState.Loading:
+                    Time.timeScale = 1f;
+                    UIManager.Instance.HideAllPanels();
+                    UIManager.Instance.ShowLoadingPanel(true);
+                    InputManager.Instance.DisableAllActions();
+                    InputManager.Instance.LockCursor(false);
                     break;
                 case GameState.Gameplay:
                     Time.timeScale = 1f;
@@ -96,27 +99,42 @@ namespace CharonsCorner.Runtime
             }
         }
 
-        public void SwitchScenes(SceneReference scene)
+        public async UniTask SwitchScenes(SceneReference scene, GameState afterState)
         {
-            SceneManager.LoadScene(scene.Name);
+            ChangeGameState(GameState.Loading);
+
+            await SceneManager.LoadSceneAsync(scene.Name);
             CurrentScene = scene;
+            OnSceneChanged.Invoke(CurrentScene);
+
+            UIManager.Instance.ShowLoadingPanel(false);
+
+            ChangeGameState(afterState);
         }
 
         public void StartGame()
         {
-            SwitchScenes(tutorialScene);
-            ChangeGameState(GameState.Gameplay);
+            SwitchScenes(tutorialScene, GameState.Gameplay).Forget();
         }
 
-        public void ReloadScene()
+        public void ReloadScene(GameState afterState)
         {
-            Scene currentScene = SceneManager.GetActiveScene();
-            SceneManager.LoadScene(currentScene.buildIndex);
+            SceneReference currentSceneReference = SceneReference.FromScenePath(SceneManager.GetActiveScene().path);
+            SwitchScenes(currentSceneReference, afterState).Forget();
         }
 
         public void ReturnToMenu()
         {
-            ChangeGameState(GameState.Title);
+            SwitchScenes(titleScene, GameState.Title).Forget();
+        }
+
+        public static void QuitGame()
+        {
+#if UNITY_EDITOR
+                UnityEditor.EditorApplication.isPlaying = false;
+#else
+                Application.Quit();
+#endif
         }
     }
 }

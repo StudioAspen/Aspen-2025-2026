@@ -11,8 +11,7 @@ namespace CharonsCorner.Runtime
 
         public void Restart()
         {
-            GameManager.Instance.ReloadScene();
-            GameManager.Instance.ChangeGameState(GameState.Gameplay);
+            GameManager.Instance.ReloadScene(GameState.Gameplay);
         }
 
         public void ShowSettingsPanel() => uiManager.ShowPanel(UIManager.PanelName.Settings);
@@ -24,5 +23,7 @@ namespace CharonsCorner.Runtime
             uiManager.HideAllPanels();
             GameManager.Instance.ChangeGameState(GameState.Gameplay);
         }
+
+        public void QuitGame() => GameManager.QuitGame();
     }
 }

@@ -56,6 +56,14 @@ namespace CharonsCorner.Runtime
             InputActions.UI.SetCallbacks(this);
         }
 
+        public void DisableAllActions()
+        {
+            if(InputActions == null)
+                CreatePlayerActions();
+
+            InputActions.Disable();
+        }
+
         public void EnablePlayerActions()
         {
             if (InputActions == null)
