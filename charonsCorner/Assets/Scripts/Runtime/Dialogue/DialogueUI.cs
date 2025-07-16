@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace CharonsCorner.Runtime
 {
-    public class DialogueUI : MonoBehaviour
+    public class DialogueUI : UIPanel
     {
         [Header("References")]
         [SerializeField] private DialogueManager dialogueManager;

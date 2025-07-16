@@ -2,9 +2,9 @@
 {
     public enum DialogueReaction
     {
-        NEUTRAL,
-        CACKLING,
-        CONFIDENT,
-        SHOCKED,
+        Neutral,
+        Cackling,
+        Confident,
+        Shocked,
     }
 }

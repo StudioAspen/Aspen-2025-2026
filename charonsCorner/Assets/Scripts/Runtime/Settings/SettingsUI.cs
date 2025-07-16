@@ -2,8 +2,8 @@ using UnityEngine;
 
 namespace CharonsCorner.Runtime
 {
-    public interface IInputReader
+    public class SettingsUI : UIPanel
     {
-        void EnableActions();
+
     }
 }

@@ -1,16 +1,16 @@
 using NaughtyAttributes;
 using UnityEngine;
+using UnityEngine.Windows;
 
 namespace CharonsCorner.Runtime
 {
     [RequireComponent(typeof(Rigidbody))]
     public class PlayerController : MonoBehaviour
     {
+        private InputManager input;
+
         private Rigidbody rigidBody;
         private Transform mainCamera;
-
-        [Header("References")]
-        [SerializeField] private PlayerInputReaderSO input;
 
         private Vector3 moveInput;
         private Vector3 cameraBasedMoveInput;
@@ -39,18 +39,17 @@ namespace CharonsCorner.Runtime
 
         private void Start()
         {
-            mainCamera = Camera.main.transform;
-
+            input = InputManager.Instance;
             input.Move += direction => moveInput = new Vector3(direction.x, 0, direction.y);
             input.Jump += isJumpKeyPressed =>
             {
-                if(isJumpKeyPressed)
+                if (isJumpKeyPressed)
                     Jump();
             };
 
-            input.EnableActions();
+            input.EnablePlayerActions();
 
-            Cursor.lockState = CursorLockMode.Locked;
+            mainCamera = Camera.main.transform;
         }
 
         private void OnDrawGizmos()
