@@ -64,6 +64,15 @@ namespace CharonsCorner.Runtime
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Pause"",
+                    ""type"": ""Button"",
+                    ""id"": ""77902fea-6b29-47cb-b627-da7554e0e993"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -179,28 +188,6 @@ namespace CharonsCorner.Runtime
                 },
                 {
                     ""name"": """",
-                    ""id"": ""1635d3fe-58b6-4ba9-a4e2-f4b964f6b5c8"",
-                    ""path"": ""<XRController>/{Primary2DAxis}"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""XR"",
-                    ""action"": ""Move"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""3ea4d645-4504-4529-b061-ab81934c3752"",
-                    ""path"": ""<Joystick>/stick"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Joystick"",
-                    ""action"": ""Move"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""c1f7a91b-d0fd-4a62-997e-7fb9b69bf235"",
                     ""path"": ""<Gamepad>/rightStick"",
                     ""interactions"": """",
@@ -217,17 +204,6 @@ namespace CharonsCorner.Runtime
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse;Touch"",
-                    ""action"": ""Look"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""3e5f5442-8668-4b27-a940-df99bad7e831"",
-                    ""path"": ""<Joystick>/{Hatswitch}"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Joystick"",
                     ""action"": ""Look"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -256,12 +232,23 @@ namespace CharonsCorner.Runtime
                 },
                 {
                     ""name"": """",
-                    ""id"": ""603f3daf-40bd-4854-8724-93e8017f59e3"",
-                    ""path"": ""<XRController>/secondaryButton"",
+                    ""id"": ""aa261d8b-db0d-4060-bd48-b9efc8d26ea8"",
+                    ""path"": ""<Keyboard>/escape"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""XR"",
-                    ""action"": ""Jump"",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Pause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a3019651-cc4c-422a-a130-5806c19e4402"",
+                    ""path"": ""<Gamepad>/start"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Pause"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -875,6 +862,7 @@ namespace CharonsCorner.Runtime
             m_Player_Look = m_Player.FindAction("Look", throwIfNotFound: true);
             m_Player_Interact = m_Player.FindAction("Interact", throwIfNotFound: true);
             m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
+            m_Player_Pause = m_Player.FindAction("Pause", throwIfNotFound: true);
             // UI
             m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
             m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -958,6 +946,7 @@ namespace CharonsCorner.Runtime
         private readonly InputAction m_Player_Look;
         private readonly InputAction m_Player_Interact;
         private readonly InputAction m_Player_Jump;
+        private readonly InputAction m_Player_Pause;
         public struct PlayerActions
         {
             private @InputActions m_Wrapper;
@@ -966,6 +955,7 @@ namespace CharonsCorner.Runtime
             public InputAction @Look => m_Wrapper.m_Player_Look;
             public InputAction @Interact => m_Wrapper.m_Player_Interact;
             public InputAction @Jump => m_Wrapper.m_Player_Jump;
+            public InputAction @Pause => m_Wrapper.m_Player_Pause;
             public InputActionMap Get() { return m_Wrapper.m_Player; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -987,6 +977,9 @@ namespace CharonsCorner.Runtime
                 @Jump.started += instance.OnJump;
                 @Jump.performed += instance.OnJump;
                 @Jump.canceled += instance.OnJump;
+                @Pause.started += instance.OnPause;
+                @Pause.performed += instance.OnPause;
+                @Pause.canceled += instance.OnPause;
             }
 
             private void UnregisterCallbacks(IPlayerActions instance)
@@ -1003,6 +996,9 @@ namespace CharonsCorner.Runtime
                 @Jump.started -= instance.OnJump;
                 @Jump.performed -= instance.OnJump;
                 @Jump.canceled -= instance.OnJump;
+                @Pause.started -= instance.OnPause;
+                @Pause.performed -= instance.OnPause;
+                @Pause.canceled -= instance.OnPause;
             }
 
             public void RemoveCallbacks(IPlayerActions instance)
@@ -1189,6 +1185,7 @@ namespace CharonsCorner.Runtime
             void OnLook(InputAction.CallbackContext context);
             void OnInteract(InputAction.CallbackContext context);
             void OnJump(InputAction.CallbackContext context);
+            void OnPause(InputAction.CallbackContext context);
         }
         public interface IUIActions
         {

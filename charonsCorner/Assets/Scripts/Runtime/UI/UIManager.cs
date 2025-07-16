@@ -41,7 +41,7 @@ namespace CharonsCorner.Runtime
         private void InitializePanels()
         {
             foreach (UIPanel panel in panels.Values)
-                panel.Initialize();
+                panel.Init(this);
         }
 
         public void ShowPanel(PanelName panelName)

@@ -1,19 +1,38 @@
 using Eflatun.SceneReference;
 using NaughtyAttributes;
+using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace CharonsCorner.Runtime
 {
+    public enum GameState
+    {
+        Title,
+        Gameplay,
+        Dialogue,
+        Paused,
+        Cutscene
+    }
+
     public class GameManager : MonoBehaviour
     {
         public static GameManager Instance { get; private set; }
 
+        [field: SerializeField, ReadOnly] public GameState CurrentGameState { get; private set; }
+        public event Action<GameState> OnGameStateChanged = delegate { };
+
+        public SceneReference CurrentScene { get; private set; }
+        public event Action<SceneReference> OnSceneChanged = delegate { };
+
         [Header("References")]
+        [SerializeField] private SceneReference titleScene;
         [SerializeField] private SceneReference tutorialScene;
 
         [Header("Debug")]
         [SerializeField] private SceneReference debugScene;
+        [Button("Switch To Debug Scene")]
+        public void SwitchScenesDebug() => SwitchScenes(debugScene);
 
         private void Awake()
         {
@@ -27,20 +46,77 @@ namespace CharonsCorner.Runtime
             DontDestroyOnLoad(gameObject);
         }
 
-        [Button("Switch Scenes")]
-        public void SwitchScenes()
+        private void Start()
         {
-            SceneManager.LoadScene(debugScene.Name);
+            // Initialize the game state to Title at the start
+            ChangeGameState(GameState.Title);
+        }
+
+        public void ChangeGameState(GameState newState)
+        {
+            if(CurrentGameState == newState)
+                return;
+
+            CurrentGameState = newState;
+            OnGameStateEnter(newState);
+
+            OnGameStateChanged.Invoke(newState);
+        }
+
+        private void OnGameStateEnter(GameState newState)
+        {
+            switch (newState)
+            {
+                case GameState.Title:
+                    Time.timeScale = 1f;
+                    UIManager.Instance.HideAllPanels();
+                    InputManager.Instance.LockCursor(false);
+                    SwitchScenes(titleScene);
+                    break;
+                case GameState.Gameplay:
+                    Time.timeScale = 1f;
+                    UIManager.Instance.HideAllPanels();
+                    InputManager.Instance.EnablePlayerActions();
+                    InputManager.Instance.LockCursor(true);
+                    break;
+                case GameState.Dialogue:
+                    Time.timeScale = 0f;
+                    UIManager.Instance.ShowPanel(UIManager.PanelName.Dialogue);
+                    InputManager.Instance.LockCursor(false);
+                    break;
+                case GameState.Paused:
+                    Time.timeScale = 0f;
+                    UIManager.Instance.ShowPanel(UIManager.PanelName.PauseMenu);
+                    InputManager.Instance.LockCursor(false);
+                    break;
+                case GameState.Cutscene:
+                    Time.timeScale = 1f;
+                    InputManager.Instance.LockCursor(false);
+                    break;
+            }
         }
 
         public void SwitchScenes(SceneReference scene)
         {
             SceneManager.LoadScene(scene.Name);
+            CurrentScene = scene;
         }
 
         public void StartGame()
         {
             SwitchScenes(tutorialScene);
+            ChangeGameState(GameState.Gameplay);
+        }
+
+        public void ReloadScene()
+        {
+            Scene currentScene = SceneManager.GetActiveScene();
+            SceneManager.LoadScene(currentScene.buildIndex);
+        }
+
+        public void ReturnToMenu()
+        {
+            ChangeGameState(GameState.Title);
         }
     }
 }

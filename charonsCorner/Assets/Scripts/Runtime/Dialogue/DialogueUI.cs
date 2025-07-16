@@ -26,7 +26,7 @@ namespace CharonsCorner.Runtime
         private string typedOutFullText;
         private Dictionary<string, DialogueSO> pendingOptions;
 
-        public override void Initialize()
+        private protected override void Initialize()
         {
             dialogueManager.OnDialogueStarted += DialogueManager_OnDialogueStarted;
         }
@@ -110,6 +110,11 @@ namespace CharonsCorner.Runtime
 
             foreach (Transform child in optionsContainer)
                 Destroy(child.gameObject);
+        }
+
+        public override void CloseUI()
+        {
+            // No specific close behavior for dialogue UI
         }
     }
 }

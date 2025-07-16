@@ -7,15 +7,9 @@ namespace CharonsCorner.Runtime
         [SerializeField] private GameManager gameManager;
         [SerializeField] private UIManager uiManager;
 
-        public void StartGame()
-        {
-            gameManager.StartGame();
-        }
+        public void StartGame() => gameManager.StartGame();
 
-        public void ShowSettings()
-        {
-            uiManager.ShowPanel(UIManager.PanelName.Settings);
-        }
+        public void ShowSettings() => uiManager.ShowPanel(UIManager.PanelName.Settings);
 
         public void QuitGame()
         {

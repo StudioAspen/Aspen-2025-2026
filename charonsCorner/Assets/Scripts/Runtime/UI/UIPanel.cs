@@ -4,10 +4,18 @@ namespace CharonsCorner.Runtime
 {
     public abstract class UIPanel : MonoBehaviour
     {
+        private protected UIManager uiManager;
+
+        public void Init(UIManager manager)
+        {
+            uiManager = manager;
+            Initialize();
+        }
+
         /// <summary>
         /// Replacement for Unity's Awake method due to the panels being disabled on start.
         /// </summary>
-        public abstract void Initialize();
+        private protected abstract void Initialize();
 
         public virtual void Show()
         {
@@ -18,5 +26,7 @@ namespace CharonsCorner.Runtime
         {
             gameObject.SetActive(false);
         }
+
+        public abstract void CloseUI();
     }
 }

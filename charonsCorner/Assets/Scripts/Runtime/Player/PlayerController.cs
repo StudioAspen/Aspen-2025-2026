@@ -42,14 +42,14 @@ namespace CharonsCorner.Runtime
             mainCamera = Camera.main.transform;
 
             input = InputManager.Instance;
-            input.Move += direction => moveInput = new Vector3(direction.x, 0, direction.y);
-            input.Jump += isJumpKeyPressed =>
-            {
-                if (isJumpKeyPressed)
-                    Jump();
-            };
+            input.Move += Input_Move;
+            input.Jump += Input_Jump;
+        }
 
-            input.EnablePlayerActions();
+        private void OnDestroy()
+        {
+            input.Move -= Input_Move;
+            input.Jump -= Input_Jump;
         }
 
         private void OnDrawGizmos()
@@ -70,6 +70,14 @@ namespace CharonsCorner.Runtime
         private void FixedUpdate()
         {
             HandleRoll();
+        }
+
+        private void Input_Move(Vector2 direction) => moveInput = new Vector3(direction.x, 0, direction.y);
+
+        private void Input_Jump(bool isJumpKeyPressed)
+        {
+            if (isJumpKeyPressed)
+                Jump();
         }
 
         private void CheckGrounded()
