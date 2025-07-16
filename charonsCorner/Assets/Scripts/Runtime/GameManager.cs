@@ -23,6 +23,7 @@ namespace CharonsCorner.Runtime
 
         [field: SerializeField, ReadOnly] public GameState CurrentGameState { get; private set; }
         public event Action<GameState> OnGameStateChanged = delegate { };
+        private GameState initialGameState;
 
         public SceneReference CurrentScene { get; private set; }
         public event Action<SceneReference> OnSceneChanged = delegate { };
@@ -40,14 +41,15 @@ namespace CharonsCorner.Runtime
             }
 
             Instance = this;
-            DontDestroyOnLoad(gameObject);
         }
 
         private void Start()
         {
             // Initialize the game state to Title at the start
-            ChangeGameState(GameState.Title);
+            ChangeGameState(initialGameState);
         }
+
+        public void ChangeInitialGameState(GameState newInitialState) => initialGameState = newInitialState;
 
         public void ChangeGameState(GameState newState)
         {

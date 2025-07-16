@@ -18,7 +18,6 @@ namespace CharonsCorner.Runtime
             }
 
             instance = this;
-            DontDestroyOnLoad(gameObject);
 
             GameManager.Instance.OnSceneChanged += GameManager_OnSceneChanged;
         }

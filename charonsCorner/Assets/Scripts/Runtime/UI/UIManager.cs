@@ -38,7 +38,6 @@ namespace CharonsCorner.Runtime
             }
 
             Instance = this;
-            DontDestroyOnLoad(gameObject);
 
             InitializePanels();
         }

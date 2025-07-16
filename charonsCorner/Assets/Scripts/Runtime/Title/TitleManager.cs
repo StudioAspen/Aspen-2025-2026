@@ -4,12 +4,9 @@ namespace CharonsCorner.Runtime
 {
     public class TitleManager : MonoBehaviour
     {
-        [SerializeField] private GameManager gameManager;
-        [SerializeField] private UIManager uiManager;
+        public void StartGame() => GameManager.Instance.StartGame();
 
-        public void StartGame() => gameManager.StartGame();
-
-        public void ShowSettings() => uiManager.ShowPanel(UIManager.PanelName.Settings);
+        public void ShowSettings() => UIManager.Instance.ShowPanel(UIManager.PanelName.Settings);
 
         public static void QuitGame() => GameManager.QuitGame();
     }
