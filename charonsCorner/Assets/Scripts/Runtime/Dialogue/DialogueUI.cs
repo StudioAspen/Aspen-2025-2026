@@ -26,7 +26,7 @@ namespace CharonsCorner.Runtime
         private string typedOutFullText;
         private Dictionary<string, DialogueSO> pendingOptions;
 
-        private void Awake()
+        public override void Initialize()
         {
             dialogueManager.OnDialogueStarted += DialogueManager_OnDialogueStarted;
         }

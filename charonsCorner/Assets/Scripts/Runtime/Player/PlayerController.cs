@@ -39,6 +39,8 @@ namespace CharonsCorner.Runtime
 
         private void Start()
         {
+            mainCamera = Camera.main.transform;
+
             input = InputManager.Instance;
             input.Move += direction => moveInput = new Vector3(direction.x, 0, direction.y);
             input.Jump += isJumpKeyPressed =>
@@ -48,8 +50,6 @@ namespace CharonsCorner.Runtime
             };
 
             input.EnablePlayerActions();
-
-            mainCamera = Camera.main.transform;
         }
 
         private void OnDrawGizmos()

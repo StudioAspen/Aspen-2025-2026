@@ -35,7 +35,13 @@ namespace CharonsCorner.Runtime
             Instance = this;
             DontDestroyOnLoad(gameObject);
 
-            HideAllPanels();
+            InitializePanels();
+        }
+
+        private void InitializePanels()
+        {
+            foreach (UIPanel panel in panels.Values)
+                panel.Initialize();
         }
 
         public void ShowPanel(PanelName panelName)
@@ -49,6 +55,7 @@ namespace CharonsCorner.Runtime
                 CurrentPanel.Hide();
 
             CurrentPanel = panel;
+            CurrentPanel.Show();
             OnPanelChanged.Invoke(CurrentPanel);
 
             InputManager.Instance.EnableUIActions();
