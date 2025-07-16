@@ -1,4 +1,4 @@
-﻿using CharonsCorner.Utilities;
+﻿using NaughtyAttributes;
 using System;
 using UnityEngine;
 

@@ -12,16 +12,16 @@ namespace CharonsCorner.Runtime
         [Header("References")]
         [SerializeField] private DialogueManager dialogueManager;
         [SerializeField] private DialogueConfigSO dialogueConfig;
+        [SerializeField] private GameObject optionButtonPrefab;
 
+        [Header("UI Elements")]
         [SerializeField] private TMP_Text nameText;
         [SerializeField] private TMP_Text dialogueText;
         [SerializeField] private Image reactionImage;
-
         [SerializeField] private Transform optionsContainer;
-        [SerializeField] private GameObject optionButtonPrefab;
 
         [Header("Typing Config")]
-        [SerializeField] private float typingSpeed = 0.05f;
+        [SerializeField] private float typingSpeed = 0.01f;
         private Coroutine typingCoroutine;
         private string typedOutFullText;
         private Dictionary<string, DialogueSO> pendingOptions;
