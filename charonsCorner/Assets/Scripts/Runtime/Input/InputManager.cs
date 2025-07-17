@@ -42,11 +42,6 @@ namespace CharonsCorner.Runtime
             CreatePlayerActions();
         }
 
-        private void OnDestroy()
-        {
-            
-        }
-
         private void CreatePlayerActions()
         {
             InputActions = new InputActions();

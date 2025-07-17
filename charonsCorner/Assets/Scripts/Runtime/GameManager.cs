@@ -45,7 +45,6 @@ namespace CharonsCorner.Runtime
 
         private void Start()
         {
-            // Initialize the game state to Title at the start
             ChangeGameState(initialGameState);
         }
 

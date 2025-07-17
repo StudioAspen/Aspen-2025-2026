@@ -18,7 +18,10 @@ namespace CharonsCorner.Runtime
             }
 
             instance = this;
+        }
 
+        private void Start()
+        {
             GameManager.Instance.OnSceneChanged += GameManager_OnSceneChanged;
         }
 
@@ -36,7 +39,7 @@ namespace CharonsCorner.Runtime
                 if(eventSystem == null) 
                     continue;
 
-                if (eventSystem != this)
+                if (eventSystem.gameObject != gameObject)
                     Destroy(eventSystem.gameObject);
             }
         }

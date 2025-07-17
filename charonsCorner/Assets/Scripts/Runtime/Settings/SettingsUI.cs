@@ -10,10 +10,10 @@ namespace CharonsCorner.Runtime
         public event Action<GameObject> OnSettingsUIChanged = delegate { };
 
         [Header("UI Elements")]
-        [SerializeField] private GameObject generalSettingsUI;
-        [SerializeField] private GameObject graphicsSettingsUI;
-        [SerializeField] private GameObject audioSettingsUI;
-        [SerializeField] private GameObject controlsSettingsUI;
+        [SerializeField] private GameObject generalSubSettingsUI;
+        [SerializeField] private GameObject graphicsSubSettingsUI;
+        [SerializeField] private GameObject audioSubSettingsUI;
+        [SerializeField] private GameObject controlsSubSettingsUI;
 
         private protected override void Initialize()
         {
@@ -22,7 +22,7 @@ namespace CharonsCorner.Runtime
 
         private void OnEnable()
         {
-            ChangeSettingsUI(generalSettingsUI);
+            ChangeSettingsUI(generalSubSettingsUI);
         }
 
         private void OnDisable()
@@ -44,10 +44,10 @@ namespace CharonsCorner.Runtime
             OnSettingsUIChanged.Invoke(settingsUI);
         }
 
-        public void ChangeToGeneralSettings() => ChangeSettingsUI(generalSettingsUI);
-        public void ChangeToGraphicsSettings() => ChangeSettingsUI(graphicsSettingsUI);
-        public void ChangeToAudioSettings() => ChangeSettingsUI(audioSettingsUI);
-        public void ChangeToControlsSettings() => ChangeSettingsUI(controlsSettingsUI);
+        public void ChangeToGeneralSettings() => ChangeSettingsUI(generalSubSettingsUI);
+        public void ChangeToGraphicsSettings() => ChangeSettingsUI(graphicsSubSettingsUI);
+        public void ChangeToAudioSettings() => ChangeSettingsUI(audioSubSettingsUI);
+        public void ChangeToControlsSettings() => ChangeSettingsUI(controlsSubSettingsUI);
 
         public override void CloseUI()
         {
