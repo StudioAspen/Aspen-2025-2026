@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace CharonsCorner.Runtime
 {
-    public class ClickToSaveSubSettingsUI : MonoBehaviour
+    public class SubSettingsUI : MonoBehaviour
     {
         private List<Setting> settings = new List<Setting>();
 
@@ -16,14 +16,13 @@ namespace CharonsCorner.Runtime
             Load();
         }
 
-        public void Save()
+        public void Apply()
         {
             foreach (Setting setting in settings)
             {
                 if (setting == null)
                     continue;
-
-                setting.Save();
+                setting.Apply();
             }
         }
 
@@ -33,9 +32,22 @@ namespace CharonsCorner.Runtime
             {
                 if (setting == null)
                     continue;
-
                 setting.Load();
             }
         }
+
+        public void Discard()
+        {
+            foreach (Setting setting in settings)
+            {
+                if (setting == null)
+                    continue;
+                setting.Discard();
+            }
+        }
+
+        public void Show() => gameObject.SetActive(true);
+
+        public void Hide() => gameObject.SetActive(false);
     }
 }

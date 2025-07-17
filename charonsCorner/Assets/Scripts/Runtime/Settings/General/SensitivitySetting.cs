@@ -6,36 +6,34 @@ namespace CharonsCorner.Runtime
 {
     public class SensitivitySetting : Setting
     {
-        public static readonly string PlayerPrefsKey = "Settings_Sensitivity";
-        public static readonly float DefaultValue = 50;
+        private protected override string playerPrefsKey => "Settings_Sensitivity";
+        private static readonly float defaultValue = 50;
         public static float CurrentValue { get; private set; }
+
 
         [SerializeField] private Slider sensitivitySlider;
 
         private void OnEnable()
         {
-            sensitivitySlider.onValueChanged.AddListener(SensitivitySlider_OnValueChanged);
-        }
-
-        private void OnDisable()
-        {
-            sensitivitySlider.onValueChanged.RemoveListener(SensitivitySlider_OnValueChanged);
-        }
-
-        private void SensitivitySlider_OnValueChanged(float newValue)
-        {
-            CurrentValue = newValue;
+            sensitivitySlider.value = CurrentValue;
         }
 
         public override void Load()
         {
-            CurrentValue = PlayerPrefs.GetFloat(PlayerPrefsKey, DefaultValue);
+            CurrentValue = PlayerPrefs.GetFloat(playerPrefsKey, defaultValue);
             sensitivitySlider.value = CurrentValue;
         }
 
-        public override void Save()
+        public override void Apply()
         {
-            PlayerPrefs.SetFloat(PlayerPrefsKey, sensitivitySlider.value);
+            Debug.Log($"Applying sensitivity setting: {sensitivitySlider.value}");
+            PlayerPrefs.SetFloat(playerPrefsKey, sensitivitySlider.value);
+            CurrentValue = sensitivitySlider.value;
+        }
+
+        public override void Discard()
+        {
+            sensitivitySlider.value = CurrentValue;
         }
     }
 }

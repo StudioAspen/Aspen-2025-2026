@@ -1,28 +1,33 @@
 using NaughtyAttributes;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace CharonsCorner.Runtime
 {
     public class SettingsUI : UIPanel
     {
-        [field: SerializeField, ReadOnly] public GameObject CurrentSettingsUI { get; private set; }
-        public event Action<GameObject> OnSettingsUIChanged = delegate { };
+        [field: SerializeField, ReadOnly] public SubSettingsUI CurrentSettingsUI { get; private set; }
+        public event Action<SubSettingsUI> OnSettingsUIChanged = delegate { };
 
         [Header("UI Elements")]
-        [SerializeField] private GameObject generalSubSettingsUI;
-        [SerializeField] private GameObject graphicsSubSettingsUI;
-        [SerializeField] private GameObject audioSubSettingsUI;
-        [SerializeField] private GameObject controlsSubSettingsUI;
+        [SerializeField] private SubSettingsUI generalSubSettingsUI;
+        [SerializeField] private SubSettingsUI graphicsSubSettingsUI;
+        [SerializeField] private SubSettingsUI audioSubSettingsUI;
+        [SerializeField] private SubSettingsUI controlsSubSettingsUI;
 
         private protected override void Initialize()
         {
-            foreach(SettingAutoSaver settingAutoSaver in GetComponentsInChildren<SettingAutoSaver>(true))
+            // Initialize the sub-settings UIs
+            List<SubSettingsUI> subSettingsUIs = new List<SubSettingsUI>
             {
-                if (settingAutoSaver == null)
-                    continue;
-                settingAutoSaver.Initialize();
-            }
+                generalSubSettingsUI,
+                graphicsSubSettingsUI,
+                audioSubSettingsUI,
+                controlsSubSettingsUI
+            };
+            foreach(SubSettingsUI subSettingsUI in subSettingsUIs)
+                subSettingsUI.Initialize();
         }
 
         private void OnEnable()
@@ -35,18 +40,18 @@ namespace CharonsCorner.Runtime
             
         }
 
-        private void ChangeSettingsUI(GameObject settingsUI)
+        private void ChangeSettingsUI(SubSettingsUI subSettingsUI)
         {
-            if(CurrentSettingsUI == settingsUI)
+            if(CurrentSettingsUI == subSettingsUI)
                 return;
 
-            if(CurrentSettingsUI != null)
-                CurrentSettingsUI.SetActive(false);
+            if (CurrentSettingsUI != null)
+                CurrentSettingsUI.Hide();
 
-            CurrentSettingsUI = settingsUI;
-            CurrentSettingsUI.SetActive(true);
+            CurrentSettingsUI = subSettingsUI;
+            CurrentSettingsUI.Show();
 
-            OnSettingsUIChanged.Invoke(settingsUI);
+            OnSettingsUIChanged.Invoke(subSettingsUI);
         }
 
         public void ChangeToGeneralSettings() => ChangeSettingsUI(generalSubSettingsUI);
