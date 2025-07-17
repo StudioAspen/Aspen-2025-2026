@@ -1,3 +1,4 @@
+using NaughtyAttributes;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,6 +7,8 @@ namespace CharonsCorner.Runtime
     public class SubSettingsUI : MonoBehaviour
     {
         private List<Setting> settings = new List<Setting>();
+
+        public bool IsDirty => settings.Exists(setting => setting != null && setting.IsDirty());
 
         // Disabled objects dont get awake called, so we need to initialize manually
         public void Initialize()
@@ -47,7 +50,6 @@ namespace CharonsCorner.Runtime
         }
 
         public void Show() => gameObject.SetActive(true);
-
         public void Hide() => gameObject.SetActive(false);
     }
 }

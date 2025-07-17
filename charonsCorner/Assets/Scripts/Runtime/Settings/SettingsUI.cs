@@ -15,6 +15,7 @@ namespace CharonsCorner.Runtime
         [SerializeField] private SubSettingsUI graphicsSubSettingsUI;
         [SerializeField] private SubSettingsUI audioSubSettingsUI;
         [SerializeField] private SubSettingsUI controlsSubSettingsUI;
+        [SerializeField] private GameObject warningPanelObject;
 
         private protected override void Initialize()
         {
@@ -45,7 +46,13 @@ namespace CharonsCorner.Runtime
             if(CurrentSettingsUI == subSettingsUI)
                 return;
 
-            if (CurrentSettingsUI != null)
+            if (CurrentSettingsUI != null && CurrentSettingsUI.IsDirty)
+            {
+                warningPanelObject.SetActive(true);
+                return;
+            }
+
+            if(CurrentSettingsUI != null)
                 CurrentSettingsUI.Hide();
 
             CurrentSettingsUI = subSettingsUI;
@@ -59,8 +66,17 @@ namespace CharonsCorner.Runtime
         public void ChangeToAudioSettings() => ChangeSettingsUI(audioSubSettingsUI);
         public void ChangeToControlsSettings() => ChangeSettingsUI(controlsSubSettingsUI);
 
+        public void ApplyCurrentSubSettings() => CurrentSettingsUI?.Apply();
+        public void DiscardCurrentSubSettings() => CurrentSettingsUI?.Discard();
+
         public override void CloseUI()
         {
+            if (CurrentSettingsUI != null && CurrentSettingsUI.IsDirty)
+            {
+                warningPanelObject.SetActive(true);
+                return;
+            }
+
             if (GameManager.Instance.CurrentGameState == GameState.Title)
                 uiManager.HideAllPanels();
             else

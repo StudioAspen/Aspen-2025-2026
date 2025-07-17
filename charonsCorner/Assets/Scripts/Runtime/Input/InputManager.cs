@@ -107,9 +107,7 @@ namespace CharonsCorner.Runtime
         public void OnPause(InputAction.CallbackContext context)
         {
             if (context.performed)
-            {
                 GameManager.Instance.ChangeGameState(GameState.Paused);
-            }
         }
  
         public void OnInteract(InputAction.CallbackContext context) { }

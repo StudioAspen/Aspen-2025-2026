@@ -10,7 +10,6 @@ namespace CharonsCorner.Runtime
         private static readonly float defaultValue = 50;
         public static float CurrentValue { get; private set; }
 
-
         [SerializeField] private Slider sensitivitySlider;
 
         private void OnEnable()
@@ -26,7 +25,6 @@ namespace CharonsCorner.Runtime
 
         public override void Apply()
         {
-            Debug.Log($"Applying sensitivity setting: {sensitivitySlider.value}");
             PlayerPrefs.SetFloat(playerPrefsKey, sensitivitySlider.value);
             CurrentValue = sensitivitySlider.value;
         }
@@ -35,5 +33,7 @@ namespace CharonsCorner.Runtime
         {
             sensitivitySlider.value = CurrentValue;
         }
+
+        public override bool IsDirty() => sensitivitySlider.value != CurrentValue;
     }
 }
