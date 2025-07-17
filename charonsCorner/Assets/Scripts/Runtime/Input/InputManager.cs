@@ -3,6 +3,7 @@ using System;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.LowLevel;
 using static CharonsCorner.Runtime.InputActions;
 
 namespace CharonsCorner.Runtime
@@ -32,6 +33,8 @@ namespace CharonsCorner.Runtime
         public event Action<ControlScheme> OnControlSchemeChanged = delegate { };
         #endregion
 
+        private CursorLockMode desiredCursorLockState;
+
         private void Awake()
         {
             if(Instance != null && Instance != this)
@@ -42,6 +45,13 @@ namespace CharonsCorner.Runtime
             Instance = this;
 
             CreatePlayerActions();
+
+            InputSystem.onEvent += InputSystem_OnEvent;
+        }
+
+        private void OnDestroy()
+        {
+            InputSystem.onEvent -= InputSystem_OnEvent;
         }
 
         private void CreatePlayerActions()
@@ -65,6 +75,7 @@ namespace CharonsCorner.Runtime
                 CreatePlayerActions();
 
             InputActions.Enable();
+            InputActions.Player.Enable();
             InputActions.UI.Disable();
 
             LockCursor(true);
@@ -75,7 +86,8 @@ namespace CharonsCorner.Runtime
             if (InputActions == null)
                 CreatePlayerActions();
 
-            InputActions.Disable();
+            InputActions.Enable();
+            InputActions.Player.Disable();
             InputActions.UI.Enable();
 
             LockCursor(false);
@@ -125,31 +137,42 @@ namespace CharonsCorner.Runtime
         public void OnTrackedDeviceOrientation(InputAction.CallbackContext context) { }
 
         // Control Scheme
-        private void DetectControlScheme(InputAction.CallbackContext context)
+        private void InputSystem_OnEvent(InputEventPtr eventPtr, InputDevice device)
         {
-            var device = context.control.device;
             ControlScheme newScheme = device is Gamepad ? ControlScheme.Gamepad : ControlScheme.KeyboardMouse;
 
             if (newScheme != CurrentControlScheme)
             {
+                Debug.Log(device.name + " detected, switching to " + newScheme.ToString() + " control scheme.");
                 CurrentControlScheme = newScheme;
                 OnControlSchemeChanged.Invoke(CurrentControlScheme);
+
+                ApplyCursorLockState();
             }
         }
 
         // Cursor
         public void LockCursor(bool locked)
         {
+            // Always remember the user's preference
+            desiredCursorLockState = locked ? CursorLockMode.Locked : CursorLockMode.None;
+
+            ApplyCursorLockState();
+        }
+
+        private void ApplyCursorLockState()
+        {
             if (CurrentControlScheme == ControlScheme.Gamepad)
             {
-                // If using gamepad, always lock the cursor
+                // Gamepad always locks
                 Cursor.lockState = CursorLockMode.Locked;
                 Cursor.visible = false;
-                return;
             }
-
-            Cursor.lockState = locked ? CursorLockMode.Locked : CursorLockMode.None;
-            Cursor.visible = !locked;
+            else
+            {
+                Cursor.lockState = desiredCursorLockState;
+                Cursor.visible = desiredCursorLockState != CursorLockMode.Locked;
+            }
         }
     }
 }

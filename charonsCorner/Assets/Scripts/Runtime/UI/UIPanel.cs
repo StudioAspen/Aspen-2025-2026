@@ -6,6 +6,8 @@ namespace CharonsCorner.Runtime
     {
         private protected UIManager uiManager;
 
+        [field: SerializeField] public GameObject DefaultSelectedObject { get; private set; }
+
         public void Init(UIManager manager)
         {
             uiManager = manager;

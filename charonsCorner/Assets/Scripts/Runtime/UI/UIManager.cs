@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using static CharonsCorner.Runtime.InputManager;
 
 namespace CharonsCorner.Runtime
 {
@@ -29,6 +30,8 @@ namespace CharonsCorner.Runtime
 
         public event Action<UIPanel> OnPanelChanged = delegate { };
 
+        public GameObject DesiredSelectedObject { get; private set; }
+
         private void Awake()
         {
             if (Instance != null && Instance != this)
@@ -40,6 +43,18 @@ namespace CharonsCorner.Runtime
             Instance = this;
 
             InitializePanels();
+        }
+
+        private void Start()
+        {
+            if(InputManager.Instance != null)
+                InputManager.Instance.OnControlSchemeChanged += InputManager_OnControlSchemeChanged;
+        }
+
+        private void OnDestroy()
+        {
+            if(InputManager.Instance != null)
+                InputManager.Instance.OnControlSchemeChanged -= InputManager_OnControlSchemeChanged;
         }
 
         private void InitializePanels()
@@ -60,6 +75,8 @@ namespace CharonsCorner.Runtime
 
             CurrentPanel = panel;
             CurrentPanel.Show();
+            ChangeCurrentSelectedObject(CurrentPanel.DefaultSelectedObject);
+            
             OnPanelChanged.Invoke(CurrentPanel);
 
             InputManager.Instance.EnableUIActions();
@@ -74,5 +91,24 @@ namespace CharonsCorner.Runtime
         }
 
         public void ShowLoadingPanel(bool show) => loadingPanel.SetActive(show);
+
+        public void ChangeCurrentSelectedObject(GameObject selectedObject)
+        {
+            DesiredSelectedObject = selectedObject;
+            SetCurrentSelectedObject();
+        }
+
+        private void SetCurrentSelectedObject()
+        {
+            if (InputManager.Instance.CurrentControlScheme == InputManager.ControlScheme.KeyboardMouse)
+                EventSystem.current.SetSelectedGameObject(null);
+            else
+                EventSystem.current.SetSelectedGameObject(DesiredSelectedObject);
+        }
+
+        private void InputManager_OnControlSchemeChanged(ControlScheme newScheme)
+        {
+            SetCurrentSelectedObject();
+        }
     }
 }

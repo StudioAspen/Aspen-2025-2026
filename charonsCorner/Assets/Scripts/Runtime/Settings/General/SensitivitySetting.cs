@@ -8,7 +8,7 @@ namespace CharonsCorner.Runtime
     {
         private protected override string playerPrefsKey => "Settings_Sensitivity";
         private static readonly int defaultValue = 50;
-        public static int CurrentValue { get; private set; }
+        public static float CurrentValue { get; private set; }
 
         [SerializeField] private Slider sensitivitySlider;
 
