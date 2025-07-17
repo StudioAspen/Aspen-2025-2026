@@ -14,10 +14,12 @@ namespace CharonsCorner.Runtime
         public InputActions InputActions { get; private set; }
 
         public event UnityAction<Vector2> Move = delegate { };
+        public event UnityAction<Vector2> Look = delegate { };
         public event UnityAction<bool> Jump = delegate { };
         public event UnityAction<bool> Interact = delegate { };
 
-        public Vector2 Direction => InputActions.Player.Move.ReadValue<Vector2>();
+        public Vector2 MoveDirection => InputActions.Player.Move.ReadValue<Vector2>();
+        public Vector2 LookDirection => InputActions.Player.Look.ReadValue<Vector2>();
         public bool IsJumpKeyPressed => InputActions.Player.Jump.IsPressed();
 
         #region Control Scheme
@@ -84,6 +86,11 @@ namespace CharonsCorner.Runtime
             Move.Invoke(context.ReadValue<Vector2>());
         }
 
+        public void OnLook(InputAction.CallbackContext context)
+        {
+            Look.Invoke(context.ReadValue<Vector2>());
+        }
+
         public void OnJump(InputAction.CallbackContext context)
         {
             switch (context.phase)
@@ -104,8 +111,7 @@ namespace CharonsCorner.Runtime
                 GameManager.Instance.ChangeGameState(GameState.Paused);
             }
         }
-
-        public void OnLook(InputAction.CallbackContext context) { }
+ 
         public void OnInteract(InputAction.CallbackContext context) { }
 
         // UI Actions

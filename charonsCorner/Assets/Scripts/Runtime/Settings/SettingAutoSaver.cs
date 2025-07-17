@@ -7,13 +7,10 @@ namespace CharonsCorner.Runtime
     {
         private Setting setting;
 
-        private void Awake()
+        // Disabled objects dont get awake called, so we need to initialize manually
+        public void Initialize()
         {
             setting = GetComponent<Setting>();
-        }
-
-        private void Start()
-        {
             setting.Load();
         }
 

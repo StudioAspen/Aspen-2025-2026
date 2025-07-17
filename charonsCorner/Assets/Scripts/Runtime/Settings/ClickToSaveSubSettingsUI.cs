@@ -1,14 +1,14 @@
 ﻿using System.Collections.Generic;
-using System;
 using UnityEngine;
 
 namespace CharonsCorner.Runtime
 {
-    public class SavableSubSettingsUI : MonoBehaviour
+    public class ClickToSaveSubSettingsUI : MonoBehaviour
     {
         private List<Setting> settings = new List<Setting>();
 
-        private void Awake()
+        // Disabled objects dont get awake called, so we need to initialize manually
+        public void Initialize()
         {
             // Find all Setting components in children and add them to the list
             settings.AddRange(GetComponentsInChildren<Setting>());

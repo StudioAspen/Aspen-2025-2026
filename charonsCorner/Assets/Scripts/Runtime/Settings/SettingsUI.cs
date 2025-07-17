@@ -17,7 +17,12 @@ namespace CharonsCorner.Runtime
 
         private protected override void Initialize()
         {
-            
+            foreach(SettingAutoSaver settingAutoSaver in GetComponentsInChildren<SettingAutoSaver>(true))
+            {
+                if (settingAutoSaver == null)
+                    continue;
+                settingAutoSaver.Initialize();
+            }
         }
 
         private void OnEnable()
