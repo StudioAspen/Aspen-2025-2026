@@ -20,14 +20,15 @@ namespace CharonsCorner.Runtime
         {
             CurrentValue = PlayerPrefs.GetInt(playerPrefsKey, defaultValue);
             vsyncToggle.isOn = CurrentValue == 1;
+            QualitySettings.vSyncCount = CurrentValue;
         }
 
         public override void Apply()
         {
             int vsyncValue = vsyncToggle.isOn ? 1 : 0;
-            PlayerPrefs.SetFloat(playerPrefsKey, vsyncValue);
+            PlayerPrefs.SetInt(playerPrefsKey, vsyncValue);
             CurrentValue = vsyncValue;
-            QualitySettings.vSyncCount = vsyncValue;
+            QualitySettings.vSyncCount = CurrentValue;
         }
 
         public override void Discard()

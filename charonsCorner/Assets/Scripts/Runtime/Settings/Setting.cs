@@ -15,6 +15,7 @@ namespace CharonsCorner.Runtime
         public abstract void Apply();
 
         /// <summary>
+        /// Equivalent to Awake, but called manually to ensure settings are initialized even if the object is disabled at startup.
         /// Grab the current value from PlayerPrefs and apply it to the setting.
         /// </summary>
         public abstract void Load();
