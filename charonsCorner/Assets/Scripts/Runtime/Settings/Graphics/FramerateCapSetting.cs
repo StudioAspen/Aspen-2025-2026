@@ -7,8 +7,8 @@ namespace CharonsCorner.Runtime
     public class FramerateCapSetting : Setting
     {
         private protected override string playerPrefsKey => "Settings_FramerateCap";
-        private static readonly int defaultValue = FramerateCapValues.Length - 1; // Default to no cap (last index)
-        public static readonly int[] FramerateCapValues = { 30, 60, 120, 144, 240, 0 }; // 0 means no cap
+        private static int defaultValue = 0; // Default to no cap (first index)
+        public static readonly int[] FramerateCapValues = {-1, 30, 60, 75, 100, 120, 144, 165, 170, 240}; // 0 means no cap
         public static int CurrentIndex { get; private set; }
 
         [SerializeField] private TMP_Dropdown framerateCapDropdown;
@@ -23,9 +23,11 @@ namespace CharonsCorner.Runtime
             // Clear existing options and add new ones
             framerateCapDropdown.ClearOptions();
             foreach (int value in FramerateCapValues)
-                framerateCapDropdown.options.Add(new TMP_Dropdown.OptionData(value == 0 ? "No Cap" : value.ToString()));
+                framerateCapDropdown.options.Add(new TMP_Dropdown.OptionData(value == -1 ? "No Cap" : value.ToString()));
 
             CurrentIndex = PlayerPrefs.GetInt(playerPrefsKey, defaultValue);
+            CurrentIndex = Mathf.Clamp(CurrentIndex, 0, FramerateCapValues.Length - 1); // Ensure index is within bounds
+
             framerateCapDropdown.value = CurrentIndex;
             Application.targetFrameRate = FramerateCapValues[CurrentIndex];
         }

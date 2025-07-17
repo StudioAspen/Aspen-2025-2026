@@ -89,7 +89,6 @@ namespace CharonsCorner.Runtime
 
         public override void CloseUI()
         {
-            Debug.Log($"CloseUI");
             if (CurrentSettingsUI != null && CurrentSettingsUI.IsDirty)
             {
                 warningPanelObject.SetActive(true);
