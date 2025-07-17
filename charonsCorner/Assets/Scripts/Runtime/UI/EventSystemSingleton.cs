@@ -27,7 +27,8 @@ namespace CharonsCorner.Runtime
 
         private void OnDestroy()
         {
-            GameManager.Instance.OnSceneChanged -= GameManager_OnSceneChanged;
+            if(GameManager.Instance != null)
+                GameManager.Instance.OnSceneChanged -= GameManager_OnSceneChanged;
         }
 
         private void GameManager_OnSceneChanged(SceneReference scene)

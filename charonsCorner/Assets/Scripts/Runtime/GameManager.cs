@@ -45,14 +45,14 @@ namespace CharonsCorner.Runtime
 
         private void Start()
         {
-            ChangeGameState(initialGameState);
+            ChangeGameState(initialGameState, true);
         }
 
         public void ChangeInitialGameState(GameState newInitialState) => initialGameState = newInitialState;
 
-        public void ChangeGameState(GameState newState)
+        public void ChangeGameState(GameState newState, bool force = false)
         {
-            if(CurrentGameState == newState)
+            if(CurrentGameState == newState && !force)
                 return;
 
             CurrentGameState = newState;

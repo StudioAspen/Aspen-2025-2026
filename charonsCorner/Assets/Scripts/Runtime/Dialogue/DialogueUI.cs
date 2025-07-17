@@ -33,7 +33,8 @@ namespace CharonsCorner.Runtime
 
         private void OnDestroy()
         {
-            dialogueManager.OnDialogueStarted -= DialogueManager_OnDialogueStarted;
+            if (dialogueManager != null)
+                dialogueManager.OnDialogueStarted -= DialogueManager_OnDialogueStarted;
         }
 
         private void DialogueManager_OnDialogueStarted(DialogueSO dialogue)

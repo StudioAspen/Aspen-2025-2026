@@ -24,7 +24,8 @@ namespace CharonsCorner.Runtime
 
         private void OnDestroy()
         {
-            slider.onValueChanged.RemoveListener(Slider_OnValueChanged);
+            if(slider != null)
+                slider.onValueChanged.RemoveListener(Slider_OnValueChanged);
         }
 
         private void Slider_OnValueChanged(float value)

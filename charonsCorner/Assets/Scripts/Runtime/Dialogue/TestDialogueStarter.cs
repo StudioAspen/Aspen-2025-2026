@@ -12,7 +12,7 @@ namespace CharonsCorner.Runtime
         public void PlayDialogue()
         {
             dialogueManager.StartDialogue(dialogue);
-            Cursor.lockState = CursorLockMode.None;
+            GameManager.Instance.ChangeGameState(GameState.Dialogue);
         }
     }
 }

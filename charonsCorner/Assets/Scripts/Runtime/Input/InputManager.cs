@@ -14,14 +14,17 @@ namespace CharonsCorner.Runtime
 
         public InputActions InputActions { get; private set; }
 
+        // Player
         public event UnityAction<Vector2> Move = delegate { };
         public event UnityAction<Vector2> Look = delegate { };
-        public event UnityAction<bool> Jump = delegate { };
-        public event UnityAction<bool> Interact = delegate { };
+        public event UnityAction Jump = delegate { };
 
         public Vector2 MoveDirection => InputActions.Player.Move.ReadValue<Vector2>();
         public Vector2 LookDirection => InputActions.Player.Look.ReadValue<Vector2>();
         public bool IsJumpKeyPressed => InputActions.Player.Jump.IsPressed();
+
+        // UI
+        public event UnityAction Unpause = delegate { };
 
         #region Control Scheme
         public enum ControlScheme
@@ -105,15 +108,8 @@ namespace CharonsCorner.Runtime
 
         public void OnJump(InputAction.CallbackContext context)
         {
-            switch (context.phase)
-            {
-                case InputActionPhase.Started:
-                    Jump.Invoke(true);
-                    break;
-                case InputActionPhase.Canceled:
-                    Jump.Invoke(false);
-                    break;
-            }
+            if (context.performed)
+                Jump.Invoke();
         }
 
         public void OnPause(InputAction.CallbackContext context)
@@ -125,6 +121,12 @@ namespace CharonsCorner.Runtime
         public void OnInteract(InputAction.CallbackContext context) { }
 
         // UI Actions
+        public void OnUnpause(InputAction.CallbackContext context)
+        {
+            if (context.performed && GameManager.Instance.CurrentGameState == GameState.Paused)
+                Unpause.Invoke();
+        }
+
         public void OnNavigate(InputAction.CallbackContext context) { }
         public void OnSubmit(InputAction.CallbackContext context) { }
         public void OnCancel(InputAction.CallbackContext context) { }
@@ -167,12 +169,11 @@ namespace CharonsCorner.Runtime
                 // Gamepad always locks
                 Cursor.lockState = CursorLockMode.Locked;
                 Cursor.visible = false;
+                return;
             }
-            else
-            {
-                Cursor.lockState = desiredCursorLockState;
-                Cursor.visible = desiredCursorLockState != CursorLockMode.Locked;
-            }
+
+            Cursor.lockState = desiredCursorLockState;
+            Cursor.visible = desiredCursorLockState != CursorLockMode.Locked;
         }
     }
 }

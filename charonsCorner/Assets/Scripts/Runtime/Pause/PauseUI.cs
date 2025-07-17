@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace CharonsCorner.Runtime
@@ -7,6 +8,17 @@ namespace CharonsCorner.Runtime
         private protected override void Initialize()
         {
 
+        }
+
+        private void OnEnable()
+        {
+            InputManager.Instance.Unpause += InputManager_Unpause;
+        }
+
+        private void OnDisable()
+        {
+            if(InputManager.Instance != null)
+                InputManager.Instance.Unpause -= InputManager_Unpause;
         }
 
         public void Restart()
@@ -25,5 +37,7 @@ namespace CharonsCorner.Runtime
         }
 
         public void QuitGame() => GameManager.QuitGame();
+
+        private void InputManager_Unpause() => CloseUI();
     }
 }

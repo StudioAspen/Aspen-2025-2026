@@ -74,11 +74,7 @@ namespace CharonsCorner.Runtime
 
         private void Input_Move(Vector2 direction) => moveInput = new Vector3(direction.x, 0, direction.y);
 
-        private void Input_Jump(bool isJumpKeyPressed)
-        {
-            if (isJumpKeyPressed)
-                Jump();
-        }
+        private void Input_Jump() => Jump();
 
         private void CheckGrounded()
         {

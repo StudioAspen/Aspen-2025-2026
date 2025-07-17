@@ -1,5 +1,5 @@
 using AYellowpaper.SerializedCollections;
-using Eflatun.SceneReference;
+using Cysharp.Threading.Tasks;
 using NaughtyAttributes;
 using System;
 using System.Collections.Generic;
@@ -13,6 +13,8 @@ namespace CharonsCorner.Runtime
     {
         public static UIManager Instance { get; private set; }
 
+        [field: SerializeField, ReadOnly] public GameObject DesiredSelectedObject { get; private set; }
+
         public enum PanelName
         {
             PauseMenu,
@@ -21,7 +23,7 @@ namespace CharonsCorner.Runtime
         }
 
         [Header("Panels")]
-        [SerializeField, SerializedDictionary("Panel Name", "Panel")] 
+        [SerializeField, SerializedDictionary("Panel Name", "Panel")]
         private SerializedDictionary<PanelName, UIPanel> panels = new SerializedDictionary<PanelName, UIPanel>();
         [field: SerializeField, ReadOnly] public UIPanel CurrentPanel { get; private set; }
 
@@ -29,8 +31,7 @@ namespace CharonsCorner.Runtime
         [SerializeField] private GameObject loadingPanel;
 
         public event Action<UIPanel> OnPanelChanged = delegate { };
-
-        public GameObject DesiredSelectedObject { get; private set; }
+        public event Action OnUIClose = delegate { };
 
         private void Awake()
         {
@@ -47,13 +48,12 @@ namespace CharonsCorner.Runtime
 
         private void Start()
         {
-            if(InputManager.Instance != null)
-                InputManager.Instance.OnControlSchemeChanged += InputManager_OnControlSchemeChanged;
+            InputManager.Instance.OnControlSchemeChanged += InputManager_OnControlSchemeChanged;
         }
 
         private void OnDestroy()
         {
-            if(InputManager.Instance != null)
+            if (InputManager.Instance != null)
                 InputManager.Instance.OnControlSchemeChanged -= InputManager_OnControlSchemeChanged;
         }
 
@@ -76,7 +76,7 @@ namespace CharonsCorner.Runtime
             CurrentPanel = panel;
             CurrentPanel.Show();
             ChangeCurrentSelectedObject(CurrentPanel.DefaultSelectedObject);
-            
+
             OnPanelChanged.Invoke(CurrentPanel);
 
             InputManager.Instance.EnableUIActions();
@@ -88,6 +88,8 @@ namespace CharonsCorner.Runtime
                 panel.Hide();
 
             CurrentPanel = null;
+
+            OnUIClose.Invoke();
         }
 
         public void ShowLoadingPanel(bool show) => loadingPanel.SetActive(show);
@@ -100,7 +102,7 @@ namespace CharonsCorner.Runtime
 
         private void SetCurrentSelectedObject()
         {
-            if (InputManager.Instance.CurrentControlScheme == InputManager.ControlScheme.KeyboardMouse)
+            if (InputManager.Instance.CurrentControlScheme == ControlScheme.KeyboardMouse)
                 EventSystem.current.SetSelectedGameObject(null);
             else
                 EventSystem.current.SetSelectedGameObject(DesiredSelectedObject);

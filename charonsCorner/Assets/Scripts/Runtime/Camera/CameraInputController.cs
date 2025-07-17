@@ -9,7 +9,7 @@ namespace CharonsCorner.Runtime
         void Update()
         {
             if (!Application.isPlaying) return;
-            UpdateControllers();
+                UpdateControllers();
         }
 
         [Serializable]

@@ -369,6 +369,15 @@ namespace CharonsCorner.Runtime
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Unpause"",
+                    ""type"": ""Button"",
+                    ""id"": ""cc5ed076-91c6-4956-8c1a-f16c13919aaf"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -638,6 +647,28 @@ namespace CharonsCorner.Runtime
                 },
                 {
                     ""name"": """",
+                    ""id"": ""5319134d-53fc-4418-ad3d-0eab352eb34e"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Unpause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""db1f9db9-2119-41b1-ad6b-21b15eaff0f4"",
+                    ""path"": ""<Gamepad>/start"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Unpause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""9e92bb26-7e3b-4ec4-b06b-3c8f8e498ddc"",
                     ""path"": ""*/{Submit}"",
                     ""interactions"": """",
@@ -875,6 +906,7 @@ namespace CharonsCorner.Runtime
             m_UI_ScrollWheel = m_UI.FindAction("ScrollWheel", throwIfNotFound: true);
             m_UI_TrackedDevicePosition = m_UI.FindAction("TrackedDevicePosition", throwIfNotFound: true);
             m_UI_TrackedDeviceOrientation = m_UI.FindAction("TrackedDeviceOrientation", throwIfNotFound: true);
+            m_UI_Unpause = m_UI.FindAction("Unpause", throwIfNotFound: true);
         }
 
         ~@InputActions()
@@ -1030,6 +1062,7 @@ namespace CharonsCorner.Runtime
         private readonly InputAction m_UI_ScrollWheel;
         private readonly InputAction m_UI_TrackedDevicePosition;
         private readonly InputAction m_UI_TrackedDeviceOrientation;
+        private readonly InputAction m_UI_Unpause;
         public struct UIActions
         {
             private @InputActions m_Wrapper;
@@ -1044,6 +1077,7 @@ namespace CharonsCorner.Runtime
             public InputAction @ScrollWheel => m_Wrapper.m_UI_ScrollWheel;
             public InputAction @TrackedDevicePosition => m_Wrapper.m_UI_TrackedDevicePosition;
             public InputAction @TrackedDeviceOrientation => m_Wrapper.m_UI_TrackedDeviceOrientation;
+            public InputAction @Unpause => m_Wrapper.m_UI_Unpause;
             public InputActionMap Get() { return m_Wrapper.m_UI; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -1083,6 +1117,9 @@ namespace CharonsCorner.Runtime
                 @TrackedDeviceOrientation.started += instance.OnTrackedDeviceOrientation;
                 @TrackedDeviceOrientation.performed += instance.OnTrackedDeviceOrientation;
                 @TrackedDeviceOrientation.canceled += instance.OnTrackedDeviceOrientation;
+                @Unpause.started += instance.OnUnpause;
+                @Unpause.performed += instance.OnUnpause;
+                @Unpause.canceled += instance.OnUnpause;
             }
 
             private void UnregisterCallbacks(IUIActions instance)
@@ -1117,6 +1154,9 @@ namespace CharonsCorner.Runtime
                 @TrackedDeviceOrientation.started -= instance.OnTrackedDeviceOrientation;
                 @TrackedDeviceOrientation.performed -= instance.OnTrackedDeviceOrientation;
                 @TrackedDeviceOrientation.canceled -= instance.OnTrackedDeviceOrientation;
+                @Unpause.started -= instance.OnUnpause;
+                @Unpause.performed -= instance.OnUnpause;
+                @Unpause.canceled -= instance.OnUnpause;
             }
 
             public void RemoveCallbacks(IUIActions instance)
@@ -1199,6 +1239,7 @@ namespace CharonsCorner.Runtime
             void OnScrollWheel(InputAction.CallbackContext context);
             void OnTrackedDevicePosition(InputAction.CallbackContext context);
             void OnTrackedDeviceOrientation(InputAction.CallbackContext context);
+            void OnUnpause(InputAction.CallbackContext context);
         }
     }
 }

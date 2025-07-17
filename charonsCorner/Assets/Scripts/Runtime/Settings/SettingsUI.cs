@@ -36,14 +36,21 @@ namespace CharonsCorner.Runtime
 
         private void OnEnable()
         {
+            InputManager.Instance.Unpause += InputManager_Unpause;
+
             ChangeSettingsUI(generalSubSettingsUI);
         }
 
         private void OnDisable()
         {
-            
+            if(InputManager.Instance != null)
+                InputManager.Instance.Unpause -= InputManager_Unpause;
         }
 
+        /// <summary>
+        /// Changes the current settings UI to the specified sub-settings UI. Closes the previous one if it exists.
+        /// </summary>
+        /// <param name="subSettingsUI"></param>
         private void ChangeSettingsUI(SubSettingsUI subSettingsUI)
         {
             if(CurrentSettingsUI == subSettingsUI)
@@ -69,11 +76,12 @@ namespace CharonsCorner.Runtime
         public void ChangeToAudioSettings() => ChangeSettingsUI(audioSubSettingsUI);
         public void ChangeToControlsSettings() => ChangeSettingsUI(controlsSubSettingsUI);
 
-        public void ApplyCurrentSubSettings() => CurrentSettingsUI?.Apply();
-        public void DiscardCurrentSubSettings() => CurrentSettingsUI?.Discard();
+        public void ApplyCurrentSubSettings() => CurrentSettingsUI.IfNotNullThenCall(subSettingsUI => subSettingsUI.Apply());
+        public void DiscardCurrentSubSettings() => CurrentSettingsUI.IfNotNullThenCall(subSettingsUI => subSettingsUI.Discard());
 
         public override void CloseUI()
         {
+            Debug.Log($"CloseUI");
             if (CurrentSettingsUI != null && CurrentSettingsUI.IsDirty)
             {
                 warningPanelObject.SetActive(true);
@@ -85,5 +93,7 @@ namespace CharonsCorner.Runtime
             else
                 uiManager.ShowPanel(UIManager.PanelName.PauseMenu);
         }
+
+        private void InputManager_Unpause() => CloseUI();
     }
 }
