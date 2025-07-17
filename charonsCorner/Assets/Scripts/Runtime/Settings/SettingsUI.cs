@@ -28,7 +28,10 @@ namespace CharonsCorner.Runtime
                 controlsSubSettingsUI
             };
             foreach(SubSettingsUI subSettingsUI in subSettingsUIs)
+            {
+                subSettingsUI.Hide();
                 subSettingsUI.Initialize();
+            }
         }
 
         private void OnEnable()
