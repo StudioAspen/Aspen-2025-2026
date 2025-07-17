@@ -33,6 +33,14 @@ namespace CharonsCorner.Runtime
             Gamepad
         }
         [field: SerializeField, ReadOnly] public ControlScheme CurrentControlScheme { get; private set; }
+        /// <summary>
+        /// Action that is invoked when the current control scheme is changed based on the input device used.
+        /// </summary>
+        /// <remarks>
+        /// <list type="bullet">
+        /// <item><description><c>ControlScheme controlScheme</c>: The new controlScheme that was changed to.</description></item>
+        /// </list>
+        /// </remarks>
         public event Action<ControlScheme> OnControlSchemeChanged = delegate { };
         #endregion
 
@@ -57,6 +65,10 @@ namespace CharonsCorner.Runtime
             InputSystem.onEvent -= InputSystem_OnEvent;
         }
 
+        /// <summary>
+        /// Creates a new InputActions instance and sets the callbacks for Player and UI actions.
+        /// Needs to be done once in an entire game session.
+        /// </summary>
         private void CreatePlayerActions()
         {
             InputActions = new InputActions();
@@ -64,6 +76,9 @@ namespace CharonsCorner.Runtime
             InputActions.UI.SetCallbacks(this);
         }
 
+        /// <summary>
+        /// Prevents all inputs from being processed.
+        /// </summary>
         public void DisableAllActions()
         {
             if(InputActions == null)
@@ -72,6 +87,10 @@ namespace CharonsCorner.Runtime
             InputActions.Disable();
         }
 
+        /// <summary>
+        /// Enables the player actions and disables the UI actions.
+        /// Locks the cursor accordingly.
+        /// </summary>
         public void EnablePlayerActions()
         {
             if (InputActions == null)
@@ -84,6 +103,10 @@ namespace CharonsCorner.Runtime
             LockCursor(true);
         }
 
+        /// <summary>
+        /// Enables the UI actions and disables the player actions.
+        /// Unlocks the cursor accordingly.
+        /// </summary>
         public void EnableUIActions()
         {
             if (InputActions == null)
@@ -138,14 +161,17 @@ namespace CharonsCorner.Runtime
         public void OnTrackedDevicePosition(InputAction.CallbackContext context) { }
         public void OnTrackedDeviceOrientation(InputAction.CallbackContext context) { }
 
-        // Control Scheme
+        /// <summary>
+        /// Detects whether the control scheme has changed based on the input device used.
+        /// </summary>
+        /// <param name="eventPtr"></param>
+        /// <param name="device"></param>
         private void InputSystem_OnEvent(InputEventPtr eventPtr, InputDevice device)
         {
             ControlScheme newScheme = device is Gamepad ? ControlScheme.Gamepad : ControlScheme.KeyboardMouse;
 
             if (newScheme != CurrentControlScheme)
             {
-                Debug.Log(device.name + " detected, switching to " + newScheme.ToString() + " control scheme.");
                 CurrentControlScheme = newScheme;
                 OnControlSchemeChanged.Invoke(CurrentControlScheme);
 
@@ -153,7 +179,12 @@ namespace CharonsCorner.Runtime
             }
         }
 
-        // Cursor
+        /// <summary>
+        /// Locks or unlocks the cursor based on the user's preference.
+        /// Keeps track of the desired cursor lock state, which is used when switching between control schemes.
+        /// Gamepad always locks the cursor.
+        /// </summary>
+        /// <param name="locked"></param>
         public void LockCursor(bool locked)
         {
             // Always remember the user's preference
@@ -162,6 +193,9 @@ namespace CharonsCorner.Runtime
             ApplyCursorLockState();
         }
 
+        /// <summary>
+        /// Helper method to apply the desired cursor lock state based on the current control scheme.
+        /// </summary>
         private void ApplyCursorLockState()
         {
             if (CurrentControlScheme == ControlScheme.Gamepad)

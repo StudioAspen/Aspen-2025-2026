@@ -63,6 +63,11 @@ namespace CharonsCorner.Runtime
                 reactionImage.sprite = null;
         }
 
+        /// <summary>
+        /// Types out the dialogue text character by character with a specified delay.
+        /// </summary>
+        /// <param name="text"></param>
+        /// <returns></returns>
         private IEnumerator TypeOutTextCoroutine(string text)
         {
             dialogueText.text = "";
@@ -77,6 +82,9 @@ namespace CharonsCorner.Runtime
             ShowOptions(pendingOptions);
         }
 
+        /// <summary>
+        /// Stops typing and shows the full text immediately.
+        /// </summary>
         public void SkipTyping()
         {
             if (typingCoroutine != null)
@@ -89,6 +97,10 @@ namespace CharonsCorner.Runtime
             }
         }
 
+        /// <summary>
+        /// Displays the options available.
+        /// </summary>
+        /// <param name="options"></param>
         private void ShowOptions(Dictionary<string, DialogueSO> options)
         {
             foreach (var option in options)
@@ -103,6 +115,9 @@ namespace CharonsCorner.Runtime
             }
         }
 
+        /// <summary>
+        /// Completely clears the UI elements to prepare for a new dialogue to be typed out.
+        /// </summary>
         private void ClearUI()
         {
             nameText.text = "";

@@ -18,7 +18,7 @@ namespace CharonsCorner.Runtime
             }
 
             hasBootstrapped = true;
-            gameManager.ChangeInitialGameState(initialGameState);
+            gameManager.ChangeInitialGameState(initialGameState); // Required because different scenes may have different initial game states
 
             DontDestroyOnLoad(gameObject);
         }

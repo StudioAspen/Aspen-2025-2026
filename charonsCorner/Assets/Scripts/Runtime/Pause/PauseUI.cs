@@ -21,13 +21,13 @@ namespace CharonsCorner.Runtime
                 InputManager.Instance.Unpause -= InputManager_Unpause;
         }
 
-        public void Restart()
-        {
-            GameManager.Instance.ReloadScene(GameState.Gameplay);
-        }
+        // Called by button UI event
+        public void Restart() => GameManager.Instance.ReloadScene(GameState.Gameplay);
 
+        // Called by button UI event
         public void ShowSettingsPanel() => uiManager.ShowPanel(UIManager.PanelName.Settings);
 
+        // Called by button UI event
         public void GoBackToMenu() => GameManager.Instance.ReturnToMenu();
 
         public override void CloseUI()
@@ -36,6 +36,7 @@ namespace CharonsCorner.Runtime
             GameManager.Instance.ChangeGameState(GameState.Gameplay);
         }
 
+        // Called by button UI event
         public void QuitGame() => GameManager.QuitGame();
 
         private void InputManager_Unpause() => CloseUI();

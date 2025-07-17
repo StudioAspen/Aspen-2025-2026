@@ -21,10 +21,9 @@ namespace CharonsCorner.Runtime
 
         private void UIManager_OnUIClose() => UIManager.Instance.ChangeCurrentSelectedObject(defaultSelectedObject);
 
+        // Called by button UI events
         public void StartGame() => GameManager.Instance.StartGame();
-
         public void ShowSettings() => UIManager.Instance.ShowPanel(UIManager.PanelName.Settings);
-
         public static void QuitGame() => GameManager.QuitGame();
     }
 }

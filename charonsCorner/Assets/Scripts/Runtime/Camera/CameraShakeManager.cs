@@ -26,6 +26,12 @@ namespace CharonsCorner.Runtime
             cinemachineBasicMultiChannelPerlin = GetComponent<CinemachineBasicMultiChannelPerlin>();
         }
 
+        /// <summary>
+        /// Shakes the camera with the specified amplitude, frequency, and duration.
+        /// </summary>
+        /// <param name="amplitude">How large the shakes are.</param>
+        /// <param name="frequency">How often are the shakes.</param>
+        /// <param name="duration">How long will the camera be shaking.</param>
         public void ShakeCamera(float amplitude, float frequency, float duration)
         {
             cinemachineBasicMultiChannelPerlin.ReSeed();

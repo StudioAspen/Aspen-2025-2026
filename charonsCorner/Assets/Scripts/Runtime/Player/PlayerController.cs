@@ -13,7 +13,6 @@ namespace CharonsCorner.Runtime
         private Transform mainCamera;
 
         private Vector3 moveInput;
-        private Vector3 cameraBasedMoveInput;
 
         [Header("Roll Config")]
         [SerializeField] private float rollAcceleration = 1f;
@@ -63,6 +62,7 @@ namespace CharonsCorner.Runtime
         {
             CheckGrounded();
 
+            // For debug
             currentSpeed = rigidBody.linearVelocity.magnitude;
             currentRotationalSpeed = rigidBody.angularVelocity.magnitude;
         }
@@ -76,23 +76,23 @@ namespace CharonsCorner.Runtime
 
         private void Input_Jump() => Jump();
 
-        private void CheckGrounded()
-        {
-            isGrounded = Physics.CheckSphere(transform.position + groundCheckDistance * Vector3.down, groundCheckRadius, groundLayerMask);
-        }
+        private void CheckGrounded() => isGrounded = Physics.CheckSphere(transform.position + groundCheckDistance * Vector3.down, groundCheckRadius, groundLayerMask);
 
         private void Jump()
         {
             if (!isGrounded)
                 return;
 
-            float jumpForce = Mathf.Sqrt(2 * jumpHeight * Mathf.Abs(Physics.gravity.y));
+            float jumpForce = Mathf.Sqrt(2 * jumpHeight * Mathf.Abs(Physics.gravity.y)); // Equation to calculate jump force based on desired height
             rigidBody.AddForce(Vector3.up * jumpForce, ForceMode.VelocityChange);
         }
 
+        /// <summary>
+        /// Rotates the player based on input and camera orientation, applying torque for snappy turns.
+        /// </summary>
         private void HandleRoll()
         {
-            cameraBasedMoveInput = GetCameraBasedMoveInput();
+            Vector3 cameraBasedMoveInput = GetCameraBasedMoveInput();
 
             Vector3 desiredDirection = cameraBasedMoveInput.normalized;
 
@@ -132,6 +132,10 @@ namespace CharonsCorner.Runtime
                 rigidBody.linearVelocity = Vector3.ClampMagnitude(rigidBody.linearVelocity, maxSpeed);
         }
 
+        /// <summary>
+        /// Calculates the movement input relative to the camera's orientation.
+        /// </summary>
+        /// <returns></returns>
         private Vector3 GetCameraBasedMoveInput()
         {
             Vector3 forward = mainCamera.forward;

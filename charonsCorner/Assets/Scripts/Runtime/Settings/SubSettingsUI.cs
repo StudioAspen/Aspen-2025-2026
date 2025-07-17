@@ -10,7 +10,9 @@ namespace CharonsCorner.Runtime
 
         public bool IsDirty => settings.Exists(setting => setting != null && setting.IsDirty());
 
-        // Disabled objects dont get awake called, so we need to initialize manually
+        /// <summary>
+        /// Disabled objects dont get awake called, so we need to initialize manually
+        /// </summary>
         public void Initialize()
         {
             // Find all Setting components in children and add them to the list
@@ -19,6 +21,9 @@ namespace CharonsCorner.Runtime
             Load();
         }
 
+        /// <summary>
+        /// Applies the current values of all settings under this sub-settings UI.
+        /// </summary>
         public void Apply()
         {
             foreach (Setting setting in settings)
@@ -29,6 +34,9 @@ namespace CharonsCorner.Runtime
             }
         }
 
+        /// <summary>
+        /// Loads the current values of all settings under this sub-settings UI.
+        /// </summary>
         private void Load()
         {
             foreach (Setting setting in settings)
@@ -39,6 +47,9 @@ namespace CharonsCorner.Runtime
             }
         }
 
+        /// <summary>
+        /// Discards any changes made to the settings under this sub-settings UI.
+        /// </summary>
         public void Discard()
         {
             foreach (Setting setting in settings)

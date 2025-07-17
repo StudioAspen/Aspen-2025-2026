@@ -8,6 +8,14 @@ namespace CharonsCorner.Runtime
     public class SettingsUI : UIPanel
     {
         [field: SerializeField, ReadOnly] public SubSettingsUI CurrentSettingsUI { get; private set; }
+        /// <summary>
+        /// Action that is invoked when the current subsettings UI is changed.
+        /// </summary>
+        /// <remarks>
+        /// <list type="bullet">
+        /// <item><description><c>SubSettingsUI newSubSettingsUI</c>: The new subSettings UI that was changed to.</description></item>
+        /// </list>
+        /// </remarks>
         public event Action<SubSettingsUI> OnSettingsUIChanged = delegate { };
 
         [Header("UI Elements")]
@@ -71,11 +79,11 @@ namespace CharonsCorner.Runtime
             OnSettingsUIChanged.Invoke(subSettingsUI);
         }
 
+        // Called by button UI events
         public void ChangeToGeneralSettings() => ChangeSettingsUI(generalSubSettingsUI);
         public void ChangeToGraphicsSettings() => ChangeSettingsUI(graphicsSubSettingsUI);
         public void ChangeToAudioSettings() => ChangeSettingsUI(audioSubSettingsUI);
         public void ChangeToControlsSettings() => ChangeSettingsUI(controlsSubSettingsUI);
-
         public void ApplyCurrentSubSettings() => CurrentSettingsUI.IfNotNullThenCall(subSettingsUI => subSettingsUI.Apply());
         public void DiscardCurrentSubSettings() => CurrentSettingsUI.IfNotNullThenCall(subSettingsUI => subSettingsUI.Discard());
 

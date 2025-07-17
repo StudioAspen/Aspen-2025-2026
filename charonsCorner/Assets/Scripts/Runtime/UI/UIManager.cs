@@ -30,7 +30,18 @@ namespace CharonsCorner.Runtime
         [Header("Loading")]
         [SerializeField] private GameObject loadingPanel;
 
+        /// <summary>
+        /// Action that is invoked when the current panel is changed.
+        /// </summary>
+        /// <remarks>
+        /// <list type="bullet">
+        /// <item><description><c>UIPanel newPanel</c>: The new panel that was switched to.</description></item>
+        /// </list>
+        /// </remarks>
         public event Action<UIPanel> OnPanelChanged = delegate { };
+        /// <summary>
+        /// Action that is invoked when UI under the UIManager is closed.
+        /// </summary>
         public event Action OnUIClose = delegate { };
 
         private void Awake()
@@ -63,6 +74,10 @@ namespace CharonsCorner.Runtime
                 panel.Init(this);
         }
 
+        /// <summary>
+        /// Shows the specified panel, hiding the current one if it exists.
+        /// </summary>
+        /// <param name="panelName"></param>
         public void ShowPanel(PanelName panelName)
         {
             UIPanel panel = panels[panelName];
@@ -82,6 +97,9 @@ namespace CharonsCorner.Runtime
             InputManager.Instance.EnableUIActions();
         }
 
+        /// <summary>
+        /// Essentially closes the UI by hiding all panels and resetting the current panel.
+        /// </summary>
         public void HideAllPanels()
         {
             foreach (UIPanel panel in panels.Values)
@@ -94,12 +112,20 @@ namespace CharonsCorner.Runtime
 
         public void ShowLoadingPanel(bool show) => loadingPanel.SetActive(show);
 
+        /// <summary>
+        /// Changes the currently selected object in the UI.
+        /// KeyboardMouse control scheme will always set the selected object to null.
+        /// </summary>
+        /// <param name="selectedObject"></param>
         public void ChangeCurrentSelectedObject(GameObject selectedObject)
         {
             DesiredSelectedObject = selectedObject;
             SetCurrentSelectedObject();
         }
 
+        /// <summary>
+        /// Helper method to set the currently selected object in the EventSystem based on the current control scheme.
+        /// </summary>
         private void SetCurrentSelectedObject()
         {
             if (InputManager.Instance.CurrentControlScheme == ControlScheme.KeyboardMouse)

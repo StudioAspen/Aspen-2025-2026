@@ -29,11 +29,12 @@ namespace CharonsCorner.Runtime
 
                 collector.CollectPin(1);
 
+                // Launch when hit by the player
                 Vector3 launchDirection = transform.position - other.transform.position + Vector3.down;
                 float collectorSpeed = other.GetComponent<Rigidbody>().linearVelocity.magnitude;
                 rigidBody.AddForce(impulseForceMultiplier * collectorSpeed * launchDirection, ForceMode.Impulse);
 
-                Destroy(boxCollider);
+                Destroy(boxCollider); // Remove the trigger to prevent further collisions
 
                 Destroy(gameObject, destroyDelay);
             }

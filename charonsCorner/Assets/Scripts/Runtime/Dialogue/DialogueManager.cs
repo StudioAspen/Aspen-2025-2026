@@ -10,6 +10,11 @@ namespace CharonsCorner.Runtime
 
         public event Action<DialogueSO> OnDialogueStarted = delegate { };
 
+        /// <summary>
+        /// Starts a dialogue with the given DialogueSO.
+        /// Can be used to continue a dialogue or start a completely new one.
+        /// </summary>
+        /// <param name="dialogue"></param>
         public void StartDialogue(DialogueSO dialogue)
         {
             if(dialogue == null)
