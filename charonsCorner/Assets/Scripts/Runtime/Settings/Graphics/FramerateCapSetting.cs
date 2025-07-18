@@ -8,7 +8,7 @@ namespace CharonsCorner.Runtime
     {
         private protected override string playerPrefsKey => "Settings_FramerateCap";
         private static int defaultValue = 0; // Default to no cap (first index)
-        public static readonly int[] FramerateCapValues = {-1, 30, 60, 75, 100, 120, 144, 165, 170, 240}; // 0 means no cap
+        public static readonly int[] FramerateCapValues = {-1, 30, 60, 75, 100, 120, 144, 165, 170, 180, 200, 240}; // 0 means no cap
         public static int CurrentIndex { get; private set; }
 
         [SerializeField] private TMP_Dropdown framerateCapDropdown;
