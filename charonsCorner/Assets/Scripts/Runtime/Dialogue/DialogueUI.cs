@@ -39,13 +39,10 @@ namespace CharonsCorner.Runtime
 
         private void DialogueManager_OnDialogueStarted(DialogueSO dialogue)
         {
-            if (dialogue == null)
-            {
-                ClearUI();
-                return;
-            }
-
             ClearUI();
+
+            if (dialogue == null)
+                return;
 
             nameText.text = dialogue.Name;
 
@@ -103,16 +100,32 @@ namespace CharonsCorner.Runtime
         /// <param name="options"></param>
         private void ShowOptions(Dictionary<string, DialogueSO> options)
         {
+            if(options == null || options.Count == 0)
+            {
+                GameObject closeButtonObject = Instantiate(optionButtonPrefab, optionsContainer);
+                closeButtonObject.name = "CloseButton";
+                TMP_Text closeButtonText = closeButtonObject.GetComponentInChildren<TMP_Text>();
+                closeButtonText.text = "Close";
+
+                Button closeButton = closeButtonObject.GetComponent<Button>();
+                closeButton.onClick.AddListener(CloseUI);
+                return;
+            }
+
             foreach (var option in options)
             {
-                GameObject buttonObj = Instantiate(optionButtonPrefab, optionsContainer);
-                TMP_Text buttonText = buttonObj.GetComponentInChildren<TMP_Text>();
+                GameObject buttonObject = Instantiate(optionButtonPrefab, optionsContainer);
+                buttonObject.name = $"({option.Key})Button";
+                TMP_Text buttonText = buttonObject.GetComponentInChildren<TMP_Text>();
                 buttonText.text = option.Key;
 
-                Button button = buttonObj.GetComponent<Button>();
+                Button button = buttonObject.GetComponent<Button>();
                 DialogueSO nextDialogue = option.Value;
                 button.onClick.AddListener(() => dialogueManager.StartDialogue(nextDialogue));
             }
+
+            if(optionsContainer.childCount > 0)
+                uiManager.ChangeCurrentSelectedObject(optionsContainer.GetChild(0).gameObject);
         }
 
         /// <summary>
@@ -131,6 +144,7 @@ namespace CharonsCorner.Runtime
         public override void CloseUI()
         {
             // No specific close behavior for dialogue UI
+            Debug.LogWarning("DialogueUI: CloseUI called, but no specific close behavior defined.");
         }
     }
 }

@@ -6,7 +6,7 @@ namespace CharonsCorner.Runtime
 {
     public class DialogueManager : MonoBehaviour
     {
-        [field: SerializeField, ReadOnly] public DialogueSO CurrentDialogue { get; private set; }
+        [field: SerializeField, ReadOnly, Expandable] public DialogueSO CurrentDialogue { get; private set; }
 
         public event Action<DialogueSO> OnDialogueStarted = delegate { };
 
