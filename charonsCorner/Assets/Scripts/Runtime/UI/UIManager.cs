@@ -27,8 +27,8 @@ namespace CharonsCorner.Runtime
         private SerializedDictionary<PanelName, UIPanel> panels = new SerializedDictionary<PanelName, UIPanel>();
         [field: SerializeField, ReadOnly] public UIPanel CurrentPanel { get; private set; }
 
-        [Header("Loading")]
-        [SerializeField] private GameObject loadingPanel;
+        [field: Header("Loading")]
+        [field: SerializeField] public LoadingHandler LoadingHandler { get; private set; }
 
         /// <summary>
         /// Action that is invoked when the current panel is changed.
@@ -109,8 +109,6 @@ namespace CharonsCorner.Runtime
 
             OnUIClose.Invoke();
         }
-
-        public void ShowLoadingPanel(bool show) => loadingPanel.SetActive(show);
 
         /// <summary>
         /// Changes the currently selected object in the UI.

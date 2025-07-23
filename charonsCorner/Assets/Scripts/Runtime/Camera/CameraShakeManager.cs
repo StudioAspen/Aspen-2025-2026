@@ -48,7 +48,7 @@ namespace CharonsCorner.Runtime
         {
             if (shakeTimer > 0)
             {
-                shakeTimer -= Time.unscaledDeltaTime;
+                shakeTimer -= Time.deltaTime;
 
                 cinemachineBasicMultiChannelPerlin.AmplitudeGain =
                     Mathf.Lerp(startingAmplitude, 0, 1 - (shakeTimer / shakeDuration));

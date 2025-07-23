@@ -102,11 +102,9 @@ namespace CharonsCorner.Runtime
                     InputManager.Instance.LockCursor(false);
                     break;
                 case GameState.Loading:
-                    Time.timeScale = 1f;
-                    UIManager.Instance.HideAllPanels();
-                    UIManager.Instance.ShowLoadingPanel(true);
+                    Time.timeScale = 0f;
                     InputManager.Instance.DisableAllActions();
-                    InputManager.Instance.LockCursor(false);
+                    InputManager.Instance.LockCursor(true);
                     break;
                 case GameState.Gameplay:
                     Time.timeScale = 1f;
@@ -141,14 +139,15 @@ namespace CharonsCorner.Runtime
         public async UniTask SwitchScenes(SceneReference scene, GameState afterState)
         {
             ChangeGameState(GameState.Loading);
+            await UIManager.Instance.LoadingHandler.FadeIn();
 
             await SceneManager.LoadSceneAsync(scene.Name);
             CurrentScene = scene;
             OnSceneChanged.Invoke(CurrentScene);
 
-            UIManager.Instance.ShowLoadingPanel(false);
-
             ChangeGameState(afterState);
+
+            await UIManager.Instance.LoadingHandler.FadeOut();
         }
 
         /// <summary>
