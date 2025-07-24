@@ -105,7 +105,7 @@ namespace CharonsCorner.Runtime
                 case GameState.Loading:
                     Time.timeScale = 0f;
                     InputManager.Instance.DisableAllActions();
-                    InputManager.Instance.LockCursor(true);
+                    InputManager.Instance.LockCursor(false);
                     break;
                 case GameState.Gameplay:
                     Time.timeScale = 1f;
