@@ -4,6 +4,7 @@ using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Cysharp.Threading.Tasks;
+using Steamworks;
 
 namespace CharonsCorner.Runtime
 {
@@ -180,9 +181,9 @@ namespace CharonsCorner.Runtime
         public static void QuitGame()
         {
 #if UNITY_EDITOR
-                UnityEditor.EditorApplication.isPlaying = false;
+            UnityEditor.EditorApplication.isPlaying = false;
 #else
-                Application.Quit();
+            Application.Quit();
 #endif
         }
     }
