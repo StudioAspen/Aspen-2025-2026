@@ -112,6 +112,9 @@ namespace CharonsCorner.Runtime
                     UIManager.Instance.HideAllPanels();
                     InputManager.Instance.EnablePlayerActions();
                     InputManager.Instance.LockCursor(true);
+                    // If the Steam overlay is open, pause the game
+                    if(SteamOverlayListener.IsOverlayOpen)
+                        ChangeGameState(GameState.Paused);
                     break;
                 case GameState.Dialogue:
                     Time.timeScale = 0f;

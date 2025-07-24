@@ -7,6 +7,8 @@ public class SteamOverlayListener : MonoBehaviour
     private GameManager gameManager;
     private Callback<GameOverlayActivated_t> overlayActivatedCallback;
 
+    public static bool IsOverlayOpen { get; private set; }
+
     private void Start()
     {
         gameManager = GameManager.Instance;
@@ -25,8 +27,8 @@ public class SteamOverlayListener : MonoBehaviour
 
     private void OnOverlayActivated(GameOverlayActivated_t callback)
     {
-        bool isOpen = callback.m_bActive != 0;
-        if (!isOpen)
+        IsOverlayOpen = callback.m_bActive != 0;
+        if (!IsOverlayOpen)
             return;
 
         // If open, pause the game if it's currently in gameplay state
