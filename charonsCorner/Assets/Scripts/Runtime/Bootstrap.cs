@@ -8,7 +8,7 @@ namespace CharonsCorner.Runtime
     {
         private static bool hasBootstrapped = false;
 
-        [SerializeField, Required] private BootstrapConfigSO bootstrapConfig;
+        [SerializeField, Required, Expandable] private BootstrapConfigSO bootstrapConfig;
         [SerializeField, Required] private GameManager gameManager;
 
         private void Awake()
