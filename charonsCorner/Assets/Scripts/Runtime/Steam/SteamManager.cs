@@ -88,7 +88,7 @@ public partial class SteamManager : MonoBehaviour
         }
 
         // We want our SteamManager Instance to persist across scenes.
-        DontDestroyOnLoad(gameObject);
+        // DontDestroyOnLoad(gameObject); // Samson: Commented out since our bootstrapper handles that
 
         if (!Packsize.Test())
         {
@@ -134,7 +134,7 @@ public partial class SteamManager : MonoBehaviour
         m_bInitialized = SteamAPI.Init();
         if (!m_bInitialized)
         {
-            Debug.LogError("[Steamworks.NET] SteamAPI_Init() failed. Refer to Valve's documentation or the comment above this line for more information.", this);
+            Debug.LogWarning("[Steamworks.NET] SteamAPI_Init() failed. Refer to Valve's documentation or the comment above this line for more information.", this);
 
             return;
         }

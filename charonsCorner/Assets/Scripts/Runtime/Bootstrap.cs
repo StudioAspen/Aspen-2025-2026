@@ -1,3 +1,5 @@
+using Eflatun.SceneReference;
+using NaughtyAttributes;
 using UnityEngine;
 
 namespace CharonsCorner.Runtime
@@ -6,8 +8,8 @@ namespace CharonsCorner.Runtime
     {
         private static bool hasBootstrapped = false;
 
-        [SerializeField] private GameManager gameManager;
-        [SerializeField] private GameState initialGameState;
+        [SerializeField, Required] private BootstrapConfigSO bootstrapConfig;
+        [SerializeField, Required] private GameManager gameManager;
 
         private void Awake()
         {
@@ -18,9 +20,29 @@ namespace CharonsCorner.Runtime
             }
 
             hasBootstrapped = true;
-            gameManager.ChangeInitialGameState(initialGameState); // Required because different scenes may have different initial game states
+
+            bootstrapConfig.Initialize();
 
             DontDestroyOnLoad(gameObject);
+        }
+
+        private void Start()
+        {
+            SceneReference currentScene = gameManager.GetCurrentScene();
+            gameManager.ChangeGameState(bootstrapConfig.GetSceneInitialState(currentScene), true); // Required because different scenes may have different initial game states
+        }
+    }
+
+    public static class BootstrapLoader
+    {
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+        private static void LoadBootstrap()
+        {
+            if (GameObject.FindFirstObjectByType<Bootstrap>() == null)
+            {
+                GameObject prefab = Resources.Load<GameObject>("Bootstrap");
+                GameObject go = GameObject.Instantiate(prefab);
+            }
         }
     }
 }

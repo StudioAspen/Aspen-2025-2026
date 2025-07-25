@@ -34,7 +34,6 @@ namespace CharonsCorner.Runtime
         public event Action<GameState> OnGameStateChanged = delegate { };
         private GameState initialGameState;
 
-        public SceneReference CurrentScene { get; private set; }
         /// <summary>
         /// Action that is invoked the current scene is changed.
         /// </summary>
@@ -59,17 +58,6 @@ namespace CharonsCorner.Runtime
 
             Instance = this;
         }
-
-        private void Start()
-        {
-            ChangeGameState(initialGameState, true);
-        }
-
-        /// <summary>
-        /// Sets the initial game state that the GameManager will start with.
-        /// </summary>
-        /// <param name="newInitialState"></param>
-        public void ChangeInitialGameState(GameState newInitialState) => initialGameState = newInitialState;
 
         /// <summary>
         /// Changes the current game state to the specified new state.
@@ -146,8 +134,7 @@ namespace CharonsCorner.Runtime
             await UIManager.Instance.LoadingHandler.FadeIn();
 
             await SceneManager.LoadSceneAsync(scene.Name);
-            CurrentScene = scene;
-            OnSceneChanged.Invoke(CurrentScene);
+            OnSceneChanged.Invoke(scene);
 
             ChangeGameState(afterState);
 
@@ -167,16 +154,14 @@ namespace CharonsCorner.Runtime
         /// Reloads the scene by switching to the current scene and changing the game state afterwards.
         /// </summary>
         /// <param name="afterState"></param>
-        public void ReloadScene(GameState afterState)
-        {
-            SceneReference currentSceneReference = SceneReference.FromScenePath(SceneManager.GetActiveScene().path);
-            SwitchScenes(currentSceneReference, afterState).Forget();
-        }
+        public void ReloadScene(GameState afterState) => SwitchScenes(GetCurrentScene(), afterState).Forget();
 
         /// <summary>
         /// Helper method to switch back to the title scene and set the game state to Title.
         /// </summary>
         public void ReturnToMenu() => SwitchScenes(titleScene, GameState.Title).Forget();
+
+        public SceneReference GetCurrentScene() => SceneReference.FromScenePath(SceneManager.GetActiveScene().path);
 
         /// <summary>
         /// Quits the game properly based on the platform.
