@@ -14,5 +14,6 @@ def get_parent_directory(path: str, num: int):
     count = 0
     while count < num:
         result = os.path.dirname(result)
+        count += 1
 
     return result
