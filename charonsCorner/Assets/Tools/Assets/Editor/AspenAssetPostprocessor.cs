@@ -2,7 +2,7 @@ using System;
 using UnityEditor;
 using UnityEngine;
 using System.IO;
-using Codice.Client.Common;
+using System.Reflection;
 
 namespace Aspen.Tools.Assets
 {
@@ -27,51 +27,33 @@ namespace Aspen.Tools.Assets
 			foreach (string assetPath in importedAssets)
 			{
 				// If an FBX file was imported into Assets/Art, create a prefab from the FBX file.
-				if (assetPath.EndsWith(".fbx", System.StringComparison.OrdinalIgnoreCase) 
-				    && (assetPath.StartsWith("Assets/Art/Models") || assetPath.StartsWith("Assets/Art/Rigs")))
+				if (assetPath.EndsWith(".fbx", System.StringComparison.OrdinalIgnoreCase)
+				    && assetPath.StartsWith("Assets/Art/models"))
 				{
-					CreatePrefabFromFBX(assetPath);
+					ExtractTextures(assetPath);
 				}
 			}
 		}
-		
+
 		/// <summary>
 		///	Create a prefab from an FBX.
 		/// The FBX prefab will be a nested object in the new prefab.
 		/// </summary>
 		/// <param name="fbxPath">The path of the FBX to create a prefab from.</param>
-		static void CreatePrefabFromFBX(string fbxPath)
+		private static void ExtractTextures(string fbxPath)
 		{
-			// Convert the fbx path to the prefab path
-			string fileName = Path.GetFileName(fbxPath);
-			string prefabPath = fbxPath
-				.Replace($"/{Path.GetFileName(Path.GetDirectoryName(fbxPath))}", "")	// Remove asset-specific folder
-				.Replace("Art/Models", "Prefabs")										// Replace Art/Models folder with Prefabs
-				.Replace(fileName, $"Static/{fileName}")								// Add static folder before the asset file
-				.Replace(".fbx", ".prefab");											// Change .fbx extension to .prefab
-			Directory.CreateDirectory(Path.GetFullPath(Path.GetDirectoryName(prefabPath)));
-			
-			// If the prefab already exists, don't create one
-			if (AssetDatabase.LoadAssetAtPath<GameObject>(prefabPath) != null)
-				return;
-			
-			// Try to load FBX
-			GameObject fbxPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(fbxPath);
-			if (fbxPrefab == null)
+			string extractPath = Path.GetDirectoryName(fbxPath);
+
+			var importer = AssetImporter.GetAtPath(fbxPath) as ModelImporter;
+			if (importer == null)
 			{
-				Debug.LogError($"No base prefab found at {fbxPath}. Unable to create prefab.");
+				Debug.LogError("No ModelImporter found at: " + fbxPath);
 				return;
 			}
-
-			// Create root object for new prefab. FBX is a child object.
-			GameObject root = new GameObject();
-			GameObject tempInstance = (GameObject)PrefabUtility.InstantiatePrefab(fbxPrefab);
-			tempInstance.transform.parent = root.transform;
 			
-			PrefabUtility.SaveAsPrefabAsset(root, prefabPath);
-			GameObject.DestroyImmediate(root);
-			
-			Debug.Log($"✅ Created prefab variant: {prefabPath}");
+			importer.ExtractTextures(extractPath);
+			AssetDatabase.SaveAssets();
+			AssetDatabase.Refresh();
 		}
 	}
 }
