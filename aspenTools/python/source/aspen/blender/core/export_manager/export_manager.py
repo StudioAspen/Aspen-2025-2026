@@ -49,16 +49,20 @@ class EXPORTMANAGER_OT_export(bpy.types.Operator):
 
     def execute(self, context):
         """Try to export selection with the specified settings."""
+        # Check if the current .blend file is saved
+        if not bpy.data.filepath:
+            self.report({'ERROR'}, "File must be saved in order to export a model.")
+
+        # Check if valid export name
+        if not context.scene.export_manager.export_name:
+            self.report({'ERROR'}, 'No export name specified.')
+            return {'CANCELLED'}
+
         # Get export settings
         export_manager = context.scene.export_manager
         export_name = export_manager.export_name
         export_type = export_manager.export_type
         asset_type = f'{export_manager.asset_type.lower()}s'
-
-        # Check if valid export name
-        if not export_name:
-            self.report({'ERROR'}, 'No export name specified.')
-            return {'CANCELLED'}
 
         # Set the export directory based on export and asset type
         export_dir = ''
