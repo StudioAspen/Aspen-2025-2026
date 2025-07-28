@@ -79,6 +79,9 @@ namespace CharonsCorner.Runtime
 
         private void Jump()
         {
+            if (jumpHeight <= 0f)
+                return;
+
             if (!isGrounded)
                 return;
 
