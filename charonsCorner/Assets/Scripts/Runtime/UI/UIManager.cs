@@ -1,8 +1,6 @@
 using AYellowpaper.SerializedCollections;
-using Cysharp.Threading.Tasks;
 using NaughtyAttributes;
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using static CharonsCorner.Runtime.InputManager;
@@ -20,6 +18,7 @@ namespace CharonsCorner.Runtime
             PauseMenu,
             Settings,
             Dialogue,
+            Confirm, // When the player wants to confirm an action, like starting a level
         }
 
         [Header("Panels")]

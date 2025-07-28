@@ -36,6 +36,7 @@ namespace CharonsCorner.Runtime
 
         [Header("References")]
         [SerializeField] private SceneReference titleScene;
+        [SerializeField] private SceneReference hubScene;
         [SerializeField] private SceneReference tutorialScene;
 
         private void Awake()
@@ -95,7 +96,7 @@ namespace CharonsCorner.Runtime
                         ChangeGameState(GameState.Paused);
                     break;
                 case GameState.Dialogue:
-                    Time.timeScale = 0f;
+                    Time.timeScale = 1f;
                     UIManager.Instance.ShowPanel(UIManager.PanelName.Dialogue);
                     InputManager.Instance.LockCursor(false);
                     break;
@@ -136,7 +137,7 @@ namespace CharonsCorner.Runtime
         /// </summary>
         public void StartGame()
         {
-            SwitchScenes(tutorialScene, GameState.Gameplay).Forget();
+            SwitchScenes(hubScene, GameState.Gameplay).Forget();
         }
 
         /// <summary>

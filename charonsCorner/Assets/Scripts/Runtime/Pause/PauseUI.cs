@@ -32,7 +32,6 @@ namespace CharonsCorner.Runtime
 
         public override void CloseUI()
         {
-            uiManager.HideAllPanels();
             GameManager.Instance.ChangeGameState(GameState.Gameplay);
         }
 

@@ -1,4 +1,6 @@
 ﻿using AYellowpaper.SerializedCollections;
+using DG.Tweening;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -11,60 +13,80 @@ namespace CharonsCorner.Runtime
     {
         [Header("References")]
         [SerializeField] private DialogueManager dialogueManager;
-        [SerializeField] private DialogueConfigSO dialogueConfig;
         [SerializeField] private GameObject optionButtonPrefab;
 
         [Header("UI Elements")]
         [SerializeField] private TMP_Text nameText;
         [SerializeField] private TMP_Text dialogueText;
-        [SerializeField] private Image reactionImage;
         [SerializeField] private Transform optionsContainer;
 
         [Header("Typing Config")]
         [SerializeField] private float typingSpeed = 0.01f;
         private Coroutine typingCoroutine;
         private string typedOutFullText;
-        private Dictionary<string, DialogueSO> pendingOptions;
 
         private protected override void Initialize()
         {
+            dialogueManager.OnDialogueOpenerStarted += DialogueManager_OnDialogueOpenerStarted;
+            dialogueManager.OnDialogueSequenceStarted += DialogueManager_OnDialogueSequenceStarted;
             dialogueManager.OnDialogueStarted += DialogueManager_OnDialogueStarted;
+
+            dialogueManager.OnDialogueSequenceEndReached += DialogueManager_OnDialogueSequenceEndReached;
         }
 
         private void OnDestroy()
         {
             if (dialogueManager != null)
+            {
+                dialogueManager.OnDialogueOpenerStarted -= DialogueManager_OnDialogueOpenerStarted;
+                dialogueManager.OnDialogueSequenceStarted -= DialogueManager_OnDialogueSequenceStarted;
                 dialogueManager.OnDialogueStarted -= DialogueManager_OnDialogueStarted;
+
+                dialogueManager.OnDialogueSequenceEndReached -= DialogueManager_OnDialogueSequenceEndReached;
+            }
+        }
+
+        private void DialogueManager_OnDialogueOpenerStarted(DialogueOpenerSO opener)
+        {
+            ClearUI();
+
+            nameText.text = opener.SpeakerName;
+            TypeOutText(opener.Text);
+
+            ShowOptions(opener.SequenceOptions);
+        }
+
+        private void DialogueManager_OnDialogueSequenceStarted(DialogueSequenceSO sequence)
+        {
+            ClearUI();
         }
 
         private void DialogueManager_OnDialogueStarted(DialogueSO dialogue)
         {
             ClearUI();
 
-            if (dialogue == null)
-                return;
-
             nameText.text = dialogue.SpeakerName;
+            TypeOutText(dialogue.Text);
 
+            ShowNextButton();
+        }
+
+        private void DialogueManager_OnDialogueSequenceEndReached(DialogueSequenceSO sequence, DialogueSO dialogue)
+        {
+            ShowOptions(new());
+        }
+
+        private void TypeOutText(string text)
+        {
             if (typingCoroutine != null)
                 StopCoroutine(typingCoroutine);
-
-            //typedOutFullText = dialogue.Text;
-            //pendingOptions = dialogue.Options;
-
-            typingCoroutine = StartCoroutine(TypeOutTextCoroutine(typedOutFullText));
-
-            if (dialogueConfig.ReactionSprites.TryGetValue(dialogue.Reaction, out Sprite reactionSprite))
-                reactionImage.sprite = reactionSprite;
-            else
-                reactionImage.sprite = null;
+            typedOutFullText = text;
+            typingCoroutine = StartCoroutine(TypeOutTextCoroutine(text));
         }
 
         /// <summary>
         /// Types out the dialogue text character by character with a specified delay.
         /// </summary>
-        /// <param name="text"></param>
-        /// <returns></returns>
         private IEnumerator TypeOutTextCoroutine(string text)
         {
             dialogueText.text = "";
@@ -76,7 +98,6 @@ namespace CharonsCorner.Runtime
             }
 
             typingCoroutine = null;
-            ShowOptions(pendingOptions);
         }
 
         /// <summary>
@@ -90,61 +111,71 @@ namespace CharonsCorner.Runtime
                 typingCoroutine = null;
 
                 dialogueText.text = typedOutFullText;
-                ShowOptions(pendingOptions);
             }
         }
 
-        /// <summary>
-        /// Displays the options available.
-        /// </summary>
-        /// <param name="options"></param>
-        private void ShowOptions(Dictionary<string, DialogueSO> options)
+        private void ShowOptions(List<DialogueSequenceSO> sequenceOptions)
         {
-            if(options == null || options.Count == 0)
-            {
-                GameObject closeButtonObject = Instantiate(optionButtonPrefab, optionsContainer);
-                closeButtonObject.name = "CloseButton";
-                TMP_Text closeButtonText = closeButtonObject.GetComponentInChildren<TMP_Text>();
-                closeButtonText.text = "Close";
+            ClearButtons();
 
-                Button closeButton = closeButtonObject.GetComponent<Button>();
-                closeButton.onClick.AddListener(CloseUI);
-                return;
-            }
-
-            foreach (var option in options)
+            foreach (DialogueSequenceSO sequence in sequenceOptions)
             {
                 GameObject buttonObject = Instantiate(optionButtonPrefab, optionsContainer);
-                buttonObject.name = $"({option.Key})Button";
+                buttonObject.name = $"({sequence.SequenceName})Button";
                 TMP_Text buttonText = buttonObject.GetComponentInChildren<TMP_Text>();
-                buttonText.text = option.Key;
-
+                buttonText.text = sequence.SequenceName;
                 Button button = buttonObject.GetComponent<Button>();
-                DialogueSO nextDialogue = option.Value;
-                button.onClick.AddListener(() => dialogueManager.StartDialogue(nextDialogue));
+                button.onClick.AddListener(() => dialogueManager.StartDialogueSequence(sequence));
             }
 
-            if(optionsContainer.childCount > 0)
+            GameObject closeButtonObject = Instantiate(optionButtonPrefab, optionsContainer);
+            closeButtonObject.name = "CloseButton";
+            TMP_Text closeButtonText = closeButtonObject.GetComponentInChildren<TMP_Text>();
+            closeButtonText.text = "Close";
+            Button closeButton = closeButtonObject.GetComponent<Button>();
+            closeButton.onClick.AddListener(() => {
+                CloseUI();
+                dialogueManager.EndDialogue();
+            });
+
+            if (optionsContainer.childCount > 0)
                 uiManager.ChangeCurrentSelectedObject(optionsContainer.GetChild(0).gameObject);
         }
 
+        private void ShowNextButton()
+        {
+            ClearButtons();
+
+            GameObject nextButtonObject = Instantiate(optionButtonPrefab, optionsContainer);
+            nextButtonObject.name = "NextButton";
+            TMP_Text nextButtonText = nextButtonObject.GetComponentInChildren<TMP_Text>();
+            nextButtonText.text = "Next";
+
+            Button nextButton = nextButtonObject.GetComponent<Button>();
+            nextButton.onClick.AddListener(() => dialogueManager.StartNextDialogueInSequence());
+        }
+
         /// <summary>
-        /// Completely clears the UI elements to prepare for a new dialogue to be typed out.
+        /// Completely clears the UI, including name and dialogue text, and removes all option buttons.
+        /// Used for resetting the dialogue UI before starting a new dialogue or sequence.
         /// </summary>
         private void ClearUI()
         {
             nameText.text = "";
             dialogueText.text = "";
-            reactionImage.sprite = null;
 
+            ClearButtons();
+        }
+
+        private void ClearButtons()
+        {
             foreach (Transform child in optionsContainer)
                 Destroy(child.gameObject);
         }
 
         public override void CloseUI()
         {
-            // No specific close behavior for dialogue UI
-            Debug.LogWarning("DialogueUI: CloseUI called, but no specific close behavior defined.");
+            GameManager.Instance.ChangeGameState(GameState.Gameplay);
         }
     }
 }
