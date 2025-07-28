@@ -25,7 +25,7 @@ namespace CharonsCorner.Runtime
 
             if(dialogue == CurrentDialogue)
             {
-                Debug.LogWarning($"DialogueManager: Attempted to start the same dialogue '{dialogue.Name}' again. Ignoring.");
+                Debug.LogWarning($"DialogueManager: Attempted to start the same dialogue '{dialogue.SpeakerName}' again. Ignoring.");
                 return;
             }
 

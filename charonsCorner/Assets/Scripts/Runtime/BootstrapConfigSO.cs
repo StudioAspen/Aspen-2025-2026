@@ -39,7 +39,7 @@ namespace CharonsCorner.Runtime
         {
             if (!sceneNameInitialStatesMap.ContainsKey(scene.Name))
             {
-                Debug.LogWarning($"Scene {scene.Name} not found in BootstrapConfig. Defaulting to Gameplay state.");
+                Debug.LogWarning($"Scene '{scene.Name}' not found in BootstrapConfig. Defaulting to Gameplay state.");
                 return GameState.Gameplay; // Default to Gameplay state if not found
             }
 

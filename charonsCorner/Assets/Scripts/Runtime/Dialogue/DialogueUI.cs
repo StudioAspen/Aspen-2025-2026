@@ -44,13 +44,13 @@ namespace CharonsCorner.Runtime
             if (dialogue == null)
                 return;
 
-            nameText.text = dialogue.Name;
+            nameText.text = dialogue.SpeakerName;
 
             if (typingCoroutine != null)
                 StopCoroutine(typingCoroutine);
 
-            typedOutFullText = dialogue.Text;
-            pendingOptions = dialogue.Options;
+            //typedOutFullText = dialogue.Text;
+            //pendingOptions = dialogue.Options;
 
             typingCoroutine = StartCoroutine(TypeOutTextCoroutine(typedOutFullText));
 

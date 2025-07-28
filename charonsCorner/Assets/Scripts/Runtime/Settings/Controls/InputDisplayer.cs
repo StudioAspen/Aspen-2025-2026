@@ -1,3 +1,4 @@
+using NaughtyAttributes;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -6,30 +7,45 @@ namespace CharonsCorner.Runtime
 {
     public class InputDisplayer : MonoBehaviour
     {
+        [Header("References")]
         [SerializeField] private InputActionReference inputAction;
-        private int keyboardMouseBindingIndex;
-        private int gamepadBindingIndex;
+        [SerializeField] private TMP_Text inputDisplayText;
 
-        public enum KeyboardMouseInputType
+        [Header("Config")]
+        [SerializeField] private bool autoDetectControlScheme = false;
+        private bool ShowManualControlScheme => !autoDetectControlScheme;
+        [SerializeField, ShowIf(nameof(ShowManualControlScheme))] private InputManager.ControlScheme controlScheme;
+
+        private void Start()
         {
-            Keyboard,
-            Mouse
+            if (autoDetectControlScheme)
+            {
+                controlScheme = InputManager.Instance.CurrentControlScheme;
+                InputManager.Instance.OnControlSchemeChanged += InputManager_OnControlSchemeChanged;
+            }
+
+            inputDisplayText.text = GetInputDisplayString(inputAction, controlScheme);
         }
 
-        [Header("Keyboard Mouse")]
-        [SerializeField] private KeyboardMouseInputType keyboardMouseInputType;
-        [SerializeField] private TMP_Text keyboardMouseInputText;
-
-        [Header("Gamepad")]
-        [SerializeField] private TMP_Text gamepadInputText;
-
-        private void Awake()
+        private void OnDestroy()
         {
-            keyboardMouseBindingIndex = inputAction.action.bindings.IndexOf(binding => binding.groups.Contains($"{keyboardMouseInputType}"));
-            gamepadBindingIndex = inputAction.action.bindings.IndexOf(binding => binding.groups.Contains("Gamepad"));
+            if(InputManager.Instance != null)
+                InputManager.Instance.OnControlSchemeChanged -= InputManager_OnControlSchemeChanged;
+        }
 
-            keyboardMouseInputText.text = inputAction.action.GetBindingDisplayString(keyboardMouseBindingIndex, InputBinding.DisplayStringOptions.DontIncludeInteractions);
-            gamepadInputText.text = inputAction.action.GetBindingDisplayString(gamepadBindingIndex, InputBinding.DisplayStringOptions.DontIncludeInteractions);
+        private void InputManager_OnControlSchemeChanged(InputManager.ControlScheme newScheme)
+        {
+            controlScheme = newScheme;
+            inputDisplayText.text = GetInputDisplayString(inputAction, controlScheme);
+        }
+
+        /// <summary>
+        /// Gets the display string for the given input action based on the specified control scheme.
+        /// </summary>
+        public static string GetInputDisplayString(InputActionReference inputAction, InputManager.ControlScheme controlScheme, InputBinding.DisplayStringOptions displayOptions = InputBinding.DisplayStringOptions.DontIncludeInteractions)
+        {
+            int bindingIndex = inputAction.action.bindings.IndexOf(binding => binding.groups.Contains($"{InputManager.ControlSchemeInternalNames[controlScheme]}"));
+            return inputAction.action.GetBindingDisplayString(bindingIndex, displayOptions);
         }
     }
 }

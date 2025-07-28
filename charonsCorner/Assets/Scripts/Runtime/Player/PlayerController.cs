@@ -16,10 +16,14 @@ namespace CharonsCorner.Runtime
         [Header("Roll Config")]
         [SerializeField] private float rollAcceleration = 1f;
         [SerializeField] private float turnResponsiveness = 1f;
-        [SerializeField] private float airRollDamp = 0.02f;
         [SerializeField] private float maxSpeed = 25f;
         [SerializeField, ReadOnly] private float currentSpeed;
         [SerializeField, ReadOnly] private float currentRotationalSpeed;
+
+        [Header("Damp Config")]
+        [SerializeField] private float airRollDamp = 0.02f;
+        [SerializeField] private bool idleDampingEnabled = false;
+        [SerializeField, ShowIf("idleDampingEnabled")] private float idleDamp = 0.1f;
 
         [Header("Jump Config")]
         [SerializeField] private float jumpHeight = 2f;
@@ -106,10 +110,10 @@ namespace CharonsCorner.Runtime
             if (rigidBody.linearVelocity.sqrMagnitude > 0.01f)
             {
                 float angle = Vector3.Angle(currentDirection, desiredDirection);
-                directionChangeFactor = Mathf.InverseLerp(0f, 180f, angle); // Normalize angle (0° = no change, 180° = full change)
+                directionChangeFactor = Mathf.InverseLerp(0f, 180f, angle); // Normalize angle (0ï¿½ = no change, 180ï¿½ = full change)
             }
 
-            // Torque scales with how much you’re turning
+            // Torque scales with how much youï¿½re turning
             Vector3 turnTorque = turnResponsiveness * directionChangeFactor * Vector3.Cross(Vector3.up, desiredDirection);
 
             // Propulsion torque based on speed for snappy direction changes at low speed
@@ -119,7 +123,7 @@ namespace CharonsCorner.Runtime
             Vector3 totalTorque = turnTorque + propulsionTorque;
 
             if (moveInput == Vector3.zero)
-                totalTorque = Vector3.zero;
+                totalTorque = idleDampingEnabled ? idleDamp * -rigidBody.angularVelocity : Vector3.zero;
 
             if (!isGrounded)
                 totalTorque = airRollDamp * -rigidBody.angularVelocity;
@@ -161,6 +165,15 @@ namespace CharonsCorner.Runtime
             // Project current angular velocity onto XZ plane to ensure no Y spin
             Vector3 angularVel = Vector3.ProjectOnPlane(rigidBody.angularVelocity, Vector3.up);
             rigidBody.angularVelocity = multiplier * angularVel.magnitude * angularVel.normalized;
+        }
+
+        /// <summary>
+        /// Completely stops the player, resetting both linear and angular velocities to zero.
+        /// </summary>
+        public void Stop()
+        {
+            rigidBody.angularVelocity = Vector3.zero;
+            rigidBody.linearVelocity = Vector3.zero;
         }
 
         private void OnCollisionEnter(Collision collision)

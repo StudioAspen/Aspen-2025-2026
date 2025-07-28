@@ -1,7 +1,7 @@
 ﻿using NaughtyAttributes;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.LowLevel;
 using static CharonsCorner.Runtime.InputActions;
@@ -15,16 +15,17 @@ namespace CharonsCorner.Runtime
         public InputActions InputActions { get; private set; }
 
         // Player
-        public event UnityAction<Vector2> Move = delegate { };
-        public event UnityAction<Vector2> Look = delegate { };
-        public event UnityAction Jump = delegate { };
+        public event Action<Vector2> Move = delegate { };
+        public event Action<Vector2> Look = delegate { };
+        public event Action Jump = delegate { };
+        public event Action Interact = delegate { };
 
         public Vector2 MoveDirection => InputActions.Player.Move.ReadValue<Vector2>();
         public Vector2 LookDirection => InputActions.Player.Look.ReadValue<Vector2>();
         public bool IsJumpKeyPressed => InputActions.Player.Jump.IsPressed();
 
         // UI
-        public event UnityAction Unpause = delegate { };
+        public event Action Unpause = delegate { };
 
         #region Control Scheme
         public enum ControlScheme
@@ -42,6 +43,11 @@ namespace CharonsCorner.Runtime
         /// </list>
         /// </remarks>
         public event Action<ControlScheme> OnControlSchemeChanged = delegate { };
+        public static readonly Dictionary<ControlScheme, string> ControlSchemeInternalNames = new Dictionary<ControlScheme, string>
+        {
+            { ControlScheme.KeyboardMouse, "Keyboard&Mouse" },
+            { ControlScheme.Gamepad, "Gamepad" }
+        };
         #endregion
 
         private CursorLockMode desiredCursorLockState;
@@ -141,7 +147,11 @@ namespace CharonsCorner.Runtime
                 GameManager.Instance.ChangeGameState(GameState.Paused);
         }
  
-        public void OnInteract(InputAction.CallbackContext context) { }
+        public void OnInteract(InputAction.CallbackContext context)
+        {
+            if (context.performed)
+                Interact.Invoke();
+        }
 
         // UI Actions
         public void OnUnpause(InputAction.CallbackContext context)

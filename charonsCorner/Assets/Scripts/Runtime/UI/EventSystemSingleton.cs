@@ -1,7 +1,6 @@
-using Eflatun.SceneReference;
-using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 
 namespace CharonsCorner.Runtime
 {
@@ -18,30 +17,35 @@ namespace CharonsCorner.Runtime
             }
 
             instance = this;
-        }
 
-        private void Start()
-        {
-            GameManager.Instance.OnSceneChanged += GameManager_OnSceneChanged;
+            SceneManager.activeSceneChanged += SceneManager_ActiveSceneChanged;
+            DestroyOtherEventSystems();
         }
 
         private void OnDestroy()
         {
-            if(GameManager.Instance != null)
-                GameManager.Instance.OnSceneChanged -= GameManager_OnSceneChanged;
+            SceneManager.activeSceneChanged -= SceneManager_ActiveSceneChanged;
         }
 
-        private void GameManager_OnSceneChanged(SceneReference scene)
+        private void SceneManager_ActiveSceneChanged(Scene previousScene, Scene newScene)
+        {
+            DestroyOtherEventSystems();
+        }
+
+        private void DestroyOtherEventSystems()
         {
             // Destroy all other EventSystems in the scene except this one
             EventSystem[] eventSystems = FindObjectsByType<EventSystem>(FindObjectsSortMode.None);
-            foreach(EventSystem eventSystem in eventSystems)
+            foreach (EventSystem eventSystem in eventSystems)
             {
-                if(eventSystem == null) 
+                if (eventSystem == null)
                     continue;
 
                 if (eventSystem.gameObject != gameObject)
+                {
+                    Debug.LogWarning($"Destroying duplicate EventSystem: {eventSystem.gameObject.name}");
                     Destroy(eventSystem.gameObject);
+                }
             }
         }
     }

@@ -34,16 +34,6 @@ namespace CharonsCorner.Runtime
         public event Action<GameState> OnGameStateChanged = delegate { };
         private GameState initialGameState;
 
-        /// <summary>
-        /// Action that is invoked the current scene is changed.
-        /// </summary>
-        /// <remarks>
-        /// <list type="bullet">
-        /// <item><description><c>SceneReference newScene</c>: The scene that was changed to.</description></item>
-        /// </list>
-        /// </remarks>
-        public event Action<SceneReference> OnSceneChanged = delegate { };
-
         [Header("References")]
         [SerializeField] private SceneReference titleScene;
         [SerializeField] private SceneReference tutorialScene;
@@ -134,7 +124,6 @@ namespace CharonsCorner.Runtime
             await UIManager.Instance.LoadingHandler.FadeIn();
 
             await SceneManager.LoadSceneAsync(scene.Name);
-            OnSceneChanged.Invoke(scene);
 
             ChangeGameState(afterState);
 
