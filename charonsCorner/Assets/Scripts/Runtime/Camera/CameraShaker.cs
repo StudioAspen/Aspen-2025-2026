@@ -3,11 +3,9 @@ using UnityEngine;
 
 namespace CharonsCorner.Runtime
 {
-    [RequireComponent(typeof(CinemachineCamera))]
-    [RequireComponent(typeof(CinemachineBasicMultiChannelPerlin))]
-    public class CameraShakeManager : MonoBehaviour
+    public class CameraShaker
     {
-        public static CameraShakeManager Instance { get; private set; }
+        private CameraManager cameraManager;
 
         private CinemachineBasicMultiChannelPerlin cinemachineBasicMultiChannelPerlin;
 
@@ -16,14 +14,9 @@ namespace CharonsCorner.Runtime
         private float shakeTimer;
         private float shakeDuration;
 
-        private void Awake()
+        public CameraShaker(CameraManager manager)
         {
-            if (Instance != null)
-                Destroy(Instance.gameObject);
-
-            Instance = this;
-
-            cinemachineBasicMultiChannelPerlin = GetComponent<CinemachineBasicMultiChannelPerlin>();
+            cameraManager = manager;
         }
 
         /// <summary>
@@ -34,6 +27,19 @@ namespace CharonsCorner.Runtime
         /// <param name="duration">How long will the camera be shaking.</param>
         public void ShakeCamera(float amplitude, float frequency, float duration)
         {
+            if(cameraManager.CurrentCamera == null)
+            {
+                Debug.LogError("Current camera is not set. Cannot shake camera.");
+                return;
+            }
+
+            cinemachineBasicMultiChannelPerlin = cameraManager.CurrentCamera.GetComponent<CinemachineBasicMultiChannelPerlin>();
+            if(cinemachineBasicMultiChannelPerlin == null )
+            {
+                Debug.LogError("CinemachineBasicMultiChannelPerlin component not found on the current camera. Cannot shake camera.");
+                return;
+            }
+
             cinemachineBasicMultiChannelPerlin.ReSeed();
 
             cinemachineBasicMultiChannelPerlin.AmplitudeGain = amplitude;
@@ -44,7 +50,7 @@ namespace CharonsCorner.Runtime
             shakeTimer = duration;
         }
 
-        private void Update()
+        public void Update()
         {
             if (shakeTimer > 0)
             {

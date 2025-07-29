@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 7056525876318405914}
   - component: {fileID: 526683063067528195}
   - component: {fileID: 2071458422734880173}
-  - component: {fileID: 2346539909112627032}
+  - component: {fileID: 8446799887837855137}
   m_Layer: 0
   m_Name: GameplayCinemachineCamera
   m_TagString: Untagged
@@ -31,13 +31,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 244906395302872331}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.08908324, y: 3.7799997e-15, z: -4.622643e-16, w: 0.99602425}
+  m_LocalRotation: {x: 0.089085475, y: 0, z: 0, w: 0.996024}
   m_LocalPosition: {x: 0, y: 3.5, z: -4.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 10.222, y: 0, z: 0}
 --- !u!114 &4309236162557638298
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -187,8 +187,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NoiseProfile: {fileID: 11400000, guid: 69ce8388f6785dd4c8c39915efece2f4, type: 2}
   PivotOffset: {x: 0, y: 0, z: 0}
-  AmplitudeGain: 1
-  FrequencyGain: 1
+  AmplitudeGain: 0
+  FrequencyGain: 0
   m_NoiseOffsets: {x: 0, y: 0, z: 0}
 --- !u!114 &526683063067528195
 MonoBehaviour:
@@ -267,7 +267,7 @@ MonoBehaviour:
       Driver:
         AccelTime: 0
         DecelTime: 0
---- !u!114 &2346539909112627032
+--- !u!114 &8446799887837855137
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -276,6 +276,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 244906395302872331}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9d1e47b55111d80469d7f52bf1451b91, type: 3}
+  m_Script: {fileID: 11500000, guid: 34bcfe160424d64429f7eaca32651523, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cinemachineCamera: {fileID: 4309236162557638298}
+  cameraType: 0
+  changeToActiveCamera: 1

@@ -182,7 +182,7 @@ namespace CharonsCorner.Runtime
             float shakeAmplitude = Mathf.Lerp(0f, 4f, Mathf.Pow(impactForce / 20f, 2));
             float shakeDuration = Mathf.Lerp(0f, 0.4f, impactForce / 5f);
 
-            CameraShakeManager.Instance.ShakeCamera(shakeAmplitude, 10f, shakeDuration);
+            CameraManager.Instance.CameraShaker.ShakeCamera(shakeAmplitude, 10f, shakeDuration);
         }
     }
 }

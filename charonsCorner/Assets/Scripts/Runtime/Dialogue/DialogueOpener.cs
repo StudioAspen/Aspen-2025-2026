@@ -1,6 +1,7 @@
 ﻿using DG.Tweening;
 using NaughtyAttributes;
 using System;
+using Unity.Cinemachine;
 using UnityEngine;
 
 namespace CharonsCorner.Runtime
@@ -13,24 +14,11 @@ namespace CharonsCorner.Runtime
 
         [Header("Camera Config")]
         [SerializeField] private bool useCamera = true;
-        [SerializeField, ShowIf("useCamera")] private Transform mainCamera;
-        [SerializeField, ShowIf("useCamera")] private GameObject cinemachineCamera;
-        [SerializeField, ShowIf("useCamera")] private Transform lookAtTarget;
-        [SerializeField, ShowIf("useCamera")] private Vector3 cameraTargetOffset;
+        [SerializeField, ShowIf("useCamera")] private CinemachineCamera cinemachineCamera;
 
         private void Awake()
         {
             dialogueManager = FindFirstObjectByType<DialogueManager>(FindObjectsInactive.Include);
-        }
-
-        private void OnDrawGizmos()
-        {
-            if (useCamera)
-            {
-                Gizmos.color = Color.green;
-                Gizmos.DrawSphere(transform.position + cameraTargetOffset, 0.1f);
-                Gizmos.DrawLine(cameraTargetOffset + transform.position, lookAtTarget.position);
-            }
         }
 
         private void OnDestroy()
@@ -46,17 +34,19 @@ namespace CharonsCorner.Runtime
 
             dialogueManager.OnDialogueEnded += DialogueManager_OnDialogueEnded;
 
-            cinemachineCamera.SetActive(false);
-            mainCamera.DOMove(transform.position + cameraTargetOffset, 0.5f).SetEase(Ease.OutQuad);
-            Quaternion lookAtRotation = Quaternion.LookRotation(lookAtTarget.position - (transform.position + cameraTargetOffset));
-            mainCamera.DORotateQuaternion(lookAtRotation, 0.5f).SetEase(Ease.OutQuad);
+            if (useCamera)
+            {
+                CameraManager.Instance.RegisterCamera(CameraManager.CameraType.Dialogue, cinemachineCamera);
+                CameraManager.Instance.ChangeActiveCamera(CameraManager.CameraType.Dialogue);
+            }
         }
 
         private void DialogueManager_OnDialogueEnded()
         {
             dialogueManager.OnDialogueEnded -= DialogueManager_OnDialogueEnded;
 
-            cinemachineCamera.SetActive(true);
+            if(useCamera)
+                CameraManager.Instance.ChangeActiveCamera(CameraManager.CameraType.Player);
         }
     }
 }

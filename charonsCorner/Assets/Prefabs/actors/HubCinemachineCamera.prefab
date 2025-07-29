@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8891330613483638285}
   - component: {fileID: 7622866792634044295}
   - component: {fileID: 648398786697178038}
-  - component: {fileID: 9144675641969470630}
+  - component: {fileID: 5635155497141451692}
   m_Layer: 0
   m_Name: HubCinemachineCamera
   m_TagString: Untagged
@@ -49,7 +49,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Priority:
     Enabled: 0
-    m_Value: 0
+    m_Value: 1
   OutputChannel: 1
   StandbyUpdate: 2
   m_StreamingVersion: 20241001
@@ -111,10 +111,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NoiseProfile: {fileID: 11400000, guid: 69ce8388f6785dd4c8c39915efece2f4, type: 2}
   PivotOffset: {x: 0, y: 0, z: 0}
-  AmplitudeGain: 1
-  FrequencyGain: 1
+  AmplitudeGain: 0
+  FrequencyGain: 0
   m_NoiseOffsets: {x: 0, y: 0, z: 0}
---- !u!114 &9144675641969470630
+--- !u!114 &5635155497141451692
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -123,6 +123,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 3078185688785241634}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9d1e47b55111d80469d7f52bf1451b91, type: 3}
+  m_Script: {fileID: 11500000, guid: 34bcfe160424d64429f7eaca32651523, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cinemachineCamera: {fileID: 8891330613483638285}
+  cameraType: 0
+  changeToActiveCamera: 1
