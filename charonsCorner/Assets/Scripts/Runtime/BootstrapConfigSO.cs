@@ -8,7 +8,7 @@ using UnityEngine;
 namespace CharonsCorner.Runtime
 {
     [CreateAssetMenu(fileName = "BootstrapConfig", menuName = "CharonsCorner/Bootstrap/Config")]
-    public class  BootstrapConfigSO : ScriptableObject
+    public class BootstrapConfigSO : ScriptableObject
     {
         [InfoBox("Set the initial GameState for each scene. If a scene is not listed, it defaults to Gameplay.")]
         [SerializeField, SerializedDictionary("Scene", "Initial Game State")]

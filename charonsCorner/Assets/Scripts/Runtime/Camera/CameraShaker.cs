@@ -29,14 +29,14 @@ namespace CharonsCorner.Runtime
         {
             if(cameraManager.CurrentCamera == null)
             {
-                Debug.LogError("Current camera is not set. Cannot shake camera.");
+                Debug.LogWarning("Current camera is not set. Cannot shake camera.");
                 return;
             }
 
             cinemachineBasicMultiChannelPerlin = cameraManager.CurrentCamera.GetComponent<CinemachineBasicMultiChannelPerlin>();
             if(cinemachineBasicMultiChannelPerlin == null )
             {
-                Debug.LogError("CinemachineBasicMultiChannelPerlin component not found on the current camera. Cannot shake camera.");
+                Debug.LogWarning("CinemachineBasicMultiChannelPerlin component not found on the current camera. Cannot shake camera.");
                 return;
             }
 

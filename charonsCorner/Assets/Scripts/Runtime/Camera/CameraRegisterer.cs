@@ -11,13 +11,7 @@ namespace CharonsCorner.Runtime
 
         private void Start()
         {
-            CameraManager.Instance.RegisterCamera(cameraType, cinemachineCamera);
-
-            if (changeToActiveCamera)
-            {
-                Debug.Log($"CameraRegisterer: Registering and changing active camera to {cameraType}: {cinemachineCamera.gameObject.name}");
-                CameraManager.Instance.ChangeActiveCamera(cameraType);
-            }
+            CameraManager.Instance.RegisterCamera(cameraType, cinemachineCamera, changeToActiveCamera);
         }
     }
 }

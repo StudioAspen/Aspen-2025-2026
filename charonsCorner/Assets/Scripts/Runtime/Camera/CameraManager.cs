@@ -48,15 +48,15 @@ namespace CharonsCorner.Runtime
             SceneManager.activeSceneChanged -= SceneManager_ActiveSceneChanged;
         }
 
-        public void RegisterCamera(CameraType type, CinemachineCamera camera)
+        public void RegisterCamera(CameraType type, CinemachineCamera camera, bool changeToActive = false)
         {
             if (!RegisteredCameras.ContainsKey(type))
-            {
                 RegisteredCameras.Add(type, camera);
-                return;
-            }
+            else
+                RegisteredCameras[type] = camera;
 
-            RegisteredCameras[type] = camera;
+            if (changeToActive)
+                ChangeActiveCamera(type);
         }
 
         public void ChangeActiveCamera(CameraType cameraType)
@@ -82,12 +82,6 @@ namespace CharonsCorner.Runtime
         {
             RegisteredCameras.Clear();
             CurrentCamera = null;
-        }
-
-        [Button("Test Shake Camera")]
-        public void TestShakeCamera()
-        {
-            CameraShaker.ShakeCamera(1f, 2f, 0.5f);
         }
     }
 }

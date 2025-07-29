@@ -36,8 +36,7 @@ namespace CharonsCorner.Runtime
 
             if (useCamera)
             {
-                CameraManager.Instance.RegisterCamera(CameraManager.CameraType.Dialogue, cinemachineCamera);
-                CameraManager.Instance.ChangeActiveCamera(CameraManager.CameraType.Dialogue);
+                CameraManager.Instance.RegisterCamera(CameraManager.CameraType.Dialogue, cinemachineCamera, true);
             }
         }
 
