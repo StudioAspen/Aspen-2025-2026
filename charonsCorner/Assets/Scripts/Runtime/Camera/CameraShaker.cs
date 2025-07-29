@@ -1,3 +1,4 @@
+using System;
 using Unity.Cinemachine;
 using UnityEngine;
 
@@ -17,6 +18,8 @@ namespace CharonsCorner.Runtime
         public CameraShaker(CameraManager manager)
         {
             cameraManager = manager;
+
+            cameraManager.OnActiveCameraChanged += CameraManager_OnActiveCameraChanged;
         }
 
         /// <summary>
@@ -50,8 +53,18 @@ namespace CharonsCorner.Runtime
             shakeTimer = duration;
         }
 
+        private void StopShake()
+        {
+            cinemachineBasicMultiChannelPerlin.AmplitudeGain = 0f;
+            cinemachineBasicMultiChannelPerlin.FrequencyGain = 0f;
+            shakeTimer = 0f;
+        }
+
         public void Update()
         {
+            if (cinemachineBasicMultiChannelPerlin == null)
+                return;
+
             if (shakeTimer > 0)
             {
                 shakeTimer -= Time.deltaTime;
@@ -61,6 +74,32 @@ namespace CharonsCorner.Runtime
                 cinemachineBasicMultiChannelPerlin.FrequencyGain =
                     Mathf.Lerp(startingFrequency, 0, 1 - (shakeTimer / shakeDuration));
             }
+            else
+            {
+                cinemachineBasicMultiChannelPerlin.AmplitudeGain = 0f;
+                cinemachineBasicMultiChannelPerlin.FrequencyGain = 0f;
+            }
+        }
+
+        private void CameraManager_OnActiveCameraChanged(CinemachineCamera newCamera)
+        {
+            if (newCamera == null)
+            {
+                StopShake();
+                return;
+            }
+
+            cinemachineBasicMultiChannelPerlin = newCamera.GetComponent<CinemachineBasicMultiChannelPerlin>();
+            if (cinemachineBasicMultiChannelPerlin == null)
+            {
+                StopShake();
+                return;
+            }
+        }
+
+        public void Dispose()
+        {
+            cameraManager.OnActiveCameraChanged -= CameraManager_OnActiveCameraChanged;
         }
     }
 }

@@ -49,11 +49,13 @@ namespace CharonsCorner.Runtime
         private void DialogueManager_OnDialogueOpenerStarted(DialogueOpenerSO opener)
         {
             animator.SetTrigger(reactionAnimations[opener.Reaction].ParameterHash);
+            opener.ApplyEffects();
         }
 
         private void DialogueManager_OnDialogueStarted(DialogueSO dialogue)
         {
             animator.SetTrigger(reactionAnimations[dialogue.Reaction].ParameterHash);
+            dialogue.ApplyEffects();
         }
 
         private void DialogueManager_OnDialogueEnded()

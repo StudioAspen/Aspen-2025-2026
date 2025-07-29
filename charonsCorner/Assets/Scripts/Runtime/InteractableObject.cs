@@ -62,7 +62,6 @@ namespace CharonsCorner.Runtime
             if (!isOverlapping)
                 return;
 
-            Debug.Log($"Interacted with {gameObject.name}");
             OnInteract.Invoke();
         }
 

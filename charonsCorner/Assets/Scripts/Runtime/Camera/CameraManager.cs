@@ -46,6 +46,8 @@ namespace CharonsCorner.Runtime
         private void OnDestroy()
         {
             SceneManager.activeSceneChanged -= SceneManager_ActiveSceneChanged;
+
+            CameraShaker.Dispose();
         }
 
         public void RegisterCamera(CameraType type, CinemachineCamera camera, bool changeToActive = false)

@@ -13,11 +13,21 @@ namespace CharonsCorner.Runtime
         [field: SerializeField] public DialogueReaction Reaction { get; private set; }
 
         [field: Space(20f)]
-        [field: SerializeField] public List<DialogueEffectConfigContainer> Effects { get; private set; } = new();
+        [field: SerializeField] public List<DialogueEffectContainer> Effects { get; private set; } = new();
         [System.Serializable]
-        public class DialogueEffectConfigContainer
+        public class DialogueEffectContainer
         {
-            [SerializeReference] public DialogueEffectConfig Config;
+            [field: SerializeReference, SubclassSelector] public DialogueEffect Effect { get; private set; }
+        }
+
+        public void ApplyEffects()
+        {
+            foreach(DialogueEffectContainer container in Effects)
+            {
+                if(container.Effect == null)
+                    continue;
+                container.Effect.ApplyEffect();
+            }
         }
     }
 }
