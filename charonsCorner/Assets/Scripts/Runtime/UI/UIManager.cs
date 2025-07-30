@@ -139,7 +139,7 @@ namespace CharonsCorner.Runtime
         /// <summary>
         /// Helper method to change the contents of the confirm panel.
         /// </summary>
-        public void ChangeConfirmPanelContents(string warningContent, string yesContent, string noContent, UnityEngine.Events.UnityAction yesButtonAction)
+        public void ChangeConfirmPanelContents(string warningContent, string yesContent, UnityEngine.Events.UnityAction yesButtonAction)
         {
             GameplayConfirmPanel confirmPanel = panels[PanelName.Confirm] as GameplayConfirmPanel;
             if(confirmPanel == null)
@@ -147,7 +147,7 @@ namespace CharonsCorner.Runtime
                 Debug.LogError("Confirm panel is not of type GameplayConfirmPanel or is not set up correctly.");
                 return;
             }
-            confirmPanel.SetupContents(warningContent, yesContent, noContent, yesButtonAction);
+            confirmPanel.SetupContents(warningContent, yesContent, yesButtonAction);
         }
     }
 }

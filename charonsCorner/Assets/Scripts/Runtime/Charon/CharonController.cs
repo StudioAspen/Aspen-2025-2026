@@ -10,6 +10,9 @@ namespace CharonsCorner.Runtime
 
         [SerializeField] private Animator animator;
 
+        [Header("Config")]
+        [SerializeField] private float animationSpeed = 1f;
+
         [System.Serializable]
         public class AnimationParameterContainer
         {
@@ -34,6 +37,8 @@ namespace CharonsCorner.Runtime
             dialogueManager.OnDialogueOpenerStarted += DialogueManager_OnDialogueOpenerStarted;
             dialogueManager.OnDialogueStarted += DialogueManager_OnDialogueStarted;
             dialogueManager.OnDialogueEnded += DialogueManager_OnDialogueEnded;
+
+            animator.speed = animationSpeed;
         }
 
         private void OnDestroy()

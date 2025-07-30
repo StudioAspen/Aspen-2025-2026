@@ -10,18 +10,16 @@ namespace CharonsCorner.Runtime
         [SerializeField] private TMP_Text warningText;
         [SerializeField] private Button yesButton;
         [SerializeField] private TMP_Text yesButtonText;
-        [SerializeField] private TMP_Text noButtonText;
 
         private protected override void Initialize()
         {
             
         }
 
-        public void SetupContents(string warningContent, string yesContent, string noContent, UnityAction yesButtonAction)
+        public void SetupContents(string warningContent, string yesContent, UnityAction yesButtonAction)
         {
             warningText.text = warningContent;
             yesButtonText.text = yesContent;
-            noButtonText.text = noContent;
 
             yesButton.onClick.RemoveAllListeners();
             yesButton.onClick.AddListener(yesButtonAction);
