@@ -27,7 +27,7 @@ namespace CharonsCorner.Runtime
         [field: SerializeField, ReadOnly] public UIPanel CurrentPanel { get; private set; }
 
         [field: Header("Loading")]
-        [field: SerializeField] public LoadingHandler LoadingHandler { get; private set; }
+        [field: SerializeField] public LoadingPanel LoadingPanel { get; private set; }
 
         /// <summary>
         /// Action that is invoked when the current panel is changed.
@@ -134,6 +134,20 @@ namespace CharonsCorner.Runtime
         private void InputManager_OnControlSchemeChanged(ControlScheme newScheme)
         {
             SetCurrentSelectedObject();
+        }
+
+        /// <summary>
+        /// Helper method to change the contents of the confirm panel.
+        /// </summary>
+        public void ChangeConfirmPanelContents(string warningContent, string yesContent, string noContent, UnityEngine.Events.UnityAction yesButtonAction)
+        {
+            GameplayConfirmPanel confirmPanel = panels[PanelName.Confirm] as GameplayConfirmPanel;
+            if(confirmPanel == null)
+            {
+                Debug.LogError("Confirm panel is not of type GameplayConfirmPanel or is not set up correctly.");
+                return;
+            }
+            confirmPanel.SetupContents(warningContent, yesContent, noContent, yesButtonAction);
         }
     }
 }

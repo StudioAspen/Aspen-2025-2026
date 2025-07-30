@@ -4,7 +4,6 @@ using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Cysharp.Threading.Tasks;
-using Steamworks;
 
 namespace CharonsCorner.Runtime
 {
@@ -15,6 +14,7 @@ namespace CharonsCorner.Runtime
         Gameplay,
         Dialogue,
         Paused,
+        GameplayConfirm, // When the player wants to confirm a gameplay action
         Cutscene
     }
 
@@ -105,6 +105,11 @@ namespace CharonsCorner.Runtime
                     UIManager.Instance.ShowPanel(UIManager.PanelName.PauseMenu);
                     InputManager.Instance.LockCursor(false);
                     break;
+                case GameState.GameplayConfirm:
+                    Time.timeScale = 1f;
+                    UIManager.Instance.ShowPanel(UIManager.PanelName.Confirm);
+                    InputManager.Instance.LockCursor(false);
+                    break;
                 case GameState.Cutscene:
                     Time.timeScale = 1f;
                     InputManager.Instance.LockCursor(false);
@@ -122,13 +127,13 @@ namespace CharonsCorner.Runtime
         public async UniTask SwitchScenes(SceneReference scene, GameState afterState)
         {
             ChangeGameState(GameState.Loading);
-            await UIManager.Instance.LoadingHandler.FadeIn();
+            await UIManager.Instance.LoadingPanel.FadeIn();
 
             await SceneManager.LoadSceneAsync(scene.Name);
 
             ChangeGameState(afterState);
 
-            await UIManager.Instance.LoadingHandler.FadeOut();
+            await UIManager.Instance.LoadingPanel.FadeOut();
         }
 
         /// <summary>

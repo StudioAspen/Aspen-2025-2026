@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace CharonsCorner.Runtime
 {
-    public class LoadingHandler : MonoBehaviour
+    public class LoadingPanel : MonoBehaviour
     {
         [SerializeField, Required] private Image image;
 
