@@ -138,8 +138,7 @@ namespace CharonsCorner.Runtime
                 dialogueManager.EndDialogue();
             });
 
-            if (optionsContainer.childCount > 0)
-                uiManager.ChangeCurrentSelectedObject(optionsContainer.GetChild(0).gameObject);
+            uiManager.ChangeCurrentSelectedObject(optionsContainer.GetChild(0).gameObject); // Set the first button as selected
         }
 
         private void ShowNextButton()
@@ -153,6 +152,8 @@ namespace CharonsCorner.Runtime
 
             Button nextButton = nextButtonObject.GetComponent<Button>();
             nextButton.onClick.AddListener(() => dialogueManager.StartNextDialogueInSequence());
+
+            uiManager.ChangeCurrentSelectedObject(nextButtonObject);
         }
 
         /// <summary>
@@ -169,8 +170,14 @@ namespace CharonsCorner.Runtime
 
         private void ClearButtons()
         {
-            foreach (Transform child in optionsContainer)
+            // We need to detach first because destroyed gameObjects take a frame
+            // We are looping backwards to avoid issues with child count changing during iteration
+            for (int i = optionsContainer.childCount - 1; i >= 0; i--)
+            {
+                Transform child = optionsContainer.GetChild(i);
+                child.SetParent(null, false); // Detach so container's childCount updates immediately
                 Destroy(child.gameObject);
+            }
         }
 
         public override void CloseUI()

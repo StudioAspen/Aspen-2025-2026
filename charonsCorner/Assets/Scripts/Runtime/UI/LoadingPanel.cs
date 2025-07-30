@@ -20,6 +20,8 @@ namespace CharonsCorner.Runtime
 
         public async UniTask FadeIn()
         {
+            image.DOKill();
+
             image.SetImageAlpha(0f);
             gameObject.SetActive(true);
 
@@ -29,6 +31,9 @@ namespace CharonsCorner.Runtime
 
         public async UniTask FadeOut()
         {
+            image.DOKill();
+
+            image.SetImageAlpha(1f);
             gameObject.SetActive(true);
 
             await image.DOFade(0f, fadeOutDuration).SetEase(fadeOutEase).SetUpdate(true);

@@ -79,6 +79,7 @@ namespace CharonsCorner.Runtime
                 case GameState.Title:
                     Time.timeScale = 1f;
                     UIManager.Instance.HideAllPanels();
+                    InputManager.Instance.EnableUIActions();
                     InputManager.Instance.LockCursor(false);
                     break;
                 case GameState.Loading:
@@ -137,7 +138,6 @@ namespace CharonsCorner.Runtime
         }
 
         /// <summary>
-        /// Starts the game by switching to the tutorial scene and setting the game state to Gameplay.
         /// TODO in the future because of loading from saved point.
         /// </summary>
         public void StartGame()

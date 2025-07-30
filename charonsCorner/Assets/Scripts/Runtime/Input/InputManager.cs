@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.LowLevel;
 using static CharonsCorner.Runtime.InputActions;
@@ -11,6 +12,9 @@ namespace CharonsCorner.Runtime
     public class InputManager : MonoBehaviour, IPlayerActions, IUIActions
     {
         public static InputManager Instance { get; private set; }
+
+        [Header("References")]
+        [SerializeField] private EventSystem eventSystem;
 
         public InputActions InputActions { get; private set; }
 
@@ -33,6 +37,7 @@ namespace CharonsCorner.Runtime
             KeyboardMouse,
             Gamepad
         }
+        [field: Header("Control Scheme")]
         [field: SerializeField, ReadOnly] public ControlScheme CurrentControlScheme { get; private set; }
         /// <summary>
         /// Action that is invoked when the current control scheme is changed based on the input device used.
@@ -91,6 +96,7 @@ namespace CharonsCorner.Runtime
                 CreatePlayerActions();
 
             InputActions.Disable();
+            eventSystem.sendNavigationEvents = false;
         }
 
         /// <summary>
@@ -105,6 +111,7 @@ namespace CharonsCorner.Runtime
             InputActions.Enable();
             InputActions.Player.Enable();
             InputActions.UI.Disable();
+            eventSystem.sendNavigationEvents = false;
 
             LockCursor(true);
         }
@@ -121,6 +128,7 @@ namespace CharonsCorner.Runtime
             InputActions.Enable();
             InputActions.Player.Disable();
             InputActions.UI.Enable();
+            eventSystem.sendNavigationEvents = true;
 
             LockCursor(false);
         }
