@@ -9,3 +9,6 @@ Unity Version 6000.0.25f1
 3. https://github.com/starikcetin/Eflatun.SceneReference
 4. https://github.com/Cysharp/UniTask
 5. https://assetstore.unity.com/packages/tools/animation/dotween-hotween-v2-27676?srsltid=AfmBOornbZYhlGWV3aDX83vnbNypVHFwMPJIVzroHsUGNM_iLoJVLB93
+6. https://github.com/Haruma-K/uPalette
+7. https://github.com/rlabrecque/Steamworks.NET
+8. https://github.com/mackysoft/Unity-SerializeReferenceExtensions
