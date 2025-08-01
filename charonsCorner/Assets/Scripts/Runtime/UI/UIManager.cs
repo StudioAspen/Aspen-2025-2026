@@ -1,8 +1,10 @@
 using AYellowpaper.SerializedCollections;
 using NaughtyAttributes;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 using static CharonsCorner.Runtime.InputManager;
 
 namespace CharonsCorner.Runtime
@@ -148,6 +150,33 @@ namespace CharonsCorner.Runtime
                 return;
             }
             confirmPanel.SetupContents(warningContent, yesContent, yesButtonAction);
+        }
+
+        public static bool IsUIObjectInteractable(EventSystem eventSystem, GameObject target)
+        {
+            if (target == null || !target.activeInHierarchy)
+                return false;
+
+            RectTransform rectTransform = target.GetComponent<RectTransform>();
+            if (rectTransform == null)
+                return false;
+
+            Vector2 screenPoint = RectTransformUtility.WorldToScreenPoint(null, rectTransform.position);
+            var pointerData = new PointerEventData(eventSystem) { position = screenPoint };
+
+            List<RaycastResult> results = new List<RaycastResult>();
+            eventSystem.RaycastAll(pointerData, results);
+
+            foreach (var result in results)
+            {
+                if (result.gameObject == target || result.gameObject.transform.IsChildOf(target.transform))
+                    return true;
+
+                // Hit something else first
+                return false;
+            }
+
+            return false;
         }
     }
 }

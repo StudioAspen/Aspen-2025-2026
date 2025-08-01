@@ -169,7 +169,20 @@ namespace CharonsCorner.Runtime
         }
 
         public void OnNavigate(InputAction.CallbackContext context) { }
-        public void OnSubmit(InputAction.CallbackContext context) { }
+        public void OnSubmit(InputAction.CallbackContext context)
+        {
+            if (!context.performed)
+                return;
+
+            GameObject selectedObject = eventSystem.currentSelectedGameObject;
+            if (selectedObject == null)
+                return;
+
+            if (!UIManager.IsUIObjectInteractable(eventSystem, selectedObject))
+                return;
+
+            ExecuteEvents.Execute(selectedObject, new BaseEventData(eventSystem), ExecuteEvents.submitHandler);
+        }
         public void OnCancel(InputAction.CallbackContext context) { }
         public void OnPoint(InputAction.CallbackContext context) { }
         public void OnClick(InputAction.CallbackContext context) { }

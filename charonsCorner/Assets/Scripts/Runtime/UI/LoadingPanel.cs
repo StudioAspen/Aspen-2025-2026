@@ -20,26 +20,31 @@ namespace CharonsCorner.Runtime
 
         public async UniTask FadeIn()
         {
+            if (!DOTween.IsTweening(image))
+                image.SetImageAlpha(0f);
+
             image.DOKill();
 
-            image.SetImageAlpha(0f);
             gameObject.SetActive(true);
 
-            await image.DOFade(1f, fadeInDuration).SetEase(fadeInEase).SetUpdate(true);
-            image.SetImageAlpha(1f);
+            await image.DOFade(1f, fadeInDuration).SetEase(fadeInEase).SetUpdate(true).OnComplete(() => { 
+                image.SetImageAlpha(1f); 
+            });
         }
 
         public async UniTask FadeOut()
         {
+            if (!DOTween.IsTweening(image))
+                image.SetImageAlpha(1f);
+
             image.DOKill();
 
-            image.SetImageAlpha(1f);
             gameObject.SetActive(true);
 
-            await image.DOFade(0f, fadeOutDuration).SetEase(fadeOutEase).SetUpdate(true);
-            image.SetImageAlpha(0f);
-
-            gameObject.SetActive(false);
+            await image.DOFade(0f, fadeOutDuration).SetEase(fadeOutEase).SetUpdate(true).OnComplete(() => { 
+                image.SetImageAlpha(0f);
+                gameObject.SetActive(false);
+            });
         }
     }
 }
