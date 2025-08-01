@@ -35,9 +35,7 @@ namespace CharonsCorner.Runtime
             dialogueManager.OnDialogueEnded += DialogueManager_OnDialogueEnded;
 
             if (useCamera)
-            {
-                CameraManager.Instance.RegisterCamera(CameraManager.CameraType.Dialogue, cinemachineCamera, true);
-            }
+                CameraManager.Instance.ChangeActiveCamera(cinemachineCamera);
         }
 
         private void DialogueManager_OnDialogueEnded()
@@ -45,7 +43,7 @@ namespace CharonsCorner.Runtime
             dialogueManager.OnDialogueEnded -= DialogueManager_OnDialogueEnded;
 
             if(useCamera)
-                CameraManager.Instance.ChangeActiveCamera(CameraManager.CameraType.Player);
+                CameraManager.Instance.ResetActiveCamera();
         }
     }
 }

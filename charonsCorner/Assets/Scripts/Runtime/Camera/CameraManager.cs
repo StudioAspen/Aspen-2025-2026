@@ -14,17 +14,9 @@ namespace CharonsCorner.Runtime
     {
         public static CameraManager Instance { get; private set; }
 
+        [field: SerializeField, ReadOnly] public CinemachineCamera SceneDefaultCamera { get; private set; }
         [field: SerializeField, ReadOnly] public CinemachineCamera CurrentCamera { get; private set; }
         public event Action<CinemachineCamera> OnActiveCameraChanged = delegate { };
-
-        public enum CameraType
-        {
-            Player,
-            Dialogue,
-        }
-
-        [field: SerializeField, SerializedDictionary("Camera Type", "Camera")]
-        public SerializedDictionary<CameraType, CinemachineCamera> RegisteredCameras { get; private set; } = new();
 
         public CameraShaker CameraShaker { get; private set; }
 
@@ -50,29 +42,31 @@ namespace CharonsCorner.Runtime
             CameraShaker.Dispose();
         }
 
-        public void RegisterCamera(CameraType type, CinemachineCamera camera, bool changeToActive = false)
+        public void RegisterSceneDefaultCamera(CinemachineCamera camera, bool changeToActiveCamera = false)
         {
-            if (!RegisteredCameras.ContainsKey(type))
-                RegisteredCameras.Add(type, camera);
-            else
-                RegisteredCameras[type] = camera;
+            SceneDefaultCamera = camera;
 
-            if (changeToActive)
-                ChangeActiveCamera(type);
+            if (changeToActiveCamera)
+                ChangeActiveCamera(camera);
         }
 
-        public void ChangeActiveCamera(CameraType cameraType)
+        public void ChangeActiveCamera(CinemachineCamera camera)
         {
-            if (!RegisteredCameras.ContainsKey(cameraType))
-            {
-                Debug.LogWarning($"Camera type {cameraType} is not registered. Failed to change active camera.");
-                return;
-            }
-
-            CurrentCamera = RegisteredCameras[cameraType];
+            CurrentCamera = camera;
             CurrentCamera.Prioritize();
 
             OnActiveCameraChanged.Invoke(CurrentCamera);
+        }
+
+        public void ResetActiveCamera()
+        {
+            if (SceneDefaultCamera == null)
+            {
+                Debug.LogWarning("No default camera registered. Cannot reset active camera.");
+                return;
+            }
+
+            ChangeActiveCamera(SceneDefaultCamera);
         }
 
         private void Update()
@@ -82,7 +76,7 @@ namespace CharonsCorner.Runtime
 
         private void SceneManager_ActiveSceneChanged(Scene oldScene, Scene newScene)
         {
-            RegisteredCameras.Clear();
+            SceneDefaultCamera = null;
             CurrentCamera = null;
         }
     }
