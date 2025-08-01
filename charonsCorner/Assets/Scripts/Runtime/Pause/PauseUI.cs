@@ -30,6 +30,9 @@ namespace CharonsCorner.Runtime
         // Called by button UI event
         public void GoBackToMenu() => GameManager.Instance.ReturnToMenu();
 
+        // Called by button UI event
+        public void GoBackToHub() => GameManager.Instance.ReturnToHub();
+
         public override void CloseUI()
         {
             GameManager.Instance.ChangeGameState(GameState.Gameplay);

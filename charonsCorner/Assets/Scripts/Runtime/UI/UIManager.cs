@@ -152,6 +152,13 @@ namespace CharonsCorner.Runtime
             confirmPanel.SetupContents(warningContent, yesContent, yesButtonAction);
         }
 
+        /// <summary>
+        /// Utility method to check if a UI object is interactable by raycasting against it to see if any other UI elements block it.
+        /// Needed for gamepad interactions.
+        /// </summary>
+        /// <param name="eventSystem"></param>
+        /// <param name="target"></param>
+        /// <returns></returns>
         public static bool IsUIObjectInteractable(EventSystem eventSystem, GameObject target)
         {
             if (target == null || !target.activeInHierarchy)
