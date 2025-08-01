@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.LowLevel;
 using static CharonsCorner.Runtime.InputActions;
 
 namespace CharonsCorner.Runtime
@@ -14,6 +13,7 @@ namespace CharonsCorner.Runtime
         public static InputManager Instance { get; private set; }
 
         [Header("References")]
+        [SerializeField] private PlayerInput playerInput; // We are using C# generated inputs, so this is just a dummy playerInput to detect controlScheme changes
         [SerializeField] private EventSystem eventSystem;
 
         public InputActions InputActions { get; private set; }
@@ -68,12 +68,12 @@ namespace CharonsCorner.Runtime
 
             CreatePlayerActions();
 
-            InputSystem.onEvent += InputSystem_OnEvent;
+            playerInput.onControlsChanged += PlayerInput_OnControlsChanged;
         }
 
         private void OnDestroy()
         {
-            InputSystem.onEvent -= InputSystem_OnEvent;
+            playerInput.onControlsChanged -= PlayerInput_OnControlsChanged;
         }
 
         /// <summary>
@@ -197,9 +197,9 @@ namespace CharonsCorner.Runtime
         /// </summary>
         /// <param name="eventPtr"></param>
         /// <param name="device"></param>
-        private void InputSystem_OnEvent(InputEventPtr eventPtr, InputDevice device)
+        private void PlayerInput_OnControlsChanged(PlayerInput input)
         {
-            ControlScheme newScheme = device is Gamepad ? ControlScheme.Gamepad : ControlScheme.KeyboardMouse;
+            ControlScheme newScheme = input.currentControlScheme == "Gamepad" ? ControlScheme.Gamepad : ControlScheme.KeyboardMouse;
 
             if (newScheme != CurrentControlScheme)
             {
