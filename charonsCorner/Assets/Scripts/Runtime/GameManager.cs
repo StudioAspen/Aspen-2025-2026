@@ -32,7 +32,6 @@ namespace CharonsCorner.Runtime
         /// </list>
         /// </remarks>
         public event Action<GameState> OnGameStateChanged = delegate { };
-        private GameState initialGameState;
 
         [Header("References")]
         [SerializeField] private SceneReference titleScene;

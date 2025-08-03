@@ -5,7 +5,7 @@ namespace CharonsCorner.Runtime
 {
     public class VsyncSetting : Setting
     {
-        private protected override string playerPrefsKey => "Settings_Vsync";
+        private protected override string saveKey => "Vsync";
         private static readonly int defaultValue = 0;
         public static int CurrentValue { get; private set; }
 
@@ -18,7 +18,7 @@ namespace CharonsCorner.Runtime
 
         public override void Load()
         {
-            CurrentValue = PlayerPrefs.GetInt(playerPrefsKey, defaultValue);
+            CurrentValue = SaveManager.SettingsStore.Data.GetInt(saveKey, defaultValue);
             vsyncToggle.isOn = CurrentValue == 1;
             QualitySettings.vSyncCount = CurrentValue;
         }
@@ -26,7 +26,7 @@ namespace CharonsCorner.Runtime
         public override void Apply()
         {
             int vsyncValue = vsyncToggle.isOn ? 1 : 0;
-            PlayerPrefs.SetInt(playerPrefsKey, vsyncValue);
+            SaveManager.SettingsStore.Data.SetInt(saveKey, vsyncValue);
             CurrentValue = vsyncValue;
             QualitySettings.vSyncCount = CurrentValue;
         }

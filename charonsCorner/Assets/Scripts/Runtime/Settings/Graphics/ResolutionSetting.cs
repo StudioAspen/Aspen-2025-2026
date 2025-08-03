@@ -7,7 +7,7 @@ namespace CharonsCorner.Runtime
 {
     public class ResolutionSetting : Setting
     {
-        private protected override string playerPrefsKey => "Settings_Resolution";
+        private protected override string saveKey => "Resolution";
         private static int defaultValue => 0; // Default to the first resolution in the list (highest available in this case)
         public static int CurrentIndex { get; private set; }
 
@@ -29,7 +29,7 @@ namespace CharonsCorner.Runtime
             foreach (Resolution resolution in validResolutions)
                 resolutionDropdown.options.Add(new TMP_Dropdown.OptionData($"{resolution.width}x{resolution.height}"));
 
-            CurrentIndex = PlayerPrefs.GetInt(playerPrefsKey, defaultValue);
+            CurrentIndex = SaveManager.SettingsStore.Data.GetInt(saveKey, defaultValue);
             CurrentIndex = Mathf.Clamp(CurrentIndex, 0, validResolutions.Count - 1); // Ensure index is within bounds
             resolutionDropdown.value = CurrentIndex;
 
@@ -40,7 +40,7 @@ namespace CharonsCorner.Runtime
         public override void Apply()
         {
             int windowModeIndex = resolutionDropdown.value;
-            PlayerPrefs.SetInt(playerPrefsKey, windowModeIndex);
+            SaveManager.SettingsStore.Data.SetInt(saveKey, windowModeIndex);
             CurrentIndex = windowModeIndex;
 
             Resolution selectedResolution = validResolutions[CurrentIndex];

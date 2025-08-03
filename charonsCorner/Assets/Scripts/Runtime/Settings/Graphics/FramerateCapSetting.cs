@@ -1,12 +1,11 @@
 ﻿using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace CharonsCorner.Runtime
 {
     public class FramerateCapSetting : Setting
     {
-        private protected override string playerPrefsKey => "Settings_FramerateCap";
+        private protected override string saveKey => "FramerateCap";
         private static int defaultValue = 0; // Default to no cap (first index)
         public static readonly int[] FramerateCapValues = {-1, 30, 60, 75, 100, 120, 144, 165, 170, 180, 200, 240}; // 0 means no cap
         public static int CurrentIndex { get; private set; }
@@ -25,7 +24,7 @@ namespace CharonsCorner.Runtime
             foreach (int value in FramerateCapValues)
                 framerateCapDropdown.options.Add(new TMP_Dropdown.OptionData(value == -1 ? "No Cap" : value.ToString()));
 
-            CurrentIndex = PlayerPrefs.GetInt(playerPrefsKey, defaultValue);
+            CurrentIndex = SaveManager.SettingsStore.Data.GetInt(saveKey, defaultValue);
             CurrentIndex = Mathf.Clamp(CurrentIndex, 0, FramerateCapValues.Length - 1); // Ensure index is within bounds
 
             framerateCapDropdown.value = CurrentIndex;
@@ -35,7 +34,7 @@ namespace CharonsCorner.Runtime
         public override void Apply()
         {
             int framerateCapIndex = framerateCapDropdown.value;
-            PlayerPrefs.SetInt(playerPrefsKey, framerateCapIndex);
+            SaveManager.SettingsStore.Data.SetInt(saveKey, framerateCapIndex);
             CurrentIndex = framerateCapIndex;
             Application.targetFrameRate = FramerateCapValues[CurrentIndex];
         }

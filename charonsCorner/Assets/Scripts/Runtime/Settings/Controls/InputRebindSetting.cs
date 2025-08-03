@@ -8,7 +8,7 @@ namespace CharonsCorner.Runtime
 {
     public class InputRebindSetting : Setting
     {
-        private protected override string playerPrefsKey => $"Settings_{actionToRebind.name}";
+        private protected override string saveKey => $"{actionToRebind.name}";
 
         [Header("Config")]
         [SerializeField] private InputActionReference actionToRebind;

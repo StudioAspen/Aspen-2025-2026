@@ -5,18 +5,18 @@ namespace CharonsCorner.Runtime
     public abstract class Setting : MonoBehaviour
     {
         /// <summary>
-        /// The key used to store the setting in PlayerPrefs.
+        /// The key used to store the setting in the save store.
         /// </summary>
-        private protected abstract string playerPrefsKey { get; }
+        private protected abstract string saveKey { get; }
 
         /// <summary>
-        /// Save the current value of the setting to PlayerPrefs and apply it to the game.
+        /// Save the current value of the setting to save store and apply it to the game.
         /// </summary>
         public abstract void Apply();
 
         /// <summary>
         /// Equivalent to Awake, but called manually to ensure settings are initialized even if the object is disabled at startup.
-        /// Grab the current value from PlayerPrefs and apply it to the setting.
+        /// Grab the current value from save store and apply it to the setting.
         /// </summary>
         public abstract void Load();
 

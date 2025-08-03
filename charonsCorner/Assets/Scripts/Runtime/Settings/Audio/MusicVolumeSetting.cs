@@ -5,7 +5,7 @@ namespace CharonsCorner.Runtime
 {
     public class MusicVolumeSetting : Setting
     {
-        private protected override string playerPrefsKey => "Settings_MusicVolume";
+        private protected override string saveKey => "MusicVolume";
         private static readonly int defaultValue = 50;
         public static int CurrentValue { get; private set; }
 
@@ -18,14 +18,14 @@ namespace CharonsCorner.Runtime
 
         public override void Load()
         {
-            CurrentValue = PlayerPrefs.GetInt(playerPrefsKey, defaultValue);
+            CurrentValue = SaveManager.SettingsStore.Data.GetInt(saveKey, defaultValue);
             musicVolumeSlider.value = CurrentValue;
         }
 
         public override void Apply()
         {
             int musicVolume = (int)musicVolumeSlider.value;
-            PlayerPrefs.SetInt(playerPrefsKey, musicVolume);
+            SaveManager.SettingsStore.Data.SetInt(saveKey, musicVolume);
             CurrentValue = musicVolume;
         }
 
