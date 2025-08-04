@@ -31,7 +31,7 @@ namespace CharonsCorner.Runtime
             foreach (var mode in WindowModes)
                 windowModeDropdown.options.Add(new TMP_Dropdown.OptionData($"{mode.name}"));
 
-            CurrentIndex = SaveManager.SettingsStore.Data.GetInt(saveKey, defaultValue);
+            CurrentIndex = SaveManager.SettingsStore.GetInt(saveKey, defaultValue);
             CurrentIndex = Mathf.Clamp(CurrentIndex, 0, WindowModes.Count - 1); // Ensure index is within bounds
 
             windowModeDropdown.value = CurrentIndex;
@@ -41,7 +41,7 @@ namespace CharonsCorner.Runtime
         public override void Apply()
         {
             int windowModeIndex = windowModeDropdown.value;
-            SaveManager.SettingsStore.Data.SetInt(saveKey, windowModeIndex);
+            SaveManager.SettingsStore.SetInt(saveKey, windowModeIndex);
             CurrentIndex = windowModeIndex;
             Screen.fullScreenMode = WindowModes[CurrentIndex].mode;
         }

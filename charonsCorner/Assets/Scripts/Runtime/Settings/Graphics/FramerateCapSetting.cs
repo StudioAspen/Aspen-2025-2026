@@ -24,7 +24,7 @@ namespace CharonsCorner.Runtime
             foreach (int value in FramerateCapValues)
                 framerateCapDropdown.options.Add(new TMP_Dropdown.OptionData(value == -1 ? "No Cap" : value.ToString()));
 
-            CurrentIndex = SaveManager.SettingsStore.Data.GetInt(saveKey, defaultValue);
+            CurrentIndex = SaveManager.SettingsStore.GetInt(saveKey, defaultValue);
             CurrentIndex = Mathf.Clamp(CurrentIndex, 0, FramerateCapValues.Length - 1); // Ensure index is within bounds
 
             framerateCapDropdown.value = CurrentIndex;
@@ -34,7 +34,7 @@ namespace CharonsCorner.Runtime
         public override void Apply()
         {
             int framerateCapIndex = framerateCapDropdown.value;
-            SaveManager.SettingsStore.Data.SetInt(saveKey, framerateCapIndex);
+            SaveManager.SettingsStore.SetInt(saveKey, framerateCapIndex);
             CurrentIndex = framerateCapIndex;
             Application.targetFrameRate = FramerateCapValues[CurrentIndex];
         }

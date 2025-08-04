@@ -18,7 +18,7 @@ namespace CharonsCorner.Runtime
 
         public override void Load()
         {
-            CurrentValue = SaveManager.SettingsStore.Data.GetBool(saveKey, defaultValue);
+            CurrentValue = SaveManager.SettingsStore.GetBool(saveKey, defaultValue);
             vsyncToggle.isOn = CurrentValue;
             QualitySettings.vSyncCount = CurrentValue ? 1 : 0;
         }
@@ -26,7 +26,7 @@ namespace CharonsCorner.Runtime
         public override void Apply()
         {
             bool vsyncValue = vsyncToggle.isOn;
-            SaveManager.SettingsStore.Data.SetBool(saveKey, vsyncValue);
+            SaveManager.SettingsStore.SetBool(saveKey, vsyncValue);
             CurrentValue = vsyncValue;
             QualitySettings.vSyncCount = CurrentValue ? 1 : 0;
         }

@@ -18,14 +18,14 @@ namespace CharonsCorner.Runtime
 
         public override void Load()
         {
-            CurrentValue = SaveManager.SettingsStore.Data.GetInt(saveKey, defaultValue);
+            CurrentValue = SaveManager.SettingsStore.GetInt(saveKey, defaultValue);
             musicVolumeSlider.value = CurrentValue;
         }
 
         public override void Apply()
         {
             int musicVolume = (int)musicVolumeSlider.value;
-            SaveManager.SettingsStore.Data.SetInt(saveKey, musicVolume);
+            SaveManager.SettingsStore.SetInt(saveKey, musicVolume);
             CurrentValue = musicVolume;
         }
 

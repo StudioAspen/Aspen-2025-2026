@@ -29,7 +29,7 @@ namespace CharonsCorner.Runtime
             foreach (Resolution resolution in validResolutions)
                 resolutionDropdown.options.Add(new TMP_Dropdown.OptionData($"{resolution.width}x{resolution.height}"));
 
-            CurrentIndex = SaveManager.SettingsStore.Data.GetInt(saveKey, defaultValue);
+            CurrentIndex = SaveManager.SettingsStore.GetInt(saveKey, defaultValue);
             CurrentIndex = Mathf.Clamp(CurrentIndex, 0, validResolutions.Count - 1); // Ensure index is within bounds
             resolutionDropdown.value = CurrentIndex;
 
@@ -40,7 +40,7 @@ namespace CharonsCorner.Runtime
         public override void Apply()
         {
             int windowModeIndex = resolutionDropdown.value;
-            SaveManager.SettingsStore.Data.SetInt(saveKey, windowModeIndex);
+            SaveManager.SettingsStore.SetInt(saveKey, windowModeIndex);
             CurrentIndex = windowModeIndex;
 
             Resolution selectedResolution = validResolutions[CurrentIndex];

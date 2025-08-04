@@ -19,14 +19,14 @@ namespace CharonsCorner.Runtime
 
         public override void Load()
         {
-            CurrentValue = SaveManager.SettingsStore.Data.GetInt(saveKey, defaultValue);
+            CurrentValue = SaveManager.SettingsStore.GetInt(saveKey, defaultValue);
             sensitivitySlider.value = CurrentValue;
         }
 
         public override void Apply()
         {
             int sensitivityValue = (int)sensitivitySlider.value;
-            SaveManager.SettingsStore.Data.SetInt(saveKey, sensitivityValue);
+            SaveManager.SettingsStore.SetInt(saveKey, sensitivityValue);
             CurrentValue = sensitivityValue;
         }
 
