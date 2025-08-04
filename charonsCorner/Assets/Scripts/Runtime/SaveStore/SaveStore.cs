@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using UnityEngine;
 
@@ -10,8 +11,7 @@ namespace CharonsCorner.Runtime
         /// Whether to obfuscate the save data. Prevents easy modification of the save file.
         /// </summary>
         public bool Obfuscate { get; private set; }
-        private const string fileExtension = ".dat";
-        public string FilePath => Path.Combine(Application.persistentDataPath, $"{FileName}{fileExtension}");
+        public string FilePath => Path.Combine(Application.persistentDataPath, $"{FileName}");
 
         public SaveData Data { get; private set; }
 
@@ -31,18 +31,16 @@ namespace CharonsCorner.Runtime
         /// </summary>
         public SaveData Load()
         {
-            SaveData data;
-
             if (!File.Exists(FilePath))
-                data = new SaveData();
-            else
-            {
-                string json = File.ReadAllText(FilePath);
-                if (Obfuscate)
-                    json = EncryptionUtilities.Decrypt(json);
+                return InitNewSave();
 
-                data = JsonUtility.FromJson<SaveData>(json);
-            }
+            string json = File.ReadAllText(FilePath);
+
+            if(Obfuscate && !TryDecrypt(ref json))
+                return InitNewSave();
+
+            if (!TryParseJson(json, out SaveData data))
+                return InitNewSave();
 
             data.SetSaveStore(this);
             return data;
@@ -59,11 +57,11 @@ namespace CharonsCorner.Runtime
         /// <summary>
         /// Saves the provided data to the save file.
         /// </summary>
-        public void Save(SaveData data)
+        private void Save(SaveData data)
         {
             string json = JsonUtility.ToJson(data, true);
 
-            if(Obfuscate)
+            if (Obfuscate)
                 json = EncryptionUtilities.Encrypt(json);
 
             File.WriteAllText(FilePath, json);
@@ -72,13 +70,43 @@ namespace CharonsCorner.Runtime
         }
 
         /// <summary>
-        /// Wipes the save file and resets the data.
+        /// Initializes a new empty save data instance and saves it to the store.
         /// </summary>
-        public void Clear()
+        private SaveData InitNewSave()
         {
-            if (File.Exists(FilePath))
-                File.Delete(FilePath);
-            Data = Load();
+            SaveData newData = new SaveData();
+            Save(newData);
+            newData.SetSaveStore(this);
+            return newData;
+        }
+
+        private bool TryDecrypt(ref string json)
+        {
+            try
+            {
+                json = EncryptionUtilities.Decrypt(json);
+                return true;
+            }
+            catch (Exception e)
+            {
+                Debug.LogWarning($"Decryption failed. Resetting save file '{FilePath}' due to potential corruption.\nError: {e.Message}");
+                return false;
+            }
+        }
+
+        private bool TryParseJson(string json, out SaveData data)
+        {
+            try
+            {
+                data = JsonUtility.FromJson<SaveData>(json);
+                return true;
+            }
+            catch (Exception e)
+            {
+                Debug.LogWarning($"Failed to parse save data from '{FilePath}'. Resetting save file due to potential corruption.\nError: {e.Message}");
+                data = null;
+                return false;
+            }
         }
     }
 }

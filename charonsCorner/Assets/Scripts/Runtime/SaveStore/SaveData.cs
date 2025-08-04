@@ -38,9 +38,16 @@ namespace CharonsCorner.Runtime
         public void DeleteKey(string key)
         {
             if (values.ContainsKey(key))
+            {
                 values.Remove(key);
+                saveStore.Save(); // Automatically save after deleting a key
+            }
         }
-        public void DeleteAll() => values.Clear();
+        public void DeleteAll()
+        {
+            values.Clear();
+            saveStore.Save(); // Automatically save after clearing all values
+        }
 
         public float GetFloat(string key, float defaultValue = 0f)
         {

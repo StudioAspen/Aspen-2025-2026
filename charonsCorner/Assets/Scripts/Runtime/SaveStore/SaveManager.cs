@@ -14,8 +14,8 @@ namespace CharonsCorner.Runtime
 
         private static void InitializeSaveStores()
         {
-            SettingsStore = new SaveStore("Settings", false);
-            GameStore = new SaveStore("Data", true);
+            SettingsStore = new SaveStore("settings", false);
+            GameStore = new SaveStore("gameData", true);
         }
     }
 }
