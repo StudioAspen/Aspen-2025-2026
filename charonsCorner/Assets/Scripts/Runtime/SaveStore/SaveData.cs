@@ -1,4 +1,5 @@
 using AYellowpaper.SerializedCollections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace CharonsCorner.Runtime
@@ -87,5 +88,81 @@ namespace CharonsCorner.Runtime
             return defaultValue;
         }
         public void SetVector3(string key, Vector3 value) => SetValue(key, $"({value.x},{value.y},{value.z})");
+
+        public List<T> GetList<T>(string key, List<T> defaultValue = null)
+        {
+            string value = GetValue(key);
+            if (string.IsNullOrEmpty(value))
+                return defaultValue ?? new List<T>();
+
+            try
+            {
+                return JsonUtility.FromJson<ListWrapper<T>>(value).List;
+            }
+            catch
+            {
+                return defaultValue ?? new List<T>();
+            }
+        }
+        public void SetList<T>(string key, List<T> list)
+        {
+            if (list == null || list.Count == 0)
+            {
+                DeleteKey(key);
+                return;
+            }
+
+            string json = JsonUtility.ToJson(new ListWrapper<T>(list));
+            SetValue(key, json);
+        }
+
+        public Dictionary<K, V> GetDictionary<K, V>(string key, Dictionary<K, V> defaultValue = null)
+        {
+            string value = GetValue(key);
+            if (string.IsNullOrEmpty(value))
+                return defaultValue ?? new Dictionary<K, V>();
+
+            try
+            {
+                return JsonUtility.FromJson<DictionaryWrapper<K, V>>(value).Dictionary;
+            }
+            catch
+            {
+                return defaultValue ?? new Dictionary<K, V>();
+            }
+        }
+        public void SetDictionary<K, V>(string key, Dictionary<K, V> dict)
+        {
+            if (dict == null || dict.Count == 0)
+            {
+                DeleteKey(key);
+                return;
+            }
+
+            string json = JsonUtility.ToJson(new DictionaryWrapper<K, V>(new SerializedDictionary<K, V>(dict)));
+            SetValue(key, json);
+        }
+    }
+
+    [System.Serializable]
+    public class ListWrapper<T>
+    {
+        public List<T> List;
+
+        public ListWrapper(List<T> list)
+        {
+            List = list;
+        }
+    }
+
+    [System.Serializable]
+    public class DictionaryWrapper<K, V>
+    {
+        public SerializedDictionary<K, V> Dictionary;
+
+        public DictionaryWrapper(SerializedDictionary<K, V> dict)
+        {
+            Dictionary = dict;
+        }
     }
 }

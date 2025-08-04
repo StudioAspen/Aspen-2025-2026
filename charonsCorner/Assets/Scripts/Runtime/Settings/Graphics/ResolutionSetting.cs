@@ -60,9 +60,10 @@ namespace CharonsCorner.Runtime
         /// </summary>
         private List<Resolution> GetValidResolutions()
         {
-            Resolution[] allResolutions = Screen.resolutions.Reverse().ToArray();
+            Resolution[] allResolutions = Screen.resolutions.Reverse().ToArray(); // Reverse to prioritize higher resolutions first
             HashSet<(int, int)> validDimensions = new HashSet<(int, int)>();
 
+            // Filter resolutions to only include those that are 16:9 and at least 1280x720
             foreach (var res in allResolutions)
             {
                 if (res.width < 1280 || res.height < 720)
@@ -85,7 +86,6 @@ namespace CharonsCorner.Runtime
         /// <summary>
         /// Helper method to set the resolution, considering fullscreen mode.
         /// </summary>
-        /// <param name="resolution"></param>
         private void SetResolution(Resolution resolution) => Screen.SetResolution(resolution.width, resolution.height, Screen.fullScreenMode);
     }
 }

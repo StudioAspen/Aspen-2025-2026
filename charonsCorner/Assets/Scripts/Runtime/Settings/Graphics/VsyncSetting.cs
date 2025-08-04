@@ -6,36 +6,36 @@ namespace CharonsCorner.Runtime
     public class VsyncSetting : Setting
     {
         private protected override string saveKey => "Vsync";
-        private static readonly int defaultValue = 0;
-        public static int CurrentValue { get; private set; }
+        private static readonly bool defaultValue = false;
+        public static bool CurrentValue { get; private set; }
 
         [SerializeField] private Toggle vsyncToggle;
 
         private void OnEnable()
         {
-            vsyncToggle.isOn = CurrentValue == 1;
+            vsyncToggle.isOn = CurrentValue;
         }
 
         public override void Load()
         {
-            CurrentValue = SaveManager.SettingsStore.Data.GetInt(saveKey, defaultValue);
-            vsyncToggle.isOn = CurrentValue == 1;
-            QualitySettings.vSyncCount = CurrentValue;
+            CurrentValue = SaveManager.SettingsStore.Data.GetBool(saveKey, defaultValue);
+            vsyncToggle.isOn = CurrentValue;
+            QualitySettings.vSyncCount = CurrentValue ? 1 : 0;
         }
 
         public override void Apply()
         {
-            int vsyncValue = vsyncToggle.isOn ? 1 : 0;
-            SaveManager.SettingsStore.Data.SetInt(saveKey, vsyncValue);
+            bool vsyncValue = vsyncToggle.isOn;
+            SaveManager.SettingsStore.Data.SetBool(saveKey, vsyncValue);
             CurrentValue = vsyncValue;
-            QualitySettings.vSyncCount = CurrentValue;
+            QualitySettings.vSyncCount = CurrentValue ? 1 : 0;
         }
 
         public override void Discard()
         {
-            vsyncToggle.isOn = CurrentValue == 1;
+            vsyncToggle.isOn = CurrentValue;
         }
 
-        public override bool IsDirty() => vsyncToggle.isOn != (CurrentValue == 1);
+        public override bool IsDirty() => vsyncToggle.isOn != CurrentValue;
     }
 }
