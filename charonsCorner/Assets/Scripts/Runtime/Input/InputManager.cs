@@ -22,11 +22,13 @@ namespace CharonsCorner.Runtime
         public event Action<Vector2> Move = delegate { };
         public event Action<Vector2> Look = delegate { };
         public event Action Jump = delegate { };
+        /// <summary>
+        /// Invoked when start/stop drifting. True for start, false for stop.
+        /// </summary>
+        public event Action<bool> Drift = delegate { };
         public event Action Interact = delegate { };
 
-        public Vector2 MoveDirection => InputActions.Player.Move.ReadValue<Vector2>();
         public Vector2 LookDirection => InputActions.Player.Look.ReadValue<Vector2>();
-        public bool IsJumpKeyPressed => InputActions.Player.Jump.IsPressed();
 
         // UI
         public event Action Unpause = delegate { };
@@ -148,17 +150,25 @@ namespace CharonsCorner.Runtime
             if (context.performed)
                 Jump.Invoke();
         }
-
-        public void OnPause(InputAction.CallbackContext context)
-        {
-            if (context.performed)
-                GameManager.Instance.ChangeGameState(GameState.Paused);
-        }
  
         public void OnInteract(InputAction.CallbackContext context)
         {
             if (context.performed)
                 Interact.Invoke();
+        }
+
+        public void OnDrift(InputAction.CallbackContext context)
+        {
+            if(context.started)
+                Drift.Invoke(true); // Start drifting
+            else if(context.canceled)
+                Drift.Invoke(false); // Stop drifting
+        }
+
+        public void OnPause(InputAction.CallbackContext context)
+        {
+            if (context.performed)
+                GameManager.Instance.ChangeGameState(GameState.Paused);
         }
 
         // UI Actions

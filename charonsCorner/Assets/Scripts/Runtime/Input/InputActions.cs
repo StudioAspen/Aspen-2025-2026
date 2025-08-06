@@ -66,6 +66,15 @@ namespace CharonsCorner.Runtime
                     ""initialStateCheck"": false
                 },
                 {
+                    ""name"": ""Drift"",
+                    ""type"": ""Button"",
+                    ""id"": ""0210802d-b852-4e0e-9c67-73c177277697"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""Pause"",
                     ""type"": ""Button"",
                     ""id"": ""77902fea-6b29-47cb-b627-da7554e0e993"",
@@ -227,6 +236,28 @@ namespace CharonsCorner.Runtime
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
                     ""action"": ""Jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""cfca2fe7-ef9d-463c-b6e0-7934e2c24beb"",
+                    ""path"": ""<Keyboard>/shift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Drift"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""085de50d-70d7-4edf-ae47-67ea76d4ee7c"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Drift"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -893,6 +924,7 @@ namespace CharonsCorner.Runtime
             m_Player_Look = m_Player.FindAction("Look", throwIfNotFound: true);
             m_Player_Interact = m_Player.FindAction("Interact", throwIfNotFound: true);
             m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
+            m_Player_Drift = m_Player.FindAction("Drift", throwIfNotFound: true);
             m_Player_Pause = m_Player.FindAction("Pause", throwIfNotFound: true);
             // UI
             m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
@@ -978,6 +1010,7 @@ namespace CharonsCorner.Runtime
         private readonly InputAction m_Player_Look;
         private readonly InputAction m_Player_Interact;
         private readonly InputAction m_Player_Jump;
+        private readonly InputAction m_Player_Drift;
         private readonly InputAction m_Player_Pause;
         public struct PlayerActions
         {
@@ -987,6 +1020,7 @@ namespace CharonsCorner.Runtime
             public InputAction @Look => m_Wrapper.m_Player_Look;
             public InputAction @Interact => m_Wrapper.m_Player_Interact;
             public InputAction @Jump => m_Wrapper.m_Player_Jump;
+            public InputAction @Drift => m_Wrapper.m_Player_Drift;
             public InputAction @Pause => m_Wrapper.m_Player_Pause;
             public InputActionMap Get() { return m_Wrapper.m_Player; }
             public void Enable() { Get().Enable(); }
@@ -1009,6 +1043,9 @@ namespace CharonsCorner.Runtime
                 @Jump.started += instance.OnJump;
                 @Jump.performed += instance.OnJump;
                 @Jump.canceled += instance.OnJump;
+                @Drift.started += instance.OnDrift;
+                @Drift.performed += instance.OnDrift;
+                @Drift.canceled += instance.OnDrift;
                 @Pause.started += instance.OnPause;
                 @Pause.performed += instance.OnPause;
                 @Pause.canceled += instance.OnPause;
@@ -1028,6 +1065,9 @@ namespace CharonsCorner.Runtime
                 @Jump.started -= instance.OnJump;
                 @Jump.performed -= instance.OnJump;
                 @Jump.canceled -= instance.OnJump;
+                @Drift.started -= instance.OnDrift;
+                @Drift.performed -= instance.OnDrift;
+                @Drift.canceled -= instance.OnDrift;
                 @Pause.started -= instance.OnPause;
                 @Pause.performed -= instance.OnPause;
                 @Pause.canceled -= instance.OnPause;
@@ -1225,6 +1265,7 @@ namespace CharonsCorner.Runtime
             void OnLook(InputAction.CallbackContext context);
             void OnInteract(InputAction.CallbackContext context);
             void OnJump(InputAction.CallbackContext context);
+            void OnDrift(InputAction.CallbackContext context);
             void OnPause(InputAction.CallbackContext context);
         }
         public interface IUIActions
