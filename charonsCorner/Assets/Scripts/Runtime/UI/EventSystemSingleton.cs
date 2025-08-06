@@ -4,19 +4,11 @@ using UnityEngine.SceneManagement;
 
 namespace CharonsCorner.Runtime
 {
-    public class EventSystemSingleton : MonoBehaviour
+    public class EventSystemSingleton : Singleton<EventSystemSingleton>
     {
-        private static EventSystemSingleton instance;
-
-        private void Awake()
+        private protected override void Awake()
         {
-            if (instance != null && instance != this)
-            {
-                Destroy(gameObject);
-                return;
-            }
-
-            instance = this;
+            base.Awake();
 
             SceneManager.activeSceneChanged += SceneManager_ActiveSceneChanged;
             DestroyOtherEventSystems();

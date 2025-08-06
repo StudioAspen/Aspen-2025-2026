@@ -4,15 +4,12 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
 using static CharonsCorner.Runtime.InputManager;
 
 namespace CharonsCorner.Runtime
 {
-    public class UIManager : MonoBehaviour
+    public class UIManager : Singleton<UIManager>
     {
-        public static UIManager Instance { get; private set; }
-
         [field: SerializeField, ReadOnly] public GameObject DesiredSelectedObject { get; private set; }
 
         public enum PanelName
@@ -45,15 +42,9 @@ namespace CharonsCorner.Runtime
         /// </summary>
         public event Action OnUIClose = delegate { };
 
-        private void Awake()
+        private protected override void Awake()
         {
-            if (Instance != null && Instance != this)
-            {
-                Destroy(gameObject);
-                return;
-            }
-
-            Instance = this;
+            base.Awake();
 
             InitializePanels();
         }

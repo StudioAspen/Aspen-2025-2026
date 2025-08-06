@@ -8,10 +8,9 @@ using static CharonsCorner.Runtime.InputActions;
 
 namespace CharonsCorner.Runtime
 {
-    public class InputManager : MonoBehaviour, IPlayerActions, IUIActions
-    {
-        public static InputManager Instance { get; private set; }
 
+    public class InputManager : Singleton<InputManager>, IPlayerActions, IUIActions
+    {
         [Header("References")]
         [SerializeField] private PlayerInput playerInput; // We are using C# generated inputs, so this is just a dummy playerInput to detect controlScheme changes
         [SerializeField] private EventSystem eventSystem;
@@ -59,14 +58,9 @@ namespace CharonsCorner.Runtime
 
         private CursorLockMode desiredCursorLockState;
 
-        private void Awake()
+        private protected override void Awake()
         {
-            if(Instance != null && Instance != this)
-            {
-                Destroy(gameObject);
-                return;
-            }
-            Instance = this;
+            base.Awake();
 
             CreatePlayerActions();
 

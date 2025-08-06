@@ -18,10 +18,8 @@ namespace CharonsCorner.Runtime
         Cutscene
     }
 
-    public class GameManager : MonoBehaviour
+    public class GameManager : Singleton<GameManager>
     {
-        public static GameManager Instance { get; private set; }
-
         [field: SerializeField, ReadOnly] public GameState CurrentGameState { get; private set; }
         /// <summary>
         /// Action that is invoked when the game state is changed.
@@ -38,15 +36,9 @@ namespace CharonsCorner.Runtime
         [SerializeField] private SceneReference hubScene;
         [SerializeField] private SceneReference tutorialScene;
 
-        private void Awake()
+        private protected override void Awake()
         {
-            if (Instance != null && Instance != this)
-            {
-                Destroy(gameObject);
-                return;
-            }
-
-            Instance = this;
+            base.Awake();
         }
 
         /// <summary>

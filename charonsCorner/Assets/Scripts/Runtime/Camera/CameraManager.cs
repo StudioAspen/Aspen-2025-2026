@@ -1,34 +1,22 @@
-using AYellowpaper.SerializedCollections;
-using Cysharp.Threading.Tasks.Triggers;
 using NaughtyAttributes;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace CharonsCorner.Runtime
 {
-    public class CameraManager : MonoBehaviour
+    public class CameraManager : Singleton<CameraManager>
     {
-        public static CameraManager Instance { get; private set; }
-
         [field: SerializeField, ReadOnly] public CinemachineCamera SceneDefaultCamera { get; private set; }
         [field: SerializeField, ReadOnly] public CinemachineCamera CurrentCamera { get; private set; }
         public event Action<CinemachineCamera> OnActiveCameraChanged = delegate { };
 
         public CameraShaker CameraShaker { get; private set; }
 
-        private void Awake()
+        private protected override void Awake()
         {
-            if (Instance != null && Instance != this)
-            {
-                Destroy(gameObject);
-                return;
-            }
-
-            Instance = this;
+            base.Awake();
 
             SceneManager.activeSceneChanged += SceneManager_ActiveSceneChanged;
 
