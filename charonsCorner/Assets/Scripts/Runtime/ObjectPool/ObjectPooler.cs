@@ -5,35 +5,35 @@ namespace CharonsCorner.Runtime
 {
     public class ObjectPooler : MonoBehaviour
     {
-        private PoolableMonoBehaviour objectPrefab;
+        private PoolableObject objectPrefab;
 
-        private ObjectPool<PoolableMonoBehaviour> objectPool;
+        private ObjectPool<PoolableObject> objectPool;
 
-        public void Init(PoolableMonoBehaviour objectPrefab, int capacity, int maxSize)
+        public void Init(PoolableObject objectPrefab, int capacity, int maxSize)
         {
             this.objectPrefab = objectPrefab;
-            objectPool = new ObjectPool<PoolableMonoBehaviour>(CreateObject, OnGetFromPool, OnReleaseToPool, OnDestroyObject, true, capacity, maxSize);
+            objectPool = new ObjectPool<PoolableObject>(CreateObject, OnGetFromPool, OnReleaseToPool, OnDestroyObject, true, capacity, maxSize);
         }
 
-        private PoolableMonoBehaviour CreateObject()
+        private PoolableObject CreateObject()
         {
-            PoolableMonoBehaviour o = Instantiate(objectPrefab, new Vector3(0f, 100000f, 0f), Quaternion.identity, transform);
-            o.SetObjectPooler(this);
+            PoolableObject newObject = Instantiate(objectPrefab, new Vector3(0f, 100000f, 0f), Quaternion.identity, transform);
+            newObject.SetObjectPooler(this);
 
-            return o;
+            return newObject;
         }
 
-        private void OnGetFromPool(PoolableMonoBehaviour pooledObject)
+        private void OnGetFromPool(PoolableObject pooledObject)
         {
             pooledObject.gameObject.SetActive(true);
         }
 
-        private void OnReleaseToPool(PoolableMonoBehaviour pooledObject)
+        private void OnReleaseToPool(PoolableObject pooledObject)
         {
             pooledObject.gameObject.SetActive(false);
         }
 
-        private void OnDestroyObject(PoolableMonoBehaviour pooledObject)
+        private void OnDestroyObject(PoolableObject pooledObject)
         {
             Destroy(pooledObject);
         }
@@ -41,7 +41,7 @@ namespace CharonsCorner.Runtime
         #region Factory
         public T SpawnObject<T>(Vector3? position = null, Transform parent = null) where T : Component
         {
-            PoolableMonoBehaviour spawnedObject = objectPool.Get();
+            PoolableObject spawnedObject = objectPool.Get();
 
             // Set position if provided, otherwise default to zero
             spawnedObject.transform.position = position ?? Vector3.zero;
@@ -63,7 +63,7 @@ namespace CharonsCorner.Runtime
         /// <summary>
         /// Use this instead of Destroy() to return the object to the pool.
         /// </summary>
-        public void ReleaseObject(PoolableMonoBehaviour pooledObject)
+        public void ReleaseObject(PoolableObject pooledObject)
         {
             objectPool.Release(pooledObject);
         }

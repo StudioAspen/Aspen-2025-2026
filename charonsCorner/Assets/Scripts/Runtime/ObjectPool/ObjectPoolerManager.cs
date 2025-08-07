@@ -13,7 +13,7 @@ namespace CharonsCorner.Runtime
         /// Key: Poolable Prefab
         /// Value: Associated ObjectPooler
         /// </summary>
-        private Dictionary<PoolableMonoBehaviour, ObjectPooler> objectPoolerDictionary = new();
+        private Dictionary<PoolableObject, ObjectPooler> objectPoolerDictionary = new();
 
         private protected override void Awake()
         {
@@ -23,7 +23,7 @@ namespace CharonsCorner.Runtime
         /// <summary>
         /// Spawns a prefab by using an existing pooler or creating a new one if it doesnt exist.
         /// </summary>
-        public T SpawnPooledObject<T>(PoolableMonoBehaviour newPrefab, Vector3? position = null, Transform parent = null) where T : Component
+        public T SpawnPooledObject<T>(PoolableObject newPrefab, Vector3? position = null, Transform parent = null) where T : MonoBehaviour
         {
             if (objectPoolerDictionary.ContainsKey(newPrefab))
             {
