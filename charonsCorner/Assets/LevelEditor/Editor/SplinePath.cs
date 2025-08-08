@@ -4,6 +4,7 @@ using UnityEngine.Splines;
 using Unity.Mathematics;
 using System;
 using NaughtyAttributes;
+using System.Data.Common;
 
 namespace CharonsCorner.LevelEditor.Editor
 {
@@ -63,18 +64,26 @@ namespace CharonsCorner.LevelEditor.Editor
             rightVertices = new();
 
             float step = 1f / segments;
-            for (int currentSegment = 0; currentSegment <= segments; currentSegment++)
+
+            for(int currentSplineIndex = 0; currentSplineIndex < splineContainer.Splines.Count; currentSplineIndex++)
             {
-                float parameter = currentSegment * step;
-                SampleSplineWidth(parameter, width, out Vector3 leftPoint, out Vector3 rightPoint);
-                leftVertices.Add(leftPoint);
-                rightVertices.Add(rightPoint);
+                for (int currentSegment = 0; currentSegment < segments; currentSegment++)
+                {
+                    float parameter = currentSegment * step;
+                    SampleSplineWidth(currentSplineIndex, parameter, width, out Vector3 leftPoint, out Vector3 rightPoint);
+                    leftVertices.Add(leftPoint);
+                    rightVertices.Add(rightPoint);
+                }
+
+                SampleSplineWidth(currentSplineIndex, 1f, width, out Vector3 lastLeftPoint, out Vector3 lastRightPoint);
+                leftVertices.Add(lastLeftPoint);
+                rightVertices.Add(lastRightPoint);
             }
         }
 
-        private void SampleSplineWidth(float parameter, float width, out Vector3 leftPoint, out Vector3 rightPoint)
+        private void SampleSplineWidth(int splineIndex, float parameter, float width, out Vector3 leftPoint, out Vector3 rightPoint)
         {
-            splineContainer.Evaluate(0, parameter, out float3 position, out float3 forward, out float3 upVector);
+            splineContainer.Evaluate(splineIndex, parameter, out float3 position, out float3 forward, out float3 upVector);
             float3 right = Vector3.Cross(forward, upVector).normalized;
             leftPoint = position + (-right * width * 0.5f);
             rightPoint = position + (right * width * 0.5f);
@@ -93,39 +102,43 @@ namespace CharonsCorner.LevelEditor.Editor
             float uvOffset = 0;
             int length = leftVertices.Count;
 
-            for (int currentSplinePoint = 0; currentSplinePoint < length; currentSplinePoint++)
+            for(int currentSplineIndex = 0; currentSplineIndex < splineContainer.Splines.Count; currentSplineIndex++)
             {
-                if(currentSplinePoint == length - 1 && !splineContainer.Splines[0].Closed)
-                    break; // Do not create triangles for the last point if the spline is not closed.
+                int splineOffset = segments * currentSplineIndex;
+                splineOffset += currentSplineIndex;
 
-                Vector3 r1 = rightVertices[currentSplinePoint];
-                Vector3 l1 = leftVertices[currentSplinePoint];
+                for (int currentSplinePoint = 1; currentSplinePoint < segments + 1; currentSplinePoint++)
+                {
+                    int vertexOffset = currentSplinePoint + splineOffset;
 
-                // If we are at the last vertex, connect it to the first vertex
-                Vector3 r2 = currentSplinePoint != length - 1 ? rightVertices[currentSplinePoint + 1] : rightVertices[0];
-                Vector3 l2 = currentSplinePoint != length - 1 ? leftVertices[currentSplinePoint + 1] : leftVertices[0];
+                    Vector3 r1 = rightVertices[vertexOffset - 1];
+                    Vector3 l1 = leftVertices[vertexOffset - 1];
+                    Vector3 r2 = rightVertices[vertexOffset];
+                    Vector3 l2 = leftVertices[vertexOffset];
 
-                offset = 4 * currentSplinePoint;
+                    offset = 4 * segments * currentSplineIndex;
+                    offset += 4 * (currentSplinePoint - 1);
 
-                // Triangles must follow right-hand rule where the normal is the thumb
-                // Triangle r1,r2,l1
-                int t1 = offset + 0;
-                int t2 = offset + 2;
-                int t3 = offset + 1;
+                    // Triangles must follow right-hand rule where the normal is the thumb
+                    // Triangle r1,r2,l2
+                    int t1 = offset + 0;
+                    int t2 = offset + 2;
+                    int t3 = offset + 3;
 
-                // Triangle l1,r2,l2
-                int t4 = offset + 1;
-                int t5 = offset + 2;
-                int t6 = offset + 3;
+                    // Triangle l2,l1,r1
+                    int t4 = offset + 3;
+                    int t5 = offset + 1;
+                    int t6 = offset + 0;
 
-                vertices.AddRange(new Vector3[] { r1, l1, r2, l2 });
-                triangles.AddRange(new int[] { t1, t2, t3, t4, t5, t6 });
+                    vertices.AddRange(new Vector3[] { r1, l1, r2, l2 });
+                    triangles.AddRange(new int[] { t1, t2, t3, t4, t5, t6 });
 
-                float distance = Vector3.Distance(r1, r2) / 4f;
-                float uvDistance = uvOffset + distance;
-                uvs.AddRange(new Vector2[] { new Vector2(uvOffset, 0), new Vector2(uvOffset, 1), new Vector2(uvDistance, 0), new Vector2(uvDistance, 1) });
+                    float distance = Vector3.Distance(r1, r2) / 4f;
+                    float uvDistance = uvOffset + distance;
+                    uvs.AddRange(new Vector2[] { new Vector2(uvOffset, 0), new Vector2(uvOffset, 1), new Vector2(uvDistance, 0), new Vector2(uvDistance, 1) });
 
-                uvOffset += distance;
+                    uvOffset += distance;
+                }
             }
 
             mesh.SetVertices(vertices);
@@ -146,4 +159,6 @@ namespace CharonsCorner.LevelEditor.Editor
             gameObject.AddComponent<MeshCollider>();
         }
     }
+
+
 }
