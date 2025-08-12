@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine.Splines;
 using Unity.Mathematics;
-using System;
 using NaughtyAttributes;
-using System.Data.Common;
 
 namespace CharonsCorner.LevelEditor.Editor
 {
@@ -15,8 +13,9 @@ namespace CharonsCorner.LevelEditor.Editor
         private SplineContainer splineContainer;
 
         [SerializeField] private MeshFilter meshFilter;
-        [SerializeField] private float width = 1f;
-        [SerializeField] private int segments = 25;
+        [SerializeField, Min(0.01f)] private float width = 10f;
+        [SerializeField, Min(0.01f)] private float thickness = 1f; // how tall the mesh is
+        [SerializeField, Min(1)] private int segments = 50;
 
         private List<Vector3> leftVertices = new();
         private List<Vector3> rightVertices = new();
@@ -36,9 +35,10 @@ namespace CharonsCorner.LevelEditor.Editor
             Spline.Changed -= Spline_Changed;
         }
 
-        private void OnDrawGizmos()
+        private void OnValidate()
         {
-
+            RebuildMesh();
+            RebuildMeshCollider();
         }
 
         private void Spline_Changed(Spline spline, int arg2, SplineModification modification)
@@ -85,22 +85,25 @@ namespace CharonsCorner.LevelEditor.Editor
         {
             splineContainer.Evaluate(splineIndex, parameter, out float3 position, out float3 forward, out float3 upVector);
             float3 right = Vector3.Cross(forward, upVector).normalized;
-            leftPoint = position + (-right * width * 0.5f);
-            rightPoint = position + (right * width * 0.5f);
+
+            Vector3 worldLeft = position + (-right * width * 0.5f);
+            Vector3 worldRight = position + (right * width * 0.5f);
+
+            leftPoint = transform.InverseTransformPoint(worldLeft);
+            rightPoint = transform.InverseTransformPoint(worldRight);
         }
 
         private void BuildMesh()
         {
             Mesh mesh = new Mesh();
-            mesh.name = "SplinePathMesh";
+            mesh.name = "GeneratedSplinePathMesh";
 
             List<Vector3> vertices = new List<Vector3>();
             List<int> triangles = new List<int>();
             List<Vector2> uvs = new List<Vector2>();
 
-            int offset = 0;
+            int vertexIndex = 0;
             float uvOffset = 0;
-            int length = leftVertices.Count;
 
             for(int currentSplineIndex = 0; currentSplineIndex < splineContainer.Splines.Count; currentSplineIndex++)
             {
@@ -111,39 +114,97 @@ namespace CharonsCorner.LevelEditor.Editor
                 {
                     int vertexOffset = currentSplinePoint + splineOffset;
 
+                    // top face vertices
                     Vector3 r1 = rightVertices[vertexOffset - 1];
                     Vector3 l1 = leftVertices[vertexOffset - 1];
                     Vector3 r2 = rightVertices[vertexOffset];
                     Vector3 l2 = leftVertices[vertexOffset];
 
-                    offset = 4 * segments * currentSplineIndex;
-                    offset += 4 * (currentSplinePoint - 1);
+                    // bottom face vertices
+                    Vector3 r1b = r1 + Vector3.down * thickness;
+                    Vector3 l1b = l1 + Vector3.down * thickness;
+                    Vector3 r2b = r2 + Vector3.down * thickness;
+                    Vector3 l2b = l2 + Vector3.down * thickness;
 
-                    // Triangles must follow right-hand rule where the normal is the thumb
-                    // Triangle r1,r2,l2
-                    int t1 = offset + 0;
-                    int t2 = offset + 2;
-                    int t3 = offset + 3;
-
-                    // Triangle l2,l1,r1
-                    int t4 = offset + 3;
-                    int t5 = offset + 1;
-                    int t6 = offset + 0;
-
-                    vertices.AddRange(new Vector3[] { r1, l1, r2, l2 });
-                    triangles.AddRange(new int[] { t1, t2, t3, t4, t5, t6 });
-
+                    // distance between r1 and r2 for UV mapping
                     float distance = Vector3.Distance(r1, r2) / 4f;
                     float uvDistance = uvOffset + distance;
-                    uvs.AddRange(new Vector2[] { new Vector2(uvOffset, 0), new Vector2(uvOffset, 1), new Vector2(uvDistance, 0), new Vector2(uvDistance, 1) });
 
+                    // top face
+                    vertices.AddRange(new[] { r1, l1, r2, l2 });
+                    uvs.AddRange(new[] { new Vector2(uvOffset, 0), new Vector2(uvOffset, 1), new Vector2(uvDistance, 0), new Vector2(uvDistance, 1) });
+                    triangles.AddRange(new[] { 
+                        vertexIndex + 0, vertexIndex + 2, vertexIndex + 3, 
+                        vertexIndex + 3, vertexIndex + 1, vertexIndex + 0 
+                    });
+
+                    // bot face (flipped normals)
+                    vertices.AddRange(new[] { r1b, r2b, l2b, l1b });
+                    uvs.AddRange(new[] { new Vector2(uvOffset, 0), new Vector2(uvDistance, 0), new Vector2(uvDistance, 1), new Vector2(uvOffset, 1) });
+                    triangles.AddRange(new[] { 
+                        vertexIndex + 6, vertexIndex + 5, vertexIndex + 4,
+                        vertexIndex + 4, vertexIndex + 7, vertexIndex + 6 
+                    });
+
+                    // right side
+                    vertices.AddRange(new[] { r1, r1b, r2b, r2 });
+                    uvs.AddRange(new[] { Vector2.zero, Vector2.up, Vector2.one, Vector2.right });
+                    triangles.AddRange(new[] { 
+                        vertexIndex + 8, vertexIndex + 9, vertexIndex + 10,
+                        vertexIndex + 10, vertexIndex + 11, vertexIndex + 8 
+                    });
+
+                    // left side
+                    vertices.AddRange(new[] { l2, l2b, l1b, l1 });
+                    uvs.AddRange(new[] { Vector2.zero, Vector2.up, Vector2.one, Vector2.right });
+                    triangles.AddRange(new[] { 
+                        vertexIndex + 12, vertexIndex + 13, vertexIndex + 14,
+                        vertexIndex + 14, vertexIndex + 15, vertexIndex + 12 
+                    });
+
+                    vertexIndex += 16;
                     uvOffset += distance;
                 }
+
+                // front face
+                Vector3 frontRightTop = rightVertices[splineOffset];
+                Vector3 frontLeftTop = leftVertices[splineOffset];
+                Vector3 frontRightBottom = frontRightTop + Vector3.down * thickness;
+                Vector3 frontLeftBottom = frontLeftTop + Vector3.down * thickness;
+
+                vertices.AddRange(new[] { frontRightTop, frontLeftTop, frontLeftBottom, frontRightBottom });
+                uvs.AddRange(new[] { Vector2.zero, Vector2.right, Vector2.one, Vector2.up });
+                triangles.AddRange(new[]
+                {
+                    vertexIndex + 0, vertexIndex + 1, vertexIndex + 2,
+                    vertexIndex + 2, vertexIndex + 3, vertexIndex + 0
+                });
+                vertexIndex += 4;
+
+                // back face
+                Vector3 backRightTop = rightVertices[splineOffset + segments];
+                Vector3 backLeftTop = leftVertices[splineOffset + segments];
+                Vector3 backRightBottom = backRightTop + Vector3.down * thickness;
+                Vector3 backLeftBottom = backLeftTop + Vector3.down * thickness;
+
+                vertices.AddRange(new[] { backRightTop, backRightBottom, backLeftBottom, backLeftTop });
+                uvs.AddRange(new[] { Vector2.zero, Vector2.up, Vector2.one, Vector2.right });
+                triangles.AddRange(new[]
+                {
+                    vertexIndex + 0, vertexIndex + 1, vertexIndex + 2,
+                    vertexIndex + 2, vertexIndex + 3, vertexIndex + 0
+                });
+                vertexIndex += 4;
             }
 
             mesh.SetVertices(vertices);
             mesh.SetTriangles(triangles, 0);
             mesh.SetUVs(0, uvs);
+
+            mesh.RecalculateNormals();
+            mesh.RecalculateBounds();
+            mesh.RecalculateTangents();
+
             meshFilter.mesh = mesh;
         }
 
@@ -153,12 +214,11 @@ namespace CharonsCorner.LevelEditor.Editor
             MeshCollider meshCollider = GetComponent<MeshCollider>();
             if(meshCollider != null)
             {
+                meshCollider.sharedMesh = null;
                 meshCollider.sharedMesh = meshFilter.sharedMesh;
                 return;
             }
             gameObject.AddComponent<MeshCollider>();
         }
     }
-
-
 }
