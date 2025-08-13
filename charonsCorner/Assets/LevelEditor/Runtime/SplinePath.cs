@@ -4,15 +4,19 @@ using UnityEngine.Splines;
 using Unity.Mathematics;
 using NaughtyAttributes;
 
-namespace CharonsCorner.LevelEditor.Editor
+namespace CharonsCorner.LevelEditor
 {
     [RequireComponent(typeof(SplineContainer))]
+    [RequireComponent(typeof(MeshFilter))]
+    [RequireComponent(typeof(MeshRenderer))]
     [ExecuteInEditMode()]
     public class SplinePath : MonoBehaviour
     {
-        private SplineContainer splineContainer;
-
+        [Header("References")]
+        [SerializeField] private SplineContainer splineContainer;
         [SerializeField] private MeshFilter meshFilter;
+
+        [Header("Config")]
         [SerializeField, Min(0.01f)] private float width = 10f;
         [SerializeField, Min(0.01f)] private float thickness = 1f; // how tall the mesh is
         [SerializeField, Min(1)] private int segments = 50;
@@ -20,11 +24,7 @@ namespace CharonsCorner.LevelEditor.Editor
         private List<Vector3> leftVertices = new();
         private List<Vector3> rightVertices = new();
 
-        private void Awake()
-        {
-            splineContainer = GetComponent<SplineContainer>();
-        }
-
+#if UNITY_EDITOR
         private void OnEnable()
         {
             Spline.Changed += Spline_Changed;
@@ -37,8 +37,25 @@ namespace CharonsCorner.LevelEditor.Editor
 
         private void OnValidate()
         {
+            if(splineContainer == null)
+                splineContainer = GetComponent<SplineContainer>();
+
+            if (meshFilter == null)
+                meshFilter = GetComponent<MeshFilter>();
+
             RebuildMesh();
             RebuildMeshCollider();
+        }
+
+        private void OnDrawGizmos()
+        {
+            float radius = 0.2f;
+            for (int i = 0; i < leftVertices.Count; i++)
+            {
+                Gizmos.color = Color.red;
+                Gizmos.DrawSphere(transform.TransformPoint(leftVertices[i]), radius);
+                Gizmos.DrawSphere(transform.TransformPoint(rightVertices[i]), radius);
+            }
         }
 
         private void Spline_Changed(Spline spline, int arg2, SplineModification modification)
@@ -46,6 +63,7 @@ namespace CharonsCorner.LevelEditor.Editor
             RebuildMesh();
             RebuildMeshCollider();
         }
+#endif
 
         private void Update()
         {
@@ -65,7 +83,7 @@ namespace CharonsCorner.LevelEditor.Editor
 
             float step = 1f / segments;
 
-            for(int currentSplineIndex = 0; currentSplineIndex < splineContainer.Splines.Count; currentSplineIndex++)
+            for (int currentSplineIndex = 0; currentSplineIndex < splineContainer.Splines.Count; currentSplineIndex++)
             {
                 for (int currentSegment = 0; currentSegment < segments; currentSegment++)
                 {
@@ -96,7 +114,7 @@ namespace CharonsCorner.LevelEditor.Editor
         private void BuildMesh()
         {
             Mesh mesh = new Mesh();
-            mesh.name = "GeneratedSplinePathMesh";
+            mesh.name = "GeneratedMesh";
 
             List<Vector3> vertices = new List<Vector3>();
             List<int> triangles = new List<int>();
@@ -105,7 +123,7 @@ namespace CharonsCorner.LevelEditor.Editor
             int vertexIndex = 0;
             float uvOffset = 0;
 
-            for(int currentSplineIndex = 0; currentSplineIndex < splineContainer.Splines.Count; currentSplineIndex++)
+            for (int currentSplineIndex = 0; currentSplineIndex < splineContainer.Splines.Count; currentSplineIndex++)
             {
                 int splineOffset = segments * currentSplineIndex;
                 splineOffset += currentSplineIndex;
@@ -133,33 +151,33 @@ namespace CharonsCorner.LevelEditor.Editor
                     // top face
                     vertices.AddRange(new[] { r1, l1, r2, l2 });
                     uvs.AddRange(new[] { new Vector2(uvOffset, 0), new Vector2(uvOffset, 1), new Vector2(uvDistance, 0), new Vector2(uvDistance, 1) });
-                    triangles.AddRange(new[] { 
-                        vertexIndex + 0, vertexIndex + 2, vertexIndex + 3, 
-                        vertexIndex + 3, vertexIndex + 1, vertexIndex + 0 
+                    triangles.AddRange(new[] {
+                        vertexIndex + 0, vertexIndex + 2, vertexIndex + 3,
+                        vertexIndex + 3, vertexIndex + 1, vertexIndex + 0
                     });
 
                     // bot face (flipped normals)
                     vertices.AddRange(new[] { r1b, r2b, l2b, l1b });
                     uvs.AddRange(new[] { new Vector2(uvOffset, 0), new Vector2(uvDistance, 0), new Vector2(uvDistance, 1), new Vector2(uvOffset, 1) });
-                    triangles.AddRange(new[] { 
+                    triangles.AddRange(new[] {
                         vertexIndex + 6, vertexIndex + 5, vertexIndex + 4,
-                        vertexIndex + 4, vertexIndex + 7, vertexIndex + 6 
+                        vertexIndex + 4, vertexIndex + 7, vertexIndex + 6
                     });
 
                     // right side
                     vertices.AddRange(new[] { r1, r1b, r2b, r2 });
                     uvs.AddRange(new[] { Vector2.zero, Vector2.up, Vector2.one, Vector2.right });
-                    triangles.AddRange(new[] { 
+                    triangles.AddRange(new[] {
                         vertexIndex + 8, vertexIndex + 9, vertexIndex + 10,
-                        vertexIndex + 10, vertexIndex + 11, vertexIndex + 8 
+                        vertexIndex + 10, vertexIndex + 11, vertexIndex + 8
                     });
 
                     // left side
                     vertices.AddRange(new[] { l2, l2b, l1b, l1 });
                     uvs.AddRange(new[] { Vector2.zero, Vector2.up, Vector2.one, Vector2.right });
-                    triangles.AddRange(new[] { 
+                    triangles.AddRange(new[] {
                         vertexIndex + 12, vertexIndex + 13, vertexIndex + 14,
-                        vertexIndex + 14, vertexIndex + 15, vertexIndex + 12 
+                        vertexIndex + 14, vertexIndex + 15, vertexIndex + 12
                     });
 
                     vertexIndex += 16;
@@ -209,10 +227,10 @@ namespace CharonsCorner.LevelEditor.Editor
         }
 
         [Button("Rebuild Mesh Collider")]
-        private void RebuildMeshCollider()
+        public void RebuildMeshCollider()
         {
             MeshCollider meshCollider = GetComponent<MeshCollider>();
-            if(meshCollider != null)
+            if (meshCollider != null)
             {
                 meshCollider.sharedMesh = null;
                 meshCollider.sharedMesh = meshFilter.sharedMesh;
