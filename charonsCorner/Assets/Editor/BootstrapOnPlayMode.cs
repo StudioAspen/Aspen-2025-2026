@@ -1,0 +1,40 @@
+﻿using Cysharp.Threading.Tasks;
+using Eflatun.SceneReference;
+using UnityEditor;
+using UnityEditor.SceneManagement;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+
+namespace CharonsCorner.Runtime
+{
+    [InitializeOnLoad]
+    public static class BootstrapOnPlayMode
+    {
+        public static readonly string BootstrapScenePath = "Assets/Scenes/Bootstrap.unity";
+        public static readonly string TitleScenePath = "Assets/Scenes/Title.unity";
+
+        static BootstrapOnPlayMode()
+        {
+            EditorApplication.playModeStateChanged += EditorApplication_PlayModeStateChanged;
+        }
+
+        private static void EditorApplication_PlayModeStateChanged(PlayModeStateChange newState)
+        {
+            if(newState == PlayModeStateChange.ExitingEditMode)
+            {
+                string currentScenePath = SceneManager.GetActiveScene().path;
+                if(currentScenePath == BootstrapScenePath)
+                    currentScenePath = TitleScenePath;
+                EditorPrefs.SetString("Bootstrap_OriginalScene", currentScenePath);
+
+                EditorSceneManager.OpenScene(BootstrapScenePath, OpenSceneMode.Single);
+            }
+            else if(newState == PlayModeStateChange.EnteredEditMode)
+            {
+                // Go back to the original scene after exiting play mode
+                string originalScenePath = EditorPrefs.GetString("Bootstrap_OriginalScene", TitleScenePath);
+                EditorSceneManager.OpenScene(originalScenePath, OpenSceneMode.Single);
+            }
+        }
+    }
+}

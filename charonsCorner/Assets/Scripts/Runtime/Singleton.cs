@@ -17,6 +17,8 @@ namespace CharonsCorner.Runtime
                 return;
             }
             Instance = this as T;
+
+            DontDestroyOnLoad(gameObject);
         }
     }
 }

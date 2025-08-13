@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine.Splines;
 using Unity.Mathematics;
 using NaughtyAttributes;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace CharonsCorner.LevelEditor
 {
@@ -33,12 +36,15 @@ namespace CharonsCorner.LevelEditor
 
         private void OnEnable()
         {
-            Spline.Changed += Spline_Changed;
+            if (!EditorApplication.isPlaying)
+                Spline.Changed += Spline_Changed;
+
         }
 
         private void OnDisable()
         {
-            Spline.Changed -= Spline_Changed;
+            if (!EditorApplication.isPlaying)
+                Spline.Changed -= Spline_Changed;
         }
 
         private void OnValidate()
@@ -77,7 +83,8 @@ namespace CharonsCorner.LevelEditor
 
         private void Update()
         {
-            RebuildMesh();
+            if (!EditorApplication.isPlaying)
+                RebuildMesh();
         }
 
         private void RebuildMesh()

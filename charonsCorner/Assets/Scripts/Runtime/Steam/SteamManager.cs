@@ -88,7 +88,7 @@ public partial class SteamManager : MonoBehaviour
         }
 
         // We want our SteamManager Instance to persist across scenes.
-        // DontDestroyOnLoad(gameObject); // Samson: Commented out since our bootstrapper handles that
+        DontDestroyOnLoad(gameObject);
 
         if (!Packsize.Test())
         {
