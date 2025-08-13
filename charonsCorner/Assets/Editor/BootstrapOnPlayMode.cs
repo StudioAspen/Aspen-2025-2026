@@ -5,7 +5,7 @@ using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace CharonsCorner.Runtime
+namespace CharonsCorner.Editor
 {
     [InitializeOnLoad]
     public static class BootstrapOnPlayMode
@@ -25,6 +25,7 @@ namespace CharonsCorner.Runtime
                 string currentScenePath = SceneManager.GetActiveScene().path;
                 if(currentScenePath == BootstrapScenePath)
                     currentScenePath = TitleScenePath;
+                EditorUtilities.MarkSceneAddressable(currentScenePath);
                 EditorPrefs.SetString("Bootstrap_OriginalScene", currentScenePath);
 
                 EditorSceneManager.OpenScene(BootstrapScenePath, OpenSceneMode.Single);
@@ -33,6 +34,7 @@ namespace CharonsCorner.Runtime
             {
                 // Go back to the original scene after exiting play mode
                 string originalScenePath = EditorPrefs.GetString("Bootstrap_OriginalScene", TitleScenePath);
+                EditorUtilities.UnmarkSceneAddressable(originalScenePath);
                 EditorSceneManager.OpenScene(originalScenePath, OpenSceneMode.Single);
             }
         }
