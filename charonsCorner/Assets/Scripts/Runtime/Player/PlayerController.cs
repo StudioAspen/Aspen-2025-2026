@@ -16,11 +16,10 @@ namespace CharonsCorner.Runtime
         [SerializeField] private LayerMask groundLayerMask;
         [field: SerializeField, ReadOnly] public bool IsGrounded { get; private set; }
 
-        [Header("State Machine")]
-        [SerializeReference] private StateMachine<PlayerController> stateMachine;
-        [field: SerializeField] public IdleState IdleState { get; private set; }
-        [field: SerializeField] public RollState RollState { get; private set; }
-        [field: SerializeField] public JumpState JumpState { get; private set; }
+        [field: Header("State Machine")]
+        [field: SerializeReference] public StateMachine<PlayerController> StateMachine { get; private set; }
+        [field: SerializeField] public GroundedSuperState GroundedSuperState { get; private set; } = new();
+        [field: SerializeField] public AirborneSuperState AirborneSuperState { get; private set; } = new();
 
         public float CurrentSpeed => RigidBody.linearVelocity.magnitude;
 
@@ -41,14 +40,14 @@ namespace CharonsCorner.Runtime
 
         private void Update()
         {
-            stateMachine.Update();
+            StateMachine.Update();
         }
 
         private void FixedUpdate()
         {
             CheckGrounded();
 
-            stateMachine.FixedUpdate();
+            StateMachine.FixedUpdate();
         }
 
         /// <summary>
@@ -56,18 +55,22 @@ namespace CharonsCorner.Runtime
         /// </summary>
         private void SetupStateMachine()
         {
-            stateMachine = new StateMachine<PlayerController>(this);
+            StateMachine = new StateMachine<PlayerController>(this);
 
-            IdleState.Initialize(stateMachine, this);
-            RollState.Initialize(stateMachine, this);
-            JumpState.Initialize(stateMachine, this);
+            GroundedSuperState.Init(StateMachine, this);
+            AirborneSuperState.Init(StateMachine, this);
 
-            stateMachine.ChangeState(IdleState, true);
+            StateMachine.ChangeState(GroundedSuperState, true);
         }
 
         private void CheckGrounded()
         {
-            IsGrounded = Physics.CheckSphere(transform.position + groundCheckDistance * Vector3.down, groundCheckRadius, groundLayerMask);
+            bool isGrounded = Physics.CheckSphere(transform.position + groundCheckDistance * Vector3.down, groundCheckRadius, groundLayerMask);
+            if(isGrounded != IsGrounded)
+            {
+                IsGrounded = isGrounded;
+                StateMachine.ChangeState(IsGrounded ? GroundedSuperState : AirborneSuperState);
+            }
         }
     }
 }

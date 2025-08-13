@@ -39,11 +39,17 @@ namespace CharonsCorner.Runtime
         public void Update()
         {
             CurrentState?.Update();
+
+            if (CurrentState is HierarchicalState<TContext> hierarchicalState)
+                hierarchicalState.SubStateMachine?.Update();
         }
 
         public void FixedUpdate()
         {
             CurrentState?.FixedUpdate();
+
+            if (CurrentState is HierarchicalState<TContext> hierarchicalState)
+                hierarchicalState.SubStateMachine?.FixedUpdate();
         }
     }
 }

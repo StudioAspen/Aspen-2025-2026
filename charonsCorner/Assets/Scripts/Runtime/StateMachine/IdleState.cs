@@ -21,7 +21,7 @@ namespace CharonsCorner.Runtime
         {
             if(InputManager.Instance.MoveDirection != Vector2.zero)
             {
-                stateMachine.ChangeState(context.RollState);
+                stateMachine.ChangeState(context.GroundedSuperState.RollState);
                 return;
             }
         }

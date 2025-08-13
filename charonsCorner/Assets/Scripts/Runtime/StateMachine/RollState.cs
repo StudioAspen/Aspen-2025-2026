@@ -23,7 +23,7 @@ namespace CharonsCorner.Runtime
         {
             if (InputManager.Instance.MoveDirection == Vector2.zero)
             {
-                stateMachine.ChangeState(context.IdleState);
+                stateMachine.ChangeState(context.GroundedSuperState.IdleState);
                 return;
             }
         }

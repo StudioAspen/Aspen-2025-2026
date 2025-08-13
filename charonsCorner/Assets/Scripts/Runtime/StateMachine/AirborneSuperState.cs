@@ -3,13 +3,16 @@
 namespace CharonsCorner.Runtime
 {
     [System.Serializable]
-    public class JumpState : State<PlayerController>
+    public class AirborneSuperState : HierarchicalState<PlayerController>
     {
-        [field: SerializeField] public float JumpHeight { get; private set; } = 2f;
+        private protected override void InitializeSubStates()
+        {
+            
+        }
 
         public override void Enter()
         {
-
+            
         }
 
         public override void Exit()

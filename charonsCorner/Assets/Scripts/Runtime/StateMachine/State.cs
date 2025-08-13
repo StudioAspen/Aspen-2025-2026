@@ -8,11 +8,14 @@ namespace CharonsCorner.Runtime
         private protected StateMachine<TContext> stateMachine;
         private protected TContext context;
 
-        public void Initialize(StateMachine<TContext> stateMachine, TContext context)
+        public virtual void Init(StateMachine<TContext> stateMachine, TContext context)
         {
             this.stateMachine = stateMachine;
             this.context = context;
+            OnInit();
         }
+
+        private protected virtual void OnInit() { }
         
         public abstract void Enter();
         public abstract void Exit();
