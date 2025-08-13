@@ -6,12 +6,15 @@ using NaughtyAttributes;
 
 namespace CharonsCorner.LevelEditor
 {
+#if UNITY_EDITOR
     [RequireComponent(typeof(SplineContainer))]
     [RequireComponent(typeof(MeshFilter))]
     [RequireComponent(typeof(MeshRenderer))]
     [ExecuteInEditMode()]
+#endif
     public class SplinePath : MonoBehaviour
     {
+#if UNITY_EDITOR
         [Header("References")]
         [SerializeField] private SplineContainer splineContainer;
         [SerializeField] private MeshFilter meshFilter;
@@ -24,7 +27,10 @@ namespace CharonsCorner.LevelEditor
         private List<Vector3> leftVertices = new();
         private List<Vector3> rightVertices = new();
 
-#if UNITY_EDITOR
+        [Header("Debug Config")]
+        [SerializeField] private bool enableGizmos;
+        [SerializeField, ShowIf("enableGizmos"), Range(0f, 1f)] private float gizmoRadius = 0.2f;
+
         private void OnEnable()
         {
             Spline.Changed += Spline_Changed;
@@ -49,12 +55,17 @@ namespace CharonsCorner.LevelEditor
 
         private void OnDrawGizmos()
         {
-            float radius = 0.2f;
-            for (int i = 0; i < leftVertices.Count; i++)
+            if (!enableGizmos)
+                return;
+
+            if(gizmoRadius > 0f)
             {
-                Gizmos.color = Color.red;
-                Gizmos.DrawSphere(transform.TransformPoint(leftVertices[i]), radius);
-                Gizmos.DrawSphere(transform.TransformPoint(rightVertices[i]), radius);
+                for (int i = 0; i < leftVertices.Count; i++)
+                {
+                    Gizmos.color = Color.red;
+                    Gizmos.DrawSphere(transform.TransformPoint(leftVertices[i]), gizmoRadius);
+                    Gizmos.DrawSphere(transform.TransformPoint(rightVertices[i]), gizmoRadius);
+                }
             }
         }
 
@@ -63,7 +74,6 @@ namespace CharonsCorner.LevelEditor
             RebuildMesh();
             RebuildMeshCollider();
         }
-#endif
 
         private void Update()
         {
@@ -238,5 +248,6 @@ namespace CharonsCorner.LevelEditor
             }
             gameObject.AddComponent<MeshCollider>();
         }
+#endif
     }
 }
