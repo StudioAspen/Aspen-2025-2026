@@ -22,6 +22,14 @@ namespace CharonsCorner.Editor
         {
             if(newState == PlayModeStateChange.ExitingEditMode)
             {
+                // Prompt user to save unsaved changes
+                bool continuePlayMode = EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo();
+                if (!continuePlayMode)
+                {
+                    EditorApplication.isPlaying = false;
+                    return;
+                }
+
                 string currentScenePath = SceneManager.GetActiveScene().path;
                 if(currentScenePath == BootstrapScenePath)
                     currentScenePath = TitleScenePath;

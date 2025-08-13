@@ -78,5 +78,22 @@ namespace CharonsCorner.Runtime
             string format = "F" + decimalPlaces;
             return value.ToString(format);
         }
+
+        /// <summary>
+        /// Calculates the movement input relative to the camera's orientation.
+        /// </summary>
+        public static Vector3 GetCameraBasedMoveInput(Transform cameraTransform, Vector2 moveInput)
+        {
+            Vector3 forward = cameraTransform.forward;
+            Vector3 right = cameraTransform.right;
+
+            forward.y = 0; // Ignore vertical component
+            right.y = 0; // Ignore vertical component
+
+            forward.Normalize();
+            right.Normalize();
+
+            return (forward * moveInput.y + right * moveInput.x).normalized;
+        }
     }
 }

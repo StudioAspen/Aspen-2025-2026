@@ -1,0 +1,35 @@
+﻿using UnityEngine;
+
+namespace CharonsCorner.Runtime
+{
+    [System.Serializable]
+    public class IdleState : State<PlayerController>
+    {
+        [field: SerializeField] public float Damp { get; private set; } = 0.1f;
+
+        public override void Enter()
+        {
+            
+        }
+
+        public override void Exit()
+        {
+            
+        }
+
+        public override void Update()
+        {
+            if(InputManager.Instance.MoveDirection != Vector2.zero)
+            {
+                stateMachine.ChangeState(context.RollState);
+                return;
+            }
+        }
+
+        public override void FixedUpdate()
+        {
+            Vector3 torque = Damp * -context.RigidBody.angularVelocity;
+            context.RigidBody.AddTorque(torque, ForceMode.VelocityChange);
+        }
+    }
+}

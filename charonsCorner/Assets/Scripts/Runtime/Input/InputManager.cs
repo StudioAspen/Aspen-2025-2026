@@ -27,6 +27,7 @@ namespace CharonsCorner.Runtime
         public event Action<bool> Drift = delegate { };
         public event Action Interact = delegate { };
 
+        public Vector2 MoveDirection => InputActions.Player.Move.ReadValue<Vector2>();
         public Vector2 LookDirection => InputActions.Player.Look.ReadValue<Vector2>();
 
         // UI
