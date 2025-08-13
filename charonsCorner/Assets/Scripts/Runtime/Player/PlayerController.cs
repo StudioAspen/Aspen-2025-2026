@@ -17,8 +17,8 @@ namespace CharonsCorner.Runtime
         [SerializeField] private float rollAcceleration = 1f;
         [SerializeField] private float turnResponsiveness = 1f;
         [SerializeField] private float maxSpeed = 25f;
-        [SerializeField, ReadOnly] private float currentSpeed;
-        [SerializeField, ReadOnly] private float currentRotationalSpeed;
+        [field: SerializeField, ReadOnly] public float CurrentSpeed { get; private set; }
+        [field: SerializeField, ReadOnly] public float CurrentRotationalSpeed { get; private set; }
 
         [Header("Damp Config")]
         [SerializeField] private float airRollDamp = 0.02f;
@@ -66,8 +66,8 @@ namespace CharonsCorner.Runtime
             CheckGrounded();
 
             // For debug
-            currentSpeed = rigidBody.linearVelocity.magnitude;
-            currentRotationalSpeed = rigidBody.angularVelocity.magnitude;
+            CurrentSpeed = rigidBody.linearVelocity.magnitude;
+            CurrentRotationalSpeed = rigidBody.angularVelocity.magnitude;
         }
 
         private void FixedUpdate()

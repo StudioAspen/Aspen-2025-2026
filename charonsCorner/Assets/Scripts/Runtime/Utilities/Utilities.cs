@@ -72,5 +72,11 @@ namespace CharonsCorner.Runtime
         /// Vector3.z = z does not work as expected in Unity, so this is a workaround.
         /// </summary>
         public static void SetZ(this ref Vector3 vector, float z) => vector = vector.WithZ(z);
+
+        public static string FloatToString(float value, int decimalPlaces = 2)
+        {
+            string format = "F" + decimalPlaces;
+            return value.ToString(format);
+        }
     }
 }
