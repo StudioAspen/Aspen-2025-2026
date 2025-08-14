@@ -84,6 +84,9 @@ namespace CharonsCorner.Runtime
         /// </summary>
         public static Vector3 GetCameraBasedMoveInput(Transform cameraTransform, Vector2 moveInput)
         {
+            if (cameraTransform == null)
+                return moveInput;
+
             Vector3 forward = cameraTransform.forward;
             Vector3 right = cameraTransform.right;
 

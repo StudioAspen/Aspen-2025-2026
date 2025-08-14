@@ -30,7 +30,10 @@ namespace CharonsCorner.Runtime
 
         public override void FixedUpdate()
         {
-            Vector3 cameraBasedMoveInput = Utilities.GetCameraBasedMoveInput(CameraManager.Instance.CurrentCamera.transform, InputManager.Instance.MoveDirection);
+            Vector3 cameraBasedMoveInput = Utilities.GetCameraBasedMoveInput(
+                CameraManager.Instance.CurrentCamera.transform, 
+                InputManager.Instance.MoveDirection
+                );
 
             Vector3 desiredDirection = cameraBasedMoveInput.normalized;
 
@@ -42,10 +45,10 @@ namespace CharonsCorner.Runtime
             if (context.RigidBody.linearVelocity.sqrMagnitude > 0.01f)
             {
                 float angle = Vector3.Angle(currentDirection, desiredDirection);
-                directionChangeFactor = Mathf.InverseLerp(0f, 180f, angle); // Normalize angle (0� = no change, 180� = full change)
+                directionChangeFactor = Mathf.InverseLerp(0f, 180f, angle); // Normalize angle (0 = no change, 180 = full change)
             }
 
-            // Torque scales with how much you�re turning
+            // Torque scales with how much you're turning
             Vector3 turnTorque = TurnResponsiveness * directionChangeFactor * Vector3.Cross(Vector3.up, desiredDirection);
 
             // Propulsion torque based on speed for snappy direction changes at low speed
