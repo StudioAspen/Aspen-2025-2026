@@ -3,25 +3,25 @@
 namespace CharonsCorner.Runtime
 {
     [System.Serializable]
-    public class GroundedIdleState : State<PlayerController>
+    public class AirborneIdleState : State<PlayerController>
     {
         [field: SerializeField] public float Damp { get; private set; } = 0.1f;
 
         public override void Enter()
         {
-           
+
         }
 
         public override void Exit()
         {
-            
+
         }
 
         public override void Update()
         {
-            if(InputManager.Instance.MoveDirection != Vector2.zero)
+            if (InputManager.Instance.MoveDirection != Vector2.zero)
             {
-                stateMachine.ChangeState(context.GroundedSuperState.MoveState);
+                stateMachine.ChangeState(context.AirborneSuperState.MoveState);
                 return;
             }
         }

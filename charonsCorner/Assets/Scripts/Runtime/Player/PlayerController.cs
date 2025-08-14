@@ -1,4 +1,3 @@
-using NaughtyAttributes;
 using UnityEngine;
 
 namespace CharonsCorner.Runtime

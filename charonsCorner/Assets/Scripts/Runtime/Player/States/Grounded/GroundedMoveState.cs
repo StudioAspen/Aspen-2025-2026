@@ -3,7 +3,7 @@
 namespace CharonsCorner.Runtime
 {
     [System.Serializable]
-    public class GroundedRollState : State<PlayerController>
+    public class GroundedMoveState : State<PlayerController>
     {
         [field: SerializeField] public float Acceleration { get; private set; } = 1f;
         [field: SerializeField] public float TurnResponsiveness { get; private set; } = 1f;
@@ -11,7 +11,7 @@ namespace CharonsCorner.Runtime
 
         public override void Enter()
         {
-
+            
         }
 
         public override void Exit()

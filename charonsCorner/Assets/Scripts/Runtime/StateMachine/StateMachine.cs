@@ -59,7 +59,7 @@ namespace CharonsCorner.Runtime
             if (CurrentState is HierarchicalState<TContext> hierarchicalState)
                 hierarchicalState.SubStateMachine?.FixedUpdate();
         }
-        
+
         public void Dispose()
         {
             if (CurrentState is HierarchicalState<TContext> hierarchicalState)
