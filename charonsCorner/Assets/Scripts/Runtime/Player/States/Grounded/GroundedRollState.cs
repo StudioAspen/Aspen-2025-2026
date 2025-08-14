@@ -3,7 +3,7 @@
 namespace CharonsCorner.Runtime
 {
     [System.Serializable]
-    public class RollState : State<PlayerController>
+    public class GroundedRollState : State<PlayerController>
     {
         [field: SerializeField] public float Acceleration { get; private set; } = 1f;
         [field: SerializeField] public float TurnResponsiveness { get; private set; } = 1f;

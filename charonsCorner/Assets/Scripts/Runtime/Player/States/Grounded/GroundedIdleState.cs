@@ -3,7 +3,7 @@
 namespace CharonsCorner.Runtime
 {
     [System.Serializable]
-    public class IdleState : State<PlayerController>
+    public class GroundedIdleState : State<PlayerController>
     {
         [field: SerializeField] public float Damp { get; private set; } = 0.1f;
 

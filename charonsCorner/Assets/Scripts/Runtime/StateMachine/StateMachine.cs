@@ -10,7 +10,7 @@ namespace CharonsCorner.Runtime
         public TContext Context { get; private set; }
 
         public State<TContext> CurrentState { get; private set; }
-        [SerializeField, ReadOnly, AllowNesting] private string currentStateName;
+        [SerializeField, ReadOnly, AllowNesting] private string currentStateName = "None";
 
         public event Action<State<TContext>> OnStateChanged = delegate { };
 
@@ -27,13 +27,21 @@ namespace CharonsCorner.Runtime
             if(CurrentState == newState && !force)
                 return;
 
+            HierarchicalState<TContext> hierarchicalState = CurrentState as HierarchicalState<TContext>;
+            if (hierarchicalState != null)
+                hierarchicalState.SubStateMachine?.CurrentState?.Exit();
             CurrentState?.Exit();
+
             CurrentState = newState;
+
             CurrentState?.Enter();
+            hierarchicalState = CurrentState as HierarchicalState<TContext>;
+            if (hierarchicalState != null)
+                hierarchicalState.SubStateMachine?.ChangeState(hierarchicalState.InitialSubState, true);
 
             OnStateChanged.Invoke(CurrentState);
 
-            currentStateName = CurrentState.GetType().Name;
+            currentStateName = CurrentState != null ? CurrentState.GetType().Name : "None";
         }
 
         public void Update()
@@ -50,6 +58,14 @@ namespace CharonsCorner.Runtime
 
             if (CurrentState is HierarchicalState<TContext> hierarchicalState)
                 hierarchicalState.SubStateMachine?.FixedUpdate();
+        }
+        
+        public void Dispose()
+        {
+            if (CurrentState is HierarchicalState<TContext> hierarchicalState)
+                hierarchicalState.SubStateMachine?.Dispose();
+            CurrentState?.Exit();
+            OnStateChanged = null; // Unsubscribe all listeners
         }
     }
 }

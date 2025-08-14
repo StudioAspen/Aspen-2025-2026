@@ -10,17 +10,12 @@ namespace CharonsCorner.Runtime
         public Rigidbody RigidBody { get; private set; }
         public SphereCollider SphereCollider { get; private set; }
 
-        [Header("Ground Check")]
-        [SerializeField] private float groundCheckDistance = 0.2f;
-        [SerializeField] private float groundCheckRadius = 0.9f;
-        [SerializeField] private LayerMask groundLayerMask;
-        [field: SerializeField, ReadOnly] public bool IsGrounded { get; private set; }
-
         [field: Header("State Machine")]
-        [field: SerializeReference] public StateMachine<PlayerController> StateMachine { get; private set; }
+        [field: SerializeField] public StateMachine<PlayerController> StateMachine { get; private set; }
         [field: SerializeField] public GroundedSuperState GroundedSuperState { get; private set; } = new();
         [field: SerializeField] public AirborneSuperState AirborneSuperState { get; private set; } = new();
 
+        public bool IsGrounded => GroundedSuperState.IsGrounded;
         public float CurrentSpeed => RigidBody.linearVelocity.magnitude;
 
         private void Awake()
@@ -31,11 +26,16 @@ namespace CharonsCorner.Runtime
             SetupStateMachine();
         }
 
+        private void OnDestroy()
+        {
+            StateMachine.Dispose();
+        }
+
         private void OnDrawGizmos()
         {
             // Draws the ground check sphere in the editor for visualization
             Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(transform.position + groundCheckDistance * Vector3.down, groundCheckRadius);
+            Gizmos.DrawWireSphere(transform.position + GroundedSuperState.GroundCheckDistance * Vector3.down, GroundedSuperState.GroundCheckRadius);
         }
 
         private void Update()
@@ -45,7 +45,7 @@ namespace CharonsCorner.Runtime
 
         private void FixedUpdate()
         {
-            CheckGrounded();
+            GroundedSuperState.CheckGrounded();
 
             StateMachine.FixedUpdate();
         }
@@ -61,16 +61,6 @@ namespace CharonsCorner.Runtime
             AirborneSuperState.Init(StateMachine, this);
 
             StateMachine.ChangeState(GroundedSuperState, true);
-        }
-
-        private void CheckGrounded()
-        {
-            bool isGrounded = Physics.CheckSphere(transform.position + groundCheckDistance * Vector3.down, groundCheckRadius, groundLayerMask);
-            if(isGrounded != IsGrounded)
-            {
-                IsGrounded = isGrounded;
-                StateMachine.ChangeState(IsGrounded ? GroundedSuperState : AirborneSuperState);
-            }
         }
     }
 }
