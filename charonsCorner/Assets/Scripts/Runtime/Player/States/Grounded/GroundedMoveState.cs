@@ -30,12 +30,10 @@ namespace CharonsCorner.Runtime
 
         public override void FixedUpdate()
         {
-            Vector3 cameraBasedMoveInput = Utilities.GetCameraBasedMoveInput(
+            Vector3 desiredDirection = Utilities.GetCameraBasedMoveInput(
                 CameraManager.Instance.CurrentCamera.transform, 
                 InputManager.Instance.MoveDirection
                 );
-
-            Vector3 desiredDirection = cameraBasedMoveInput.normalized;
 
             Vector3 currentDirection = context.RigidBody.linearVelocity;
             currentDirection.y = 0;

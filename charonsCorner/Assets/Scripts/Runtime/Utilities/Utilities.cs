@@ -81,6 +81,7 @@ namespace CharonsCorner.Runtime
 
         /// <summary>
         /// Calculates the movement input relative to the camera's orientation.
+        /// The return result is normalized.
         /// </summary>
         public static Vector3 GetCameraBasedMoveInput(Transform cameraTransform, Vector2 moveInput)
         {
