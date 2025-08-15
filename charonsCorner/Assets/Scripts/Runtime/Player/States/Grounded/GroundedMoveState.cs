@@ -21,7 +21,7 @@ namespace CharonsCorner.Runtime
 
         public override void Update()
         {
-            if (InputManager.Instance.MoveDirection == Vector2.zero)
+            if (context.Input.MoveDirection == Vector2.zero)
             {
                 stateMachine.ChangeState(context.GroundedSuperState.IdleState);
                 return;
@@ -32,7 +32,7 @@ namespace CharonsCorner.Runtime
         {
             Vector3 desiredDirection = Utilities.GetCameraBasedMoveInput(
                 CameraManager.Instance.CurrentCamera.transform, 
-                InputManager.Instance.MoveDirection
+                context.Input.MoveDirection
                 );
 
             Vector3 currentDirection = context.RigidBody.linearVelocity;

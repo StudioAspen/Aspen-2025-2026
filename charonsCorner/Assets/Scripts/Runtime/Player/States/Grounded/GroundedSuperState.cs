@@ -31,20 +31,24 @@ namespace CharonsCorner.Runtime
 
         public override void Enter()
         {
-            InputManager.Instance.Jump += Input_Jump;
+            context.Input.Jump += Input_Jump;
+            context.Input.Drift += Input_Drift;
         }
 
         public override void Exit()
         {
-            if(InputManager.Instance != null)
-                InputManager.Instance.Jump -= Input_Jump;
+            if(context.Input != null)
+            {
+                context.Input.Jump -= Input_Jump;
+                context.Input.Drift -= Input_Drift;
+            }
         }
 
         public override void Update()
         {
-            if (InputManager.Instance.InputActions.Player.Drift.IsPressed())
+            if (!IsGrounded)
             {
-                SubStateMachine.ChangeState(DriftState);
+                stateMachine.ChangeState(context.AirborneSuperState);
                 return;
             }
         }
@@ -56,12 +60,7 @@ namespace CharonsCorner.Runtime
 
         public void CheckGrounded()
         {
-            bool isGrounded = Physics.CheckSphere(context.transform.position + GroundCheckDistance * Vector3.down, GroundCheckRadius, GroundLayerMask);
-            if (isGrounded != IsGrounded)
-            {
-                IsGrounded = isGrounded;
-                stateMachine.ChangeState(IsGrounded ? context.GroundedSuperState : context.AirborneSuperState);
-            }
+            IsGrounded = Physics.CheckSphere(context.transform.position + GroundCheckDistance * Vector3.down, GroundCheckRadius, GroundLayerMask);
         }
 
         private void Input_Jump()
@@ -76,6 +75,15 @@ namespace CharonsCorner.Runtime
             context.RigidBody.AddForce(Vector3.up * jumpForce, ForceMode.VelocityChange);
 
             stateMachine.ChangeState(context.AirborneSuperState);
+        }
+
+        private void Input_Drift(bool isDrifting)
+        {
+            if (!isDrifting)
+                return;
+
+            if(context.Input.MoveDirection != Vector2.zero)
+                SubStateMachine.ChangeState(DriftState);
         }
     }
 }

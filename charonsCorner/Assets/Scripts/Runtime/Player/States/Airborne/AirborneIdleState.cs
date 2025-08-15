@@ -19,7 +19,7 @@ namespace CharonsCorner.Runtime
 
         public override void Update()
         {
-            if (InputManager.Instance.MoveDirection != Vector2.zero)
+            if (context.Input.MoveDirection != Vector2.zero)
             {
                 stateMachine.ChangeState(context.AirborneSuperState.MoveState);
                 return;

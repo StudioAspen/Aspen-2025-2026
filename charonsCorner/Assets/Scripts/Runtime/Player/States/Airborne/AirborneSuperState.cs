@@ -31,7 +31,13 @@ namespace CharonsCorner.Runtime
 
         public override void Update()
         {
-            if (InputManager.Instance.InputActions.Player.Drift.IsPressed())
+            if (context.IsGrounded)
+            {
+                stateMachine.ChangeState(context.GroundedSuperState);
+                return;
+            }
+
+            if (context.Input.InputActions.Player.Drift.IsPressed())
             {
                 SubStateMachine.ChangeState(DriftState);
                 return;

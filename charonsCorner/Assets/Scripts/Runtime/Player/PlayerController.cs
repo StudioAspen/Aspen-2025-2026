@@ -6,8 +6,12 @@ namespace CharonsCorner.Runtime
     [RequireComponent(typeof(SphereCollider))]
     public class PlayerController : MonoBehaviour
     {
+        public InputManager Input { get; private set; } // For quick access
         public Rigidbody RigidBody { get; private set; }
         public SphereCollider SphereCollider { get; private set; }
+
+        [field: Header("References")]
+        [field: SerializeField] public Transform BallVisual { get; private set; }
 
         [field: Header("State Machine")]
         [field: SerializeField] public StateMachine<PlayerController> StateMachine { get; private set; }
@@ -19,6 +23,7 @@ namespace CharonsCorner.Runtime
 
         private void Awake()
         {
+            Input = InputManager.Instance;
             RigidBody = GetComponent<Rigidbody>();
             SphereCollider = GetComponent<SphereCollider>();
 
