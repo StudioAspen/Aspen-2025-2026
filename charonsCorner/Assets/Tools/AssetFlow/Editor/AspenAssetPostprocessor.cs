@@ -30,7 +30,16 @@ namespace Aspen.Tools.Assets
 				if (assetPath.EndsWith(".fbx", System.StringComparison.OrdinalIgnoreCase)
 				    && assetPath.StartsWith("Assets/Art/models"))
 				{
-					ExtractTexturesFromFBX(assetPath);
+					ModelImporter modelImporter = AssetImporter.GetAtPath(assetPath) as ModelImporter;
+					
+					ExtractTexturesFromFBX(modelImporter, assetPath);
+					
+					// Create avatar for characters and props
+					if (assetPath.StartsWith("Assets/Art/models/characters") ||
+					    assetPath.StartsWith("Assets/Art/models/props"))
+					{
+						CreateAvatarFromFBX(modelImporter);
+					}
 
 					// Create prefabs for actors
 					if (assetPath.StartsWith("Assets/Art/models/actors"))
@@ -48,20 +57,26 @@ namespace Aspen.Tools.Assets
 		///    Extract textures from FBX. The textures will be extracted to same folder as FBX.
 		/// </summary>
 		/// <param name="fbxPath">The path of the FBX to extract textures from.</param>
-		private static void ExtractTexturesFromFBX(string fbxPath)
+		private static void ExtractTexturesFromFBX(ModelImporter modelImporter, string fbxPath)
 		{
 			string extractPath = Path.GetDirectoryName(fbxPath);
 
 			// Get model importer
-			var importer = AssetImporter.GetAtPath(fbxPath) as ModelImporter;
-			if (importer == null)
+			if (modelImporter == null)
 			{
 				Debug.LogError("No ModelImporter found at: " + fbxPath);
 				return;
 			}
 					
 			// Extract textures from model
-			importer.ExtractTextures(extractPath);
+			modelImporter.ExtractTextures(extractPath);
+		}
+
+		
+		private static void CreateAvatarFromFBX(ModelImporter modelImporter)
+		{
+			modelImporter.avatarSetup = ModelImporterAvatarSetup.CreateFromThisModel;
+			//modelImporter.optimizeGameObjects = true; // Hide bone GameObjects not needed at runtime
 		}
 		
 

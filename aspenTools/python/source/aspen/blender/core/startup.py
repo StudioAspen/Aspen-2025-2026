@@ -1,4 +1,4 @@
-from aspen.blender.core.export_manager import export_manager
+from aspen.blender.common.export_manager import export_manager
 
 modules = [
     export_manager
