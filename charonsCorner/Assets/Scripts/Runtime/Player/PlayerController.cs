@@ -18,6 +18,9 @@ namespace CharonsCorner.Runtime
         [field: SerializeField] public GroundedSuperState GroundedSuperState { get; private set; } = new();
         [field: SerializeField] public AirborneSuperState AirborneSuperState { get; private set; } = new();
 
+        /// <summary>
+        /// Easy access to whether the player is grounded or not from the context. GroundedSuperState handles the actual checking.
+        /// </summary>
         public bool IsGrounded => GroundedSuperState.IsGrounded;
         public float CurrentSpeed => RigidBody.linearVelocity.magnitude;
 
@@ -30,9 +33,22 @@ namespace CharonsCorner.Runtime
             SetupStateMachine();
         }
 
+        /// <summary>
+        /// Runs in awake. Sets up the state machine and all the states for the player controller.
+        /// </summary>
+        private void SetupStateMachine()
+        {
+            StateMachine = new StateMachine<PlayerController>(this);
+
+            GroundedSuperState.Init(StateMachine, this);
+            AirborneSuperState.Init(StateMachine, this);
+
+            StateMachine.ChangeState(GroundedSuperState, true);
+        }
+
         private void OnDestroy()
         {
-            StateMachine.Dispose();
+            StateMachine.Destroy();
         }
 
         private void OnDrawGizmos()
@@ -52,19 +68,6 @@ namespace CharonsCorner.Runtime
             GroundedSuperState.CheckGrounded();
 
             StateMachine.FixedUpdate();
-        }
-
-        /// <summary>
-        /// Runs in awake. Sets up the state machine and all the states for the player controller.
-        /// </summary>
-        private void SetupStateMachine()
-        {
-            StateMachine = new StateMachine<PlayerController>(this);
-
-            GroundedSuperState.Init(StateMachine, this);
-            AirborneSuperState.Init(StateMachine, this);
-
-            StateMachine.ChangeState(GroundedSuperState, true);
         }
     }
 }

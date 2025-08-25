@@ -8,6 +8,8 @@ namespace CharonsCorner.Runtime
         private protected StateMachine<TContext> stateMachine;
         private protected TContext context;
 
+        private static readonly bool debug = true; // Set to true to enable debug logs for state transitions
+
         public virtual void Init(StateMachine<TContext> stateMachine, TContext context)
         {
             this.stateMachine = stateMachine;
@@ -17,9 +19,54 @@ namespace CharonsCorner.Runtime
 
         private protected virtual void OnInit() { }
         
-        public abstract void Enter();
-        public abstract void Exit();
-        public abstract void Update();
-        public abstract void FixedUpdate();
+        public virtual void Destroy()
+        {
+            if(debug)
+                Debug.Log($"Destroying state {GetType().Name}");
+            Exit();
+        }
+
+        public virtual void Enter()
+        {
+            if(debug)
+                Debug.Log($"Entering state {GetType().Name}");
+            OnEnter();
+        }
+
+        public virtual void Exit()
+        {
+            if(debug)
+                Debug.Log($"Exiting state {GetType().Name}");
+            OnExit();
+        }
+
+        public virtual void Update()
+        {
+            State<TContext> transitionState = GetTransition();
+            if (transitionState != null && !stateMachine.HasTransitionedThisFrame)
+            {
+                stateMachine.ChangeState(transitionState);
+                return;
+            }
+
+            OnUpdate();
+        }
+
+        public virtual void FixedUpdate()
+        {
+            OnFixedUpdate();
+        }
+
+        private protected abstract void OnEnter();
+        private protected abstract void OnExit();
+        private protected abstract void OnUpdate();
+        private protected abstract void OnFixedUpdate();
+
+        /// <summary>
+        /// Polls for a transition to another state.
+        /// Update will call this method and if it returns a non-null state, the state machine will transition to that state.
+        /// Override this method to implement custom transition logic.
+        /// </summary>
+        private protected virtual State<TContext> GetTransition() => null;
     }
 }

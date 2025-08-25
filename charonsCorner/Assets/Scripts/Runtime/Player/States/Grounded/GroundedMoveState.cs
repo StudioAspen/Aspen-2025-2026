@@ -9,26 +9,22 @@ namespace CharonsCorner.Runtime
         [field: SerializeField] public float TurnResponsiveness { get; private set; } = 1f;
         [field: SerializeField] public float MaxSpeed { get; private set; } = 25f;
 
-        public override void Enter()
+        private protected override void OnEnter()
         {
             
         }
 
-        public override void Exit()
+        private protected override void OnExit()
         {
 
         }
 
-        public override void Update()
+        private protected override void OnUpdate()
         {
-            if (context.Input.MoveDirection == Vector2.zero)
-            {
-                stateMachine.ChangeState(context.GroundedSuperState.IdleState);
-                return;
-            }
+
         }
 
-        public override void FixedUpdate()
+        private protected override void OnFixedUpdate()
         {
             Vector3 desiredDirection = Utilities.GetCameraBasedMoveInput(
                 CameraManager.Instance.CurrentCamera.transform, 
@@ -63,6 +59,14 @@ namespace CharonsCorner.Runtime
             // Cap final speed
             if (context.RigidBody.linearVelocity.magnitude > MaxSpeed)
                 context.RigidBody.linearVelocity = Vector3.ClampMagnitude(context.RigidBody.linearVelocity, MaxSpeed);
+        }
+
+        private protected override State<PlayerController> GetTransition()
+        {
+            if (context.Input.MoveDirection == Vector2.zero)
+                return context.GroundedSuperState.IdleState;
+
+            return null;
         }
     }
 }

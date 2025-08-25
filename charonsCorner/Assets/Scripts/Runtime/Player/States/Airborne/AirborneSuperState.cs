@@ -1,10 +1,9 @@
-﻿using NaughtyAttributes;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace CharonsCorner.Runtime
 {
     [System.Serializable]
-    public class AirborneSuperState : HierarchicalState<PlayerController>
+    public class AirborneSuperState : SuperState<PlayerController>
     {
         public override State<PlayerController> InitialSubState => IdleState;
 
@@ -19,34 +18,40 @@ namespace CharonsCorner.Runtime
             DriftState.Init(SubStateMachine, context);
         }
 
-        public override void Enter()
+        private protected override void OnEnter()
         {
             
         }
 
-        public override void Exit()
+        private protected override void OnExit()
         {
 
         }
 
-        public override void Update()
+        private protected override void OnUpdate()
+        {
+
+        }
+
+        private protected override void OnFixedUpdate()
+        {
+
+        }
+
+        private protected override State<PlayerController> GetTransition()
         {
             if (context.IsGrounded)
-            {
-                stateMachine.ChangeState(context.GroundedSuperState);
-                return;
-            }
+                return context.GroundedSuperState;
 
-            if (context.Input.InputActions.Player.Drift.IsPressed())
-            {
-                SubStateMachine.ChangeState(DriftState);
-                return;
-            }
+            return null;
         }
 
-        public override void FixedUpdate()
+        private protected override State<PlayerController> GetSubStateTransition()
         {
+            if (context.Input.InputActions.Player.Drift.IsPressed())
+                return DriftState;
 
+            return null;
         }
     }
 }

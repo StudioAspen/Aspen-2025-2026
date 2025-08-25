@@ -1,13 +1,10 @@
-﻿using log4net.Util;
-using NaughtyAttributes;
-using System;
-using UnityEditorInternal;
+﻿using NaughtyAttributes;
 using UnityEngine;
 
 namespace CharonsCorner.Runtime
 {
     [System.Serializable]
-    public class GroundedSuperState : HierarchicalState<PlayerController>
+    public class GroundedSuperState : SuperState<PlayerController>
     {
         public override State<PlayerController> InitialSubState => IdleState;
 
@@ -29,13 +26,13 @@ namespace CharonsCorner.Runtime
             DriftState.Init(SubStateMachine, context);
         }
 
-        public override void Enter()
+        private protected override void OnEnter()
         {
             context.Input.Jump += Input_Jump;
             context.Input.Drift += Input_Drift;
         }
 
-        public override void Exit()
+        private protected override void OnExit()
         {
             if(context.Input != null)
             {
@@ -44,18 +41,22 @@ namespace CharonsCorner.Runtime
             }
         }
 
-        public override void Update()
+        private protected override void OnUpdate()
         {
-            if (!IsGrounded)
-            {
-                stateMachine.ChangeState(context.AirborneSuperState);
-                return;
-            }
+
         }
 
-        public override void FixedUpdate()
+        private protected override void OnFixedUpdate()
         {
 
+        }
+
+        private protected override State<PlayerController> GetTransition()
+        {
+            if (!IsGrounded)
+                return context.AirborneSuperState;
+
+            return null;
         }
 
         public void CheckGrounded()
@@ -68,7 +69,7 @@ namespace CharonsCorner.Runtime
             if (JumpHeight <= 0f)
                 return;
 
-            if (!context.IsGrounded)
+            if (!IsGrounded)
                 return;
 
             float jumpForce = Mathf.Sqrt(2 * JumpHeight * Mathf.Abs(Physics.gravity.y)); // Equation to calculate jump force based on desired height

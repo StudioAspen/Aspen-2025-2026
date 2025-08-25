@@ -16,7 +16,7 @@ namespace CharonsCorner.Runtime
 
         public bool IsDrifting { get; private set; }
 
-        public override void Enter()
+        private protected override void OnEnter()
         {
             IsDrifting = true;
 
@@ -30,31 +30,24 @@ namespace CharonsCorner.Runtime
             float angle = AngleOffset * (context.Input.MoveDirection.x > 0 ? 1 : -1);
             driftDirection = Quaternion.AngleAxis(angle, Vector3.up) * driftDirection;
 
-            Debug.DrawRay(context.transform.position, 100f * context.RigidBody.linearVelocity.normalized, Color.green, 10f);
+/*            Debug.DrawRay(context.transform.position, 100f * context.RigidBody.linearVelocity.normalized, Color.green, 10f);
             Debug.DrawRay(context.transform.position, 100f * driftDirection, Color.red, 10f);
-            Debug.Break();
+            Debug.Break();*/
         }
 
-        public override void Exit()
+        private protected override void OnExit()
         {
             IsDrifting = false;
 
             driftTimer = 0f;
         }
 
-        public override void Update()
+        private protected override void OnUpdate()
         {
-            if (!context.Input.InputActions.Player.Drift.IsPressed() ||
-                context.Input.MoveDirection == Vector2.zero)
-            {
-                stateMachine.ChangeState(context.GroundedSuperState.IdleState);
-                return;
-            }
-
             driftTimer += Time.deltaTime;
         }
 
-        public override void FixedUpdate()
+        private protected override void OnFixedUpdate()
         {
             Vector3 desiredDirection = Utilities.GetCameraBasedMoveInput(
                 CameraManager.Instance.CurrentCamera.transform, 
@@ -72,6 +65,14 @@ namespace CharonsCorner.Runtime
             Vector3 velocity = context.RigidBody.linearVelocity;
             Vector3 lateral = Vector3.ProjectOnPlane(velocity, driftDirection);
             context.RigidBody.linearVelocity = (velocity - lateral) + lateral * Friction;
+        }
+
+        private protected override State<PlayerController> GetTransition()
+        {
+            if (!context.Input.InputActions.Player.Drift.IsPressed() || context.Input.MoveDirection == Vector2.zero)
+                return context.GroundedSuperState.IdleState;
+
+            return null;
         }
     }
 }

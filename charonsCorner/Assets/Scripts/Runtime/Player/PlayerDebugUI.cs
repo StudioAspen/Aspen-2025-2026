@@ -20,7 +20,7 @@ namespace CharonsCorner.Runtime
         {
             string superStateName = playerController.StateMachine.CurrentState.GetType().Name;
             string subStateName = "None";
-            if(playerController.StateMachine.CurrentState is HierarchicalState<PlayerController> hierarchicalState && hierarchicalState.SubStateMachine.CurrentState != null)
+            if(playerController.StateMachine.CurrentState is SuperState<PlayerController> hierarchicalState && hierarchicalState.SubStateMachine.CurrentState != null)
                 subStateName = hierarchicalState.SubStateMachine.CurrentState.GetType().Name;
 
             superStateText.text = $"Superstate: {superStateName}";

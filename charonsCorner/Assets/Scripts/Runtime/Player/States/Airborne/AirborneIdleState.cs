@@ -7,29 +7,33 @@ namespace CharonsCorner.Runtime
     {
         [field: SerializeField] public float Damp { get; private set; } = 0.1f;
 
-        public override void Enter()
+        private protected override void OnEnter()
         {
 
         }
 
-        public override void Exit()
+        private protected override void OnExit()
         {
 
         }
 
-        public override void Update()
+        private protected override void OnUpdate()
         {
-            if (context.Input.MoveDirection != Vector2.zero)
-            {
-                stateMachine.ChangeState(context.AirborneSuperState.MoveState);
-                return;
-            }
+
         }
 
-        public override void FixedUpdate()
+        private protected override void OnFixedUpdate()
         {
             Vector3 torque = Damp * -context.RigidBody.angularVelocity;
             context.RigidBody.AddTorque(torque, ForceMode.VelocityChange);
+        }
+
+        private protected override State<PlayerController> GetTransition()
+        {
+            if (context.Input.MoveDirection != Vector2.zero)
+                return context.AirborneSuperState.MoveState;
+
+            return null;
         }
     }
 }

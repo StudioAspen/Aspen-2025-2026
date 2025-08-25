@@ -1,5 +1,4 @@
 using NaughtyAttributes;
-using System;
 using UnityEngine;
 
 namespace CharonsCorner.Runtime
@@ -12,60 +11,58 @@ namespace CharonsCorner.Runtime
         public State<TContext> CurrentState { get; private set; }
         [SerializeField, ReadOnly, AllowNesting] private string currentStateName = "None";
 
-        public event Action<State<TContext>> OnStateChanged = delegate { };
+        public bool HasTransitionedThisFrame { get; private set; } = false;
 
         public StateMachine(TContext context)
         {
             Context = context;
         }
 
-        public void ChangeState(State<TContext> newState, bool force = false)
+        /// <summary>
+        /// Changes the current state to the new state.
+        /// If the new state is the same as the current state, it will not change unless forceChangeToSameState is true.
+        /// </summary>
+        public void ChangeState(State<TContext> newState, bool forceChangeToSameState = false)
         {
+            if (HasTransitionedThisFrame)
+                return;
+
             if (newState == null)
                 return;
 
-            if(CurrentState == newState && !force)
+            if(CurrentState == newState && !forceChangeToSameState)
                 return;
 
-            HierarchicalState<TContext> hierarchicalState = CurrentState as HierarchicalState<TContext>;
-            if (hierarchicalState != null)
-                hierarchicalState.SubStateMachine?.CurrentState?.Exit();
+            HasTransitionedThisFrame = true;
+
             CurrentState?.Exit();
-
             CurrentState = newState;
-
             CurrentState?.Enter();
-            hierarchicalState = CurrentState as HierarchicalState<TContext>;
-            if (hierarchicalState != null)
-                hierarchicalState.SubStateMachine?.ChangeState(hierarchicalState.InitialSubState, true);
-
-            OnStateChanged.Invoke(CurrentState);
 
             currentStateName = CurrentState != null ? CurrentState.GetType().Name : "None";
         }
 
         public void Update()
         {
+            HasTransitionedThisFrame = false;
             CurrentState?.Update();
-
-            if (CurrentState is HierarchicalState<TContext> hierarchicalState)
-                hierarchicalState.SubStateMachine?.Update();
         }
 
         public void FixedUpdate()
         {
             CurrentState?.FixedUpdate();
-
-            if (CurrentState is HierarchicalState<TContext> hierarchicalState)
-                hierarchicalState.SubStateMachine?.FixedUpdate();
         }
 
-        public void Dispose()
+        public void ExitCurrentState()
         {
-            if (CurrentState is HierarchicalState<TContext> hierarchicalState)
-                hierarchicalState.SubStateMachine?.Dispose();
             CurrentState?.Exit();
-            OnStateChanged = null; // Unsubscribe all listeners
+            CurrentState = null;
+            currentStateName = "None";
+        }
+
+        public void Destroy()
+        {
+            CurrentState?.Destroy();
         }
     }
 }
