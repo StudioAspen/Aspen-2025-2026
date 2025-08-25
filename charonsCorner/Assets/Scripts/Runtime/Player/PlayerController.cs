@@ -10,9 +10,6 @@ namespace CharonsCorner.Runtime
         public Rigidbody RigidBody { get; private set; }
         public SphereCollider SphereCollider { get; private set; }
 
-        [field: Header("References")]
-        [field: SerializeField] public Transform BallVisual { get; private set; }
-
         [field: Header("State Machine")]
         [field: SerializeField] public StateMachine<PlayerController> StateMachine { get; private set; }
         [field: SerializeField] public GroundedSuperState GroundedSuperState { get; private set; } = new();
