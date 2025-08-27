@@ -33,7 +33,7 @@ namespace CharonsCorner.Editor
                 string currentScenePath = SceneManager.GetActiveScene().path;
                 if(currentScenePath == BootstrapScenePath)
                     currentScenePath = TitleScenePath;
-                EditorUtilities.MarkSceneAddressable(currentScenePath);
+                EditorUtilities.MarkAllScenesAddressable();
                 EditorPrefs.SetString("Bootstrap_OriginalScene", currentScenePath);
 
                 EditorSceneManager.OpenScene(BootstrapScenePath, OpenSceneMode.Single);
@@ -42,7 +42,7 @@ namespace CharonsCorner.Editor
             {
                 // Go back to the original scene after exiting play mode
                 string originalScenePath = EditorPrefs.GetString("Bootstrap_OriginalScene", TitleScenePath);
-                EditorUtilities.UnmarkSceneAddressable(originalScenePath);
+                EditorUtilities.UnmarkAllScenesAddressable();
                 EditorSceneManager.OpenScene(originalScenePath, OpenSceneMode.Single);
             }
         }
