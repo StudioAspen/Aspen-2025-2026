@@ -70,7 +70,7 @@ namespace CharonsCorner.Runtime
         private protected override State<PlayerController> GetTransition()
         {
             if (!context.Input.InputActions.Player.Drift.IsPressed() || context.Input.MoveDirection == Vector2.zero)
-                return context.GroundedSuperState.IdleState;
+                return context.Config.GroundedSuperState.IdleState;
 
             return null;
         }

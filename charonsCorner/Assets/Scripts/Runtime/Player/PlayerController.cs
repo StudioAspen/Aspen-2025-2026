@@ -1,3 +1,5 @@
+using NaughtyAttributes;
+using UnityEditorInternal;
 using UnityEngine;
 
 namespace CharonsCorner.Runtime
@@ -10,16 +12,14 @@ namespace CharonsCorner.Runtime
         public Rigidbody RigidBody { get; private set; }
         public SphereCollider SphereCollider { get; private set; }
 
-        [field: Header("State Machine")]
-        [field: SerializeField] public StateMachine<PlayerController> StateMachine { get; private set; }
-        [field: SerializeField] public GroundedSuperState GroundedSuperState { get; private set; } = new();
-        [field: SerializeField] public AirborneSuperState AirborneSuperState { get; private set; } = new();
+        public StateMachine<PlayerController> StateMachine { get; private set; }
+        [field: SerializeField] public PlayerControllerConfigSO Config { get; private set; }
 
         /// <summary>
         /// Easy access to whether the player is grounded or not from the context. GroundedSuperState handles the actual checking.
         /// </summary>
-        public bool IsGrounded => GroundedSuperState.IsGrounded;
-        public float CurrentSpeed => RigidBody.linearVelocity.magnitude;
+        [ShowNativeProperty] public bool IsGrounded => Config.GroundedSuperState.IsGrounded;
+        [ShowNativeProperty] public float CurrentSpeed => RigidBody.linearVelocity.magnitude;
 
         private void Awake()
         {
@@ -27,20 +27,8 @@ namespace CharonsCorner.Runtime
             RigidBody = GetComponent<Rigidbody>();
             SphereCollider = GetComponent<SphereCollider>();
 
-            SetupStateMachine();
-        }
-
-        /// <summary>
-        /// Runs in awake. Sets up the state machine and all the states for the player controller.
-        /// </summary>
-        private void SetupStateMachine()
-        {
             StateMachine = new StateMachine<PlayerController>(this);
-
-            GroundedSuperState.Init(StateMachine, this);
-            AirborneSuperState.Init(StateMachine, this);
-
-            StateMachine.ChangeState(GroundedSuperState, true);
+            Config.InitializeStates(StateMachine, this);
         }
 
         private void OnDestroy()
@@ -52,7 +40,7 @@ namespace CharonsCorner.Runtime
         {
             // Draws the ground check sphere in the editor for visualization
             Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(transform.position + GroundedSuperState.GroundCheckDistance * Vector3.down, GroundedSuperState.GroundCheckRadius);
+            Gizmos.DrawWireSphere(transform.position + Config.GroundedSuperState.GroundCheckDistance * Vector3.down, Config.GroundedSuperState.GroundCheckRadius);
         }
 
         private void Update()
@@ -62,7 +50,7 @@ namespace CharonsCorner.Runtime
 
         private void FixedUpdate()
         {
-            GroundedSuperState.CheckGrounded();
+            Config.GroundedSuperState.CheckGrounded();
 
             StateMachine.FixedUpdate();
         }

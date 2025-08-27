@@ -16,8 +16,8 @@ namespace CharonsCorner.Runtime
         [field: SerializeField] public float GroundCheckDistance { get; private set; } = 0.2f;
         [field: SerializeField] public float GroundCheckRadius { get; private set; } = 0.9f;
         [field: SerializeField] public LayerMask GroundLayerMask { get; private set; }
-        [field: SerializeField, ReadOnly, AllowNesting] public bool IsGrounded { get; private set; }
         [field: SerializeField] public float JumpHeight { get; private set; } = 2f;
+        public bool IsGrounded { get; private set; }
 
         private protected override void InitializeSubStates()
         {
@@ -54,7 +54,7 @@ namespace CharonsCorner.Runtime
         private protected override State<PlayerController> GetTransition()
         {
             if (!IsGrounded)
-                return context.AirborneSuperState;
+                return context.Config.AirborneSuperState;
 
             return null;
         }
@@ -75,7 +75,7 @@ namespace CharonsCorner.Runtime
             float jumpForce = Mathf.Sqrt(2 * JumpHeight * Mathf.Abs(Physics.gravity.y)); // Equation to calculate jump force based on desired height
             context.RigidBody.AddForce(Vector3.up * jumpForce, ForceMode.VelocityChange);
 
-            stateMachine.ChangeState(context.AirborneSuperState);
+            stateMachine.ChangeState(context.Config.AirborneSuperState);
         }
 
         private void Input_Drift(bool isDrifting)

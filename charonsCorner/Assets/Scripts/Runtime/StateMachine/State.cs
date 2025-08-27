@@ -8,7 +8,7 @@ namespace CharonsCorner.Runtime
         private protected StateMachine<TContext> stateMachine;
         private protected TContext context;
 
-        private static readonly bool debug = true; // Set to true to enable debug logs for state transitions
+        private static readonly bool enableDebug = true; // Set to true to enable debug logs for state transitions
 
         public virtual void Init(StateMachine<TContext> stateMachine, TContext context)
         {
@@ -21,21 +21,21 @@ namespace CharonsCorner.Runtime
         
         public virtual void Destroy()
         {
-            if(debug)
+            if(enableDebug)
                 Debug.Log($"Destroying state {GetType().Name}");
             Exit();
         }
 
         public virtual void Enter()
         {
-            if(debug)
+            if(enableDebug)
                 Debug.Log($"Entering state {GetType().Name}");
             OnEnter();
         }
 
         public virtual void Exit()
         {
-            if(debug)
+            if(enableDebug)
                 Debug.Log($"Exiting state {GetType().Name}");
             OnExit();
         }
