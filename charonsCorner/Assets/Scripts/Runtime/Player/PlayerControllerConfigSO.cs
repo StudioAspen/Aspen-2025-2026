@@ -1,3 +1,4 @@
+using NaughtyAttributes;
 using UnityEngine;
 
 namespace CharonsCorner.Runtime
@@ -5,6 +6,7 @@ namespace CharonsCorner.Runtime
     [CreateAssetMenu(fileName = "PlayerControllerConfig", menuName = "CharonsCorner/Player/ControllerConfig", order = 0)]
     public class PlayerControllerConfigSO : ScriptableObject
     {
+        [field: InfoBox("NOTE: This config scriptable object persists runtime data! Serialized field values here should never be modified in code.", EInfoBoxType.Warning)]
         [field: SerializeField] public GroundedSuperState GroundedSuperState { get; private set; } = new();
         [field: SerializeField] public AirborneSuperState AirborneSuperState { get; private set; } = new();
 
