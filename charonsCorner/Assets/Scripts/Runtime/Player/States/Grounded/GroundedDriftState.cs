@@ -6,73 +6,73 @@ namespace CharonsCorner.Runtime
     [System.Serializable]
     public class GroundedDriftState : State<PlayerController>
     {
-        [field: SerializeField] public float AngleOffset { get; private set; } = 20f;
-        [field: SerializeField] public float TurnResponsiveness { get; private set; } = 1f;
-        [field: SerializeField] public float Acceleration { get; private set; } = 1f;
-        [field: SerializeField] public float Friction { get; private set; } = 0.9f;
+        [SerializeField] private float driftAdjustSpeed = 20f;
+        [SerializeField] private float maxDriftOffsetAngle = 45f;
+        [SerializeField] private float driftSpeed = 10f;
 
-        private Vector3 driftDirection;
-        [SerializeField, ReadOnly, AllowNesting] private float driftTimer;
+        private Vector3 startDirection;
+        private float currentOffsetAngle;
+        private Vector3 driftMoveDirection;
+
+        private float driftTimer;
 
         public bool IsDrifting { get; private set; }
 
         private protected override void OnEnter()
         {
             IsDrifting = true;
-
             driftTimer = 0f;
 
-            driftDirection = Utilities.GetCameraBasedMoveInput(
-                CameraManager.Instance.CurrentCamera.transform, 
-                context.Input.MoveDirection
-            );
+            currentOffsetAngle = 0f;
 
-            float angle = AngleOffset * (context.Input.MoveDirection.x > 0 ? 1 : -1);
-            driftDirection = Quaternion.AngleAxis(angle, Vector3.up) * driftDirection;
+            startDirection = context.RigidBody.linearVelocity.WithY(0).normalized;
 
-/*            Debug.DrawRay(context.transform.position, 100f * context.RigidBody.linearVelocity.normalized, Color.green, 10f);
-            Debug.DrawRay(context.transform.position, 100f * driftDirection, Color.red, 10f);
-            Debug.Break();*/
+            context.RigidBody.isKinematic = true;
         }
 
         private protected override void OnExit()
         {
             IsDrifting = false;
 
-            driftTimer = 0f;
+            context.RigidBody.isKinematic = false;
         }
 
         private protected override void OnUpdate()
         {
             driftTimer += Time.deltaTime;
+
+            HandleDriftOffsetAngle();
+
+            Vector3 currentOffsetDirection = Quaternion.Euler(0f, currentOffsetAngle, 0f) * startDirection;
+            Debug.DrawLine(context.transform.position, context.transform.position + startDirection * 25f, Color.magenta, 0.1f);
+            Debug.DrawLine(context.transform.position, context.transform.position + currentOffsetDirection * 25f, Color.yellow, 0.1f);
+
+            // The actual drift direction is halfway between the start direction and the current offset direction
+            driftMoveDirection = Quaternion.Euler(0f, currentOffsetAngle / 2f, 0f) * startDirection;
+            Debug.DrawLine(context.transform.position, context.transform.position + driftMoveDirection * 25f, Color.green, 0.1f);
         }
 
         private protected override void OnFixedUpdate()
         {
-            Vector3 desiredDirection = Utilities.GetCameraBasedMoveInput(
-                CameraManager.Instance.CurrentCamera.transform, 
-                context.Input.MoveDirection
-            );
-
-            // Adjust drift direction slowly toward input
-            driftDirection = Vector3.Slerp(driftDirection, desiredDirection, TurnResponsiveness * Time.fixedDeltaTime);
-
-            Vector3 turnTorque = Vector3.Cross(Vector3.up, driftDirection) * TurnResponsiveness;
-            context.RigidBody.AddTorque(turnTorque, ForceMode.VelocityChange);
-
-            context.RigidBody.AddForce(driftDirection * Acceleration, ForceMode.Acceleration);
-
-            Vector3 velocity = context.RigidBody.linearVelocity;
-            Vector3 lateral = Vector3.ProjectOnPlane(velocity, driftDirection);
-            context.RigidBody.linearVelocity = (velocity - lateral) + lateral * Friction;
+            context.RigidBody.MovePosition(context.transform.position + driftSpeed * driftMoveDirection * Time.fixedDeltaTime);
         }
 
         private protected override State<PlayerController> GetTransition()
         {
-            if (!context.Input.InputActions.Player.Drift.IsPressed() || context.Input.MoveDirection == Vector2.zero)
+            if (!context.Input.InputActions.Player.Drift.IsPressed())
                 return context.Config.GroundedSuperState.IdleState;
 
             return null;
+        }
+
+        private void HandleDriftOffsetAngle()
+        {
+            float horizontalInput = context.Input.MoveDirection.x;
+            currentOffsetAngle += horizontalInput * driftAdjustSpeed * Time.deltaTime;
+
+            // Clamp the offset angle to the maximum allowed drift angle
+            if (Mathf.Abs(currentOffsetAngle) > maxDriftOffsetAngle)
+                currentOffsetAngle = Mathf.Sign(currentOffsetAngle) * maxDriftOffsetAngle;
         }
     }
 }
