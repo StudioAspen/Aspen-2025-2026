@@ -76,7 +76,6 @@ namespace CharonsCorner.Runtime
                     Time.timeScale = 1f;
                     UIManager.Instance.HideAllPanels();
                     InputManager.Instance.EnableUIActions();
-                    InputManager.Instance.LockCursor(false);
                     break;
                 case GameState.Loading:
                     Time.timeScale = 0f;
@@ -87,7 +86,6 @@ namespace CharonsCorner.Runtime
                     Time.timeScale = 1f;
                     UIManager.Instance.HideAllPanels();
                     InputManager.Instance.EnablePlayerActions();
-                    InputManager.Instance.LockCursor(true);
                     // If the Steam overlay is open, pause the game
                     if(SteamOverlayListener.IsOverlayOpen)
                         ChangeGameState(GameState.Paused);
@@ -95,17 +93,14 @@ namespace CharonsCorner.Runtime
                 case GameState.Dialogue:
                     Time.timeScale = 1f;
                     UIManager.Instance.ShowPanel(UIManager.PanelName.Dialogue);
-                    InputManager.Instance.LockCursor(false);
                     break;
                 case GameState.Paused:
                     Time.timeScale = 0f;
                     UIManager.Instance.ShowPanel(UIManager.PanelName.PauseMenu);
-                    InputManager.Instance.LockCursor(false);
                     break;
                 case GameState.GameplayConfirm:
                     Time.timeScale = 1f;
                     UIManager.Instance.ShowPanel(UIManager.PanelName.Confirm);
-                    InputManager.Instance.LockCursor(false);
                     break;
                 case GameState.Cutscene:
                     Time.timeScale = 1f;
