@@ -12,13 +12,14 @@ namespace CharonsCorner.Runtime
         public SphereCollider SphereCollider { get; private set; }
 
         public StateMachine<PlayerController> StateMachine { get; private set; }
-        [field: SerializeField] public PlayerControllerConfigSO Config { get; private set; }
+        [field: SerializeField] public GroundedSuperState GroundedSuperState { get; private set; } = new();
+        [field: SerializeField] public AirborneSuperState AirborneSuperState { get; private set; } = new();
 
         /// <summary>
         /// Easy access to whether the player is grounded or not from the context. GroundedSuperState handles the actual checking.
         /// </summary>
-        [ShowNativeProperty] public bool IsGrounded => Config.GroundedSuperState.IsGrounded;
-        [ShowNativeProperty] public float CurrentSpeed => RigidBody.linearVelocity.magnitude;
+        [ShowNativeProperty] public bool IsGrounded => GroundedSuperState.IsGrounded;
+        public float CurrentSpeed => RigidBody.linearVelocity.magnitude;
 
         private void Awake()
         {
@@ -27,7 +28,7 @@ namespace CharonsCorner.Runtime
             SphereCollider = GetComponent<SphereCollider>();
 
             StateMachine = new StateMachine<PlayerController>(this);
-            Config.InitializeStates(StateMachine, this);
+            InitializeStates(StateMachine, this);
         }
 
         private void OnDestroy()
@@ -39,7 +40,7 @@ namespace CharonsCorner.Runtime
         {
             // Draws the ground check sphere in the editor for visualization
             Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(transform.position + Config.GroundedSuperState.GroundCheckDistance * Vector3.down, Config.GroundedSuperState.GroundCheckRadius);
+            Gizmos.DrawWireSphere(transform.position + GroundedSuperState.GroundCheckDistance * Vector3.down, GroundedSuperState.GroundCheckRadius);
         }
 
         private void Update()
@@ -49,9 +50,20 @@ namespace CharonsCorner.Runtime
 
         private void FixedUpdate()
         {
-            Config.GroundedSuperState.CheckGrounded();
+            GroundedSuperState.CheckGrounded();
 
             StateMachine.FixedUpdate();
+        }
+
+        /// <summary>
+        /// Runs in awake. Sets up the state machine and all the states for the player controller.
+        /// </summary>
+        public void InitializeStates(StateMachine<PlayerController> machine, PlayerController context)
+        {
+            GroundedSuperState.Init(machine, context);
+            AirborneSuperState.Init(machine, context);
+
+            machine.ChangeState(GroundedSuperState, context);
         }
     }
 }

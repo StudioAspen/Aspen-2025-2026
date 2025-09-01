@@ -41,7 +41,7 @@ namespace CharonsCorner.Runtime
         private protected override State<PlayerController> GetTransition()
         {
             if (context.IsGrounded)
-                return context.Config.GroundedSuperState;
+                return context.GroundedSuperState;
 
             return null;
         }

@@ -64,7 +64,7 @@ namespace CharonsCorner.Runtime
         private protected override State<PlayerController> GetTransition()
         {
             if (context.Input.MoveDirection == Vector2.zero)
-                return context.Config.GroundedSuperState.IdleState;
+                return context.GroundedSuperState.IdleState;
 
             return null;
         }

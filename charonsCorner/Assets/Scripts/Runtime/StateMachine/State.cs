@@ -8,7 +8,7 @@ namespace CharonsCorner.Runtime
         private protected StateMachine<TContext> stateMachine;
         private protected TContext context;
 
-        private static readonly bool enableDebug = true; // Set to true to enable debug logs for state transitions
+        private static readonly bool enableDebug = false; // Set to true to enable debug logs for state transitions
 
         public virtual void Init(StateMachine<TContext> stateMachine, TContext context)
         {
