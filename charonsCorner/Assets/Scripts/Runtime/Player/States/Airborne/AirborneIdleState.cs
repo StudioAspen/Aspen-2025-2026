@@ -26,6 +26,8 @@ namespace CharonsCorner.Runtime
         {
             Vector3 torque = Damp * -context.RigidBody.angularVelocity;
             context.RigidBody.AddTorque(torque, ForceMode.VelocityChange);
+
+            context.VisualObject.transform.rotation = context.RigidBody.rotation;
         }
 
         private protected override State<PlayerController> GetTransition()

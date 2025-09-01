@@ -24,7 +24,7 @@ namespace CharonsCorner.Runtime
 
         private protected override void OnFixedUpdate()
         {
-            
+            context.VisualObject.transform.rotation = context.RigidBody.rotation;
         }
 
         private protected override State<PlayerController> GetTransition()

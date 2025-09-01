@@ -5,7 +5,7 @@ namespace CharonsCorner.Runtime
     [System.Serializable]
     public class GroundedIdleState : State<PlayerController>
     {
-        [field: SerializeField] public float Damp { get; private set; } = 0.1f;
+        [SerializeField] private float damp = 0.1f;
 
         private protected override void OnEnter()
         {
@@ -24,8 +24,10 @@ namespace CharonsCorner.Runtime
 
         private protected override void OnFixedUpdate()
         {
-            Vector3 torque = Damp * -context.RigidBody.angularVelocity;
+            Vector3 torque = damp * -context.RigidBody.angularVelocity;
             context.RigidBody.AddTorque(torque, ForceMode.VelocityChange);
+
+            context.VisualObject.transform.rotation = context.RigidBody.rotation;
         }
 
         private protected override State<PlayerController> GetTransition()

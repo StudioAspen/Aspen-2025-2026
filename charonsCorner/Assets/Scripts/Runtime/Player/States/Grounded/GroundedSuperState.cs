@@ -10,19 +10,21 @@ namespace CharonsCorner.Runtime
 
         [field: SerializeField] public GroundedIdleState IdleState { get; private set; } = new();
         [field: SerializeField] public GroundedMoveState MoveState { get; private set; } = new();
+        [field: SerializeField] public GroundedDriftStartState DriftStartState { get; private set; } = new();
         [field: SerializeField] public GroundedDriftState DriftState { get; private set; } = new();
 
         [field: Header("Config")]
         [field: SerializeField] public float GroundCheckDistance { get; private set; } = 0.2f;
         [field: SerializeField] public float GroundCheckRadius { get; private set; } = 0.9f;
         [field: SerializeField] public LayerMask GroundLayerMask { get; private set; }
-        [field: SerializeField] public float JumpHeight { get; private set; } = 2f;
+        [SerializeField] private float jumpHeight = 2f;
         public bool IsGrounded { get; private set; }
 
         private protected override void InitializeSubStates()
         {
             IdleState.Init(SubStateMachine, context);
             MoveState.Init(SubStateMachine, context);
+            DriftStartState.Init(SubStateMachine, context);
             DriftState.Init(SubStateMachine, context);
         }
 
@@ -66,13 +68,13 @@ namespace CharonsCorner.Runtime
 
         private void Input_Jump()
         {
-            if (JumpHeight <= 0f)
+            if (jumpHeight <= 0f)
                 return;
 
             if (!IsGrounded)
                 return;
 
-            float jumpForce = Mathf.Sqrt(2 * JumpHeight * Mathf.Abs(Physics.gravity.y)); // Equation to calculate jump force based on desired height
+            float jumpForce = Mathf.Sqrt(2 * jumpHeight * Mathf.Abs(Physics.gravity.y)); // Equation to calculate jump force based on desired height
             context.RigidBody.AddForce(Vector3.up * jumpForce, ForceMode.VelocityChange);
 
             stateMachine.ChangeState(context.AirborneSuperState);
@@ -84,7 +86,7 @@ namespace CharonsCorner.Runtime
                 return;
 
             if(context.Input.MoveDirection != Vector2.zero)
-                SubStateMachine.ChangeState(DriftState);
+                SubStateMachine.ChangeState(DriftStartState);
         }
     }
 }

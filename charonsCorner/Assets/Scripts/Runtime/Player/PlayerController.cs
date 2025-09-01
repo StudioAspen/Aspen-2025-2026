@@ -3,13 +3,12 @@ using UnityEngine;
 
 namespace CharonsCorner.Runtime
 {
-    [RequireComponent(typeof(Rigidbody))]
-    [RequireComponent(typeof(SphereCollider))]
     public class PlayerController : MonoBehaviour
     {
         public InputManager Input { get; private set; } // For quick access
-        public Rigidbody RigidBody { get; private set; }
-        public SphereCollider SphereCollider { get; private set; }
+        [field: SerializeField] public Rigidbody RigidBody { get; private set; }
+        [field: SerializeField] public SphereCollider SphereCollider { get; private set; }
+        [field: SerializeField] public GameObject VisualObject { get; private set; }
 
         public StateMachine<PlayerController> StateMachine { get; private set; }
         [field: SerializeField] public GroundedSuperState GroundedSuperState { get; private set; } = new();
@@ -24,8 +23,6 @@ namespace CharonsCorner.Runtime
         private void Awake()
         {
             Input = InputManager.Instance;
-            RigidBody = GetComponent<Rigidbody>();
-            SphereCollider = GetComponent<SphereCollider>();
 
             StateMachine = new StateMachine<PlayerController>(this);
             InitializeStates(StateMachine, this);
@@ -50,6 +47,8 @@ namespace CharonsCorner.Runtime
 
         private void FixedUpdate()
         {
+            transform.position = RigidBody.position; // Controller locks onto the collider
+
             GroundedSuperState.CheckGrounded();
 
             StateMachine.FixedUpdate();
