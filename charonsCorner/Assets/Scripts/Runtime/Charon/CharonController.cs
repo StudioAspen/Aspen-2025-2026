@@ -1,3 +1,4 @@
+using Animancer;
 using AYellowpaper.SerializedCollections;
 using NaughtyAttributes;
 using UnityEngine;
@@ -8,27 +9,14 @@ namespace CharonsCorner.Runtime
     {
         private DialogueManager dialogueManager;
 
-        [SerializeField] private Animator animator;
+        [Header("References")]
+        [SerializeField] private AnimancerComponent animator;
 
         [Header("Config")]
-        [SerializeField] private float animationSpeed = 1f;
+        [SerializeField] private float animatorFadeDuration = 0.2f;
 
-        [System.Serializable]
-        public class AnimationParameterContainer
-        {
-            private Animator animator;
-            [field: SerializeField, AnimatorParam("animator")] public int ParameterHash { get; private set; }
-            public void SetAnimator(Animator animator) => this.animator = animator;
-        }
-
-        [SerializeField, SerializedDictionary("Reaction", "Animation Parameter")]
-        private SerializedDictionary<DialogueReaction, AnimationParameterContainer> reactionAnimations;
-
-        private void OnValidate()
-        {
-            foreach(AnimationParameterContainer container in reactionAnimations.Values)
-                container.SetAnimator(animator);
-        }
+        [SerializeField, SerializedDictionary("Reaction", "Animation Clip")]
+        private SerializedDictionary<DialogueReaction, ClipTransition> reactionAnimations;
 
         private void Awake()
         {
@@ -37,8 +25,11 @@ namespace CharonsCorner.Runtime
             dialogueManager.OnDialogueOpenerStarted += DialogueManager_OnDialogueOpenerStarted;
             dialogueManager.OnDialogueStarted += DialogueManager_OnDialogueStarted;
             dialogueManager.OnDialogueEnded += DialogueManager_OnDialogueEnded;
+        }
 
-            animator.speed = animationSpeed;
+        private void Start()
+        {
+            animator.Play(reactionAnimations[DialogueReaction.Idle], animatorFadeDuration);
         }
 
         private void OnDestroy()
@@ -53,19 +44,19 @@ namespace CharonsCorner.Runtime
 
         private void DialogueManager_OnDialogueOpenerStarted(DialogueOpenerSO opener)
         {
-            animator.SetTrigger(reactionAnimations[opener.Reaction].ParameterHash);
+            animator.Play(reactionAnimations[opener.Reaction], animatorFadeDuration);
             opener.ApplyEffects();
         }
 
         private void DialogueManager_OnDialogueStarted(DialogueSO dialogue)
         {
-            animator.SetTrigger(reactionAnimations[dialogue.Reaction].ParameterHash);
+            animator.Play(reactionAnimations[dialogue.Reaction], animatorFadeDuration);
             dialogue.ApplyEffects();
         }
 
         private void DialogueManager_OnDialogueEnded()
         {
-            animator.SetTrigger(reactionAnimations[DialogueReaction.Idle].ParameterHash);
+            animator.Play(reactionAnimations[DialogueReaction.Idle], animatorFadeDuration);
         }
     }
 }
