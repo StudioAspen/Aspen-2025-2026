@@ -7,18 +7,14 @@ namespace CharonsCorner.Runtime
     [System.Serializable]
     public class GroundedDriftState : State<PlayerController>
     {
+        [SerializeField] private CinemachineOrbitalFollow orbitalCamera;
+        [SerializeField] private float acceleration = 2f;
         [SerializeField] private float driftAngleAdjustSpeed = 50f;
         [SerializeField] private float maxDriftAngle = 90f;
         [SerializeField] private float driftVisualRotationMultiplier = 2f;
+        private float initialSpeed;
         private float currentDriftAngle;
         private float driftDirectionSign;
-
-        [SerializeField] private CinemachineOrbitalFollow orbitalCamera;
-
-        [Header("Move")]
-        [SerializeField] private float turnAcceleration = 2f;
-        private float initialSpeed;
-
         private float driftTimer;
 
         public bool IsDrifting { get; private set; }
@@ -61,7 +57,7 @@ namespace CharonsCorner.Runtime
         private protected override void OnFixedUpdate()
         {
             Vector3 desiredDirection = Quaternion.Euler(0f, currentDriftAngle, 0f) * context.RigidBody.linearVelocity;
-            Vector3 torque = turnAcceleration * Vector3.Cross(Vector3.up, desiredDirection.normalized);
+            Vector3 torque = acceleration * Vector3.Cross(Vector3.up, desiredDirection.normalized);
 
             context.RigidBody.AddTorque(torque, ForceMode.VelocityChange);
 
@@ -75,7 +71,7 @@ namespace CharonsCorner.Runtime
             Vector3 rotationAxis = GetRotationAxisFromDirection(desiredDirection);
             context.VisualObject.transform.Rotate(rotationAxis, driftVisualRotationMultiplier * context.RigidBody.angularVelocity.magnitude, Space.World);
 
-            orbitalCamera.HorizontalAxis.Value += turnAcceleration * currentDriftAngle * Time.fixedDeltaTime;
+            orbitalCamera.HorizontalAxis.Value += acceleration * currentDriftAngle * Time.fixedDeltaTime;
         }
 
         private protected override State<PlayerController> GetTransition()
