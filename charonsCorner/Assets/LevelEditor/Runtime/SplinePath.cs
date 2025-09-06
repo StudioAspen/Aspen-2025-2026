@@ -1,260 +1,307 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.Splines;
 using Unity.Mathematics;
-using NaughtyAttributes;
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
 
 namespace CharonsCorner.LevelEditor
 {
-#if UNITY_EDITOR
-    [RequireComponent(typeof(SplineContainer))]
+    [Serializable]
+    public struct Intersection
+    {
+        public List<Junction> junctions;
+    }
+
+    [Serializable]
+    public struct Junction
+    {
+        public int splineIndex;
+        public int knotIndex;
+        public SplineContainer spline;
+
+        public Junction(int argSplineIndex, int argKnotIndex, SplineContainer argSpline)
+        {
+            splineIndex = argSplineIndex;
+            knotIndex = argKnotIndex;
+            spline = argSpline;
+        }
+    }
+    
+    /// <summary>
+    /// The path along a spline.
+    /// </summary>
+    [RequireComponent(typeof(MeshCollider))]
     [RequireComponent(typeof(MeshFilter))]
     [RequireComponent(typeof(MeshRenderer))]
-    [ExecuteInEditMode()]
-#endif
+    [RequireComponent(typeof(SplineContainer))]
     public class SplinePath : MonoBehaviour
     {
-#if UNITY_EDITOR
-        [Header("References")]
-        [SerializeField] private SplineContainer splineContainer;
-        [SerializeField] private MeshFilter meshFilter;
+        [HideInInspector] public SplineContainer splineContainer;
+        [HideInInspector] public MeshFilter pathMeshFilter;
 
         [Header("Config")]
         [SerializeField, Min(0.01f)] private float width = 10f;
         [SerializeField, Min(0.01f)] private float thickness = 1f; // how tall the mesh is
-        [SerializeField, Min(1)] private int segments = 50;
+        [SerializeField, Min(0.01f)] private float segmentLength = 3;
 
-        private List<Vector3> leftVertices = new();
-        private List<Vector3> rightVertices = new();
+        [SerializeField] private List<Intersection> _intersections = new List<Intersection>();
 
-        [Header("Debug Config")]
-        [SerializeField] private bool enableGizmos;
-        [SerializeField, ShowIf("enableGizmos"), Range(0f, 1f)] private float gizmoRadius = 0.2f;
-
-        private void OnEnable()
+        /// <summary>
+        /// Add an intersection to the spline path
+        /// </summary>
+        /// <param name="intersection">The intersection being added.</param>
+        public void AddIntersection(Intersection intersection)
         {
-            if (!EditorApplication.isPlaying)
-                Spline.Changed += Spline_Changed;
-
+            _intersections.Add(intersection);
         }
 
-        private void OnDisable()
-        {
-            if (!EditorApplication.isPlaying)
-                Spline.Changed -= Spline_Changed;
-        }
-
-        private void OnValidate()
-        {
-            if(splineContainer == null)
-                splineContainer = GetComponent<SplineContainer>();
-
-            if (meshFilter == null)
-                meshFilter = GetComponent<MeshFilter>();
-
-            RebuildMesh();
-            RebuildMeshCollider();
-        }
-
-        private void OnDrawGizmos()
-        {
-            if (!enableGizmos)
-                return;
-
-            if(gizmoRadius > 0f)
-            {
-                for (int i = 0; i < leftVertices.Count; i++)
-                {
-                    Gizmos.color = Color.red;
-                    Gizmos.DrawSphere(transform.TransformPoint(leftVertices[i]), gizmoRadius);
-                    Gizmos.DrawSphere(transform.TransformPoint(rightVertices[i]), gizmoRadius);
-                }
-            }
-        }
-
-        private void Spline_Changed(Spline spline, int arg2, SplineModification modification)
+        /// <summary>
+        /// Rebuild the mesh and mesh collider for the path.
+        /// </summary>
+        public void CookSplinePath()
         {
             RebuildMesh();
             RebuildMeshCollider();
         }
 
-        private void Update()
+        /// <summary>
+        /// Get the left and right points along the spline.
+        /// </summary>
+        /// <param name="splineIndex">The spline index.</param>
+        /// <param name="t">The distance along the spline (0, 1)</param>
+        /// <param name="width">The width of the left and right points.</param>
+        /// <param name="leftPoint">The left point on the sampled spline.</param>
+        /// <param name="rightPoint">The right point on the sampled spline.</param>
+        private void SampleSplineWidth(int splineIndex, float t, float width, out Vector3 leftPoint, out Vector3 rightPoint)
         {
-            if (!EditorApplication.isPlaying)
-                RebuildMesh();
-        }
-
-        private void RebuildMesh()
-        {
-            GetVertices();
-            BuildMesh();
-        }
-
-        private void GetVertices()
-        {
-            leftVertices = new();
-            rightVertices = new();
-
-            float step = 1f / segments;
-
-            for (int currentSplineIndex = 0; currentSplineIndex < splineContainer.Splines.Count; currentSplineIndex++)
+            splineContainer.Evaluate(splineIndex, t, out float3 position, out float3 forward, out float3 upVector);
+            
+            // Approximate tangent if forward is a zero vector (When spline point is set to linear)
+            if (((Vector3)forward).sqrMagnitude < 1e-6f)    
             {
-                for (int currentSegment = 0; currentSegment < segments; currentSegment++)
-                {
-                    float parameter = currentSegment * step;
-                    SampleSplineWidth(currentSplineIndex, parameter, width, out Vector3 leftPoint, out Vector3 rightPoint);
-                    leftVertices.Add(leftPoint);
-                    rightVertices.Add(rightPoint);
-                }
+                // fallback: sample slightly before/after t to approximate tangent
+                float dt = 0.001f; // small step
+                float t0 = Mathf.Max(0, t - dt);
+                float t1 = Mathf.Min(1, t + dt);
 
-                SampleSplineWidth(currentSplineIndex, 1f, width, out Vector3 lastLeftPoint, out Vector3 lastRightPoint);
-                leftVertices.Add(lastLeftPoint);
-                rightVertices.Add(lastRightPoint);
+                splineContainer.Evaluate(splineIndex, t0, out float3 p0, out _, out _);
+                splineContainer.Evaluate(splineIndex, t1, out float3 p1, out _, out _);
+                forward = (Vector3)(p1 - p0);
             }
-        }
-
-        private void SampleSplineWidth(int splineIndex, float parameter, float width, out Vector3 leftPoint, out Vector3 rightPoint)
-        {
-            splineContainer.Evaluate(splineIndex, parameter, out float3 position, out float3 forward, out float3 upVector);
+            
             float3 right = Vector3.Cross(forward, upVector).normalized;
 
             Vector3 worldLeft = position + (-right * width * 0.5f);
             Vector3 worldRight = position + (right * width * 0.5f);
-
+            
             leftPoint = transform.InverseTransformPoint(worldLeft);
             rightPoint = transform.InverseTransformPoint(worldRight);
         }
 
-        private void BuildMesh()
+        /// <summary>
+        /// Rebuild the path's mesh geometry based on the spline
+        /// </summary>
+        private void RebuildMesh()
         {
-            Mesh mesh = new Mesh();
-            mesh.name = "GeneratedMesh";
+            // --------------------------------------------------------------------------------
+            // Initialize mesh
+            
+            Mesh mesh = pathMeshFilter.sharedMesh;
+            if (mesh == null) {
+                mesh = new Mesh();
+                mesh.name = "PathMesh";
+            }
+            
+            mesh.Clear();
 
             List<Vector3> vertices = new List<Vector3>();
             List<int> triangles = new List<int>();
             List<Vector2> uvs = new List<Vector2>();
-
-            int vertexIndex = 0;
-            float uvOffset = 0;
-
+            
+            // --------------------------------------------------------------------------------
+            // Build main spline path
+            
+            int offset = 0;
+            
             for (int currentSplineIndex = 0; currentSplineIndex < splineContainer.Splines.Count; currentSplineIndex++)
             {
-                int splineOffset = segments * currentSplineIndex;
-                splineOffset += currentSplineIndex;
+                // Get the left and right vertices for path mesh
+                List<Vector3> leftVertices = new List<Vector3>();
+                List<Vector3> rightVertices = new List<Vector3>();
+                
+                float splineLength = splineContainer.CalculateLength(currentSplineIndex);
+                int numSegments = Mathf.Max(1, (int)Mathf.Ceil(splineLength / segmentLength));
 
-                for (int currentSplinePoint = 1; currentSplinePoint < segments + 1; currentSplinePoint++)
+                for (int i = 0; i < numSegments + 1; i++)
                 {
-                    int vertexOffset = currentSplinePoint + splineOffset;
-
-                    // top face vertices
-                    Vector3 r1 = rightVertices[vertexOffset - 1];
-                    Vector3 l1 = leftVertices[vertexOffset - 1];
-                    Vector3 r2 = rightVertices[vertexOffset];
-                    Vector3 l2 = leftVertices[vertexOffset];
-
-                    // bottom face vertices
-                    Vector3 r1b = r1 + Vector3.down * thickness;
-                    Vector3 l1b = l1 + Vector3.down * thickness;
-                    Vector3 r2b = r2 + Vector3.down * thickness;
-                    Vector3 l2b = l2 + Vector3.down * thickness;
-
-                    // distance between r1 and r2 for UV mapping
-                    float distance = Vector3.Distance(r1, r2) / 4f;
-                    float uvDistance = uvOffset + distance;
-
-                    // top face
-                    vertices.AddRange(new[] { r1, l1, r2, l2 });
-                    uvs.AddRange(new[] { new Vector2(uvOffset, 0), new Vector2(uvOffset, 1), new Vector2(uvDistance, 0), new Vector2(uvDistance, 1) });
-                    triangles.AddRange(new[] {
-                        vertexIndex + 0, vertexIndex + 2, vertexIndex + 3,
-                        vertexIndex + 3, vertexIndex + 1, vertexIndex + 0
-                    });
-
-                    // bot face (flipped normals)
-                    vertices.AddRange(new[] { r1b, r2b, l2b, l1b });
-                    uvs.AddRange(new[] { new Vector2(uvOffset, 0), new Vector2(uvDistance, 0), new Vector2(uvDistance, 1), new Vector2(uvOffset, 1) });
-                    triangles.AddRange(new[] {
-                        vertexIndex + 6, vertexIndex + 5, vertexIndex + 4,
-                        vertexIndex + 4, vertexIndex + 7, vertexIndex + 6
-                    });
-
-                    // right side
-                    vertices.AddRange(new[] { r1, r1b, r2b, r2 });
-                    uvs.AddRange(new[] { Vector2.zero, Vector2.up, Vector2.one, Vector2.right });
-                    triangles.AddRange(new[] {
-                        vertexIndex + 8, vertexIndex + 9, vertexIndex + 10,
-                        vertexIndex + 10, vertexIndex + 11, vertexIndex + 8
-                    });
-
-                    // left side
-                    vertices.AddRange(new[] { l2, l2b, l1b, l1 });
-                    uvs.AddRange(new[] { Vector2.zero, Vector2.up, Vector2.one, Vector2.right });
-                    triangles.AddRange(new[] {
-                        vertexIndex + 12, vertexIndex + 13, vertexIndex + 14,
-                        vertexIndex + 14, vertexIndex + 15, vertexIndex + 12
-                    });
-
-                    vertexIndex += 16;
-                    uvOffset += distance;
+                    float t = i / (float)numSegments;
+                    SampleSplineWidth(currentSplineIndex, t, width,
+                        out Vector3 leftPoint, out Vector3 rightPoint);
+                    leftVertices.Add(leftPoint);
+                    rightVertices.Add(rightPoint); 
                 }
 
-                // front face
-                Vector3 frontRightTop = rightVertices[splineOffset];
-                Vector3 frontLeftTop = leftVertices[splineOffset];
-                Vector3 frontRightBottom = frontRightTop + Vector3.down * thickness;
-                Vector3 frontLeftBottom = frontLeftTop + Vector3.down * thickness;
-
-                vertices.AddRange(new[] { frontRightTop, frontLeftTop, frontLeftBottom, frontRightBottom });
-                uvs.AddRange(new[] { Vector2.zero, Vector2.right, Vector2.one, Vector2.up });
-                triangles.AddRange(new[]
+                // Create faces for each segment
+                for (int i = 0; i < numSegments; i++)
                 {
-                    vertexIndex + 0, vertexIndex + 1, vertexIndex + 2,
-                    vertexIndex + 2, vertexIndex + 3, vertexIndex + 0
-                });
-                vertexIndex += 4;
+                    Vector3 r1 = rightVertices[i];
+                    Vector3 l1 = leftVertices[i];
+                    Vector3 r2 = rightVertices[i + 1];
+                    Vector3 l2 = leftVertices[i + 1];
+                    
+                    
+                    Vector3 r3 = r1 + Vector3.down * thickness;
+                    Vector3 l3 = l1 + Vector3.down * thickness;
+                    Vector3 r4 = r2 + Vector3.down * thickness;
+                    Vector3 l4 = l2 + Vector3.down * thickness;
 
-                // back face
-                Vector3 backRightTop = rightVertices[splineOffset + segments];
-                Vector3 backLeftTop = leftVertices[splineOffset + segments];
-                Vector3 backRightBottom = backRightTop + Vector3.down * thickness;
-                Vector3 backLeftBottom = backLeftTop + Vector3.down * thickness;
+                    // Top face
+                    vertices.AddRange(new[] { r1, l1, r2, l2 });
+                    uvs.AddRange(new[] { Vector2.zero, Vector2.zero, Vector2.zero, Vector2.zero });
+                    triangles.AddRange(new[] {
+                        offset + 0, offset + 2, offset + 3,
+                        offset + 3, offset + 1, offset + 0
+                    });
 
-                vertices.AddRange(new[] { backRightTop, backRightBottom, backLeftBottom, backLeftTop });
-                uvs.AddRange(new[] { Vector2.zero, Vector2.up, Vector2.one, Vector2.right });
-                triangles.AddRange(new[]
-                {
-                    vertexIndex + 0, vertexIndex + 1, vertexIndex + 2,
-                    vertexIndex + 2, vertexIndex + 3, vertexIndex + 0
-                });
-                vertexIndex += 4;
+                    // Bottom face
+                    vertices.AddRange(new[] { r3, r4, l4, l3 });
+                    uvs.AddRange(new[] { Vector2.zero, Vector2.zero, Vector2.zero, Vector2.zero });
+                    triangles.AddRange(new[] {
+                        offset + 6, offset + 5, offset + 4,
+                        offset + 4, offset + 7, offset + 6
+                    });
+
+                    // Right side
+                    vertices.AddRange(new[] { r1, r3, r4, r2 });
+                    uvs.AddRange(new[] {Vector2.zero, Vector2.zero, Vector2.zero, Vector2.zero });
+                    triangles.AddRange(new[] {
+                        offset + 8, offset + 9, offset + 10,
+                        offset + 10, offset + 11, offset + 8
+                    });
+
+                    // Left side
+                    vertices.AddRange(new[] { l2, l4, l3, l1 });
+                    uvs.AddRange(new[] { Vector2.zero, Vector2.zero, Vector2.zero, Vector2.zero });
+                    triangles.AddRange(new[] {
+                        offset + 12, offset + 13, offset + 14,
+                        offset + 14, offset + 15, offset + 12
+                    });
+                    
+                    offset += 16;
+                }
             }
+            
+            // --------------------------------------------------------------------------------
+            // Build intersections
+            foreach (Intersection intersection in _intersections)
+            {
+                // Initialize intersection
+                int count = 0;
+                List<Vector3> points = new List<Vector3>();
+                Vector3 center = new Vector3();
+                
+                // Calculate the points and center for the junction
+                foreach (Junction junction in intersection.junctions)
+                {
+                    float t = junction.knotIndex == 0 ? 0.0f : 1.0f;
+                    SampleSplineWidth(junction.splineIndex, t, width, out Vector3 leftPoint, out Vector3 rightPoint);
+                    
+                    points.Add(leftPoint);
+                    points.Add(rightPoint);
+                    center += leftPoint;
+                    center += rightPoint;
+                    count++;
+                }
 
+                center /= points.Count;
+
+                // Sort the points before generating geometry so that faces are built in the correct order
+                points.Sort((x, y) =>
+                {
+                    Vector3 xDir = (x - center).normalized;
+                    Vector3 yDir = (y - center).normalized;
+
+                    float xAngle = Vector3.SignedAngle(center.normalized, xDir, Vector3.up);
+                    float yAngle = Vector3.SignedAngle(center.normalized, yDir, Vector3.up);
+
+                    if (xAngle > yAngle)
+                    {
+                        return 1;
+                    }
+                    if (xAngle < yAngle)
+                    {
+                        return -1;
+                    }
+                    return 0;
+                });
+
+                // Create the geometry for the intersection
+                for (int i = 1; i <= points.Count; i++)
+                {
+                    // Get top and bottom vertices
+                    Vector3 bottomCenter = center + Vector3.down * thickness;
+                    Vector3 point1 = points[i - 1];
+                    Vector3 point2;
+                    if (i == points.Count)
+                    {
+                        point2 = points[0];
+                    }
+                    else
+                    {
+                        point2 = points[i];
+                    }
+                    Vector3 point3 = point1 + Vector3.down * thickness;
+                    Vector3 point4 = point2 + Vector3.down * thickness;
+                    
+                    
+                    // Top face
+                    vertices.AddRange(new[] { center, point1, point2});
+                    uvs.AddRange(new[] { Vector2.zero, Vector2.zero, Vector2.zero });
+                    triangles.AddRange(new[] {
+                        offset + 0, offset + 1, offset + 2,
+                    });
+                    
+                    // Bottom face
+                    vertices.AddRange(new[] { bottomCenter, point3, point4});
+                    uvs.AddRange(new[] { Vector2.zero, Vector2.zero, Vector2.zero });
+                    triangles.AddRange(new[] {
+                        offset + 5, offset + 4, offset + 3,
+                    });
+
+                    // Side faces
+                    vertices.AddRange(new[] {point1, point2, point3, point4});
+                    uvs.AddRange(new[] { Vector2.zero, Vector2.zero, Vector2.zero, Vector2.zero });
+                    triangles.AddRange(new[]
+                    {
+                        offset + 9, offset + 7, offset + 6,
+                        offset + 6, offset + 8, offset + 9
+                    });
+
+                    offset += 10;
+                }
+            }
+            
             mesh.SetVertices(vertices);
             mesh.SetTriangles(triangles, 0);
             mesh.SetUVs(0, uvs);
-
+                
             mesh.RecalculateNormals();
             mesh.RecalculateBounds();
             mesh.RecalculateTangents();
-
-            meshFilter.mesh = mesh;
         }
-
-        [Button("Rebuild Mesh Collider")]
+        
+        /// <summary>
+        /// Rebuild the meshes collider.
+        /// </summary>
         public void RebuildMeshCollider()
         {
             MeshCollider meshCollider = GetComponent<MeshCollider>();
             if (meshCollider != null)
             {
-                meshCollider.sharedMesh = null;
-                meshCollider.sharedMesh = meshFilter.sharedMesh;
+                meshCollider.sharedMesh = pathMeshFilter.sharedMesh;
                 return;
             }
             gameObject.AddComponent<MeshCollider>();
         }
-#endif
     }
 }
