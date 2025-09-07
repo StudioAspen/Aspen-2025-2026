@@ -55,9 +55,9 @@ namespace CharonsCorner.Runtime
 
         private protected override State<PlayerController> GetTransition()
         {
-            if (!IsGrounded)
+/*            if (!IsGrounded)
                 return context.AirborneSuperState;
-
+*/
             return null;
         }
 
@@ -77,7 +77,7 @@ namespace CharonsCorner.Runtime
             float jumpForce = Mathf.Sqrt(2 * jumpHeight * Mathf.Abs(Physics.gravity.y)); // Equation to calculate jump force based on desired height
             context.RigidBody.AddForce(Vector3.up * jumpForce, ForceMode.VelocityChange);
 
-            stateMachine.ChangeState(context.AirborneSuperState);
+            // stateMachine.ChangeState(context.AirborneSuperState);
         }
 
         private void Input_Drift(bool isDrifting)

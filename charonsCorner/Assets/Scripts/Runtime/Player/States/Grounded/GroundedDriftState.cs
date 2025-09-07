@@ -12,6 +12,7 @@ namespace CharonsCorner.Runtime
         [SerializeField] private float driftAngleAdjustSpeed = 50f;
         [SerializeField] private float maxDriftAngle = 90f;
         [SerializeField] private float driftVisualRotationMultiplier = 2f;
+        [SerializeField] private bool useCamera = true;
         private float initialSpeed;
         private float currentDriftAngle;
         private float driftDirectionSign;
@@ -86,6 +87,9 @@ namespace CharonsCorner.Runtime
 
         private void RotateCamera()
         {
+            if (!useCamera)
+                return;
+
             Vector3 flatVel = context.RigidBody.linearVelocity.WithY(0).normalized;
             float targetYaw = Mathf.Atan2(flatVel.x, flatVel.z) * Mathf.Rad2Deg;
 
