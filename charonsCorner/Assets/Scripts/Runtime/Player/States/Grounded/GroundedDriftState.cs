@@ -72,7 +72,8 @@ namespace CharonsCorner.Runtime
             Vector3 rotationAxis = GetRotationAxisFromDirection(desiredDirection);
             context.VisualObject.transform.Rotate(rotationAxis, driftVisualRotationMultiplier * context.RigidBody.angularVelocity.magnitude, Space.World);
 
-            orbitalCamera.HorizontalAxis.Value += acceleration * currentDriftAngle * Time.fixedDeltaTime;
+            if(!useCamera)
+                orbitalCamera.HorizontalAxis.Value += acceleration * currentDriftAngle * Time.fixedDeltaTime;
         }
 
         private protected override State<PlayerController> GetTransition()
