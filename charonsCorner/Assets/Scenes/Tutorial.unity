@@ -651,12 +651,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   splineContainer: {fileID: 119522286}
-  meshFilter: {fileID: 119522288}
+  pathMeshFilter: {fileID: 0}
   width: 10
   thickness: 1
-  segments: 100
-  enableGizmos: 0
-  gizmoRadius: 0.181
+  segmentLength: 3
+  _intersections: []
 --- !u!114 &119522286
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1063,6 +1062,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4989954433687459879, guid: f5044146838575d47a2bb2e1f97b79fb, type: 3}
   m_PrefabInstance: {fileID: 519536485}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &519536487 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1156165601860737205, guid: f5044146838575d47a2bb2e1f97b79fb, type: 3}
+  m_PrefabInstance: {fileID: 519536485}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb0cfa39b597dd34faef5bdef5481848, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &520535144
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2808,7 +2818,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c44fb506df8f00249b6c0ec501b32d7e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerController: {fileID: 0}
+  playerController: {fileID: 519536487}
   superStateText: {fileID: 44755837}
   subStateText: {fileID: 1616387839}
   speedText: {fileID: 2097933505}
@@ -2976,12 +2986,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   splineContainer: {fileID: 1594053690}
-  meshFilter: {fileID: 1594053689}
+  pathMeshFilter: {fileID: 0}
   width: 20
   thickness: 1
-  segments: 50
-  enableGizmos: 0
-  gizmoRadius: 0.2
+  segmentLength: 3
+  _intersections: []
 --- !u!23 &1594053688
 MeshRenderer:
   m_ObjectHideFlags: 0
