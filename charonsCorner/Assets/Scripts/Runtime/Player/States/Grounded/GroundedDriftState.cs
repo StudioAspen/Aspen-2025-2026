@@ -72,7 +72,7 @@ namespace CharonsCorner.Runtime
             Vector3 rotationAxis = GetRotationAxisFromDirection(desiredDirection);
             context.VisualObject.transform.Rotate(rotationAxis, driftVisualRotationMultiplier * context.RigidBody.angularVelocity.magnitude, Space.World);
 
-            if(!useCamera)
+            if(useCamera)
                 orbitalCamera.HorizontalAxis.Value += acceleration * currentDriftAngle * Time.fixedDeltaTime;
         }
 
