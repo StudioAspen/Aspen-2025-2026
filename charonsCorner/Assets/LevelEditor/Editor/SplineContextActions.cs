@@ -15,12 +15,6 @@ namespace CharonsCorner.LevelEditor.Editor
         [MenuItem("CONTEXT/SplineToolContext/Create Intersection", validate = true)]
         private static bool ValidateCreateIntersectionAction()
         {
-            // Return false if no spline is selected
-            if (SplineEditorUtility.HasSelection() == false)
-            {
-                return false;
-            }
-            
             List<SelectedSplineElementInfo> elementInfos = SplineEditorUtility.GetSelection();
             
             return elementInfos.Count >= 2;
