@@ -36,13 +36,13 @@ namespace Aspen.Tools.Assets
 					
 					// Create avatar for characters and props
 					if (assetPath.StartsWith("Assets/Art/models/characters") ||
-					    assetPath.StartsWith("Assets/Art/models/props"))
+					    assetPath.StartsWith("Assets/Art/models/actors"))
 					{
 						CreateAvatarFromFBX(modelImporter);
 					}
 
 					// Create prefabs for actors
-					if (assetPath.StartsWith("Assets/Art/models/actors"))
+					if (assetPath.StartsWith("Assets/Art/models/props"))
 					{
 						CreatePrefabFromFBX(assetPath);
 					}
@@ -89,7 +89,7 @@ namespace Aspen.Tools.Assets
 		{
 			// Convert the fbx path to the prefab path
 			string fileName = Path.GetFileNameWithoutExtension(fbxPath);
-			string prefabPath = $"Assets/Prefabs/actors/{fileName}.prefab";
+			string prefabPath = $"Assets/Prefabs/Props/{fileName}.prefab";
 			Directory.CreateDirectory(Path.GetFullPath(Path.GetDirectoryName(prefabPath)));
             
 			// If the prefab already exists, don't create one
