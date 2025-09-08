@@ -33,6 +33,8 @@ namespace CharonsCorner.LevelEditor
 		        _splinePath.pathMeshFilter.mesh = generatedMesh;
 	        }
 	        Spline.Changed += OnSplineChanged;
+	        
+	        _splinePath.CookSplinePath();
         }
 
 	    /// <summary>
