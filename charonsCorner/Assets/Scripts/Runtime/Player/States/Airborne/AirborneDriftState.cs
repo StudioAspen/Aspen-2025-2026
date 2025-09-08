@@ -5,8 +5,6 @@ namespace CharonsCorner.Runtime
     [System.Serializable]
     public class AirborneDriftState : State<PlayerController>
     {
-        [field: SerializeField] public float Damp { get; private set; } = 0.1f;
-
         private protected override void OnEnter()
         {
 
@@ -29,8 +27,8 @@ namespace CharonsCorner.Runtime
 
         private protected override State<PlayerController> GetTransition()
         {
-            if (!context.Input.InputActions.Player.Drift.IsPressed() || context.Input.MoveDirection == Vector2.zero)
-                return context.AirborneSuperState.IdleState;
+            if (!context.Input.InputActions.Player.Jump.IsPressed())
+                return context.AirborneSuperState.DropDashState;
 
             return null;
         }

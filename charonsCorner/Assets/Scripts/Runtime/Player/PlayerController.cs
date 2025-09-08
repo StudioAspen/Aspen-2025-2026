@@ -14,11 +14,14 @@ namespace CharonsCorner.Runtime
         [field: SerializeField] public GroundedSuperState GroundedSuperState { get; private set; } = new();
         [field: SerializeField] public AirborneSuperState AirborneSuperState { get; private set; } = new();
 
+        [field: Header("Config")]
+        [field: SerializeField] public float StrictSpeedCap { get; private set; } = 100f;
+
         /// <summary>
         /// Easy access to whether the player is grounded or not from the context. GroundedSuperState handles the actual checking.
         /// </summary>
         [ShowNativeProperty] public bool IsGrounded => GroundedSuperState.IsGrounded;
-        public float CurrentSpeed => RigidBody.linearVelocity.magnitude;
+        public float CurrentSpeed => RigidBody.linearVelocity.WithY(0).magnitude;
 
         private void Awake()
         {
@@ -47,22 +50,29 @@ namespace CharonsCorner.Runtime
 
         private void FixedUpdate()
         {
-            transform.position = RigidBody.position; // Controller locks onto the collider
-
             GroundedSuperState.CheckGrounded();
 
             StateMachine.FixedUpdate();
+
+            CapSpeed(StrictSpeedCap);
         }
 
         /// <summary>
         /// Runs in awake. Sets up the state machine and all the states for the player controller.
         /// </summary>
-        public void InitializeStates(StateMachine<PlayerController> machine, PlayerController context)
+        private void InitializeStates(StateMachine<PlayerController> machine, PlayerController context)
         {
             GroundedSuperState.Init(machine, context);
             AirborneSuperState.Init(machine, context);
 
             machine.ChangeState(GroundedSuperState, context);
         }
+
+        public void CapSpeed(float maxSpeed)
+        {
+            if(RigidBody.linearVelocity.magnitude > maxSpeed)
+                RigidBody.linearVelocity = Vector3.ClampMagnitude(RigidBody.linearVelocity, maxSpeed);
+        }
+        
     }
 }

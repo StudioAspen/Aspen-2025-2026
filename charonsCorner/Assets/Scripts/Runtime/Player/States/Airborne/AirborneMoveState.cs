@@ -24,6 +24,12 @@ namespace CharonsCorner.Runtime
 
         private protected override void OnFixedUpdate()
         {
+            Vector3 moveDirection =
+                Utilities.GetCameraBasedMoveInput(CameraManager.Instance.CurrentCamera.transform, context.Input.MoveDirection);
+
+            if(moveDirection != Vector3.zero)
+                context.RigidBody.AddForce(context.AirborneSuperState.MaxSpeed * moveDirection - context.RigidBody.linearVelocity.WithY(0), ForceMode.VelocityChange);
+            
             context.VisualObject.transform.rotation = context.RigidBody.rotation;
         }
 

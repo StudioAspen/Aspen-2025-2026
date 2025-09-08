@@ -10,8 +10,6 @@ namespace CharonsCorner.Runtime
 
         [field: SerializeField] public GroundedIdleState IdleState { get; private set; } = new();
         [field: SerializeField] public GroundedMoveState MoveState { get; private set; } = new();
-        [field: SerializeField] public GroundedDriftStartState DriftStartState { get; private set; } = new();
-        [field: SerializeField] public GroundedDriftState DriftState { get; private set; } = new();
 
         [field: Header("Config")]
         [field: SerializeField] public float GroundCheckDistance { get; private set; } = 0.2f;
@@ -24,14 +22,11 @@ namespace CharonsCorner.Runtime
         {
             IdleState.Init(SubStateMachine, context);
             MoveState.Init(SubStateMachine, context);
-            DriftStartState.Init(SubStateMachine, context);
-            DriftState.Init(SubStateMachine, context);
         }
 
         private protected override void OnEnter()
         {
             context.Input.Jump += Input_Jump;
-            context.Input.Drift += Input_Drift;
         }
 
         private protected override void OnExit()
@@ -39,7 +34,6 @@ namespace CharonsCorner.Runtime
             if(context.Input != null)
             {
                 context.Input.Jump -= Input_Jump;
-                context.Input.Drift -= Input_Drift;
             }
         }
 
@@ -55,9 +49,9 @@ namespace CharonsCorner.Runtime
 
         private protected override State<PlayerController> GetTransition()
         {
-/*            if (!IsGrounded)
+            if (!IsGrounded)
                 return context.AirborneSuperState;
-*/
+            
             return null;
         }
 
@@ -77,16 +71,7 @@ namespace CharonsCorner.Runtime
             float jumpForce = Mathf.Sqrt(2 * jumpHeight * Mathf.Abs(Physics.gravity.y)); // Equation to calculate jump force based on desired height
             context.RigidBody.AddForce(Vector3.up * jumpForce, ForceMode.VelocityChange);
 
-            // stateMachine.ChangeState(context.AirborneSuperState);
-        }
-
-        private void Input_Drift(bool isDrifting)
-        {
-            if (!isDrifting)
-                return;
-
-            if(context.Input.MoveDirection != Vector2.zero)
-                SubStateMachine.ChangeState(DriftStartState);
+            stateMachine.ChangeState(context.AirborneSuperState);
         }
     }
 }
