@@ -27,8 +27,8 @@ namespace CharonsCorner.Runtime
 
         private protected override State<PlayerController> GetTransition()
         {
-            if (!context.Input.InputActions.Player.Jump.IsPressed())
-                return context.AirborneSuperState.DropDashState;
+            if (!_context.Input.InputActions.Player.Jump.IsPressed())
+                return _context.AirborneSuperState.DropDashState;
 
             return null;
         }

@@ -52,9 +52,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04c6bfdb43eebe8438a514364ad19f14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animator: {fileID: 2251239428750671827}
-  animatorFadeDuration: 0.2
-  reactionAnimations:
+  _animator: {fileID: 2251239428750671827}
+  _animatorFadeDuration: 0.2
+  _reactionAnimations:
     _serializedList:
     - Key: 0
       Value:
@@ -74,7 +74,7 @@ MonoBehaviour:
           _NormalizedTimes: []
           _Callbacks: []
           _Names: []
-        _Clip: {fileID: -203655887218126122, guid: 00c55401e132f1f498c1e24e812571fe, type: 3}
+        _Clip: {fileID: -203655887218126122, guid: 791a319bc9212c347881e89f08cebe75, type: 3}
         _NormalizedStartTime: NaN
     - Key: 2
       Value:
@@ -84,7 +84,7 @@ MonoBehaviour:
           _NormalizedTimes: []
           _Callbacks: []
           _Names: []
-        _Clip: {fileID: -203655887218126122, guid: 791a319bc9212c347881e89f08cebe75, type: 3}
+        _Clip: {fileID: -203655887218126122, guid: e4d4b55f1f7a3cf4580d3c4c7fad4daa, type: 3}
         _NormalizedStartTime: NaN
     - Key: 3
       Value:
@@ -94,7 +94,7 @@ MonoBehaviour:
           _NormalizedTimes: []
           _Callbacks: []
           _Names: []
-        _Clip: {fileID: -203655887218126122, guid: e4d4b55f1f7a3cf4580d3c4c7fad4daa, type: 3}
+        _Clip: {fileID: -203655887218126122, guid: 89cad8abeaa30e34bb1a32229f6e1035, type: 3}
         _NormalizedStartTime: NaN
     - Key: 4
       Value:
@@ -104,7 +104,7 @@ MonoBehaviour:
           _NormalizedTimes: []
           _Callbacks: []
           _Names: []
-        _Clip: {fileID: -203655887218126122, guid: 89cad8abeaa30e34bb1a32229f6e1035, type: 3}
+        _Clip: {fileID: -203655887218126122, guid: 00c55401e132f1f498c1e24e812571fe, type: 3}
         _NormalizedStartTime: NaN
   references:
     version: 2
@@ -121,9 +121,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 424d0a6c52a9fae4a9cffd9fd3d139b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  opener: {fileID: 11400000, guid: 8954636d548cc4c43b3102bc613fb6c7, type: 2}
-  useCamera: 1
-  cinemachineCamera: {fileID: 5454533530177445654}
+  _opener: {fileID: 11400000, guid: 8954636d548cc4c43b3102bc613fb6c7, type: 2}
+  _useCamera: 1
+  _cinemachineCamera: {fileID: 5454533530177445654}
 --- !u!114 &1237692140379531003
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -136,9 +136,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08214906e2056454e8634313eec99aef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  triggerCollider: {fileID: 8024124051656696801}
-  inputDisplayerCanvasObject: {fileID: 4222030149569433524}
-  isOverlapping: 0
+  _triggerCollider: {fileID: 8024124051656696801}
+  _inputDisplayerCanvasObject: {fileID: 4222030149569433524}
+  _isOverlapping: 0
   OnInteract:
     m_PersistentCalls:
       m_Calls:
@@ -166,10 +166,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 339397434d88238418cfefc01ece9172, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inputAction: {fileID: 1781555164194001046, guid: 052faaac586de48259a63d0c4782560b, type: 3}
-  inputDisplayText: {fileID: 8559723929055134538}
-  autoDetectControlScheme: 1
-  controlScheme: 0
+  _inputAction: {fileID: 1781555164194001046, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  _inputDisplayText: {fileID: 8559723929055134538}
+  _autoDetectControlScheme: 1
+  _controlScheme: 0
 --- !u!114 &2251239428750671827
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -333,7 +333,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6edfd8fb992098b499429e9046d81831, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetCamera: {fileID: 0}
+  _targetCamera: {fileID: 0}
 --- !u!223 &5244385305501070070
 Canvas:
   m_ObjectHideFlags: 0
@@ -680,7 +680,7 @@ PrefabInstance:
     - target: {fileID: 5866666021909216657, guid: 9fdd4b2a4fbf52941a5fb83cfb997936, type: 3}
       propertyPath: m_Controller
       value: 
-      objectReference: {fileID: 9100000, guid: 395544df50bae78419ba5950d37daead, type: 2}
+      objectReference: {fileID: 0}
     - target: {fileID: 5866666021909216657, guid: 9fdd4b2a4fbf52941a5fb83cfb997936, type: 3}
       propertyPath: m_ApplyRootMotion
       value: 0

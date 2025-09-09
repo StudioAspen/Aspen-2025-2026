@@ -37,9 +37,9 @@ namespace CharonsCorner.Runtime
         public event Action<GameState> OnGameStateChanged = delegate { };
 
         [Header("References")]
-        [SerializeField] private SceneReference titleScene;
-        [SerializeField] private SceneReference hubScene;
-        [SerializeField] private SceneReference tutorialScene;
+        [SerializeField] private SceneReference _titleScene;
+        [SerializeField] private SceneReference _hubScene;
+        [SerializeField] private SceneReference _tutorialScene;
 
         private protected override void Awake()
         {
@@ -137,7 +137,7 @@ namespace CharonsCorner.Runtime
         /// </summary>
         public void StartGame()
         {
-            SwitchScenes(hubScene, GameState.Gameplay).Forget();
+            SwitchScenes(_hubScene, GameState.Gameplay).Forget();
         }
 
         /// <summary>
@@ -149,12 +149,12 @@ namespace CharonsCorner.Runtime
         /// <summary>
         /// Helper method to switch back to the title scene and set the game state to Title.
         /// </summary>
-        public void ReturnToMenu() => SwitchScenes(titleScene, GameState.Title).Forget();
+        public void ReturnToMenu() => SwitchScenes(_titleScene, GameState.Title).Forget();
 
         /// <summary>
         /// Helper method to switch back to the hub scene and set the game state to Gameplay.
         /// </summary>
-        public void ReturnToHub() => SwitchScenes(hubScene, GameState.Gameplay).Forget();
+        public void ReturnToHub() => SwitchScenes(_hubScene, GameState.Gameplay).Forget();
 
         public SceneReference GetCurrentScene() => SceneReference.FromScenePath(SceneManager.GetActiveScene().path);
 

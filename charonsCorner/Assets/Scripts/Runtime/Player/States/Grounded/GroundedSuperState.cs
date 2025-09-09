@@ -20,20 +20,20 @@ namespace CharonsCorner.Runtime
 
         private protected override void InitializeSubStates()
         {
-            IdleState.Init(SubStateMachine, context);
-            MoveState.Init(SubStateMachine, context);
+            IdleState.Init(SubStateMachine, _context);
+            MoveState.Init(SubStateMachine, _context);
         }
 
         private protected override void OnEnter()
         {
-            context.Input.Jump += Input_Jump;
+            _context.Input.Jump += Input_Jump;
         }
 
         private protected override void OnExit()
         {
-            if(context.Input != null)
+            if(_context.Input != null)
             {
-                context.Input.Jump -= Input_Jump;
+                _context.Input.Jump -= Input_Jump;
             }
         }
 
@@ -50,14 +50,14 @@ namespace CharonsCorner.Runtime
         private protected override State<PlayerController> GetTransition()
         {
             if (!IsGrounded)
-                return context.AirborneSuperState;
+                return _context.AirborneSuperState;
             
             return null;
         }
 
         public void CheckGrounded()
         {
-            IsGrounded = Physics.CheckSphere(context.transform.position + GroundCheckDistance * Vector3.down, GroundCheckRadius, GroundLayerMask);
+            IsGrounded = Physics.CheckSphere(_context.transform.position + GroundCheckDistance * Vector3.down, GroundCheckRadius, GroundLayerMask);
         }
 
         private void Input_Jump()
@@ -69,9 +69,9 @@ namespace CharonsCorner.Runtime
                 return;
 
             float jumpForce = Mathf.Sqrt(2 * jumpHeight * Mathf.Abs(Physics.gravity.y)); // Equation to calculate jump force based on desired height
-            context.RigidBody.AddForce(Vector3.up * jumpForce, ForceMode.VelocityChange);
+            _context.RigidBody.AddForce(Vector3.up * jumpForce, ForceMode.VelocityChange);
 
-            stateMachine.ChangeState(context.AirborneSuperState);
+            _stateMachine.ChangeState(_context.AirborneSuperState);
         }
     }
 }

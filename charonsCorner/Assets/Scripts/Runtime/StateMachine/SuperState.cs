@@ -11,7 +11,7 @@ namespace CharonsCorner.Runtime
 
         private protected override void OnInit()
         {
-            SubStateMachine = new StateMachine<TContext>(context);
+            SubStateMachine = new StateMachine<TContext>(_context);
             InitializeSubStates();
         }
 

@@ -14,28 +14,28 @@ namespace CharonsCorner.Runtime
         [field: SerializeField] public AirborneDropDashState DropDashState { get; private set; } = new();
 
         public float MaxSpeed { get; private set; }
-        private bool hasDropDashed;
+        private bool _hasDropDashed;
         
         private protected override void InitializeSubStates()
         {
-            IdleState.Init(SubStateMachine, context);
-            MoveState.Init(SubStateMachine, context);
-            DriftState.Init(SubStateMachine, context);
-            DropDashState.Init(SubStateMachine, context);
+            IdleState.Init(SubStateMachine, _context);
+            MoveState.Init(SubStateMachine, _context);
+            DriftState.Init(SubStateMachine, _context);
+            DropDashState.Init(SubStateMachine, _context);
         }
 
         private protected override void OnEnter()
         {
-            hasDropDashed = false;
-            context.Input.Jump += Input_Jump;
+            _hasDropDashed = false;
+            _context.Input.Jump += Input_Jump;
             
-            UpdateMaxSpeed(context.RigidBody.linearVelocity.WithY(0).magnitude);
+            UpdateMaxSpeed(_context.RigidBody.linearVelocity.WithY(0).magnitude);
         }
 
         private protected override void OnExit()
         {
-            if(context.Input != null)
-                context.Input.Jump -= Input_Jump;
+            if(_context.Input != null)
+                _context.Input.Jump -= Input_Jump;
         }
 
         private protected override void OnUpdate()
@@ -50,18 +50,18 @@ namespace CharonsCorner.Runtime
 
         private protected override State<PlayerController> GetTransition()
         {
-            if (context.IsGrounded)
-                return context.GroundedSuperState;
+            if (_context.IsGrounded)
+                return _context.GroundedSuperState;
 
             return null;
         }
         
         private void Input_Jump()
         {
-            if (hasDropDashed)
+            if (_hasDropDashed)
                 return;
             
-            hasDropDashed = true;
+            _hasDropDashed = true;
             SubStateMachine.ChangeState(DriftState);
         }
         

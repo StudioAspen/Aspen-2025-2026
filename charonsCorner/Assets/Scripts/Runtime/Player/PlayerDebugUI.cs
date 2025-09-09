@@ -5,26 +5,26 @@ namespace CharonsCorner.Runtime
 {
     public class PlayerDebugUI : MonoBehaviour
     {
-        [SerializeField] private PlayerController playerController;
-        [SerializeField] private TMP_Text superStateText;
-        [SerializeField] private TMP_Text subStateText;
-        [SerializeField] private TMP_Text speedText;
+        [SerializeField] private PlayerController _playerController;
+        [SerializeField] private TMP_Text _superStateText;
+        [SerializeField] private TMP_Text _subStateText;
+        [SerializeField] private TMP_Text _speedText;
 
         private void LateUpdate()
         {
             ShowStates();
-            speedText.text = $"Speed: {Utilities.FloatToString(playerController.CurrentSpeed, 2)}";
+            _speedText.text = $"Speed: {Utilities.FloatToString(_playerController.CurrentSpeed, 2)}";
         }
 
         private void ShowStates()
         {
-            string superStateName = playerController.StateMachine.CurrentState.GetType().Name;
+            string superStateName = _playerController.StateMachine.CurrentState.GetType().Name;
             string subStateName = "None";
-            if(playerController.StateMachine.CurrentState is SuperState<PlayerController> hierarchicalState && hierarchicalState.SubStateMachine.CurrentState != null)
+            if(_playerController.StateMachine.CurrentState is SuperState<PlayerController> hierarchicalState && hierarchicalState.SubStateMachine.CurrentState != null)
                 subStateName = hierarchicalState.SubStateMachine.CurrentState.GetType().Name;
 
-            superStateText.text = $"Superstate: {superStateName}";
-            subStateText.text = $"Substate: {subStateName}";
+            _superStateText.text = $"Superstate: {superStateName}";
+            _subStateText.text = $"Substate: {subStateName}";
         }
     }
 }

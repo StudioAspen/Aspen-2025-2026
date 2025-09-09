@@ -8,41 +8,41 @@ namespace CharonsCorner.Runtime
 {
     public class DialogueOpener : MonoBehaviour
     {
-        private DialogueManager dialogueManager;
+        private DialogueManager _dialogueManager;
 
-        [SerializeField] private DialogueOpenerSO opener;
+        [SerializeField] private DialogueOpenerSO _opener;
 
         [Header("Camera Config")]
-        [SerializeField] private bool useCamera = true;
-        [SerializeField, ShowIf("useCamera")] private CinemachineCamera cinemachineCamera;
+        [SerializeField] private bool _useCamera = true;
+        [SerializeField, ShowIf("_useCamera")] private CinemachineCamera _cinemachineCamera;
 
         private void Awake()
         {
-            dialogueManager = FindFirstObjectByType<DialogueManager>(FindObjectsInactive.Include);
+            _dialogueManager = FindFirstObjectByType<DialogueManager>(FindObjectsInactive.Include);
         }
 
         private void OnDestroy()
         {
-            if (dialogueManager != null)
-                dialogueManager.OnDialogueEnded -= DialogueManager_OnDialogueEnded;
+            if (_dialogueManager != null)
+                _dialogueManager.OnDialogueEnded -= DialogueManager_OnDialogueEnded;
         }
 
         public void StartOpener()
         {
             GameManager.Instance.ChangeGameState(GameState.Dialogue);
-            dialogueManager.StartDialogueOpener(opener);
+            _dialogueManager.StartDialogueOpener(_opener);
 
-            dialogueManager.OnDialogueEnded += DialogueManager_OnDialogueEnded;
+            _dialogueManager.OnDialogueEnded += DialogueManager_OnDialogueEnded;
 
-            if (useCamera)
-                CameraManager.Instance.ChangeActiveCamera(cinemachineCamera);
+            if (_useCamera)
+                CameraManager.Instance.ChangeActiveCamera(_cinemachineCamera);
         }
 
         private void DialogueManager_OnDialogueEnded()
         {
-            dialogueManager.OnDialogueEnded -= DialogueManager_OnDialogueEnded;
+            _dialogueManager.OnDialogueEnded -= DialogueManager_OnDialogueEnded;
 
-            if(useCamera)
+            if(_useCamera)
                 CameraManager.Instance.ResetActiveCamera();
         }
     }

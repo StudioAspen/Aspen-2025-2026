@@ -10,7 +10,7 @@ namespace CharonsCorner.Runtime
         
         private protected override void OnEnter()
         {
-            context.RigidBody.AddForce(dropForce * Vector3.down, ForceMode.VelocityChange);
+            _context.RigidBody.AddForce(dropForce * Vector3.down, ForceMode.VelocityChange);
         }
 
         private protected override void OnExit()
@@ -21,7 +21,7 @@ namespace CharonsCorner.Runtime
 
             Vector3 boostDirection = Quaternion.Euler(0f, cameraY, 0f) * Vector3.forward;
 
-            context.RigidBody.AddForce(boostForce * boostDirection - context.RigidBody.linearVelocity, ForceMode.VelocityChange);
+            _context.RigidBody.AddForce(boostForce * boostDirection - _context.RigidBody.linearVelocity, ForceMode.VelocityChange);
         }
 
         private protected override void OnUpdate()

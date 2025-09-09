@@ -5,14 +5,14 @@ namespace CharonsCorner.Runtime
 {
     public class PlayerPinCollector : MonoBehaviour
     {
-        private PlayerController playerController;
+        private PlayerController _playerController;
 
         [field: SerializeField, ReadOnly] public int PinCount { get; private set; }
-        [SerializeField] private float pinCollectSpeedMultiplier = 1.05f;
+        [SerializeField] private float _pinCollectSpeedMultiplier = 1.05f;
 
         private void Awake()
         {
-            playerController = GetComponent<PlayerController>();
+            _playerController = GetComponent<PlayerController>();
         }
         
         /// <summary>

@@ -5,35 +5,35 @@ namespace CharonsCorner.Runtime
 {
     public class MusicVolumeSetting : Setting
     {
-        private protected override string saveKey => "MusicVolume";
-        private static readonly int defaultValue = 50;
+        private protected override string SaveKey => "MusicVolume";
+        private static readonly int DefaultValue = 50;
         public static int CurrentValue { get; private set; }
 
-        [SerializeField] private Slider musicVolumeSlider;
+        [SerializeField] private Slider _musicVolumeSlider;
 
         private void OnEnable()
         {
-            musicVolumeSlider.value = CurrentValue;
+            _musicVolumeSlider.value = CurrentValue;
         }
 
         public override void Load()
         {
-            CurrentValue = SaveManager.SettingsStore.GetInt(saveKey, defaultValue);
-            musicVolumeSlider.value = CurrentValue;
+            CurrentValue = SaveManager.SettingsStore.GetInt(SaveKey, DefaultValue);
+            _musicVolumeSlider.value = CurrentValue;
         }
 
         public override void Apply()
         {
-            int musicVolume = (int)musicVolumeSlider.value;
-            SaveManager.SettingsStore.SetInt(saveKey, musicVolume);
+            int musicVolume = (int)_musicVolumeSlider.value;
+            SaveManager.SettingsStore.SetInt(SaveKey, musicVolume);
             CurrentValue = musicVolume;
         }
 
         public override void Discard()
         {
-            musicVolumeSlider.value = CurrentValue;
+            _musicVolumeSlider.value = CurrentValue;
         }
 
-        public override bool IsDirty() => musicVolumeSlider.value != CurrentValue;
+        public override bool IsDirty() => _musicVolumeSlider.value != CurrentValue;
     }
 }

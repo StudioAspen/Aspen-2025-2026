@@ -4,39 +4,39 @@ namespace CharonsCorner.Runtime
 {
     public class Pin : MonoBehaviour
     {
-        private Rigidbody rigidBody;
-        private BoxCollider boxCollider;
+        private Rigidbody _rigidBody;
+        private BoxCollider _boxCollider;
 
-        [SerializeField] private float destroyDelay = 1f;
-        [SerializeField] private float impulseForceMultiplier = 0.4f;
+        [SerializeField] private float _destroyDelay = 1f;
+        [SerializeField] private float _impulseForceMultiplier = 0.4f;
 
-        private bool isHit;
+        private bool _isHit;
 
         private void Awake()
         {
-            rigidBody = GetComponent<Rigidbody>();
-            boxCollider = GetComponent<BoxCollider>();
+            _rigidBody = GetComponent<Rigidbody>();
+            _boxCollider = GetComponent<BoxCollider>();
         }
 
         private void OnTriggerEnter(Collider other)
         {
-            if (isHit)
+            if (_isHit)
                 return;
 
             if (other.gameObject.TryGetComponent(out PlayerPinCollector collector))
             {
-                isHit = true;
+                _isHit = true;
 
                 collector.CollectPin(1);
 
                 // Launch when hit by the player
                 Vector3 launchDirection = transform.position - other.transform.position + Vector3.down;
                 float collectorSpeed = other.GetComponent<Rigidbody>().linearVelocity.magnitude;
-                rigidBody.AddForce(impulseForceMultiplier * collectorSpeed * launchDirection, ForceMode.Impulse);
+                _rigidBody.AddForce(_impulseForceMultiplier * collectorSpeed * launchDirection, ForceMode.Impulse);
 
-                Destroy(boxCollider); // Remove the trigger to prevent further collisions
+                Destroy(_boxCollider); // Remove the trigger to prevent further collisions
 
-                Destroy(gameObject, destroyDelay);
+                Destroy(gameObject, _destroyDelay);
             }
         }
     }
