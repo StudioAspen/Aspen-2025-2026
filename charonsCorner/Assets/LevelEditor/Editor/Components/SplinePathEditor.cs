@@ -10,7 +10,10 @@ namespace CharonsCorner.LevelEditor
     [CustomEditor(typeof(SplinePath))]
     public class SplinePathEditor : UnityEditor.Editor
     {
+	    [SerializeField] private Material _defaultMaterial;
+	    
 	    private SplinePath _splinePath;
+	    private SplineContainer _splineContainer;
 	    
 	    /// <summary>
 	    /// Called on enable in the editor
@@ -18,6 +21,7 @@ namespace CharonsCorner.LevelEditor
         private void OnEnable()
         {
 	        _splinePath = (SplinePath)target;
+	        _splineContainer = _splinePath.GetComponent<SplineContainer>();
 	        
 	        if (_splinePath.splineContainer == null)
 	        {
@@ -32,6 +36,14 @@ namespace CharonsCorner.LevelEditor
 		        generatedMesh.name = "PathMesh";
 		        _splinePath.pathMeshFilter.mesh = generatedMesh;
 	        }
+	        
+	        // Set default material in mesh renderer if it is null
+	        MeshRenderer meshRenderer = _splinePath.GetComponent<MeshRenderer>();
+	        if (meshRenderer != null && meshRenderer.sharedMaterial == null)
+	        {
+		        meshRenderer.sharedMaterial = _defaultMaterial;
+	        }
+	        
 	        Spline.Changed += OnSplineChanged;
 	        
 	        _splinePath.CookSplinePath();
