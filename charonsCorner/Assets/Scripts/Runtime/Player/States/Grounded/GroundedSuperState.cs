@@ -67,7 +67,7 @@ namespace CharonsCorner.Runtime
 
         public void CheckGrounded()
         {
-            IsGrounded = Physics.CheckSphere(_context.transform.position + GroundCheckDistance * Vector3.down, GroundCheckRadius, GroundLayerMask);
+            IsGrounded = Physics.CheckSphere(_context.transform.position, GroundCheckRadius, GroundLayerMask);
         }
 
         /// <summary>
