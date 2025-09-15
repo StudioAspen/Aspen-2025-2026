@@ -12,8 +12,7 @@ namespace CharonsCorner.Runtime
         [field: SerializeField] public GroundedMoveState MoveState { get; private set; } = new();
 
         [field: Header("Config")]
-        [field: SerializeField] public float GroundCheckDistance { get; private set; } = 0.2f;
-        [field: SerializeField] public float GroundCheckRadius { get; private set; } = 0.9f;
+        [field: SerializeField, InfoBox("This will be a lower hemisphere checking for any ground layer colliders")] public float GroundCheckRadius { get; private set; } = 0.9f;
         [field: SerializeField] public LayerMask GroundLayerMask { get; private set; }
         [SerializeField] private float groundedYVelocity = -5f;
         [SerializeField] private float jumpHeight = 2f;

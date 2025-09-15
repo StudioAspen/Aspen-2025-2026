@@ -42,7 +42,7 @@ namespace CharonsCorner.Runtime
         {
             // Draws the ground check sphere in the editor for visualization
             Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(transform.position + GroundedSuperState.GroundCheckDistance * Vector3.down, GroundedSuperState.GroundCheckRadius);
+            // Gizmos.DrawWireSphere(transform.position + GroundedSuperState. * Vector3.down, GroundedSuperState.GroundCheckRadius);
         }
 
         private void Update()
