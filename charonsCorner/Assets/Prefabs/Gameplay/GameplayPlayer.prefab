@@ -9,8 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6391621879649658150}
-  - component: {fileID: 8297210079520481563}
-  - component: {fileID: 2035049026281356346}
+  - component: {fileID: 1366813655587377205}
   - component: {fileID: 8619798313246070836}
   m_Layer: 6
   m_Name: Collider
@@ -34,14 +33,14 @@ Transform:
   m_Children: []
   m_Father: {fileID: 2450827322802714975}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!135 &8297210079520481563
-SphereCollider:
+--- !u!143 &1366813655587377205
+CharacterController:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1376811668711273986}
-  m_Material: {fileID: 13400000, guid: cfb5b7ed0f678dc4095a60b2bed0c8d4, type: 2}
+  m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -49,39 +48,16 @@ SphereCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
+  m_Height: 1
   m_Radius: 0.5
+  m_SlopeLimit: 45
+  m_StepOffset: 0.3
+  m_SkinWidth: 0.08
+  m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0, z: 0}
---- !u!54 &2035049026281356346
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1376811668711273986}
-  serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 1
-  m_Constraints: 0
-  m_CollisionDetection: 2
 --- !u!114 &8619798313246070836
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -94,43 +70,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e20293586e873d348b3ca09a42c8eb25, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  impactForceRange:
+  _impactForceRange:
     Min: 0
     Max: 20
-  amplitudeCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 0.46470338
-      value: 0.8818575
-      inSlope: 1.0475266
-      outSlope: 1.0475266
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  durationCurve:
+  _amplitudeCurve:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
@@ -154,7 +97,31 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  frequency: 10
+  _durationCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  _frequency: 10
 --- !u!1 &3185378287659900961
 GameObject:
   m_ObjectHideFlags: 0
@@ -201,8 +168,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb0cfa39b597dd34faef5bdef5481848, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <RigidBody>k__BackingField: {fileID: 2035049026281356346}
-  <SphereCollider>k__BackingField: {fileID: 8297210079520481563}
+  <Controller>k__BackingField: {fileID: 1366813655587377205}
   <VisualObject>k__BackingField: {fileID: 8854770350000790380}
   <GroundedSuperState>k__BackingField:
     <IdleState>k__BackingField:
@@ -211,27 +177,21 @@ MonoBehaviour:
       acceleration: 2
       turnResponsiveness: 3
       maxSpeed: 30
-    <DriftStartState>k__BackingField:
-      hopHeight: 0.1
-      hopDuration: 0.2
-    <DriftState>k__BackingField:
-      orbitalCamera: {fileID: 0}
-      acceleration: 2
-      driftAngleAdjustSpeed: 50
-      maxDriftAngle: 90
-      driftVisualRotationMultiplier: 2
-      useCamera: 1
     <GroundCheckDistance>k__BackingField: 0.2
     <GroundCheckRadius>k__BackingField: 0.9
     <GroundLayerMask>k__BackingField:
       serializedVersion: 2
       m_Bits: 8
+    groundedYVelocity: -5
     jumpHeight: 2
+    coyoteTime: 0.5
   <AirborneSuperState>k__BackingField:
     <MoveState>k__BackingField:
       <Damp>k__BackingField: 0.1
-    <DriftState>k__BackingField:
-      <Damp>k__BackingField: 0.1
+    <DropDashState>k__BackingField:
+      dropForce: 10
+      boostForce: 15
+  <StrictSpeedCap>k__BackingField: 100
 --- !u!1773428102 &80976093907493650
 ParentConstraint:
   m_ObjectHideFlags: 0
@@ -251,9 +211,9 @@ ParentConstraint:
   m_AffectTranslationX: 1
   m_AffectTranslationY: 1
   m_AffectTranslationZ: 1
-  m_AffectRotationX: 1
-  m_AffectRotationY: 1
-  m_AffectRotationZ: 1
+  m_AffectRotationX: 0
+  m_AffectRotationY: 0
+  m_AffectRotationZ: 0
   m_Active: 1
   m_IsLocked: 1
   m_Sources:

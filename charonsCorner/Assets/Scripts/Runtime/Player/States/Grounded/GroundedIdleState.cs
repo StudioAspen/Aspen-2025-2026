@@ -24,10 +24,10 @@ namespace CharonsCorner.Runtime
 
         private protected override void OnFixedUpdate()
         {
-            Vector3 torque = damp * -_context.RigidBody.angularVelocity;
-            _context.RigidBody.AddTorque(torque, ForceMode.VelocityChange);
-
-            _context.VisualObject.transform.rotation = _context.RigidBody.rotation;
+            Vector3 oppositeForce = damp * -_context.PlanarVelocity;
+            
+            _context.SetPlanarVelocity(_context.PlanarVelocity + oppositeForce * Time.deltaTime);
+            _context.ApplyPlanarVelocity();
         }
 
         private protected override State<PlayerController> GetTransition()

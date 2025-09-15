@@ -22,9 +22,9 @@ namespace CharonsCorner.Runtime
 
         private protected override void OnFixedUpdate()
         {
-            _context.RigidBody.AddForce(_context.RigidBody.linearVelocity.WithY(0).normalized * _context.AirborneSuperState.MaxSpeed - _context.RigidBody.linearVelocity.WithY(0), ForceMode.VelocityChange);
+            /*_context.RigidBody.AddForce(_context.RigidBody.linearVelocity.WithY(0).normalized * _context.AirborneSuperState.MaxSpeed - _context.RigidBody.linearVelocity.WithY(0), ForceMode.VelocityChange);
             
-            _context.VisualObject.transform.rotation = _context.RigidBody.rotation;
+            _context.VisualObject.transform.rotation = _context.RigidBody.rotation;*/
         }
 
         private protected override State<PlayerController> GetTransition()

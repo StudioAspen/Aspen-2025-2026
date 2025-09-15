@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.Serialization;
 
 namespace CharonsCorner.Runtime
@@ -12,9 +13,6 @@ namespace CharonsCorner.Runtime
         [field: SerializeField] public AirborneMoveState MoveState { get; private set; } = new();
         [field: SerializeField] public AirborneDriftState DriftState { get; private set; } = new();
         [field: SerializeField] public AirborneDropDashState DropDashState { get; private set; } = new();
-
-        public float MaxSpeed { get; private set; }
-        private bool _hasDropDashed;
         
         private protected override void InitializeSubStates()
         {
@@ -26,10 +24,7 @@ namespace CharonsCorner.Runtime
 
         private protected override void OnEnter()
         {
-            _hasDropDashed = false;
             _context.Input.Jump += Input_Jump;
-            
-            UpdateMaxSpeed(_context.RigidBody.linearVelocity.WithY(0).magnitude);
         }
 
         private protected override void OnExit()
@@ -40,7 +35,7 @@ namespace CharonsCorner.Runtime
 
         private protected override void OnUpdate()
         {
-
+            _context.ApplyGravity();
         }
 
         private protected override void OnFixedUpdate()
@@ -58,13 +53,12 @@ namespace CharonsCorner.Runtime
         
         private void Input_Jump()
         {
-            if (_hasDropDashed)
-                return;
-            
-            _hasDropDashed = true;
-            SubStateMachine.ChangeState(DriftState);
+
         }
-        
-        public void UpdateMaxSpeed(float newMaxSpeed) => MaxSpeed = newMaxSpeed;
+
+        public void ActivateCoyoteTime(float duration, Action jumpAction)
+        {
+            
+        }
     }
 }

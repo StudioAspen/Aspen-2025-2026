@@ -10,18 +10,18 @@ namespace CharonsCorner.Runtime
         
         private protected override void OnEnter()
         {
-            _context.RigidBody.AddForce(dropForce * Vector3.down, ForceMode.VelocityChange);
+            // _context.RigidBody.AddForce(dropForce * Vector3.down, ForceMode.VelocityChange);
         }
 
         private protected override void OnExit()
         {
-            float cameraY = 0;
+            /*float cameraY = 0;
             if(CameraManager.Instance != null)
                 cameraY = CameraManager.Instance.transform.rotation.eulerAngles.y;
 
             Vector3 boostDirection = Quaternion.Euler(0f, cameraY, 0f) * Vector3.forward;
 
-            _context.RigidBody.AddForce(boostForce * boostDirection - _context.RigidBody.linearVelocity, ForceMode.VelocityChange);
+            _context.RigidBody.AddForce(boostForce * boostDirection - _context.RigidBody.linearVelocity, ForceMode.VelocityChange);*/
         }
 
         private protected override void OnUpdate()
