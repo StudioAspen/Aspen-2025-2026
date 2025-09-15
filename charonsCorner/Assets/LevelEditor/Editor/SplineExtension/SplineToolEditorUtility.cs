@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine.Splines;
 
 namespace UnityEditor.Splines
@@ -18,11 +19,20 @@ namespace UnityEditor.Splines
             knotIndex = argKnotIndex;
         }
     }
+
+    public struct SplineHit
+    {
+        public float T;
+        public float3 Normal;
+        public float3 Position;
+        public SelectableKnot PreviousKnot;
+        public SelectableKnot NextKnot;
+    }
     
     /// <summary>
     /// Editor utility for the spline.
     /// </summary>
-    public static class SplineEditorUtility
+    public static class SplineToolEditorUtility
     {
         /// <summary>
         /// Check if there are spline elements selected.
@@ -53,6 +63,22 @@ namespace UnityEditor.Splines
             }
 
             return elementInfos;
+        }
+
+        public static bool TryGetNearestPositionOnCurve(IReadOnlyList<SplineInfo> splines, out SplineHit hit, float maxDistance = SplineHandleUtility.pickingDistance)
+        {
+            bool success = EditorSplineUtility.TryGetNearestPositionOnCurve(splines, out SplineCurveHit splineCurveHit, maxDistance);
+
+            hit = new SplineHit()
+            {
+                T = splineCurveHit.T,
+                Normal = splineCurveHit.Normal,
+                Position = splineCurveHit.Position,
+                PreviousKnot = splineCurveHit.PreviousKnot,
+                NextKnot = splineCurveHit.NextKnot
+            };
+
+            return success;
         }
     }
     

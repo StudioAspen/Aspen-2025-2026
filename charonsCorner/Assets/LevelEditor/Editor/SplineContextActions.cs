@@ -3,6 +3,8 @@ using System.Collections.Generic;
 #if UNITY_EDITOR
 using UnityEditor;
 using UnityEditor.Splines;
+using UnityEngine;
+using UnityEngine.Splines;
 
 namespace CharonsCorner.LevelEditor.Editor
 {
@@ -15,13 +17,7 @@ namespace CharonsCorner.LevelEditor.Editor
         [MenuItem("CONTEXT/SplineToolContext/Create Intersection", validate = true)]
         private static bool ValidateCreateIntersectionAction()
         {
-            // Return false if no spline is selected
-            if (SplineEditorUtility.HasSelection() == false)
-            {
-                return false;
-            }
-            
-            List<SelectedSplineElementInfo> elementInfos = SplineEditorUtility.GetSelection();
+            List<SelectedSplineElementInfo> elementInfos = SplineToolEditorUtility.GetSelection();
             
             return elementInfos.Count >= 2;
         }
@@ -33,7 +29,7 @@ namespace CharonsCorner.LevelEditor.Editor
         private static void CreateIntersectionAction()
         {
             // Get selected spline elements
-            List<SelectedSplineElementInfo> elementInfos = SplineEditorUtility.GetSelection();
+            List<SelectedSplineElementInfo> elementInfos = SplineToolEditorUtility.GetSelection();
             SplinePath splinePath = elementInfos[0].target.GetComponent<SplinePath>();
 
             Intersection intersection = new Intersection();
@@ -49,6 +45,46 @@ namespace CharonsCorner.LevelEditor.Editor
             // Add intersection and cook the spline path
             splinePath.AddIntersection(intersection);
             splinePath.CookSplinePath();
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        [MenuItem("CONTEXT/SplineToolContext/Create Scale Handle")]
+        private static void CreateScaleHandle(MenuCommand cmd)
+        {
+            // Get selected spline elements
+            SplineContainer splineContainer = (SplineContainer)cmd.context; // <- the component you clicked
+            List<SplineInfo> splineInfos = new List<SplineInfo>();
+            // Get closest spline point on each spline
+            for (int i = 0; i < splineContainer.Splines.Count; i++)
+            {
+                splineInfos.Add(new SplineInfo(splineContainer, i));
+            }
+
+            SplineToolEditorUtility.TryGetNearestPositionOnCurve(splineInfos, out SplineHit splineHit);
+            Debug.Log(splineHit.Position);
+        }
+
+        private static Vector3 GetMousePositionInWorld()
+        {
+            // Create a ray from the camera through the mouse position
+            Ray mouseRay = HandleUtility.GUIPointToWorldRay(Event.current.mousePosition);
+            Vector3 result = Vector3.zero;
+
+            // Perform the raycast
+            if (Physics.Raycast(mouseRay, out RaycastHit hit))
+            {
+                // If the ray hits an object, 'hit.point' contains the world-space position
+                result = hit.point;
+            }
+            else
+            {
+                new Plane(Vector3.up, Vector3.zero).Raycast(mouseRay, out float enter);
+                result = mouseRay.GetPoint(enter);
+            }
+
+            return result;
         }
     }
 }
