@@ -6,7 +6,7 @@ from aspen.blender.core import flags
 from . import EXPORT_MANAGER_IDNAME
 
 class COMMONPIPELINE_OT_exportmanager(bpy.types.Operator):
-    """An operator used to export selection directly into the unity project."""
+    """An operator used to export directly into the unity project."""
     bl_idname = EXPORT_MANAGER_IDNAME
     bl_label = 'Export Manager'
     bl_description = 'A tool that helps export assets directly into the Unity Project'

@@ -6,44 +6,7 @@ from  aspen.blender.common.export_manager import api
 from aspen import sitecustomize
 from aspen.blender.core import flags
 
-EXPORT_OP_BL_IDNAME = 'export_manager.export'
-ADD_EXPORT_TARGET_OP_BL_IDNAME = 'export_manager.add_export_target'
-EXPORT_PANEL_BL_IDNAME = 'EXPORTMANAGER_PT_panel'
-
-EXPORT_TYPE_ENUM_MODEL = 'MODEL'
-EXPORT_TYPE_ENUM_ANIMATION = 'ANIMATION'
-EXPORT_TYPE_ENUM_RIG = 'RIG'
-EXPORT_TYPE_ENUM_ITEMS = [
-    (EXPORT_TYPE_ENUM_MODEL, EXPORT_TYPE_ENUM_MODEL.title(), ''),
-    (EXPORT_TYPE_ENUM_ANIMATION, EXPORT_TYPE_ENUM_ANIMATION.title(), ''),
-    (EXPORT_TYPE_ENUM_RIG, EXPORT_TYPE_ENUM_RIG.title(), '')
-]
-
-ASSET_TYPE_ENUM_ITEMS = [
-    ('CHARACTER', 'Character', ''),
-    ('PROP', 'Prop', 'Rigged actors'),
-    ('ACTOR', 'Actor', '')
-]
-
-class EXPORTMANAGER_PT_panel(bpy.types.Panel):
-    """Panel used for export manager tool in Blender"""
-    bl_label = 'Export Manager'
-    bl_idname = EXPORT_PANEL_BL_IDNAME
-    bl_space_type = 'VIEW_3D'
-    bl_region_type = 'UI'
-    bl_category = 'Export Manager'
-
-    def draw(self, context):
-        layout = self.layout
-
-        export_manager = context.scene.export_manager
-
-        layout.prop(export_manager, "export_name")
-        layout.prop(export_manager, "export_type")
-        layout.prop(export_manager, 'asset_type')
-
-        layout.operator(EXPORT_OP_BL_IDNAME, icon='EXPORT')
-
+from . import (EXPORT_OP_BL_IDNAME, EXPORT_TYPE_ENUM_MODEL, EXPORT_TYPE_ENUM_ANIMATION, EXPORT_TYPE_ENUM_RIG,)
 
 class EXPORTMANAGER_OT_export(bpy.types.Operator):
     """An operator used to export selection directly into the unity project."""
@@ -97,15 +60,3 @@ class EXPORTMANAGER_OT_export(bpy.types.Operator):
         self.report(flags.INFO_REPORT_FLAG, f'Export Success: {export_path}')
 
         return flags.FINISHED_REPORT_FLAG
-
-
-class ExportManagerSettings(bpy.types.PropertyGroup):
-    export_name: bpy.props.StringProperty(name='Export Name')
-    export_type: bpy.props.EnumProperty(
-        name='Export Type',
-        items=EXPORT_TYPE_ENUM_ITEMS
-    )
-    asset_type: bpy.props.EnumProperty(
-        name='Asset Type',
-        items=ASSET_TYPE_ENUM_ITEMS
-    )
