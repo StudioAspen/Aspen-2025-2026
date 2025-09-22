@@ -3,8 +3,6 @@ import bpy
 from aspen.blender.common.export_manager.ui import ExportManagerMainWindow
 from aspen.blender.core import flags
 
-from PySide6 import QtWidgets
-import sys
 from . import EXPORT_MANAGER_IDNAME
 
 class COMMONPIPELINE_OT_exportmanager(bpy.types.Operator):
@@ -15,6 +13,8 @@ class COMMONPIPELINE_OT_exportmanager(bpy.types.Operator):
     bl_options = {'REGISTER'}
 
     def execute(self, context):
+        """Launch the Export Manager"""
+
         ExportManagerMainWindow().show()
 
         return flags.FINISHED_REPORT_FLAG
