@@ -1,0 +1,1 @@
+EXPORT_MANAGER_IDNAME = 'common_pipeline.export_manager'

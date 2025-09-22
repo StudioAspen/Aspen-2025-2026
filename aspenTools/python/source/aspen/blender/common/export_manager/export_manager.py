@@ -2,9 +2,9 @@ import os
 
 import bpy
 
-import aspen.blender.common.export_manager.api as api
-import aspen.core.site as site
-import aspen.blender.core.flags as flags
+from  aspen.blender.common.export_manager import api
+from aspen import sitecustomize
+from aspen.blender.core import flags
 
 EXPORT_OP_BL_IDNAME = 'export_manager.export'
 ADD_EXPORT_TARGET_OP_BL_IDNAME = 'export_manager.add_export_target'
@@ -27,11 +27,11 @@ ASSET_TYPE_ENUM_ITEMS = [
 
 class EXPORTMANAGER_PT_panel(bpy.types.Panel):
     """Panel used for export manager tool in Blender"""
-    bl_label = "Export Manager"
+    bl_label = 'Export Manager'
     bl_idname = EXPORT_PANEL_BL_IDNAME
     bl_space_type = 'VIEW_3D'
     bl_region_type = 'UI'
-    bl_category = "Export Manager"
+    bl_category = 'Export Manager'
 
     def draw(self, context):
         layout = self.layout
@@ -72,10 +72,10 @@ class EXPORTMANAGER_OT_export(bpy.types.Operator):
         # Set the export directory based on export and asset type
         export_dir = ''
         if export_type == EXPORT_TYPE_ENUM_MODEL or export_type == EXPORT_TYPE_ENUM_RIG:
-            export_dir = os.path.join(site.UNITY_ASSETS_ROOT, 'Art', 'models', asset_type, export_name)
+            export_dir = os.path.join(sitecustomize.UNITY_PROJECT_ASSETS_DIR, 'Art', 'models', asset_type, export_name)
         elif export_type == EXPORT_TYPE_ENUM_ANIMATION:
             blend_dir = os.path.basename(os.path.dirname(bpy.data.filepath))
-            export_dir = os.path.join(site.UNITY_ASSETS_ROOT, 'Art', 'animations', asset_type, blend_dir)
+            export_dir = os.path.join(sitecustomize.UNITY_PROJECT_ASSETS_DIR, 'Art', 'animations', asset_type, blend_dir)
         else:
             # Cancel if unknown export type
             self.report(flags.ERROR_REPORT_FLAG, f'Unknown export type: {export_type}')
@@ -109,21 +109,3 @@ class ExportManagerSettings(bpy.types.PropertyGroup):
         name='Asset Type',
         items=ASSET_TYPE_ENUM_ITEMS
     )
-
-classes = [
-    EXPORTMANAGER_PT_panel, EXPORTMANAGER_OT_export, ExportManagerSettings
-]
-
-def register():
-    """Register tool"""
-    for cls in classes:
-        bpy.utils.register_class(cls)
-
-    bpy.types.Scene.export_manager = bpy.props.PointerProperty(type=ExportManagerSettings)
-
-def unregister():
-    """Unregister tool"""
-    del bpy.types.Scene.export_manager
-
-    for cls in classes:
-        bpy.utils.unregister_class(cls)
