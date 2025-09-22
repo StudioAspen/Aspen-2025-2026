@@ -17,25 +17,25 @@ class EXPORTMANAGER_OT_export(bpy.types.Operator):
 
     def execute(self, context):
         """Try to export selection with the specified settings."""
+
         # Check if the current .blend file is saved
         if not bpy.data.filepath:
             self.report(flags.ERROR_REPORT_FLAG, "File must be saved in order to export a model.")
 
         # Check if valid export name
-        if not context.scene.export_manager.export_name:
+        if not context.scene.export_manager.asset_name:
             self.report(flags.ERROR_REPORT_FLAG, 'No export name specified.')
             return flags.CANCELLED_REPORT_FLAG
 
         # Get export settings
         export_manager = context.scene.export_manager
-        export_name = export_manager.export_name
+        asset_name = export_manager.asset_name.strip()
         export_type = export_manager.export_type
         asset_type = f'{export_manager.asset_type.lower()}s'
 
         # Set the export directory based on export and asset type
-        export_dir = ''
         if export_type == EXPORT_TYPE_ENUM_MODEL or export_type == EXPORT_TYPE_ENUM_RIG:
-            export_dir = os.path.join(sitecustomize.UNITY_PROJECT_ASSETS_DIR, 'Art', 'models', asset_type, export_name)
+            export_dir = os.path.join(sitecustomize.UNITY_PROJECT_ASSETS_DIR, 'Art', 'models', asset_type, asset_name)
         elif export_type == EXPORT_TYPE_ENUM_ANIMATION:
             blend_dir = os.path.basename(os.path.dirname(bpy.data.filepath))
             export_dir = os.path.join(sitecustomize.UNITY_PROJECT_ASSETS_DIR, 'Art', 'animations', asset_type, blend_dir)
@@ -45,7 +45,7 @@ class EXPORTMANAGER_OT_export(bpy.types.Operator):
             return flags.CANCELLED_REPORT_FLAG
 
         os.makedirs(export_dir, exist_ok=True)
-        export_path = os.path.join(export_dir, f'{export_name}.fbx')
+        export_path = os.path.join(export_dir, f'{asset_name}.fbx')
 
         # Export at export path
         if export_type == EXPORT_TYPE_ENUM_MODEL or export_type == EXPORT_TYPE_ENUM_RIG:

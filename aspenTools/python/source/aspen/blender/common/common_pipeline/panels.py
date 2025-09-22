@@ -1,6 +1,6 @@
 
 import bpy
-from . import EXPORT_MANAGER_IDNAME
+from . import EXPORT_MANAGER_BL_IDNAME
 
 class ASPENCOMMON_PT_panel(bpy.types.Panel):
     bl_label = 'Aspen Common'
@@ -11,6 +11,8 @@ class ASPENCOMMON_PT_panel(bpy.types.Panel):
     bl_options = {'DEFAULT_CLOSED'}
 
     def draw(self, context):
+        """ Draw the Common Pipeline panel"""
+
         layout = self.layout
 
-        layout.operator(EXPORT_MANAGER_IDNAME, icon='EXPORT')
+        layout.operator(EXPORT_MANAGER_BL_IDNAME, icon='EXPORT')

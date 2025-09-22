@@ -38,6 +38,9 @@ class ExportManagerMainWindow(SingletonMainWindow):
         self.asset_type_combo_box.setCurrentIndex(self.asset_types.index(bpy.context.scene.export_manager.asset_type))
         self.asset_type_combo_box.currentIndexChanged.connect(self._on_asset_type_combo_box_changed)
 
+        # Set up export selection button
+        self.export_selection_button.clicked.connect(self._on_export_selection_button_clicked)
+
     def _on_asset_name_line_edit_changed(self, text: str):
         """ Set the export manager's asset name if the line edit is changed.
 
@@ -61,3 +64,8 @@ class ExportManagerMainWindow(SingletonMainWindow):
             index (int): The index of the combo box
         """
         bpy.context.scene.export_manager.asset_type = self.asset_types[index]
+
+    def _on_export_selection_button_clicked(self):
+        """ Call the export operator."""
+
+        bpy.ops.export_manager.export()
