@@ -21,6 +21,9 @@ namespace CharonsCorner.Runtime
         [SerializeField] private float _regroundDelay = 0.05f;
         [SerializeField, ReadOnly] private bool _isGrounded;
         
+        [Header("Ground Stick")]
+        [SerializeField] private float _groundStickCheckDistance = 10f;
+        
         [Header("Jump")]
         [SerializeField] private float _jumpHeight = 2f;
         [SerializeField] private float _coyoteTime = 0.4f;
@@ -71,6 +74,9 @@ namespace CharonsCorner.Runtime
             Gizmos.color = Color.red;
             Vector3 groundCheckStartPosition = transform.position + (_groundCheckYOffset - _sphereCollider.radius) * Vector3.up;
             Gizmos.DrawLine(groundCheckStartPosition, groundCheckStartPosition + _groundCheckDistance * Vector3.down);
+            
+            Gizmos.color = Color.blue;
+            Gizmos.DrawLine(groundCheckStartPosition, groundCheckStartPosition + _groundStickCheckDistance * Vector3.down);
         }
 
         private void CheckGrounded()
