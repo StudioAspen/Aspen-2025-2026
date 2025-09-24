@@ -103,7 +103,7 @@ namespace CharonsCorner.Runtime
         /// <summary>
         /// Calculates the jump force from the jump height using the physics equation
         /// </summary>
-        public static float GetJumpForce(float jumpHeight) => Mathf.Sqrt(2f * Mathf.Abs(Physics.gravity.y) * jumpHeight);
+        public static float GetJumpForce(float jumpHeight, float gravity) => Mathf.Sqrt(2f * gravity * jumpHeight);
         
         /// <summary>
         /// Checks to see if a layer exists in the layer mask

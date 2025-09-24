@@ -18,11 +18,14 @@ namespace CharonsCorner.Runtime
         [SerializeField] private LayerMask _groundLayer;
         [SerializeField] private float _groundCheckYOffset = 0.25f;
         [SerializeField] private float _groundCheckDistance = 0.5f;
+        [SerializeField] private float _groundCheckRadius = 1f;
         [SerializeField] private float _regroundDelay = 0.05f;
         [SerializeField, ReadOnly] private bool _isGrounded;
         
         [Header("Ground Stick")]
-        [SerializeField] private float _groundStickCheckDistance = 10f;
+        [SerializeField] private float _groundStickCheckDistance = 30f;
+        [SerializeField] private float _groundStickForce = 50f;
+        private Vector3 _groundNormal;
         
         [Header("Jump")]
         [SerializeField] private float _jumpHeight = 2f;
@@ -30,8 +33,14 @@ namespace CharonsCorner.Runtime
         private bool _hasJumped;
         [SerializeField, ReadOnly] private float _inAirTime;
         
-        [Header("Speed")]
-        [SerializeField] private float _speed = 5f;
+        [Header("Movement")]
+        [SerializeField] private float _forwardAcceleration = 10f;
+        [SerializeField] private float _idleDamp = 10f;
+        [SerializeField] private float _stopThreshold = 0.25f;
+        [SerializeField] private float _steerRotationSpeed = 200f;
+        [SerializeField, ReadOnly] private float _currentSpeed;
+
+        public Vector3 CurrentMovement { get; private set; }
 
         private void Awake()
         {
@@ -59,24 +68,30 @@ namespace CharonsCorner.Runtime
         private void Update()
         {
             CheckGrounded();
-            UpdateInAirTime();
+            UpdateInAirTime(Time.deltaTime);
+            HandleRotations(_input.MoveDirection, Time.deltaTime);
         }
 
         private void FixedUpdate()
         {
-            Vector3 moveDirection = Utilities.GetCameraBasedMoveInput(CameraManager.Instance.CurrentCamera.transform,
-                _input.MoveDirection);
-            _rigidBody.AddForce(_speed * moveDirection, ForceMode.Acceleration);
+            HandleGroundStick(Time.fixedDeltaTime);
+            HandleMovement(_input.MoveDirection, Time.fixedDeltaTime);
         }
 
         private void OnDrawGizmos()
         {
             Gizmos.color = Color.red;
             Vector3 groundCheckStartPosition = transform.position + (_groundCheckYOffset - _sphereCollider.radius) * Vector3.up;
-            Gizmos.DrawLine(groundCheckStartPosition, groundCheckStartPosition + _groundCheckDistance * Vector3.down);
+            Gizmos.DrawWireSphere(groundCheckStartPosition, _groundCheckRadius);
+            Gizmos.DrawWireSphere(groundCheckStartPosition + _groundCheckDistance * Vector3.down, _groundCheckRadius);
             
+            // Ground normal
             Gizmos.color = Color.blue;
-            Gizmos.DrawLine(groundCheckStartPosition, groundCheckStartPosition + _groundStickCheckDistance * Vector3.down);
+            Gizmos.DrawLine(transform.position, transform.position + 100f * _groundNormal);
+            
+            // Forward
+            Gizmos.color = Color.magenta;
+            Gizmos.DrawLine(transform.position, transform.position + 100f * transform.forward);
         }
 
         private void CheckGrounded()
@@ -87,8 +102,56 @@ namespace CharonsCorner.Runtime
                 return;
             }
             
-            _isGrounded = Physics.Raycast(transform.position + (_groundCheckYOffset - _sphereCollider.radius) * Vector3.up,
-                    Vector3.down, out RaycastHit hit, _groundCheckDistance, _groundLayer);
+            _isGrounded = Physics.SphereCast(transform.position + (_groundCheckYOffset - _sphereCollider.radius) * Vector3.up, _groundCheckRadius,
+                Vector3.down, out RaycastHit groundCheckHit, _groundCheckDistance, _groundLayer);
+
+            // Ground stick sphere cast
+            Physics.SphereCast(transform.position + (_groundCheckYOffset - _sphereCollider.radius) * Vector3.up, _groundCheckRadius,
+                Vector3.down, out RaycastHit groundStickHit, _groundStickCheckDistance, _groundLayer);
+            _groundNormal = _isGrounded ? groundStickHit.normal : Vector3.up;
+        }
+
+        private void HandleGroundStick(float deltaTime)
+        {
+            if (!_isGrounded)
+                return;
+            
+            _rigidBody.AddForce(_groundStickForce * -_groundNormal, ForceMode.Force);
+        }
+
+        private void HandleMovement(Vector2 moveDirection, float deltaTime)
+        {
+            if (moveDirection.y != 0)
+            {
+                _currentSpeed += _forwardAcceleration * moveDirection.y * deltaTime;
+            }
+            else
+            {
+                if (Mathf.Abs(_currentSpeed) < _stopThreshold)
+                    _currentSpeed = 0f;
+                else
+                    _currentSpeed += _idleDamp * -Mathf.Sign(_currentSpeed) * deltaTime;
+            }
+
+            Vector3 projectedMovement = Vector3.ProjectOnPlane(transform.forward, _groundNormal);
+            Vector3 displacement = _currentSpeed * deltaTime * projectedMovement;
+            _rigidBody.MovePosition(_rigidBody.position + displacement);
+            
+            Debug.DrawLine(transform.position, transform.position + 10f * displacement, Color.green, Time.deltaTime);
+            CurrentMovement = displacement + _rigidBody.linearVelocity.y * Vector3.up;
+        }
+
+        private void HandleRotations(Vector2 moveDirection, float deltaTime)
+        {
+            Quaternion tiltRotation = Quaternion.FromToRotation(transform.up, _groundNormal) * _rigidBody.rotation;
+            if(!_isGrounded)
+                tiltRotation = Quaternion.identity;
+            
+            float steeringAmount = moveDirection.x * _steerRotationSpeed * deltaTime;
+            Quaternion steeringRotation = Quaternion.AngleAxis(steeringAmount, _groundNormal);
+            
+            Quaternion finalRotation = steeringRotation * tiltRotation;
+            _rigidBody.MoveRotation(finalRotation);
         }
         
         private void HandleJumpInput()
@@ -100,15 +163,15 @@ namespace CharonsCorner.Runtime
             if (_inAirTime != 0f && _inAirTime > _coyoteTime)
                 return;
             
-            float jumpForce = Utilities.GetJumpForce(_jumpHeight);
-            _rigidBody.AddForce((jumpForce - _rigidBody.linearVelocity.y) * Vector3.up, ForceMode.VelocityChange);
+            float jumpForce = Utilities.GetJumpForce(_jumpHeight, Mathf.Abs(Physics.gravity.y));
+            _rigidBody.linearVelocity = jumpForce * Vector3.up;
 
             _hasJumped = true;
             _isGrounded = false;
             _inAirTime = Mathf.Epsilon; // To activate the reground check and make _inAirTime > 0
         }
 
-        private void UpdateInAirTime()
+        private void UpdateInAirTime(float deltaTime)
         {
             if (_isGrounded)
             {
@@ -117,7 +180,7 @@ namespace CharonsCorner.Runtime
                 return;
             }
             
-            _inAirTime += Time.deltaTime;
+            _inAirTime += deltaTime;
         }
     }
 }
