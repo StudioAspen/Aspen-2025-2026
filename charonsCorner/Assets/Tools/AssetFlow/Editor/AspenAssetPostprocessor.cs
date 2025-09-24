@@ -18,7 +18,7 @@ namespace Aspen.Tools.Assets
 		/// <param name="deletedAssets"></param>
 		/// <param name="movedAssets"></param>
 		/// <param name="movedFromAssetPaths"></param>
-		static void OnPostprocessAllAssets(
+		private static void OnPostprocessAllAssets(
 			string[] importedAssets,
 			string[] deletedAssets,
 			string[] movedAssets,
@@ -34,11 +34,11 @@ namespace Aspen.Tools.Assets
 					
 					ExtractTexturesFromFBX(modelImporter, assetPath);
 					
-					// Create avatar for characters and props
+					// Create avatar for characters and actors
 					if (assetPath.StartsWith("Assets/Art/models/characters") ||
-					    assetPath.StartsWith("Assets/Art/models/actors"))
+					    assetPath.StartsWith("Assets/Art/models/actors") && modelImporter != null)
 					{
-						CreateAvatarFromFBX(modelImporter);
+						modelImporter.avatarSetup = ModelImporterAvatarSetup.CreateFromThisModel;
 					}
 
 					// Create prefabs for actors
@@ -49,6 +49,42 @@ namespace Aspen.Tools.Assets
 					
 					AssetDatabase.SaveAssets();
 					AssetDatabase.Refresh();
+				}
+			}
+		}
+
+		/// <summary>
+		/// Process imported game objects that have custom properties.
+		/// </summary>
+		/// <param name="go"></param>
+		/// <param name="propNames"></param>
+		/// <param name="values"></param>
+		private void OnPostprocessGameObjectWithUserProperties(GameObject go, string[] propNames, object[] values)
+		{	
+			// Get Model Importer
+			ModelImporter modelImporter = assetImporter as ModelImporter;
+			
+			if (modelImporter != null)
+			{
+				// Importing Animations - Check for property name "avatar_path"
+				if (propNames[0].Equals("avatar_path"))
+				{
+					string avatar_path = values[0] as string;
+					
+					// Set avatar to copy from other
+					modelImporter.avatarSetup = ModelImporterAvatarSetup.CopyFromOther;
+					
+					// Try to set avatar
+					Avatar avatar = AssetDatabase.LoadAssetAtPath<Avatar>(avatar_path);
+					if (avatar != null)
+					{
+						modelImporter.sourceAvatar = avatar;
+						Debug.Log("Successfully applied avatar to animation.");
+					}
+					else
+					{
+						Debug.LogError($"Avatar not found - {avatar_path}");
+					}
 				}
 			}
 		}
@@ -71,14 +107,6 @@ namespace Aspen.Tools.Assets
 			// Extract textures from model
 			modelImporter.ExtractTextures(extractPath);
 		}
-
-		
-		private static void CreateAvatarFromFBX(ModelImporter modelImporter)
-		{
-			modelImporter.avatarSetup = ModelImporterAvatarSetup.CreateFromThisModel;
-			//modelImporter.optimizeGameObjects = true; // Hide bone GameObjects not needed at runtime
-		}
-		
 
 		/// <summary>
 		///    Create a prefab from an FBX.
