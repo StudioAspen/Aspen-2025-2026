@@ -36,6 +36,17 @@ public class WorldConfigSO : ScriptableObject
 }
 ```
 
+### Folder Names
+
+-   **PascalCase**
+-   Please put assets or scripts inside folders that make sense. Feel free to ask if you're unsure.
+    - Most of the time, your scripts will be inside the `charonsCorner/Assets/Scripts/Runtime` folder
+
+### Asset Names
+
+-   **PascalCase**
+    - Includes prefabs and scriptable objects
+
 ------------------------------------------------------------------------
 
 ## Braces
