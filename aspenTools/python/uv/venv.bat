@@ -14,3 +14,5 @@ call "%VENV_DIR%\Scripts\activate.bat"
 
 
 "%UV_PATH%" pip install -r %REQS_TXT%
+
+PAUSE
