@@ -12,7 +12,7 @@ echo Project Root: %PROJECT_ROOT%
 set UV_DIR=%PROJECT_ROOT%\aspenTools\python\uv\
 set UV_PATH=%UV_DIR%uv.exe
 set VENV_DIR=%UV_DIR%..\venv
-set REQS_TXT=%UV_DIR%..\source\requirements.txt
+set REQS_TXT=%UV_DIR%requirements.txt
 
 echo Venv: %VENV_DIR%
 
