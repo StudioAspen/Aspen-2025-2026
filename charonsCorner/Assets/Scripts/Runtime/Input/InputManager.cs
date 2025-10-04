@@ -79,7 +79,7 @@ namespace CharonsCorner.Runtime
         /// </summary>
         private void CreatePlayerActions()
         {
-            InputActions = new InputActions();
+        InputActions = new InputActions();
             InputActions.Player.SetCallbacks(this);
             InputActions.UI.SetCallbacks(this);
         }
@@ -154,10 +154,16 @@ namespace CharonsCorner.Runtime
 
         public void OnDrift(InputAction.CallbackContext context)
         {
-            if(context.started)
+            // When the drift input is pressed, start drifting (enter drift state, start timer)
+            if (context.started)
+            {
                 Drift.Invoke(true); // Start drifting
-            else if(context.canceled)
+            }
+            // When the drift input is released, stop drifting (exit drift state, check timer for boost)
+            else if (context.canceled)
+            {
                 Drift.Invoke(false); // Stop drifting
+            }
         }
 
         public void OnPause(InputAction.CallbackContext context)

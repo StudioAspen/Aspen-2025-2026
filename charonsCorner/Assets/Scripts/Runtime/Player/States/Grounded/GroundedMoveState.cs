@@ -14,10 +14,10 @@ namespace CharonsCorner.Runtime
         private float temporaryMaxSpeedTimer = 0f;
         private const float TemporaryMaxSpeedDuration = 0.75f; // seconds, tweak as needed
 
-        public void ActivateTemporaryMaxSpeed(float speed)
+        public void ActivateTemporaryMaxSpeed(float speed, float duration)
         {
             TemporaryMaxSpeed = speed;
-            temporaryMaxSpeedTimer = TemporaryMaxSpeedDuration;
+            temporaryMaxSpeedTimer = duration;
         }
 
         private protected override void OnEnter()

@@ -18,6 +18,7 @@ namespace CharonsCorner.Runtime
         [field: SerializeField] public LayerMask GroundLayerMask { get; private set; }
         [field: SerializeField, ReadOnly, AllowNesting] public bool IsGrounded { get; private set; }
         [field: SerializeField] public float JumpHeight { get; private set; } = 2f;
+        [field: SerializeField] public float BoostDuration { get; private set; } = 2.75f;
 
         private protected override void InitializeSubStates()
         {
@@ -34,22 +35,15 @@ namespace CharonsCorner.Runtime
 
         private protected override void OnExit()
         {
-            if(context.Input != null)
+            if (context.Input != null)
             {
                 context.Input.Jump -= Input_Jump;
                 context.Input.Drift -= Input_Drift;
             }
         }
 
-        private protected override void OnUpdate()
-        {
-
-        }
-
-        private protected override void OnFixedUpdate()
-        {
-
-        }
+        private protected override void OnUpdate() { }
+        private protected override void OnFixedUpdate() { }
 
         private protected override State<PlayerController> GetTransition()
         {
@@ -72,7 +66,7 @@ namespace CharonsCorner.Runtime
             if (!IsGrounded)
                 return;
 
-            float jumpForce = Mathf.Sqrt(2 * JumpHeight * Mathf.Abs(Physics.gravity.y)); // Equation to calculate jump force based on desired height
+            float jumpForce = Mathf.Sqrt(2 * JumpHeight * Mathf.Abs(Physics.gravity.y));
             context.RigidBody.AddForce(Vector3.up * jumpForce, ForceMode.VelocityChange);
 
             stateMachine.ChangeState(context.AirborneSuperState);
@@ -80,11 +74,34 @@ namespace CharonsCorner.Runtime
 
         private void Input_Drift(bool isDrifting)
         {
-            if (!isDrifting)
-                return;
-
-            if(context.Input.MoveDirection != Vector2.zero)
+            if (isDrifting && context.Input.MoveDirection != Vector2.zero)
+            {
+                // On input press, enter drift state
                 SubStateMachine.ChangeState(DriftState);
+            }
+            else if (!isDrifting)
+            {
+                // On input release, check if boost is ready and apply
+                if (SubStateMachine.CurrentState == DriftState && DriftState.IsBoostReady)
+                {
+                    float boostAmount = Mathf.Lerp(DriftState.MinDriftBoost, DriftState.MaxDriftBoost, DriftState.DriftCharge);
+                    Vector3 velocity = context.RigidBody.linearVelocity;
+                    velocity.y = 0; // Ignore vertical component for ground boost
+                    if (velocity.sqrMagnitude > 0.01f)
+                    {
+                        Vector3 boostDir = velocity.normalized;
+                        context.RigidBody.linearVelocity += boostDir * boostAmount;
+                    }
+                    else
+                    {
+                        // If not moving, fallback to facing direction
+                        context.RigidBody.linearVelocity += context.transform.forward * boostAmount;
+                    }
+                    MoveState.ActivateTemporaryMaxSpeed(boostAmount, BoostDuration);
+                }
+                // Always transition to move state on release
+                SubStateMachine.ChangeState(MoveState);
+            }
         }
     }
 }
