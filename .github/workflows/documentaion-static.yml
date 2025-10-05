@@ -30,7 +30,7 @@ jobs:
         with:
           dotnet-version: '8.0.x'
 
-      - name: Install DocFX
+      - name: Install/Update DocFX
         run: dotnet tool install -g docfx
 
       - name: Add DocFX to PATH
@@ -39,12 +39,13 @@ jobs:
       - name: Build DocFX Documentation
         working-directory: charonsCorner/Documentation
         run: |
-          docfx metadata
-          docfx build
+          docfx
 
-      - name: Deploy to doc-page branch
-        uses: peaceiris/actions-gh-pages@v4
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_branch: docfx-page
-          publish_dir: charonsCorner/Documentation/_site
+          # Upload entire repository
+          path: 'charonsCorner/Documentation/_site'
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
