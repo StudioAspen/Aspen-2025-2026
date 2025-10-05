@@ -28,7 +28,7 @@ jobs:
       - name: Setup .NET SDK
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: '9.0.x'
+          dotnet-version: '8.0.x'
 
       - name: Install DocFX
         run: dotnet tool install -g docfx
@@ -42,11 +42,11 @@ jobs:
           docfx metadata
           docfx build
 
-      - name: Upload Pages Artifact
-        uses: actions/upload-pages-artifact@v3
+      - name: Deploy to doc-page branch
+        uses: peaceiris/actions-gh-pages@v3
         with:
-          path: 'charonsCorner/Documentation/_site'
-
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: doc-page
+          publish_dir: charonsCorner/Documentation/_site
+          # Optional: keep history (set to true if you want old versions)
+          force_orphan: true
