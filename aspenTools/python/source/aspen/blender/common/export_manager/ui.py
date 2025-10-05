@@ -66,6 +66,22 @@ class ExportManagerMainWindow(SingletonMainWindow):
         bpy.context.scene.export_manager.asset_type = self.asset_types[index]
 
     def _on_export_selection_button_clicked(self):
-        """ Call the export operator."""
+        """ Call the export operator.
 
-        bpy.ops.export_manager.export()
+        In order to properly export, context uses selected_objects, which is a part of the area 'VIEW_3D'.
+        Since this is called from an external window, the context must be temporarily overridden.
+        """
+
+        # Look for 'VIEW_3D' area to temp override
+        found_window = None
+        found_area = None
+        for window in bpy.context.window_manager.windows:
+            for area in window.screen.areas:
+                if area.type == 'VIEW_3D':
+                    found_window = window
+                    found_area = area
+                    break
+
+        if found_area:
+            with bpy.context.temp_override(window=found_window, area=found_area):
+                bpy.ops.export_manager.export()

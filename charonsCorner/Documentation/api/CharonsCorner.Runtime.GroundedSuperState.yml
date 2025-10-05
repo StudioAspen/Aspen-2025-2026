@@ -1,0 +1,953 @@
+### YamlMime:ManagedReference
+items:
+- uid: CharonsCorner.Runtime.GroundedSuperState
+  commentId: T:CharonsCorner.Runtime.GroundedSuperState
+  id: GroundedSuperState
+  parent: CharonsCorner.Runtime
+  children:
+  - CharonsCorner.Runtime.GroundedSuperState.CheckGrounded
+  - CharonsCorner.Runtime.GroundedSuperState.DriftState
+  - CharonsCorner.Runtime.GroundedSuperState.GroundCheckDistance
+  - CharonsCorner.Runtime.GroundedSuperState.GroundCheckRadius
+  - CharonsCorner.Runtime.GroundedSuperState.GroundLayerMask
+  - CharonsCorner.Runtime.GroundedSuperState.IdleState
+  - CharonsCorner.Runtime.GroundedSuperState.InitialSubState
+  - CharonsCorner.Runtime.GroundedSuperState.IsGrounded
+  - CharonsCorner.Runtime.GroundedSuperState.JumpHeight
+  - CharonsCorner.Runtime.GroundedSuperState.MoveState
+  langs:
+  - csharp
+  - vb
+  name: GroundedSuperState
+  nameWithType: GroundedSuperState
+  fullName: CharonsCorner.Runtime.GroundedSuperState
+  type: Class
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/Player/States/Grounded/GroundedSuperState.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: GroundedSuperState
+    path: ../Assets/Scripts/Runtime/Player/States/Grounded/GroundedSuperState.cs
+    startLine: 5
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  syntax:
+    content: >-
+      [Serializable]
+
+      public class GroundedSuperState : SuperState<PlayerController>
+    content.vb: >-
+      <Serializable>
+
+      Public Class GroundedSuperState Inherits SuperState(Of PlayerController)
+  inheritance:
+  - System.Object
+  - CharonsCorner.Runtime.State{CharonsCorner.Runtime.PlayerController}
+  - CharonsCorner.Runtime.SuperState{CharonsCorner.Runtime.PlayerController}
+  inheritedMembers:
+  - CharonsCorner.Runtime.SuperState{CharonsCorner.Runtime.PlayerController}.SubStateMachine
+  - CharonsCorner.Runtime.SuperState{CharonsCorner.Runtime.PlayerController}.Destroy
+  - CharonsCorner.Runtime.SuperState{CharonsCorner.Runtime.PlayerController}.Enter
+  - CharonsCorner.Runtime.SuperState{CharonsCorner.Runtime.PlayerController}.Exit
+  - CharonsCorner.Runtime.SuperState{CharonsCorner.Runtime.PlayerController}.Update
+  - CharonsCorner.Runtime.SuperState{CharonsCorner.Runtime.PlayerController}.FixedUpdate
+  - CharonsCorner.Runtime.State{CharonsCorner.Runtime.PlayerController}.Init(CharonsCorner.Runtime.StateMachine{CharonsCorner.Runtime.PlayerController},CharonsCorner.Runtime.PlayerController)
+  attributes:
+  - type: System.SerializableAttribute
+    ctor: System.SerializableAttribute.#ctor
+    arguments: []
+- uid: CharonsCorner.Runtime.GroundedSuperState.InitialSubState
+  commentId: P:CharonsCorner.Runtime.GroundedSuperState.InitialSubState
+  id: InitialSubState
+  parent: CharonsCorner.Runtime.GroundedSuperState
+  langs:
+  - csharp
+  - vb
+  name: InitialSubState
+  nameWithType: GroundedSuperState.InitialSubState
+  fullName: CharonsCorner.Runtime.GroundedSuperState.InitialSubState
+  type: Property
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/Player/States/Grounded/GroundedSuperState.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: InitialSubState
+    path: ../Assets/Scripts/Runtime/Player/States/Grounded/GroundedSuperState.cs
+    startLine: 8
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  example: []
+  syntax:
+    content: public override State<PlayerController> InitialSubState { get; }
+    parameters: []
+    return:
+      type: CharonsCorner.Runtime.State{CharonsCorner.Runtime.PlayerController}
+    content.vb: Public Overrides ReadOnly Property InitialSubState As State(Of PlayerController)
+  overridden: CharonsCorner.Runtime.SuperState{CharonsCorner.Runtime.PlayerController}.InitialSubState
+  overload: CharonsCorner.Runtime.GroundedSuperState.InitialSubState*
+- uid: CharonsCorner.Runtime.GroundedSuperState.IdleState
+  commentId: P:CharonsCorner.Runtime.GroundedSuperState.IdleState
+  id: IdleState
+  parent: CharonsCorner.Runtime.GroundedSuperState
+  langs:
+  - csharp
+  - vb
+  name: IdleState
+  nameWithType: GroundedSuperState.IdleState
+  fullName: CharonsCorner.Runtime.GroundedSuperState.IdleState
+  type: Property
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/Player/States/Grounded/GroundedSuperState.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: IdleState
+    path: ../Assets/Scripts/Runtime/Player/States/Grounded/GroundedSuperState.cs
+    startLine: 10
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  syntax:
+    content: public GroundedIdleState IdleState { get; }
+    parameters: []
+    return:
+      type: CharonsCorner.Runtime.GroundedIdleState
+    content.vb: Public Property IdleState As GroundedIdleState
+  overload: CharonsCorner.Runtime.GroundedSuperState.IdleState*
+- uid: CharonsCorner.Runtime.GroundedSuperState.MoveState
+  commentId: P:CharonsCorner.Runtime.GroundedSuperState.MoveState
+  id: MoveState
+  parent: CharonsCorner.Runtime.GroundedSuperState
+  langs:
+  - csharp
+  - vb
+  name: MoveState
+  nameWithType: GroundedSuperState.MoveState
+  fullName: CharonsCorner.Runtime.GroundedSuperState.MoveState
+  type: Property
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/Player/States/Grounded/GroundedSuperState.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: MoveState
+    path: ../Assets/Scripts/Runtime/Player/States/Grounded/GroundedSuperState.cs
+    startLine: 11
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  syntax:
+    content: public GroundedMoveState MoveState { get; }
+    parameters: []
+    return:
+      type: CharonsCorner.Runtime.GroundedMoveState
+    content.vb: Public Property MoveState As GroundedMoveState
+  overload: CharonsCorner.Runtime.GroundedSuperState.MoveState*
+- uid: CharonsCorner.Runtime.GroundedSuperState.DriftState
+  commentId: P:CharonsCorner.Runtime.GroundedSuperState.DriftState
+  id: DriftState
+  parent: CharonsCorner.Runtime.GroundedSuperState
+  langs:
+  - csharp
+  - vb
+  name: DriftState
+  nameWithType: GroundedSuperState.DriftState
+  fullName: CharonsCorner.Runtime.GroundedSuperState.DriftState
+  type: Property
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/Player/States/Grounded/GroundedSuperState.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: DriftState
+    path: ../Assets/Scripts/Runtime/Player/States/Grounded/GroundedSuperState.cs
+    startLine: 12
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  syntax:
+    content: public GroundedDriftState DriftState { get; }
+    parameters: []
+    return:
+      type: CharonsCorner.Runtime.GroundedDriftState
+    content.vb: Public Property DriftState As GroundedDriftState
+  overload: CharonsCorner.Runtime.GroundedSuperState.DriftState*
+- uid: CharonsCorner.Runtime.GroundedSuperState.GroundCheckDistance
+  commentId: P:CharonsCorner.Runtime.GroundedSuperState.GroundCheckDistance
+  id: GroundCheckDistance
+  parent: CharonsCorner.Runtime.GroundedSuperState
+  langs:
+  - csharp
+  - vb
+  name: GroundCheckDistance
+  nameWithType: GroundedSuperState.GroundCheckDistance
+  fullName: CharonsCorner.Runtime.GroundedSuperState.GroundCheckDistance
+  type: Property
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/Player/States/Grounded/GroundedSuperState.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: GroundCheckDistance
+    path: ../Assets/Scripts/Runtime/Player/States/Grounded/GroundedSuperState.cs
+    startLine: 14
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  syntax:
+    content: public float GroundCheckDistance { get; }
+    parameters: []
+    return:
+      type: System.Single
+    content.vb: Public Property GroundCheckDistance As Single
+  overload: CharonsCorner.Runtime.GroundedSuperState.GroundCheckDistance*
+- uid: CharonsCorner.Runtime.GroundedSuperState.GroundCheckRadius
+  commentId: P:CharonsCorner.Runtime.GroundedSuperState.GroundCheckRadius
+  id: GroundCheckRadius
+  parent: CharonsCorner.Runtime.GroundedSuperState
+  langs:
+  - csharp
+  - vb
+  name: GroundCheckRadius
+  nameWithType: GroundedSuperState.GroundCheckRadius
+  fullName: CharonsCorner.Runtime.GroundedSuperState.GroundCheckRadius
+  type: Property
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/Player/States/Grounded/GroundedSuperState.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: GroundCheckRadius
+    path: ../Assets/Scripts/Runtime/Player/States/Grounded/GroundedSuperState.cs
+    startLine: 16
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  syntax:
+    content: public float GroundCheckRadius { get; }
+    parameters: []
+    return:
+      type: System.Single
+    content.vb: Public Property GroundCheckRadius As Single
+  overload: CharonsCorner.Runtime.GroundedSuperState.GroundCheckRadius*
+- uid: CharonsCorner.Runtime.GroundedSuperState.GroundLayerMask
+  commentId: P:CharonsCorner.Runtime.GroundedSuperState.GroundLayerMask
+  id: GroundLayerMask
+  parent: CharonsCorner.Runtime.GroundedSuperState
+  langs:
+  - csharp
+  - vb
+  name: GroundLayerMask
+  nameWithType: GroundedSuperState.GroundLayerMask
+  fullName: CharonsCorner.Runtime.GroundedSuperState.GroundLayerMask
+  type: Property
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/Player/States/Grounded/GroundedSuperState.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: GroundLayerMask
+    path: ../Assets/Scripts/Runtime/Player/States/Grounded/GroundedSuperState.cs
+    startLine: 17
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  syntax:
+    content: public LayerMask GroundLayerMask { get; }
+    parameters: []
+    return:
+      type: UnityEngine.LayerMask
+    content.vb: Public Property GroundLayerMask As LayerMask
+  overload: CharonsCorner.Runtime.GroundedSuperState.GroundLayerMask*
+- uid: CharonsCorner.Runtime.GroundedSuperState.IsGrounded
+  commentId: P:CharonsCorner.Runtime.GroundedSuperState.IsGrounded
+  id: IsGrounded
+  parent: CharonsCorner.Runtime.GroundedSuperState
+  langs:
+  - csharp
+  - vb
+  name: IsGrounded
+  nameWithType: GroundedSuperState.IsGrounded
+  fullName: CharonsCorner.Runtime.GroundedSuperState.IsGrounded
+  type: Property
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/Player/States/Grounded/GroundedSuperState.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: IsGrounded
+    path: ../Assets/Scripts/Runtime/Player/States/Grounded/GroundedSuperState.cs
+    startLine: 18
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  syntax:
+    content: public bool IsGrounded { get; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public Property IsGrounded As Boolean
+  overload: CharonsCorner.Runtime.GroundedSuperState.IsGrounded*
+- uid: CharonsCorner.Runtime.GroundedSuperState.JumpHeight
+  commentId: P:CharonsCorner.Runtime.GroundedSuperState.JumpHeight
+  id: JumpHeight
+  parent: CharonsCorner.Runtime.GroundedSuperState
+  langs:
+  - csharp
+  - vb
+  name: JumpHeight
+  nameWithType: GroundedSuperState.JumpHeight
+  fullName: CharonsCorner.Runtime.GroundedSuperState.JumpHeight
+  type: Property
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/Player/States/Grounded/GroundedSuperState.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: JumpHeight
+    path: ../Assets/Scripts/Runtime/Player/States/Grounded/GroundedSuperState.cs
+    startLine: 19
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  syntax:
+    content: public float JumpHeight { get; }
+    parameters: []
+    return:
+      type: System.Single
+    content.vb: Public Property JumpHeight As Single
+  overload: CharonsCorner.Runtime.GroundedSuperState.JumpHeight*
+- uid: CharonsCorner.Runtime.GroundedSuperState.CheckGrounded
+  commentId: M:CharonsCorner.Runtime.GroundedSuperState.CheckGrounded
+  id: CheckGrounded
+  parent: CharonsCorner.Runtime.GroundedSuperState
+  langs:
+  - csharp
+  - vb
+  name: CheckGrounded()
+  nameWithType: GroundedSuperState.CheckGrounded()
+  fullName: CharonsCorner.Runtime.GroundedSuperState.CheckGrounded()
+  type: Method
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/Player/States/Grounded/GroundedSuperState.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: CheckGrounded
+    path: ../Assets/Scripts/Runtime/Player/States/Grounded/GroundedSuperState.cs
+    startLine: 61
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  syntax:
+    content: public void CheckGrounded()
+    content.vb: Public Sub CheckGrounded()
+  overload: CharonsCorner.Runtime.GroundedSuperState.CheckGrounded*
+references:
+- uid: CharonsCorner.Runtime
+  commentId: N:CharonsCorner.Runtime
+  href: CharonsCorner.html
+  name: CharonsCorner.Runtime
+  nameWithType: CharonsCorner.Runtime
+  fullName: CharonsCorner.Runtime
+  spec.csharp:
+  - uid: CharonsCorner
+    name: CharonsCorner
+    href: CharonsCorner.html
+  - name: .
+  - uid: CharonsCorner.Runtime
+    name: Runtime
+    href: CharonsCorner.Runtime.html
+  spec.vb:
+  - uid: CharonsCorner
+    name: CharonsCorner
+    href: CharonsCorner.html
+  - name: .
+  - uid: CharonsCorner.Runtime
+    name: Runtime
+    href: CharonsCorner.Runtime.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: CharonsCorner.Runtime.State{CharonsCorner.Runtime.PlayerController}
+  commentId: T:CharonsCorner.Runtime.State{CharonsCorner.Runtime.PlayerController}
+  parent: CharonsCorner.Runtime
+  definition: CharonsCorner.Runtime.State`1
+  href: CharonsCorner.Runtime.State-1.html
+  name: State<PlayerController>
+  nameWithType: State<PlayerController>
+  fullName: CharonsCorner.Runtime.State<CharonsCorner.Runtime.PlayerController>
+  nameWithType.vb: State(Of PlayerController)
+  fullName.vb: CharonsCorner.Runtime.State(Of CharonsCorner.Runtime.PlayerController)
+  name.vb: State(Of PlayerController)
+  spec.csharp:
+  - uid: CharonsCorner.Runtime.State`1
+    name: State
+    href: CharonsCorner.Runtime.State-1.html
+  - name: <
+  - uid: CharonsCorner.Runtime.PlayerController
+    name: PlayerController
+    href: CharonsCorner.Runtime.PlayerController.html
+  - name: '>'
+  spec.vb:
+  - uid: CharonsCorner.Runtime.State`1
+    name: State
+    href: CharonsCorner.Runtime.State-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: CharonsCorner.Runtime.PlayerController
+    name: PlayerController
+    href: CharonsCorner.Runtime.PlayerController.html
+  - name: )
+- uid: CharonsCorner.Runtime.SuperState{CharonsCorner.Runtime.PlayerController}
+  commentId: T:CharonsCorner.Runtime.SuperState{CharonsCorner.Runtime.PlayerController}
+  parent: CharonsCorner.Runtime
+  definition: CharonsCorner.Runtime.SuperState`1
+  href: CharonsCorner.Runtime.SuperState-1.html
+  name: SuperState<PlayerController>
+  nameWithType: SuperState<PlayerController>
+  fullName: CharonsCorner.Runtime.SuperState<CharonsCorner.Runtime.PlayerController>
+  nameWithType.vb: SuperState(Of PlayerController)
+  fullName.vb: CharonsCorner.Runtime.SuperState(Of CharonsCorner.Runtime.PlayerController)
+  name.vb: SuperState(Of PlayerController)
+  spec.csharp:
+  - uid: CharonsCorner.Runtime.SuperState`1
+    name: SuperState
+    href: CharonsCorner.Runtime.SuperState-1.html
+  - name: <
+  - uid: CharonsCorner.Runtime.PlayerController
+    name: PlayerController
+    href: CharonsCorner.Runtime.PlayerController.html
+  - name: '>'
+  spec.vb:
+  - uid: CharonsCorner.Runtime.SuperState`1
+    name: SuperState
+    href: CharonsCorner.Runtime.SuperState-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: CharonsCorner.Runtime.PlayerController
+    name: PlayerController
+    href: CharonsCorner.Runtime.PlayerController.html
+  - name: )
+- uid: CharonsCorner.Runtime.SuperState{CharonsCorner.Runtime.PlayerController}.SubStateMachine
+  commentId: P:CharonsCorner.Runtime.SuperState{CharonsCorner.Runtime.PlayerController}.SubStateMachine
+  parent: CharonsCorner.Runtime.SuperState{CharonsCorner.Runtime.PlayerController}
+  definition: CharonsCorner.Runtime.SuperState`1.SubStateMachine
+  href: CharonsCorner.Runtime.SuperState-1.html#CharonsCorner_Runtime_SuperState_1_SubStateMachine
+  name: SubStateMachine
+  nameWithType: SuperState<PlayerController>.SubStateMachine
+  fullName: CharonsCorner.Runtime.SuperState<CharonsCorner.Runtime.PlayerController>.SubStateMachine
+  nameWithType.vb: SuperState(Of PlayerController).SubStateMachine
+  fullName.vb: CharonsCorner.Runtime.SuperState(Of CharonsCorner.Runtime.PlayerController).SubStateMachine
+- uid: CharonsCorner.Runtime.SuperState{CharonsCorner.Runtime.PlayerController}.Destroy
+  commentId: M:CharonsCorner.Runtime.SuperState{CharonsCorner.Runtime.PlayerController}.Destroy
+  parent: CharonsCorner.Runtime.SuperState{CharonsCorner.Runtime.PlayerController}
+  definition: CharonsCorner.Runtime.SuperState`1.Destroy
+  href: CharonsCorner.Runtime.SuperState-1.html#CharonsCorner_Runtime_SuperState_1_Destroy
+  name: Destroy()
+  nameWithType: SuperState<PlayerController>.Destroy()
+  fullName: CharonsCorner.Runtime.SuperState<CharonsCorner.Runtime.PlayerController>.Destroy()
+  nameWithType.vb: SuperState(Of PlayerController).Destroy()
+  fullName.vb: CharonsCorner.Runtime.SuperState(Of CharonsCorner.Runtime.PlayerController).Destroy()
+  spec.csharp:
+  - uid: CharonsCorner.Runtime.SuperState{CharonsCorner.Runtime.PlayerController}.Destroy
+    name: Destroy
+    href: CharonsCorner.Runtime.SuperState-1.html#CharonsCorner_Runtime_SuperState_1_Destroy
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: CharonsCorner.Runtime.SuperState{CharonsCorner.Runtime.PlayerController}.Destroy
+    name: Destroy
+    href: CharonsCorner.Runtime.SuperState-1.html#CharonsCorner_Runtime_SuperState_1_Destroy
+  - name: (
+  - name: )
+- uid: CharonsCorner.Runtime.SuperState{CharonsCorner.Runtime.PlayerController}.Enter
+  commentId: M:CharonsCorner.Runtime.SuperState{CharonsCorner.Runtime.PlayerController}.Enter
+  parent: CharonsCorner.Runtime.SuperState{CharonsCorner.Runtime.PlayerController}
+  definition: CharonsCorner.Runtime.SuperState`1.Enter
+  href: CharonsCorner.Runtime.SuperState-1.html#CharonsCorner_Runtime_SuperState_1_Enter
+  name: Enter()
+  nameWithType: SuperState<PlayerController>.Enter()
+  fullName: CharonsCorner.Runtime.SuperState<CharonsCorner.Runtime.PlayerController>.Enter()
+  nameWithType.vb: SuperState(Of PlayerController).Enter()
+  fullName.vb: CharonsCorner.Runtime.SuperState(Of CharonsCorner.Runtime.PlayerController).Enter()
+  spec.csharp:
+  - uid: CharonsCorner.Runtime.SuperState{CharonsCorner.Runtime.PlayerController}.Enter
+    name: Enter
+    href: CharonsCorner.Runtime.SuperState-1.html#CharonsCorner_Runtime_SuperState_1_Enter
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: CharonsCorner.Runtime.SuperState{CharonsCorner.Runtime.PlayerController}.Enter
+    name: Enter
+    href: CharonsCorner.Runtime.SuperState-1.html#CharonsCorner_Runtime_SuperState_1_Enter
+  - name: (
+  - name: )
+- uid: CharonsCorner.Runtime.SuperState{CharonsCorner.Runtime.PlayerController}.Exit
+  commentId: M:CharonsCorner.Runtime.SuperState{CharonsCorner.Runtime.PlayerController}.Exit
+  parent: CharonsCorner.Runtime.SuperState{CharonsCorner.Runtime.PlayerController}
+  definition: CharonsCorner.Runtime.SuperState`1.Exit
+  href: CharonsCorner.Runtime.SuperState-1.html#CharonsCorner_Runtime_SuperState_1_Exit
+  name: Exit()
+  nameWithType: SuperState<PlayerController>.Exit()
+  fullName: CharonsCorner.Runtime.SuperState<CharonsCorner.Runtime.PlayerController>.Exit()
+  nameWithType.vb: SuperState(Of PlayerController).Exit()
+  fullName.vb: CharonsCorner.Runtime.SuperState(Of CharonsCorner.Runtime.PlayerController).Exit()
+  spec.csharp:
+  - uid: CharonsCorner.Runtime.SuperState{CharonsCorner.Runtime.PlayerController}.Exit
+    name: Exit
+    href: CharonsCorner.Runtime.SuperState-1.html#CharonsCorner_Runtime_SuperState_1_Exit
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: CharonsCorner.Runtime.SuperState{CharonsCorner.Runtime.PlayerController}.Exit
+    name: Exit
+    href: CharonsCorner.Runtime.SuperState-1.html#CharonsCorner_Runtime_SuperState_1_Exit
+  - name: (
+  - name: )
+- uid: CharonsCorner.Runtime.SuperState{CharonsCorner.Runtime.PlayerController}.Update
+  commentId: M:CharonsCorner.Runtime.SuperState{CharonsCorner.Runtime.PlayerController}.Update
+  parent: CharonsCorner.Runtime.SuperState{CharonsCorner.Runtime.PlayerController}
+  definition: CharonsCorner.Runtime.SuperState`1.Update
+  href: CharonsCorner.Runtime.SuperState-1.html#CharonsCorner_Runtime_SuperState_1_Update
+  name: Update()
+  nameWithType: SuperState<PlayerController>.Update()
+  fullName: CharonsCorner.Runtime.SuperState<CharonsCorner.Runtime.PlayerController>.Update()
+  nameWithType.vb: SuperState(Of PlayerController).Update()
+  fullName.vb: CharonsCorner.Runtime.SuperState(Of CharonsCorner.Runtime.PlayerController).Update()
+  spec.csharp:
+  - uid: CharonsCorner.Runtime.SuperState{CharonsCorner.Runtime.PlayerController}.Update
+    name: Update
+    href: CharonsCorner.Runtime.SuperState-1.html#CharonsCorner_Runtime_SuperState_1_Update
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: CharonsCorner.Runtime.SuperState{CharonsCorner.Runtime.PlayerController}.Update
+    name: Update
+    href: CharonsCorner.Runtime.SuperState-1.html#CharonsCorner_Runtime_SuperState_1_Update
+  - name: (
+  - name: )
+- uid: CharonsCorner.Runtime.SuperState{CharonsCorner.Runtime.PlayerController}.FixedUpdate
+  commentId: M:CharonsCorner.Runtime.SuperState{CharonsCorner.Runtime.PlayerController}.FixedUpdate
+  parent: CharonsCorner.Runtime.SuperState{CharonsCorner.Runtime.PlayerController}
+  definition: CharonsCorner.Runtime.SuperState`1.FixedUpdate
+  href: CharonsCorner.Runtime.SuperState-1.html#CharonsCorner_Runtime_SuperState_1_FixedUpdate
+  name: FixedUpdate()
+  nameWithType: SuperState<PlayerController>.FixedUpdate()
+  fullName: CharonsCorner.Runtime.SuperState<CharonsCorner.Runtime.PlayerController>.FixedUpdate()
+  nameWithType.vb: SuperState(Of PlayerController).FixedUpdate()
+  fullName.vb: CharonsCorner.Runtime.SuperState(Of CharonsCorner.Runtime.PlayerController).FixedUpdate()
+  spec.csharp:
+  - uid: CharonsCorner.Runtime.SuperState{CharonsCorner.Runtime.PlayerController}.FixedUpdate
+    name: FixedUpdate
+    href: CharonsCorner.Runtime.SuperState-1.html#CharonsCorner_Runtime_SuperState_1_FixedUpdate
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: CharonsCorner.Runtime.SuperState{CharonsCorner.Runtime.PlayerController}.FixedUpdate
+    name: FixedUpdate
+    href: CharonsCorner.Runtime.SuperState-1.html#CharonsCorner_Runtime_SuperState_1_FixedUpdate
+  - name: (
+  - name: )
+- uid: CharonsCorner.Runtime.State{CharonsCorner.Runtime.PlayerController}.Init(CharonsCorner.Runtime.StateMachine{CharonsCorner.Runtime.PlayerController},CharonsCorner.Runtime.PlayerController)
+  commentId: M:CharonsCorner.Runtime.State{CharonsCorner.Runtime.PlayerController}.Init(CharonsCorner.Runtime.StateMachine{CharonsCorner.Runtime.PlayerController},CharonsCorner.Runtime.PlayerController)
+  parent: CharonsCorner.Runtime.State{CharonsCorner.Runtime.PlayerController}
+  definition: CharonsCorner.Runtime.State`1.Init(CharonsCorner.Runtime.StateMachine{`0},`0)
+  href: CharonsCorner.Runtime.State-1.html#CharonsCorner_Runtime_State_1_Init_CharonsCorner_Runtime_StateMachine__0___0_
+  name: Init(StateMachine<PlayerController>, PlayerController)
+  nameWithType: State<PlayerController>.Init(StateMachine<PlayerController>, PlayerController)
+  fullName: CharonsCorner.Runtime.State<CharonsCorner.Runtime.PlayerController>.Init(CharonsCorner.Runtime.StateMachine<CharonsCorner.Runtime.PlayerController>, CharonsCorner.Runtime.PlayerController)
+  nameWithType.vb: State(Of PlayerController).Init(StateMachine(Of PlayerController), PlayerController)
+  fullName.vb: CharonsCorner.Runtime.State(Of CharonsCorner.Runtime.PlayerController).Init(CharonsCorner.Runtime.StateMachine(Of CharonsCorner.Runtime.PlayerController), CharonsCorner.Runtime.PlayerController)
+  name.vb: Init(StateMachine(Of PlayerController), PlayerController)
+  spec.csharp:
+  - uid: CharonsCorner.Runtime.State{CharonsCorner.Runtime.PlayerController}.Init(CharonsCorner.Runtime.StateMachine{CharonsCorner.Runtime.PlayerController},CharonsCorner.Runtime.PlayerController)
+    name: Init
+    href: CharonsCorner.Runtime.State-1.html#CharonsCorner_Runtime_State_1_Init_CharonsCorner_Runtime_StateMachine__0___0_
+  - name: (
+  - uid: CharonsCorner.Runtime.StateMachine`1
+    name: StateMachine
+    href: CharonsCorner.Runtime.StateMachine-1.html
+  - name: <
+  - uid: CharonsCorner.Runtime.PlayerController
+    name: PlayerController
+    href: CharonsCorner.Runtime.PlayerController.html
+  - name: '>'
+  - name: ','
+  - name: " "
+  - uid: CharonsCorner.Runtime.PlayerController
+    name: PlayerController
+    href: CharonsCorner.Runtime.PlayerController.html
+  - name: )
+  spec.vb:
+  - uid: CharonsCorner.Runtime.State{CharonsCorner.Runtime.PlayerController}.Init(CharonsCorner.Runtime.StateMachine{CharonsCorner.Runtime.PlayerController},CharonsCorner.Runtime.PlayerController)
+    name: Init
+    href: CharonsCorner.Runtime.State-1.html#CharonsCorner_Runtime_State_1_Init_CharonsCorner_Runtime_StateMachine__0___0_
+  - name: (
+  - uid: CharonsCorner.Runtime.StateMachine`1
+    name: StateMachine
+    href: CharonsCorner.Runtime.StateMachine-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: CharonsCorner.Runtime.PlayerController
+    name: PlayerController
+    href: CharonsCorner.Runtime.PlayerController.html
+  - name: )
+  - name: ','
+  - name: " "
+  - uid: CharonsCorner.Runtime.PlayerController
+    name: PlayerController
+    href: CharonsCorner.Runtime.PlayerController.html
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: CharonsCorner.Runtime.State`1
+  commentId: T:CharonsCorner.Runtime.State`1
+  href: CharonsCorner.Runtime.State-1.html
+  name: State<TContext>
+  nameWithType: State<TContext>
+  fullName: CharonsCorner.Runtime.State<TContext>
+  nameWithType.vb: State(Of TContext)
+  fullName.vb: CharonsCorner.Runtime.State(Of TContext)
+  name.vb: State(Of TContext)
+  spec.csharp:
+  - uid: CharonsCorner.Runtime.State`1
+    name: State
+    href: CharonsCorner.Runtime.State-1.html
+  - name: <
+  - name: TContext
+  - name: '>'
+  spec.vb:
+  - uid: CharonsCorner.Runtime.State`1
+    name: State
+    href: CharonsCorner.Runtime.State-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TContext
+  - name: )
+- uid: CharonsCorner.Runtime.SuperState`1
+  commentId: T:CharonsCorner.Runtime.SuperState`1
+  href: CharonsCorner.Runtime.SuperState-1.html
+  name: SuperState<TContext>
+  nameWithType: SuperState<TContext>
+  fullName: CharonsCorner.Runtime.SuperState<TContext>
+  nameWithType.vb: SuperState(Of TContext)
+  fullName.vb: CharonsCorner.Runtime.SuperState(Of TContext)
+  name.vb: SuperState(Of TContext)
+  spec.csharp:
+  - uid: CharonsCorner.Runtime.SuperState`1
+    name: SuperState
+    href: CharonsCorner.Runtime.SuperState-1.html
+  - name: <
+  - name: TContext
+  - name: '>'
+  spec.vb:
+  - uid: CharonsCorner.Runtime.SuperState`1
+    name: SuperState
+    href: CharonsCorner.Runtime.SuperState-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TContext
+  - name: )
+- uid: CharonsCorner.Runtime.SuperState`1.SubStateMachine
+  commentId: P:CharonsCorner.Runtime.SuperState`1.SubStateMachine
+  href: CharonsCorner.Runtime.SuperState-1.html#CharonsCorner_Runtime_SuperState_1_SubStateMachine
+  name: SubStateMachine
+  nameWithType: SuperState<TContext>.SubStateMachine
+  fullName: CharonsCorner.Runtime.SuperState<TContext>.SubStateMachine
+  nameWithType.vb: SuperState(Of TContext).SubStateMachine
+  fullName.vb: CharonsCorner.Runtime.SuperState(Of TContext).SubStateMachine
+- uid: CharonsCorner.Runtime.SuperState`1.Destroy
+  commentId: M:CharonsCorner.Runtime.SuperState`1.Destroy
+  href: CharonsCorner.Runtime.SuperState-1.html#CharonsCorner_Runtime_SuperState_1_Destroy
+  name: Destroy()
+  nameWithType: SuperState<TContext>.Destroy()
+  fullName: CharonsCorner.Runtime.SuperState<TContext>.Destroy()
+  nameWithType.vb: SuperState(Of TContext).Destroy()
+  fullName.vb: CharonsCorner.Runtime.SuperState(Of TContext).Destroy()
+  spec.csharp:
+  - uid: CharonsCorner.Runtime.SuperState`1.Destroy
+    name: Destroy
+    href: CharonsCorner.Runtime.SuperState-1.html#CharonsCorner_Runtime_SuperState_1_Destroy
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: CharonsCorner.Runtime.SuperState`1.Destroy
+    name: Destroy
+    href: CharonsCorner.Runtime.SuperState-1.html#CharonsCorner_Runtime_SuperState_1_Destroy
+  - name: (
+  - name: )
+- uid: CharonsCorner.Runtime.SuperState`1.Enter
+  commentId: M:CharonsCorner.Runtime.SuperState`1.Enter
+  href: CharonsCorner.Runtime.SuperState-1.html#CharonsCorner_Runtime_SuperState_1_Enter
+  name: Enter()
+  nameWithType: SuperState<TContext>.Enter()
+  fullName: CharonsCorner.Runtime.SuperState<TContext>.Enter()
+  nameWithType.vb: SuperState(Of TContext).Enter()
+  fullName.vb: CharonsCorner.Runtime.SuperState(Of TContext).Enter()
+  spec.csharp:
+  - uid: CharonsCorner.Runtime.SuperState`1.Enter
+    name: Enter
+    href: CharonsCorner.Runtime.SuperState-1.html#CharonsCorner_Runtime_SuperState_1_Enter
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: CharonsCorner.Runtime.SuperState`1.Enter
+    name: Enter
+    href: CharonsCorner.Runtime.SuperState-1.html#CharonsCorner_Runtime_SuperState_1_Enter
+  - name: (
+  - name: )
+- uid: CharonsCorner.Runtime.SuperState`1.Exit
+  commentId: M:CharonsCorner.Runtime.SuperState`1.Exit
+  href: CharonsCorner.Runtime.SuperState-1.html#CharonsCorner_Runtime_SuperState_1_Exit
+  name: Exit()
+  nameWithType: SuperState<TContext>.Exit()
+  fullName: CharonsCorner.Runtime.SuperState<TContext>.Exit()
+  nameWithType.vb: SuperState(Of TContext).Exit()
+  fullName.vb: CharonsCorner.Runtime.SuperState(Of TContext).Exit()
+  spec.csharp:
+  - uid: CharonsCorner.Runtime.SuperState`1.Exit
+    name: Exit
+    href: CharonsCorner.Runtime.SuperState-1.html#CharonsCorner_Runtime_SuperState_1_Exit
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: CharonsCorner.Runtime.SuperState`1.Exit
+    name: Exit
+    href: CharonsCorner.Runtime.SuperState-1.html#CharonsCorner_Runtime_SuperState_1_Exit
+  - name: (
+  - name: )
+- uid: CharonsCorner.Runtime.SuperState`1.Update
+  commentId: M:CharonsCorner.Runtime.SuperState`1.Update
+  href: CharonsCorner.Runtime.SuperState-1.html#CharonsCorner_Runtime_SuperState_1_Update
+  name: Update()
+  nameWithType: SuperState<TContext>.Update()
+  fullName: CharonsCorner.Runtime.SuperState<TContext>.Update()
+  nameWithType.vb: SuperState(Of TContext).Update()
+  fullName.vb: CharonsCorner.Runtime.SuperState(Of TContext).Update()
+  spec.csharp:
+  - uid: CharonsCorner.Runtime.SuperState`1.Update
+    name: Update
+    href: CharonsCorner.Runtime.SuperState-1.html#CharonsCorner_Runtime_SuperState_1_Update
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: CharonsCorner.Runtime.SuperState`1.Update
+    name: Update
+    href: CharonsCorner.Runtime.SuperState-1.html#CharonsCorner_Runtime_SuperState_1_Update
+  - name: (
+  - name: )
+- uid: CharonsCorner.Runtime.SuperState`1.FixedUpdate
+  commentId: M:CharonsCorner.Runtime.SuperState`1.FixedUpdate
+  href: CharonsCorner.Runtime.SuperState-1.html#CharonsCorner_Runtime_SuperState_1_FixedUpdate
+  name: FixedUpdate()
+  nameWithType: SuperState<TContext>.FixedUpdate()
+  fullName: CharonsCorner.Runtime.SuperState<TContext>.FixedUpdate()
+  nameWithType.vb: SuperState(Of TContext).FixedUpdate()
+  fullName.vb: CharonsCorner.Runtime.SuperState(Of TContext).FixedUpdate()
+  spec.csharp:
+  - uid: CharonsCorner.Runtime.SuperState`1.FixedUpdate
+    name: FixedUpdate
+    href: CharonsCorner.Runtime.SuperState-1.html#CharonsCorner_Runtime_SuperState_1_FixedUpdate
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: CharonsCorner.Runtime.SuperState`1.FixedUpdate
+    name: FixedUpdate
+    href: CharonsCorner.Runtime.SuperState-1.html#CharonsCorner_Runtime_SuperState_1_FixedUpdate
+  - name: (
+  - name: )
+- uid: CharonsCorner.Runtime.State`1.Init(CharonsCorner.Runtime.StateMachine{`0},`0)
+  commentId: M:CharonsCorner.Runtime.State`1.Init(CharonsCorner.Runtime.StateMachine{`0},`0)
+  href: CharonsCorner.Runtime.State-1.html#CharonsCorner_Runtime_State_1_Init_CharonsCorner_Runtime_StateMachine__0___0_
+  name: Init(StateMachine<TContext>, TContext)
+  nameWithType: State<TContext>.Init(StateMachine<TContext>, TContext)
+  fullName: CharonsCorner.Runtime.State<TContext>.Init(CharonsCorner.Runtime.StateMachine<TContext>, TContext)
+  nameWithType.vb: State(Of TContext).Init(StateMachine(Of TContext), TContext)
+  fullName.vb: CharonsCorner.Runtime.State(Of TContext).Init(CharonsCorner.Runtime.StateMachine(Of TContext), TContext)
+  name.vb: Init(StateMachine(Of TContext), TContext)
+  spec.csharp:
+  - uid: CharonsCorner.Runtime.State`1.Init(CharonsCorner.Runtime.StateMachine{`0},`0)
+    name: Init
+    href: CharonsCorner.Runtime.State-1.html#CharonsCorner_Runtime_State_1_Init_CharonsCorner_Runtime_StateMachine__0___0_
+  - name: (
+  - uid: CharonsCorner.Runtime.StateMachine`1
+    name: StateMachine
+    href: CharonsCorner.Runtime.StateMachine-1.html
+  - name: <
+  - name: TContext
+  - name: '>'
+  - name: ','
+  - name: " "
+  - name: TContext
+  - name: )
+  spec.vb:
+  - uid: CharonsCorner.Runtime.State`1.Init(CharonsCorner.Runtime.StateMachine{`0},`0)
+    name: Init
+    href: CharonsCorner.Runtime.State-1.html#CharonsCorner_Runtime_State_1_Init_CharonsCorner_Runtime_StateMachine__0___0_
+  - name: (
+  - uid: CharonsCorner.Runtime.StateMachine`1
+    name: StateMachine
+    href: CharonsCorner.Runtime.StateMachine-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TContext
+  - name: )
+  - name: ','
+  - name: " "
+  - name: TContext
+  - name: )
+- uid: CharonsCorner.Runtime.SuperState{CharonsCorner.Runtime.PlayerController}.InitialSubState
+  commentId: P:CharonsCorner.Runtime.SuperState{CharonsCorner.Runtime.PlayerController}.InitialSubState
+  parent: CharonsCorner.Runtime.SuperState{CharonsCorner.Runtime.PlayerController}
+  definition: CharonsCorner.Runtime.SuperState`1.InitialSubState
+  href: CharonsCorner.Runtime.SuperState-1.html#CharonsCorner_Runtime_SuperState_1_InitialSubState
+  name: InitialSubState
+  nameWithType: SuperState<PlayerController>.InitialSubState
+  fullName: CharonsCorner.Runtime.SuperState<CharonsCorner.Runtime.PlayerController>.InitialSubState
+  nameWithType.vb: SuperState(Of PlayerController).InitialSubState
+  fullName.vb: CharonsCorner.Runtime.SuperState(Of CharonsCorner.Runtime.PlayerController).InitialSubState
+- uid: CharonsCorner.Runtime.GroundedSuperState.InitialSubState*
+  commentId: Overload:CharonsCorner.Runtime.GroundedSuperState.InitialSubState
+  href: CharonsCorner.Runtime.GroundedSuperState.html#CharonsCorner_Runtime_GroundedSuperState_InitialSubState
+  name: InitialSubState
+  nameWithType: GroundedSuperState.InitialSubState
+  fullName: CharonsCorner.Runtime.GroundedSuperState.InitialSubState
+- uid: CharonsCorner.Runtime.SuperState`1.InitialSubState
+  commentId: P:CharonsCorner.Runtime.SuperState`1.InitialSubState
+  href: CharonsCorner.Runtime.SuperState-1.html#CharonsCorner_Runtime_SuperState_1_InitialSubState
+  name: InitialSubState
+  nameWithType: SuperState<TContext>.InitialSubState
+  fullName: CharonsCorner.Runtime.SuperState<TContext>.InitialSubState
+  nameWithType.vb: SuperState(Of TContext).InitialSubState
+  fullName.vb: CharonsCorner.Runtime.SuperState(Of TContext).InitialSubState
+- uid: CharonsCorner.Runtime.GroundedSuperState.IdleState*
+  commentId: Overload:CharonsCorner.Runtime.GroundedSuperState.IdleState
+  href: CharonsCorner.Runtime.GroundedSuperState.html#CharonsCorner_Runtime_GroundedSuperState_IdleState
+  name: IdleState
+  nameWithType: GroundedSuperState.IdleState
+  fullName: CharonsCorner.Runtime.GroundedSuperState.IdleState
+- uid: CharonsCorner.Runtime.GroundedIdleState
+  commentId: T:CharonsCorner.Runtime.GroundedIdleState
+  parent: CharonsCorner.Runtime
+  href: CharonsCorner.Runtime.GroundedIdleState.html
+  name: GroundedIdleState
+  nameWithType: GroundedIdleState
+  fullName: CharonsCorner.Runtime.GroundedIdleState
+- uid: CharonsCorner.Runtime.GroundedSuperState.MoveState*
+  commentId: Overload:CharonsCorner.Runtime.GroundedSuperState.MoveState
+  href: CharonsCorner.Runtime.GroundedSuperState.html#CharonsCorner_Runtime_GroundedSuperState_MoveState
+  name: MoveState
+  nameWithType: GroundedSuperState.MoveState
+  fullName: CharonsCorner.Runtime.GroundedSuperState.MoveState
+- uid: CharonsCorner.Runtime.GroundedMoveState
+  commentId: T:CharonsCorner.Runtime.GroundedMoveState
+  parent: CharonsCorner.Runtime
+  href: CharonsCorner.Runtime.GroundedMoveState.html
+  name: GroundedMoveState
+  nameWithType: GroundedMoveState
+  fullName: CharonsCorner.Runtime.GroundedMoveState
+- uid: CharonsCorner.Runtime.GroundedSuperState.DriftState*
+  commentId: Overload:CharonsCorner.Runtime.GroundedSuperState.DriftState
+  href: CharonsCorner.Runtime.GroundedSuperState.html#CharonsCorner_Runtime_GroundedSuperState_DriftState
+  name: DriftState
+  nameWithType: GroundedSuperState.DriftState
+  fullName: CharonsCorner.Runtime.GroundedSuperState.DriftState
+- uid: CharonsCorner.Runtime.GroundedDriftState
+  commentId: T:CharonsCorner.Runtime.GroundedDriftState
+  parent: CharonsCorner.Runtime
+  href: CharonsCorner.Runtime.GroundedDriftState.html
+  name: GroundedDriftState
+  nameWithType: GroundedDriftState
+  fullName: CharonsCorner.Runtime.GroundedDriftState
+- uid: CharonsCorner.Runtime.GroundedSuperState.GroundCheckDistance*
+  commentId: Overload:CharonsCorner.Runtime.GroundedSuperState.GroundCheckDistance
+  href: CharonsCorner.Runtime.GroundedSuperState.html#CharonsCorner_Runtime_GroundedSuperState_GroundCheckDistance
+  name: GroundCheckDistance
+  nameWithType: GroundedSuperState.GroundCheckDistance
+  fullName: CharonsCorner.Runtime.GroundedSuperState.GroundCheckDistance
+- uid: System.Single
+  commentId: T:System.Single
+  parent: System
+  isExternal: true
+  name: float
+  nameWithType: float
+  fullName: float
+  nameWithType.vb: Single
+  fullName.vb: Single
+  name.vb: Single
+- uid: CharonsCorner.Runtime.GroundedSuperState.GroundCheckRadius*
+  commentId: Overload:CharonsCorner.Runtime.GroundedSuperState.GroundCheckRadius
+  href: CharonsCorner.Runtime.GroundedSuperState.html#CharonsCorner_Runtime_GroundedSuperState_GroundCheckRadius
+  name: GroundCheckRadius
+  nameWithType: GroundedSuperState.GroundCheckRadius
+  fullName: CharonsCorner.Runtime.GroundedSuperState.GroundCheckRadius
+- uid: CharonsCorner.Runtime.GroundedSuperState.GroundLayerMask*
+  commentId: Overload:CharonsCorner.Runtime.GroundedSuperState.GroundLayerMask
+  href: CharonsCorner.Runtime.GroundedSuperState.html#CharonsCorner_Runtime_GroundedSuperState_GroundLayerMask
+  name: GroundLayerMask
+  nameWithType: GroundedSuperState.GroundLayerMask
+  fullName: CharonsCorner.Runtime.GroundedSuperState.GroundLayerMask
+- uid: UnityEngine.LayerMask
+  commentId: T:UnityEngine.LayerMask
+  parent: UnityEngine
+  isExternal: true
+  name: LayerMask
+  nameWithType: LayerMask
+  fullName: UnityEngine.LayerMask
+- uid: UnityEngine
+  commentId: N:UnityEngine
+  isExternal: true
+  name: UnityEngine
+  nameWithType: UnityEngine
+  fullName: UnityEngine
+- uid: CharonsCorner.Runtime.GroundedSuperState.IsGrounded*
+  commentId: Overload:CharonsCorner.Runtime.GroundedSuperState.IsGrounded
+  href: CharonsCorner.Runtime.GroundedSuperState.html#CharonsCorner_Runtime_GroundedSuperState_IsGrounded
+  name: IsGrounded
+  nameWithType: GroundedSuperState.IsGrounded
+  fullName: CharonsCorner.Runtime.GroundedSuperState.IsGrounded
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: CharonsCorner.Runtime.GroundedSuperState.JumpHeight*
+  commentId: Overload:CharonsCorner.Runtime.GroundedSuperState.JumpHeight
+  href: CharonsCorner.Runtime.GroundedSuperState.html#CharonsCorner_Runtime_GroundedSuperState_JumpHeight
+  name: JumpHeight
+  nameWithType: GroundedSuperState.JumpHeight
+  fullName: CharonsCorner.Runtime.GroundedSuperState.JumpHeight
+- uid: CharonsCorner.Runtime.GroundedSuperState.CheckGrounded*
+  commentId: Overload:CharonsCorner.Runtime.GroundedSuperState.CheckGrounded
+  href: CharonsCorner.Runtime.GroundedSuperState.html#CharonsCorner_Runtime_GroundedSuperState_CheckGrounded
+  name: CheckGrounded
+  nameWithType: GroundedSuperState.CheckGrounded
+  fullName: CharonsCorner.Runtime.GroundedSuperState.CheckGrounded

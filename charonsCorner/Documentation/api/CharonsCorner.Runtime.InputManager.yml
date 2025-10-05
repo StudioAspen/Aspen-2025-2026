@@ -1,0 +1,2470 @@
+### YamlMime:ManagedReference
+items:
+- uid: CharonsCorner.Runtime.InputManager
+  commentId: T:CharonsCorner.Runtime.InputManager
+  id: InputManager
+  parent: CharonsCorner.Runtime
+  children:
+  - CharonsCorner.Runtime.InputManager.ControlSchemeInternalNames
+  - CharonsCorner.Runtime.InputManager.CurrentControlScheme
+  - CharonsCorner.Runtime.InputManager.DisableAllActions
+  - CharonsCorner.Runtime.InputManager.Drift
+  - CharonsCorner.Runtime.InputManager.EnablePlayerActions
+  - CharonsCorner.Runtime.InputManager.EnableUIActions
+  - CharonsCorner.Runtime.InputManager.InputActions
+  - CharonsCorner.Runtime.InputManager.Interact
+  - CharonsCorner.Runtime.InputManager.Jump
+  - CharonsCorner.Runtime.InputManager.LockCursor(System.Boolean)
+  - CharonsCorner.Runtime.InputManager.Look
+  - CharonsCorner.Runtime.InputManager.LookDirection
+  - CharonsCorner.Runtime.InputManager.Move
+  - CharonsCorner.Runtime.InputManager.MoveDirection
+  - CharonsCorner.Runtime.InputManager.OnCancel(UnityEngine.InputSystem.InputAction.CallbackContext)
+  - CharonsCorner.Runtime.InputManager.OnClick(UnityEngine.InputSystem.InputAction.CallbackContext)
+  - CharonsCorner.Runtime.InputManager.OnControlSchemeChanged
+  - CharonsCorner.Runtime.InputManager.OnDrift(UnityEngine.InputSystem.InputAction.CallbackContext)
+  - CharonsCorner.Runtime.InputManager.OnInteract(UnityEngine.InputSystem.InputAction.CallbackContext)
+  - CharonsCorner.Runtime.InputManager.OnJump(UnityEngine.InputSystem.InputAction.CallbackContext)
+  - CharonsCorner.Runtime.InputManager.OnLook(UnityEngine.InputSystem.InputAction.CallbackContext)
+  - CharonsCorner.Runtime.InputManager.OnMiddleClick(UnityEngine.InputSystem.InputAction.CallbackContext)
+  - CharonsCorner.Runtime.InputManager.OnMove(UnityEngine.InputSystem.InputAction.CallbackContext)
+  - CharonsCorner.Runtime.InputManager.OnNavigate(UnityEngine.InputSystem.InputAction.CallbackContext)
+  - CharonsCorner.Runtime.InputManager.OnPause(UnityEngine.InputSystem.InputAction.CallbackContext)
+  - CharonsCorner.Runtime.InputManager.OnPoint(UnityEngine.InputSystem.InputAction.CallbackContext)
+  - CharonsCorner.Runtime.InputManager.OnRightClick(UnityEngine.InputSystem.InputAction.CallbackContext)
+  - CharonsCorner.Runtime.InputManager.OnScrollWheel(UnityEngine.InputSystem.InputAction.CallbackContext)
+  - CharonsCorner.Runtime.InputManager.OnSubmit(UnityEngine.InputSystem.InputAction.CallbackContext)
+  - CharonsCorner.Runtime.InputManager.OnTrackedDeviceOrientation(UnityEngine.InputSystem.InputAction.CallbackContext)
+  - CharonsCorner.Runtime.InputManager.OnTrackedDevicePosition(UnityEngine.InputSystem.InputAction.CallbackContext)
+  - CharonsCorner.Runtime.InputManager.OnUnpause(UnityEngine.InputSystem.InputAction.CallbackContext)
+  - CharonsCorner.Runtime.InputManager.Unpause
+  langs:
+  - csharp
+  - vb
+  name: InputManager
+  nameWithType: InputManager
+  fullName: CharonsCorner.Runtime.InputManager
+  type: Class
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/Input/InputManager.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: InputManager
+    path: ../Assets/Scripts/Runtime/Input/InputManager.cs
+    startLine: 11
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  syntax:
+    content: 'public class InputManager : Singleton<InputManager>, InputActions.IPlayerActions, InputActions.IUIActions'
+    content.vb: Public Class InputManager Inherits Singleton(Of InputManager) Implements InputActions.IPlayerActions, InputActions.IUIActions
+  inheritance:
+  - System.Object
+  - UnityEngine.Object
+  - UnityEngine.Component
+  - UnityEngine.Behaviour
+  - UnityEngine.MonoBehaviour
+  - CharonsCorner.Runtime.Singleton{CharonsCorner.Runtime.InputManager}
+  implements:
+  - CharonsCorner.Runtime.InputActions.IPlayerActions
+  - CharonsCorner.Runtime.InputActions.IUIActions
+  inheritedMembers:
+  - CharonsCorner.Runtime.Singleton{CharonsCorner.Runtime.InputManager}.Instance
+  extensionMethods:
+  - CharonsCorner.Runtime.InputManager.CharonsCorner.Runtime.Utilities.IfNotNullThenCall``1(System.Action{CharonsCorner.Runtime.InputManager})
+  - CharonsCorner.Runtime.InputManager.CharonsCorner.Runtime.Utilities.IfNotNullThenGet``2(System.Func{CharonsCorner.Runtime.InputManager,{TResult}})
+- uid: CharonsCorner.Runtime.InputManager.InputActions
+  commentId: P:CharonsCorner.Runtime.InputManager.InputActions
+  id: InputActions
+  parent: CharonsCorner.Runtime.InputManager
+  langs:
+  - csharp
+  - vb
+  name: InputActions
+  nameWithType: InputManager.InputActions
+  fullName: CharonsCorner.Runtime.InputManager.InputActions
+  type: Property
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/Input/InputManager.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: InputActions
+    path: ../Assets/Scripts/Runtime/Input/InputManager.cs
+    startLine: 17
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  syntax:
+    content: public InputActions InputActions { get; }
+    parameters: []
+    return:
+      type: CharonsCorner.Runtime.InputActions
+    content.vb: Public Property InputActions As InputActions
+  overload: CharonsCorner.Runtime.InputManager.InputActions*
+- uid: CharonsCorner.Runtime.InputManager.Move
+  commentId: E:CharonsCorner.Runtime.InputManager.Move
+  id: Move
+  parent: CharonsCorner.Runtime.InputManager
+  langs:
+  - csharp
+  - vb
+  name: Move
+  nameWithType: InputManager.Move
+  fullName: CharonsCorner.Runtime.InputManager.Move
+  type: Event
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/Input/InputManager.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: Move
+    path: ../Assets/Scripts/Runtime/Input/InputManager.cs
+    startLine: 20
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  syntax:
+    content: public event Action<Vector2> Move
+    return:
+      type: System.Action{UnityEngine.Vector2}
+    content.vb: Public Event Move As Action(Of Vector2)
+- uid: CharonsCorner.Runtime.InputManager.Look
+  commentId: E:CharonsCorner.Runtime.InputManager.Look
+  id: Look
+  parent: CharonsCorner.Runtime.InputManager
+  langs:
+  - csharp
+  - vb
+  name: Look
+  nameWithType: InputManager.Look
+  fullName: CharonsCorner.Runtime.InputManager.Look
+  type: Event
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/Input/InputManager.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: Look
+    path: ../Assets/Scripts/Runtime/Input/InputManager.cs
+    startLine: 21
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  syntax:
+    content: public event Action<Vector2> Look
+    return:
+      type: System.Action{UnityEngine.Vector2}
+    content.vb: Public Event Look As Action(Of Vector2)
+- uid: CharonsCorner.Runtime.InputManager.Jump
+  commentId: E:CharonsCorner.Runtime.InputManager.Jump
+  id: Jump
+  parent: CharonsCorner.Runtime.InputManager
+  langs:
+  - csharp
+  - vb
+  name: Jump
+  nameWithType: InputManager.Jump
+  fullName: CharonsCorner.Runtime.InputManager.Jump
+  type: Event
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/Input/InputManager.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: Jump
+    path: ../Assets/Scripts/Runtime/Input/InputManager.cs
+    startLine: 22
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  syntax:
+    content: public event Action Jump
+    return:
+      type: System.Action
+    content.vb: Public Event Jump As Action
+- uid: CharonsCorner.Runtime.InputManager.Drift
+  commentId: E:CharonsCorner.Runtime.InputManager.Drift
+  id: Drift
+  parent: CharonsCorner.Runtime.InputManager
+  langs:
+  - csharp
+  - vb
+  name: Drift
+  nameWithType: InputManager.Drift
+  fullName: CharonsCorner.Runtime.InputManager.Drift
+  type: Event
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/Input/InputManager.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: Drift
+    path: ../Assets/Scripts/Runtime/Input/InputManager.cs
+    startLine: 26
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  summary: Invoked when start/stop drifting. True for start, false for stop.
+  example: []
+  syntax:
+    content: public event Action<bool> Drift
+    return:
+      type: System.Action{System.Boolean}
+    content.vb: Public Event Drift As Action(Of Boolean)
+- uid: CharonsCorner.Runtime.InputManager.Interact
+  commentId: E:CharonsCorner.Runtime.InputManager.Interact
+  id: Interact
+  parent: CharonsCorner.Runtime.InputManager
+  langs:
+  - csharp
+  - vb
+  name: Interact
+  nameWithType: InputManager.Interact
+  fullName: CharonsCorner.Runtime.InputManager.Interact
+  type: Event
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/Input/InputManager.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: Interact
+    path: ../Assets/Scripts/Runtime/Input/InputManager.cs
+    startLine: 27
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  syntax:
+    content: public event Action Interact
+    return:
+      type: System.Action
+    content.vb: Public Event Interact As Action
+- uid: CharonsCorner.Runtime.InputManager.MoveDirection
+  commentId: P:CharonsCorner.Runtime.InputManager.MoveDirection
+  id: MoveDirection
+  parent: CharonsCorner.Runtime.InputManager
+  langs:
+  - csharp
+  - vb
+  name: MoveDirection
+  nameWithType: InputManager.MoveDirection
+  fullName: CharonsCorner.Runtime.InputManager.MoveDirection
+  type: Property
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/Input/InputManager.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: MoveDirection
+    path: ../Assets/Scripts/Runtime/Input/InputManager.cs
+    startLine: 29
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  syntax:
+    content: public Vector2 MoveDirection { get; }
+    parameters: []
+    return:
+      type: UnityEngine.Vector2
+    content.vb: Public ReadOnly Property MoveDirection As Vector2
+  overload: CharonsCorner.Runtime.InputManager.MoveDirection*
+- uid: CharonsCorner.Runtime.InputManager.LookDirection
+  commentId: P:CharonsCorner.Runtime.InputManager.LookDirection
+  id: LookDirection
+  parent: CharonsCorner.Runtime.InputManager
+  langs:
+  - csharp
+  - vb
+  name: LookDirection
+  nameWithType: InputManager.LookDirection
+  fullName: CharonsCorner.Runtime.InputManager.LookDirection
+  type: Property
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/Input/InputManager.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: LookDirection
+    path: ../Assets/Scripts/Runtime/Input/InputManager.cs
+    startLine: 30
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  syntax:
+    content: public Vector2 LookDirection { get; }
+    parameters: []
+    return:
+      type: UnityEngine.Vector2
+    content.vb: Public ReadOnly Property LookDirection As Vector2
+  overload: CharonsCorner.Runtime.InputManager.LookDirection*
+- uid: CharonsCorner.Runtime.InputManager.Unpause
+  commentId: E:CharonsCorner.Runtime.InputManager.Unpause
+  id: Unpause
+  parent: CharonsCorner.Runtime.InputManager
+  langs:
+  - csharp
+  - vb
+  name: Unpause
+  nameWithType: InputManager.Unpause
+  fullName: CharonsCorner.Runtime.InputManager.Unpause
+  type: Event
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/Input/InputManager.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: Unpause
+    path: ../Assets/Scripts/Runtime/Input/InputManager.cs
+    startLine: 33
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  syntax:
+    content: public event Action Unpause
+    return:
+      type: System.Action
+    content.vb: Public Event Unpause As Action
+- uid: CharonsCorner.Runtime.InputManager.CurrentControlScheme
+  commentId: P:CharonsCorner.Runtime.InputManager.CurrentControlScheme
+  id: CurrentControlScheme
+  parent: CharonsCorner.Runtime.InputManager
+  langs:
+  - csharp
+  - vb
+  name: CurrentControlScheme
+  nameWithType: InputManager.CurrentControlScheme
+  fullName: CharonsCorner.Runtime.InputManager.CurrentControlScheme
+  type: Property
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/Input/InputManager.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: CurrentControlScheme
+    path: ../Assets/Scripts/Runtime/Input/InputManager.cs
+    startLine: 41
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  syntax:
+    content: public InputManager.ControlScheme CurrentControlScheme { get; }
+    parameters: []
+    return:
+      type: CharonsCorner.Runtime.InputManager.ControlScheme
+    content.vb: Public Property CurrentControlScheme As InputManager.ControlScheme
+  overload: CharonsCorner.Runtime.InputManager.CurrentControlScheme*
+- uid: CharonsCorner.Runtime.InputManager.OnControlSchemeChanged
+  commentId: E:CharonsCorner.Runtime.InputManager.OnControlSchemeChanged
+  id: OnControlSchemeChanged
+  parent: CharonsCorner.Runtime.InputManager
+  langs:
+  - csharp
+  - vb
+  name: OnControlSchemeChanged
+  nameWithType: InputManager.OnControlSchemeChanged
+  fullName: CharonsCorner.Runtime.InputManager.OnControlSchemeChanged
+  type: Event
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/Input/InputManager.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: OnControlSchemeChanged
+    path: ../Assets/Scripts/Runtime/Input/InputManager.cs
+    startLine: 51
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  summary: Action that is invoked when the current control scheme is changed based on the input device used.
+  remarks: '<ul><li><code>ControlScheme controlScheme</code>: The new controlScheme that was changed to.</li></ul>'
+  example: []
+  syntax:
+    content: public event Action<InputManager.ControlScheme> OnControlSchemeChanged
+    return:
+      type: System.Action{CharonsCorner.Runtime.InputManager.ControlScheme}
+    content.vb: Public Event OnControlSchemeChanged As Action(Of InputManager.ControlScheme)
+- uid: CharonsCorner.Runtime.InputManager.ControlSchemeInternalNames
+  commentId: F:CharonsCorner.Runtime.InputManager.ControlSchemeInternalNames
+  id: ControlSchemeInternalNames
+  parent: CharonsCorner.Runtime.InputManager
+  langs:
+  - csharp
+  - vb
+  name: ControlSchemeInternalNames
+  nameWithType: InputManager.ControlSchemeInternalNames
+  fullName: CharonsCorner.Runtime.InputManager.ControlSchemeInternalNames
+  type: Field
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/Input/InputManager.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: ControlSchemeInternalNames
+    path: ../Assets/Scripts/Runtime/Input/InputManager.cs
+    startLine: 52
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  syntax:
+    content: public static readonly Dictionary<InputManager.ControlScheme, string> ControlSchemeInternalNames
+    return:
+      type: System.Collections.Generic.Dictionary{CharonsCorner.Runtime.InputManager.ControlScheme,System.String}
+    content.vb: Public Shared ReadOnly ControlSchemeInternalNames As Dictionary(Of InputManager.ControlScheme, String)
+- uid: CharonsCorner.Runtime.InputManager.DisableAllActions
+  commentId: M:CharonsCorner.Runtime.InputManager.DisableAllActions
+  id: DisableAllActions
+  parent: CharonsCorner.Runtime.InputManager
+  langs:
+  - csharp
+  - vb
+  name: DisableAllActions()
+  nameWithType: InputManager.DisableAllActions()
+  fullName: CharonsCorner.Runtime.InputManager.DisableAllActions()
+  type: Method
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/Input/InputManager.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: DisableAllActions
+    path: ../Assets/Scripts/Runtime/Input/InputManager.cs
+    startLine: 89
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  summary: Prevents all inputs from being processed.
+  example: []
+  syntax:
+    content: public void DisableAllActions()
+    content.vb: Public Sub DisableAllActions()
+  overload: CharonsCorner.Runtime.InputManager.DisableAllActions*
+- uid: CharonsCorner.Runtime.InputManager.EnablePlayerActions
+  commentId: M:CharonsCorner.Runtime.InputManager.EnablePlayerActions
+  id: EnablePlayerActions
+  parent: CharonsCorner.Runtime.InputManager
+  langs:
+  - csharp
+  - vb
+  name: EnablePlayerActions()
+  nameWithType: InputManager.EnablePlayerActions()
+  fullName: CharonsCorner.Runtime.InputManager.EnablePlayerActions()
+  type: Method
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/Input/InputManager.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: EnablePlayerActions
+    path: ../Assets/Scripts/Runtime/Input/InputManager.cs
+    startLine: 102
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  summary: >-
+    Enables the player actions and disables the UI actions.
+
+    Locks the cursor accordingly.
+  example: []
+  syntax:
+    content: public void EnablePlayerActions()
+    content.vb: Public Sub EnablePlayerActions()
+  overload: CharonsCorner.Runtime.InputManager.EnablePlayerActions*
+- uid: CharonsCorner.Runtime.InputManager.EnableUIActions
+  commentId: M:CharonsCorner.Runtime.InputManager.EnableUIActions
+  id: EnableUIActions
+  parent: CharonsCorner.Runtime.InputManager
+  langs:
+  - csharp
+  - vb
+  name: EnableUIActions()
+  nameWithType: InputManager.EnableUIActions()
+  fullName: CharonsCorner.Runtime.InputManager.EnableUIActions()
+  type: Method
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/Input/InputManager.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: EnableUIActions
+    path: ../Assets/Scripts/Runtime/Input/InputManager.cs
+    startLine: 119
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  summary: >-
+    Enables the UI actions and disables the player actions.
+
+    Unlocks the cursor accordingly.
+  example: []
+  syntax:
+    content: public void EnableUIActions()
+    content.vb: Public Sub EnableUIActions()
+  overload: CharonsCorner.Runtime.InputManager.EnableUIActions*
+- uid: CharonsCorner.Runtime.InputManager.OnMove(UnityEngine.InputSystem.InputAction.CallbackContext)
+  commentId: M:CharonsCorner.Runtime.InputManager.OnMove(UnityEngine.InputSystem.InputAction.CallbackContext)
+  id: OnMove(UnityEngine.InputSystem.InputAction.CallbackContext)
+  parent: CharonsCorner.Runtime.InputManager
+  langs:
+  - csharp
+  - vb
+  name: OnMove(CallbackContext)
+  nameWithType: InputManager.OnMove(InputAction.CallbackContext)
+  fullName: CharonsCorner.Runtime.InputManager.OnMove(UnityEngine.InputSystem.InputAction.CallbackContext)
+  type: Method
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/Input/InputManager.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: OnMove
+    path: ../Assets/Scripts/Runtime/Input/InputManager.cs
+    startLine: 132
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  example: []
+  syntax:
+    content: public void OnMove(InputAction.CallbackContext context)
+    parameters:
+    - id: context
+      type: UnityEngine.InputSystem.InputAction.CallbackContext
+    content.vb: Public Sub OnMove(context As InputAction.CallbackContext)
+  overload: CharonsCorner.Runtime.InputManager.OnMove*
+  implements:
+  - CharonsCorner.Runtime.InputActions.IPlayerActions.OnMove(UnityEngine.InputSystem.InputAction.CallbackContext)
+- uid: CharonsCorner.Runtime.InputManager.OnLook(UnityEngine.InputSystem.InputAction.CallbackContext)
+  commentId: M:CharonsCorner.Runtime.InputManager.OnLook(UnityEngine.InputSystem.InputAction.CallbackContext)
+  id: OnLook(UnityEngine.InputSystem.InputAction.CallbackContext)
+  parent: CharonsCorner.Runtime.InputManager
+  langs:
+  - csharp
+  - vb
+  name: OnLook(CallbackContext)
+  nameWithType: InputManager.OnLook(InputAction.CallbackContext)
+  fullName: CharonsCorner.Runtime.InputManager.OnLook(UnityEngine.InputSystem.InputAction.CallbackContext)
+  type: Method
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/Input/InputManager.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: OnLook
+    path: ../Assets/Scripts/Runtime/Input/InputManager.cs
+    startLine: 137
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  example: []
+  syntax:
+    content: public void OnLook(InputAction.CallbackContext context)
+    parameters:
+    - id: context
+      type: UnityEngine.InputSystem.InputAction.CallbackContext
+    content.vb: Public Sub OnLook(context As InputAction.CallbackContext)
+  overload: CharonsCorner.Runtime.InputManager.OnLook*
+  implements:
+  - CharonsCorner.Runtime.InputActions.IPlayerActions.OnLook(UnityEngine.InputSystem.InputAction.CallbackContext)
+- uid: CharonsCorner.Runtime.InputManager.OnJump(UnityEngine.InputSystem.InputAction.CallbackContext)
+  commentId: M:CharonsCorner.Runtime.InputManager.OnJump(UnityEngine.InputSystem.InputAction.CallbackContext)
+  id: OnJump(UnityEngine.InputSystem.InputAction.CallbackContext)
+  parent: CharonsCorner.Runtime.InputManager
+  langs:
+  - csharp
+  - vb
+  name: OnJump(CallbackContext)
+  nameWithType: InputManager.OnJump(InputAction.CallbackContext)
+  fullName: CharonsCorner.Runtime.InputManager.OnJump(UnityEngine.InputSystem.InputAction.CallbackContext)
+  type: Method
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/Input/InputManager.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: OnJump
+    path: ../Assets/Scripts/Runtime/Input/InputManager.cs
+    startLine: 142
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  example: []
+  syntax:
+    content: public void OnJump(InputAction.CallbackContext context)
+    parameters:
+    - id: context
+      type: UnityEngine.InputSystem.InputAction.CallbackContext
+    content.vb: Public Sub OnJump(context As InputAction.CallbackContext)
+  overload: CharonsCorner.Runtime.InputManager.OnJump*
+  implements:
+  - CharonsCorner.Runtime.InputActions.IPlayerActions.OnJump(UnityEngine.InputSystem.InputAction.CallbackContext)
+- uid: CharonsCorner.Runtime.InputManager.OnInteract(UnityEngine.InputSystem.InputAction.CallbackContext)
+  commentId: M:CharonsCorner.Runtime.InputManager.OnInteract(UnityEngine.InputSystem.InputAction.CallbackContext)
+  id: OnInteract(UnityEngine.InputSystem.InputAction.CallbackContext)
+  parent: CharonsCorner.Runtime.InputManager
+  langs:
+  - csharp
+  - vb
+  name: OnInteract(CallbackContext)
+  nameWithType: InputManager.OnInteract(InputAction.CallbackContext)
+  fullName: CharonsCorner.Runtime.InputManager.OnInteract(UnityEngine.InputSystem.InputAction.CallbackContext)
+  type: Method
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/Input/InputManager.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: OnInteract
+    path: ../Assets/Scripts/Runtime/Input/InputManager.cs
+    startLine: 148
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  example: []
+  syntax:
+    content: public void OnInteract(InputAction.CallbackContext context)
+    parameters:
+    - id: context
+      type: UnityEngine.InputSystem.InputAction.CallbackContext
+    content.vb: Public Sub OnInteract(context As InputAction.CallbackContext)
+  overload: CharonsCorner.Runtime.InputManager.OnInteract*
+  implements:
+  - CharonsCorner.Runtime.InputActions.IPlayerActions.OnInteract(UnityEngine.InputSystem.InputAction.CallbackContext)
+- uid: CharonsCorner.Runtime.InputManager.OnDrift(UnityEngine.InputSystem.InputAction.CallbackContext)
+  commentId: M:CharonsCorner.Runtime.InputManager.OnDrift(UnityEngine.InputSystem.InputAction.CallbackContext)
+  id: OnDrift(UnityEngine.InputSystem.InputAction.CallbackContext)
+  parent: CharonsCorner.Runtime.InputManager
+  langs:
+  - csharp
+  - vb
+  name: OnDrift(CallbackContext)
+  nameWithType: InputManager.OnDrift(InputAction.CallbackContext)
+  fullName: CharonsCorner.Runtime.InputManager.OnDrift(UnityEngine.InputSystem.InputAction.CallbackContext)
+  type: Method
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/Input/InputManager.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: OnDrift
+    path: ../Assets/Scripts/Runtime/Input/InputManager.cs
+    startLine: 154
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  example: []
+  syntax:
+    content: public void OnDrift(InputAction.CallbackContext context)
+    parameters:
+    - id: context
+      type: UnityEngine.InputSystem.InputAction.CallbackContext
+    content.vb: Public Sub OnDrift(context As InputAction.CallbackContext)
+  overload: CharonsCorner.Runtime.InputManager.OnDrift*
+  implements:
+  - CharonsCorner.Runtime.InputActions.IPlayerActions.OnDrift(UnityEngine.InputSystem.InputAction.CallbackContext)
+- uid: CharonsCorner.Runtime.InputManager.OnPause(UnityEngine.InputSystem.InputAction.CallbackContext)
+  commentId: M:CharonsCorner.Runtime.InputManager.OnPause(UnityEngine.InputSystem.InputAction.CallbackContext)
+  id: OnPause(UnityEngine.InputSystem.InputAction.CallbackContext)
+  parent: CharonsCorner.Runtime.InputManager
+  langs:
+  - csharp
+  - vb
+  name: OnPause(CallbackContext)
+  nameWithType: InputManager.OnPause(InputAction.CallbackContext)
+  fullName: CharonsCorner.Runtime.InputManager.OnPause(UnityEngine.InputSystem.InputAction.CallbackContext)
+  type: Method
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/Input/InputManager.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: OnPause
+    path: ../Assets/Scripts/Runtime/Input/InputManager.cs
+    startLine: 162
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  example: []
+  syntax:
+    content: public void OnPause(InputAction.CallbackContext context)
+    parameters:
+    - id: context
+      type: UnityEngine.InputSystem.InputAction.CallbackContext
+    content.vb: Public Sub OnPause(context As InputAction.CallbackContext)
+  overload: CharonsCorner.Runtime.InputManager.OnPause*
+  implements:
+  - CharonsCorner.Runtime.InputActions.IPlayerActions.OnPause(UnityEngine.InputSystem.InputAction.CallbackContext)
+- uid: CharonsCorner.Runtime.InputManager.OnUnpause(UnityEngine.InputSystem.InputAction.CallbackContext)
+  commentId: M:CharonsCorner.Runtime.InputManager.OnUnpause(UnityEngine.InputSystem.InputAction.CallbackContext)
+  id: OnUnpause(UnityEngine.InputSystem.InputAction.CallbackContext)
+  parent: CharonsCorner.Runtime.InputManager
+  langs:
+  - csharp
+  - vb
+  name: OnUnpause(CallbackContext)
+  nameWithType: InputManager.OnUnpause(InputAction.CallbackContext)
+  fullName: CharonsCorner.Runtime.InputManager.OnUnpause(UnityEngine.InputSystem.InputAction.CallbackContext)
+  type: Method
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/Input/InputManager.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: OnUnpause
+    path: ../Assets/Scripts/Runtime/Input/InputManager.cs
+    startLine: 169
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  example: []
+  syntax:
+    content: public void OnUnpause(InputAction.CallbackContext context)
+    parameters:
+    - id: context
+      type: UnityEngine.InputSystem.InputAction.CallbackContext
+    content.vb: Public Sub OnUnpause(context As InputAction.CallbackContext)
+  overload: CharonsCorner.Runtime.InputManager.OnUnpause*
+  implements:
+  - CharonsCorner.Runtime.InputActions.IUIActions.OnUnpause(UnityEngine.InputSystem.InputAction.CallbackContext)
+- uid: CharonsCorner.Runtime.InputManager.OnNavigate(UnityEngine.InputSystem.InputAction.CallbackContext)
+  commentId: M:CharonsCorner.Runtime.InputManager.OnNavigate(UnityEngine.InputSystem.InputAction.CallbackContext)
+  id: OnNavigate(UnityEngine.InputSystem.InputAction.CallbackContext)
+  parent: CharonsCorner.Runtime.InputManager
+  langs:
+  - csharp
+  - vb
+  name: OnNavigate(CallbackContext)
+  nameWithType: InputManager.OnNavigate(InputAction.CallbackContext)
+  fullName: CharonsCorner.Runtime.InputManager.OnNavigate(UnityEngine.InputSystem.InputAction.CallbackContext)
+  type: Method
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/Input/InputManager.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: OnNavigate
+    path: ../Assets/Scripts/Runtime/Input/InputManager.cs
+    startLine: 175
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  example: []
+  syntax:
+    content: public void OnNavigate(InputAction.CallbackContext context)
+    parameters:
+    - id: context
+      type: UnityEngine.InputSystem.InputAction.CallbackContext
+    content.vb: Public Sub OnNavigate(context As InputAction.CallbackContext)
+  overload: CharonsCorner.Runtime.InputManager.OnNavigate*
+  implements:
+  - CharonsCorner.Runtime.InputActions.IUIActions.OnNavigate(UnityEngine.InputSystem.InputAction.CallbackContext)
+- uid: CharonsCorner.Runtime.InputManager.OnSubmit(UnityEngine.InputSystem.InputAction.CallbackContext)
+  commentId: M:CharonsCorner.Runtime.InputManager.OnSubmit(UnityEngine.InputSystem.InputAction.CallbackContext)
+  id: OnSubmit(UnityEngine.InputSystem.InputAction.CallbackContext)
+  parent: CharonsCorner.Runtime.InputManager
+  langs:
+  - csharp
+  - vb
+  name: OnSubmit(CallbackContext)
+  nameWithType: InputManager.OnSubmit(InputAction.CallbackContext)
+  fullName: CharonsCorner.Runtime.InputManager.OnSubmit(UnityEngine.InputSystem.InputAction.CallbackContext)
+  type: Method
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/Input/InputManager.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: OnSubmit
+    path: ../Assets/Scripts/Runtime/Input/InputManager.cs
+    startLine: 176
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  example: []
+  syntax:
+    content: public void OnSubmit(InputAction.CallbackContext context)
+    parameters:
+    - id: context
+      type: UnityEngine.InputSystem.InputAction.CallbackContext
+    content.vb: Public Sub OnSubmit(context As InputAction.CallbackContext)
+  overload: CharonsCorner.Runtime.InputManager.OnSubmit*
+  implements:
+  - CharonsCorner.Runtime.InputActions.IUIActions.OnSubmit(UnityEngine.InputSystem.InputAction.CallbackContext)
+- uid: CharonsCorner.Runtime.InputManager.OnCancel(UnityEngine.InputSystem.InputAction.CallbackContext)
+  commentId: M:CharonsCorner.Runtime.InputManager.OnCancel(UnityEngine.InputSystem.InputAction.CallbackContext)
+  id: OnCancel(UnityEngine.InputSystem.InputAction.CallbackContext)
+  parent: CharonsCorner.Runtime.InputManager
+  langs:
+  - csharp
+  - vb
+  name: OnCancel(CallbackContext)
+  nameWithType: InputManager.OnCancel(InputAction.CallbackContext)
+  fullName: CharonsCorner.Runtime.InputManager.OnCancel(UnityEngine.InputSystem.InputAction.CallbackContext)
+  type: Method
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/Input/InputManager.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: OnCancel
+    path: ../Assets/Scripts/Runtime/Input/InputManager.cs
+    startLine: 190
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  example: []
+  syntax:
+    content: public void OnCancel(InputAction.CallbackContext context)
+    parameters:
+    - id: context
+      type: UnityEngine.InputSystem.InputAction.CallbackContext
+    content.vb: Public Sub OnCancel(context As InputAction.CallbackContext)
+  overload: CharonsCorner.Runtime.InputManager.OnCancel*
+  implements:
+  - CharonsCorner.Runtime.InputActions.IUIActions.OnCancel(UnityEngine.InputSystem.InputAction.CallbackContext)
+- uid: CharonsCorner.Runtime.InputManager.OnPoint(UnityEngine.InputSystem.InputAction.CallbackContext)
+  commentId: M:CharonsCorner.Runtime.InputManager.OnPoint(UnityEngine.InputSystem.InputAction.CallbackContext)
+  id: OnPoint(UnityEngine.InputSystem.InputAction.CallbackContext)
+  parent: CharonsCorner.Runtime.InputManager
+  langs:
+  - csharp
+  - vb
+  name: OnPoint(CallbackContext)
+  nameWithType: InputManager.OnPoint(InputAction.CallbackContext)
+  fullName: CharonsCorner.Runtime.InputManager.OnPoint(UnityEngine.InputSystem.InputAction.CallbackContext)
+  type: Method
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/Input/InputManager.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: OnPoint
+    path: ../Assets/Scripts/Runtime/Input/InputManager.cs
+    startLine: 191
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  example: []
+  syntax:
+    content: public void OnPoint(InputAction.CallbackContext context)
+    parameters:
+    - id: context
+      type: UnityEngine.InputSystem.InputAction.CallbackContext
+    content.vb: Public Sub OnPoint(context As InputAction.CallbackContext)
+  overload: CharonsCorner.Runtime.InputManager.OnPoint*
+  implements:
+  - CharonsCorner.Runtime.InputActions.IUIActions.OnPoint(UnityEngine.InputSystem.InputAction.CallbackContext)
+- uid: CharonsCorner.Runtime.InputManager.OnClick(UnityEngine.InputSystem.InputAction.CallbackContext)
+  commentId: M:CharonsCorner.Runtime.InputManager.OnClick(UnityEngine.InputSystem.InputAction.CallbackContext)
+  id: OnClick(UnityEngine.InputSystem.InputAction.CallbackContext)
+  parent: CharonsCorner.Runtime.InputManager
+  langs:
+  - csharp
+  - vb
+  name: OnClick(CallbackContext)
+  nameWithType: InputManager.OnClick(InputAction.CallbackContext)
+  fullName: CharonsCorner.Runtime.InputManager.OnClick(UnityEngine.InputSystem.InputAction.CallbackContext)
+  type: Method
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/Input/InputManager.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: OnClick
+    path: ../Assets/Scripts/Runtime/Input/InputManager.cs
+    startLine: 192
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  example: []
+  syntax:
+    content: public void OnClick(InputAction.CallbackContext context)
+    parameters:
+    - id: context
+      type: UnityEngine.InputSystem.InputAction.CallbackContext
+    content.vb: Public Sub OnClick(context As InputAction.CallbackContext)
+  overload: CharonsCorner.Runtime.InputManager.OnClick*
+  implements:
+  - CharonsCorner.Runtime.InputActions.IUIActions.OnClick(UnityEngine.InputSystem.InputAction.CallbackContext)
+- uid: CharonsCorner.Runtime.InputManager.OnRightClick(UnityEngine.InputSystem.InputAction.CallbackContext)
+  commentId: M:CharonsCorner.Runtime.InputManager.OnRightClick(UnityEngine.InputSystem.InputAction.CallbackContext)
+  id: OnRightClick(UnityEngine.InputSystem.InputAction.CallbackContext)
+  parent: CharonsCorner.Runtime.InputManager
+  langs:
+  - csharp
+  - vb
+  name: OnRightClick(CallbackContext)
+  nameWithType: InputManager.OnRightClick(InputAction.CallbackContext)
+  fullName: CharonsCorner.Runtime.InputManager.OnRightClick(UnityEngine.InputSystem.InputAction.CallbackContext)
+  type: Method
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/Input/InputManager.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: OnRightClick
+    path: ../Assets/Scripts/Runtime/Input/InputManager.cs
+    startLine: 193
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  example: []
+  syntax:
+    content: public void OnRightClick(InputAction.CallbackContext context)
+    parameters:
+    - id: context
+      type: UnityEngine.InputSystem.InputAction.CallbackContext
+    content.vb: Public Sub OnRightClick(context As InputAction.CallbackContext)
+  overload: CharonsCorner.Runtime.InputManager.OnRightClick*
+  implements:
+  - CharonsCorner.Runtime.InputActions.IUIActions.OnRightClick(UnityEngine.InputSystem.InputAction.CallbackContext)
+- uid: CharonsCorner.Runtime.InputManager.OnMiddleClick(UnityEngine.InputSystem.InputAction.CallbackContext)
+  commentId: M:CharonsCorner.Runtime.InputManager.OnMiddleClick(UnityEngine.InputSystem.InputAction.CallbackContext)
+  id: OnMiddleClick(UnityEngine.InputSystem.InputAction.CallbackContext)
+  parent: CharonsCorner.Runtime.InputManager
+  langs:
+  - csharp
+  - vb
+  name: OnMiddleClick(CallbackContext)
+  nameWithType: InputManager.OnMiddleClick(InputAction.CallbackContext)
+  fullName: CharonsCorner.Runtime.InputManager.OnMiddleClick(UnityEngine.InputSystem.InputAction.CallbackContext)
+  type: Method
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/Input/InputManager.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: OnMiddleClick
+    path: ../Assets/Scripts/Runtime/Input/InputManager.cs
+    startLine: 194
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  example: []
+  syntax:
+    content: public void OnMiddleClick(InputAction.CallbackContext context)
+    parameters:
+    - id: context
+      type: UnityEngine.InputSystem.InputAction.CallbackContext
+    content.vb: Public Sub OnMiddleClick(context As InputAction.CallbackContext)
+  overload: CharonsCorner.Runtime.InputManager.OnMiddleClick*
+  implements:
+  - CharonsCorner.Runtime.InputActions.IUIActions.OnMiddleClick(UnityEngine.InputSystem.InputAction.CallbackContext)
+- uid: CharonsCorner.Runtime.InputManager.OnScrollWheel(UnityEngine.InputSystem.InputAction.CallbackContext)
+  commentId: M:CharonsCorner.Runtime.InputManager.OnScrollWheel(UnityEngine.InputSystem.InputAction.CallbackContext)
+  id: OnScrollWheel(UnityEngine.InputSystem.InputAction.CallbackContext)
+  parent: CharonsCorner.Runtime.InputManager
+  langs:
+  - csharp
+  - vb
+  name: OnScrollWheel(CallbackContext)
+  nameWithType: InputManager.OnScrollWheel(InputAction.CallbackContext)
+  fullName: CharonsCorner.Runtime.InputManager.OnScrollWheel(UnityEngine.InputSystem.InputAction.CallbackContext)
+  type: Method
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/Input/InputManager.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: OnScrollWheel
+    path: ../Assets/Scripts/Runtime/Input/InputManager.cs
+    startLine: 195
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  example: []
+  syntax:
+    content: public void OnScrollWheel(InputAction.CallbackContext context)
+    parameters:
+    - id: context
+      type: UnityEngine.InputSystem.InputAction.CallbackContext
+    content.vb: Public Sub OnScrollWheel(context As InputAction.CallbackContext)
+  overload: CharonsCorner.Runtime.InputManager.OnScrollWheel*
+  implements:
+  - CharonsCorner.Runtime.InputActions.IUIActions.OnScrollWheel(UnityEngine.InputSystem.InputAction.CallbackContext)
+- uid: CharonsCorner.Runtime.InputManager.OnTrackedDevicePosition(UnityEngine.InputSystem.InputAction.CallbackContext)
+  commentId: M:CharonsCorner.Runtime.InputManager.OnTrackedDevicePosition(UnityEngine.InputSystem.InputAction.CallbackContext)
+  id: OnTrackedDevicePosition(UnityEngine.InputSystem.InputAction.CallbackContext)
+  parent: CharonsCorner.Runtime.InputManager
+  langs:
+  - csharp
+  - vb
+  name: OnTrackedDevicePosition(CallbackContext)
+  nameWithType: InputManager.OnTrackedDevicePosition(InputAction.CallbackContext)
+  fullName: CharonsCorner.Runtime.InputManager.OnTrackedDevicePosition(UnityEngine.InputSystem.InputAction.CallbackContext)
+  type: Method
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/Input/InputManager.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: OnTrackedDevicePosition
+    path: ../Assets/Scripts/Runtime/Input/InputManager.cs
+    startLine: 196
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  example: []
+  syntax:
+    content: public void OnTrackedDevicePosition(InputAction.CallbackContext context)
+    parameters:
+    - id: context
+      type: UnityEngine.InputSystem.InputAction.CallbackContext
+    content.vb: Public Sub OnTrackedDevicePosition(context As InputAction.CallbackContext)
+  overload: CharonsCorner.Runtime.InputManager.OnTrackedDevicePosition*
+  implements:
+  - CharonsCorner.Runtime.InputActions.IUIActions.OnTrackedDevicePosition(UnityEngine.InputSystem.InputAction.CallbackContext)
+- uid: CharonsCorner.Runtime.InputManager.OnTrackedDeviceOrientation(UnityEngine.InputSystem.InputAction.CallbackContext)
+  commentId: M:CharonsCorner.Runtime.InputManager.OnTrackedDeviceOrientation(UnityEngine.InputSystem.InputAction.CallbackContext)
+  id: OnTrackedDeviceOrientation(UnityEngine.InputSystem.InputAction.CallbackContext)
+  parent: CharonsCorner.Runtime.InputManager
+  langs:
+  - csharp
+  - vb
+  name: OnTrackedDeviceOrientation(CallbackContext)
+  nameWithType: InputManager.OnTrackedDeviceOrientation(InputAction.CallbackContext)
+  fullName: CharonsCorner.Runtime.InputManager.OnTrackedDeviceOrientation(UnityEngine.InputSystem.InputAction.CallbackContext)
+  type: Method
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/Input/InputManager.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: OnTrackedDeviceOrientation
+    path: ../Assets/Scripts/Runtime/Input/InputManager.cs
+    startLine: 197
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  example: []
+  syntax:
+    content: public void OnTrackedDeviceOrientation(InputAction.CallbackContext context)
+    parameters:
+    - id: context
+      type: UnityEngine.InputSystem.InputAction.CallbackContext
+    content.vb: Public Sub OnTrackedDeviceOrientation(context As InputAction.CallbackContext)
+  overload: CharonsCorner.Runtime.InputManager.OnTrackedDeviceOrientation*
+  implements:
+  - CharonsCorner.Runtime.InputActions.IUIActions.OnTrackedDeviceOrientation(UnityEngine.InputSystem.InputAction.CallbackContext)
+- uid: CharonsCorner.Runtime.InputManager.LockCursor(System.Boolean)
+  commentId: M:CharonsCorner.Runtime.InputManager.LockCursor(System.Boolean)
+  id: LockCursor(System.Boolean)
+  parent: CharonsCorner.Runtime.InputManager
+  langs:
+  - csharp
+  - vb
+  name: LockCursor(bool)
+  nameWithType: InputManager.LockCursor(bool)
+  fullName: CharonsCorner.Runtime.InputManager.LockCursor(bool)
+  type: Method
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/Input/InputManager.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: LockCursor
+    path: ../Assets/Scripts/Runtime/Input/InputManager.cs
+    startLine: 223
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  summary: >-
+    Locks or unlocks the cursor based on the user's preference.
+
+    Keeps track of the desired cursor lock state, which is used when switching between control schemes.
+
+    Gamepad always locks the cursor.
+  example: []
+  syntax:
+    content: public void LockCursor(bool locked)
+    parameters:
+    - id: locked
+      type: System.Boolean
+      description: ''
+    content.vb: Public Sub LockCursor(locked As Boolean)
+  overload: CharonsCorner.Runtime.InputManager.LockCursor*
+  nameWithType.vb: InputManager.LockCursor(Boolean)
+  fullName.vb: CharonsCorner.Runtime.InputManager.LockCursor(Boolean)
+  name.vb: LockCursor(Boolean)
+references:
+- uid: CharonsCorner.Runtime
+  commentId: N:CharonsCorner.Runtime
+  href: CharonsCorner.html
+  name: CharonsCorner.Runtime
+  nameWithType: CharonsCorner.Runtime
+  fullName: CharonsCorner.Runtime
+  spec.csharp:
+  - uid: CharonsCorner
+    name: CharonsCorner
+    href: CharonsCorner.html
+  - name: .
+  - uid: CharonsCorner.Runtime
+    name: Runtime
+    href: CharonsCorner.Runtime.html
+  spec.vb:
+  - uid: CharonsCorner
+    name: CharonsCorner
+    href: CharonsCorner.html
+  - name: .
+  - uid: CharonsCorner.Runtime
+    name: Runtime
+    href: CharonsCorner.Runtime.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: UnityEngine.Object
+  commentId: T:UnityEngine.Object
+  parent: UnityEngine
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: UnityEngine.Object
+- uid: UnityEngine.Component
+  commentId: T:UnityEngine.Component
+  parent: UnityEngine
+  isExternal: true
+  name: Component
+  nameWithType: Component
+  fullName: UnityEngine.Component
+- uid: UnityEngine.Behaviour
+  commentId: T:UnityEngine.Behaviour
+  parent: UnityEngine
+  isExternal: true
+  name: Behaviour
+  nameWithType: Behaviour
+  fullName: UnityEngine.Behaviour
+- uid: UnityEngine.MonoBehaviour
+  commentId: T:UnityEngine.MonoBehaviour
+  parent: UnityEngine
+  isExternal: true
+  name: MonoBehaviour
+  nameWithType: MonoBehaviour
+  fullName: UnityEngine.MonoBehaviour
+- uid: CharonsCorner.Runtime.Singleton{CharonsCorner.Runtime.InputManager}
+  commentId: T:CharonsCorner.Runtime.Singleton{CharonsCorner.Runtime.InputManager}
+  parent: CharonsCorner.Runtime
+  definition: CharonsCorner.Runtime.Singleton`1
+  href: CharonsCorner.Runtime.Singleton-1.html
+  name: Singleton<InputManager>
+  nameWithType: Singleton<InputManager>
+  fullName: CharonsCorner.Runtime.Singleton<CharonsCorner.Runtime.InputManager>
+  nameWithType.vb: Singleton(Of InputManager)
+  fullName.vb: CharonsCorner.Runtime.Singleton(Of CharonsCorner.Runtime.InputManager)
+  name.vb: Singleton(Of InputManager)
+  spec.csharp:
+  - uid: CharonsCorner.Runtime.Singleton`1
+    name: Singleton
+    href: CharonsCorner.Runtime.Singleton-1.html
+  - name: <
+  - uid: CharonsCorner.Runtime.InputManager
+    name: InputManager
+    href: CharonsCorner.Runtime.InputManager.html
+  - name: '>'
+  spec.vb:
+  - uid: CharonsCorner.Runtime.Singleton`1
+    name: Singleton
+    href: CharonsCorner.Runtime.Singleton-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: CharonsCorner.Runtime.InputManager
+    name: InputManager
+    href: CharonsCorner.Runtime.InputManager.html
+  - name: )
+- uid: CharonsCorner.Runtime.InputActions.IPlayerActions
+  commentId: T:CharonsCorner.Runtime.InputActions.IPlayerActions
+  parent: CharonsCorner.Runtime
+  href: CharonsCorner.Runtime.InputActions.html
+  name: InputActions.IPlayerActions
+  nameWithType: InputActions.IPlayerActions
+  fullName: CharonsCorner.Runtime.InputActions.IPlayerActions
+  spec.csharp:
+  - uid: CharonsCorner.Runtime.InputActions
+    name: InputActions
+    href: CharonsCorner.Runtime.InputActions.html
+  - name: .
+  - uid: CharonsCorner.Runtime.InputActions.IPlayerActions
+    name: IPlayerActions
+    href: CharonsCorner.Runtime.InputActions.IPlayerActions.html
+  spec.vb:
+  - uid: CharonsCorner.Runtime.InputActions
+    name: InputActions
+    href: CharonsCorner.Runtime.InputActions.html
+  - name: .
+  - uid: CharonsCorner.Runtime.InputActions.IPlayerActions
+    name: IPlayerActions
+    href: CharonsCorner.Runtime.InputActions.IPlayerActions.html
+- uid: CharonsCorner.Runtime.InputActions.IUIActions
+  commentId: T:CharonsCorner.Runtime.InputActions.IUIActions
+  parent: CharonsCorner.Runtime
+  href: CharonsCorner.Runtime.InputActions.html
+  name: InputActions.IUIActions
+  nameWithType: InputActions.IUIActions
+  fullName: CharonsCorner.Runtime.InputActions.IUIActions
+  spec.csharp:
+  - uid: CharonsCorner.Runtime.InputActions
+    name: InputActions
+    href: CharonsCorner.Runtime.InputActions.html
+  - name: .
+  - uid: CharonsCorner.Runtime.InputActions.IUIActions
+    name: IUIActions
+    href: CharonsCorner.Runtime.InputActions.IUIActions.html
+  spec.vb:
+  - uid: CharonsCorner.Runtime.InputActions
+    name: InputActions
+    href: CharonsCorner.Runtime.InputActions.html
+  - name: .
+  - uid: CharonsCorner.Runtime.InputActions.IUIActions
+    name: IUIActions
+    href: CharonsCorner.Runtime.InputActions.IUIActions.html
+- uid: CharonsCorner.Runtime.Singleton{CharonsCorner.Runtime.InputManager}.Instance
+  commentId: P:CharonsCorner.Runtime.Singleton{CharonsCorner.Runtime.InputManager}.Instance
+  parent: CharonsCorner.Runtime.Singleton{CharonsCorner.Runtime.InputManager}
+  definition: CharonsCorner.Runtime.Singleton`1.Instance
+  href: CharonsCorner.Runtime.Singleton-1.html#CharonsCorner_Runtime_Singleton_1_Instance
+  name: Instance
+  nameWithType: Singleton<InputManager>.Instance
+  fullName: CharonsCorner.Runtime.Singleton<CharonsCorner.Runtime.InputManager>.Instance
+  nameWithType.vb: Singleton(Of InputManager).Instance
+  fullName.vb: CharonsCorner.Runtime.Singleton(Of CharonsCorner.Runtime.InputManager).Instance
+- uid: CharonsCorner.Runtime.InputManager.CharonsCorner.Runtime.Utilities.IfNotNullThenCall``1(System.Action{CharonsCorner.Runtime.InputManager})
+  commentId: M:CharonsCorner.Runtime.Utilities.IfNotNullThenCall``1(``0,System.Action{``0})
+  parent: CharonsCorner.Runtime.Utilities
+  definition: CharonsCorner.Runtime.Utilities.IfNotNullThenCall``1(``0,System.Action{``0})
+  href: CharonsCorner.Runtime.Utilities.html#CharonsCorner_Runtime_Utilities_IfNotNullThenCall__1___0_System_Action___0__
+  name: IfNotNullThenCall<InputManager>(InputManager, Action<InputManager>)
+  nameWithType: Utilities.IfNotNullThenCall<InputManager>(InputManager, Action<InputManager>)
+  fullName: CharonsCorner.Runtime.Utilities.IfNotNullThenCall<CharonsCorner.Runtime.InputManager>(CharonsCorner.Runtime.InputManager, System.Action<CharonsCorner.Runtime.InputManager>)
+  nameWithType.vb: Utilities.IfNotNullThenCall(Of InputManager)(InputManager, Action(Of InputManager))
+  fullName.vb: CharonsCorner.Runtime.Utilities.IfNotNullThenCall(Of CharonsCorner.Runtime.InputManager)(CharonsCorner.Runtime.InputManager, System.Action(Of CharonsCorner.Runtime.InputManager))
+  name.vb: IfNotNullThenCall(Of InputManager)(InputManager, Action(Of InputManager))
+  spec.csharp:
+  - uid: CharonsCorner.Runtime.Utilities.IfNotNullThenCall``1(CharonsCorner.Runtime.InputManager,System.Action{CharonsCorner.Runtime.InputManager})
+    name: IfNotNullThenCall
+    href: CharonsCorner.Runtime.Utilities.html#CharonsCorner_Runtime_Utilities_IfNotNullThenCall__1___0_System_Action___0__
+  - name: <
+  - uid: CharonsCorner.Runtime.InputManager
+    name: InputManager
+    href: CharonsCorner.Runtime.InputManager.html
+  - name: '>'
+  - name: (
+  - uid: CharonsCorner.Runtime.InputManager
+    name: InputManager
+    href: CharonsCorner.Runtime.InputManager.html
+  - name: ','
+  - name: " "
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+  - name: <
+  - uid: CharonsCorner.Runtime.InputManager
+    name: InputManager
+    href: CharonsCorner.Runtime.InputManager.html
+  - name: '>'
+  - name: )
+  spec.vb:
+  - uid: CharonsCorner.Runtime.Utilities.IfNotNullThenCall``1(CharonsCorner.Runtime.InputManager,System.Action{CharonsCorner.Runtime.InputManager})
+    name: IfNotNullThenCall
+    href: CharonsCorner.Runtime.Utilities.html#CharonsCorner_Runtime_Utilities_IfNotNullThenCall__1___0_System_Action___0__
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: CharonsCorner.Runtime.InputManager
+    name: InputManager
+    href: CharonsCorner.Runtime.InputManager.html
+  - name: )
+  - name: (
+  - uid: CharonsCorner.Runtime.InputManager
+    name: InputManager
+    href: CharonsCorner.Runtime.InputManager.html
+  - name: ','
+  - name: " "
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: CharonsCorner.Runtime.InputManager
+    name: InputManager
+    href: CharonsCorner.Runtime.InputManager.html
+  - name: )
+  - name: )
+- uid: CharonsCorner.Runtime.InputManager.CharonsCorner.Runtime.Utilities.IfNotNullThenGet``2(System.Func{CharonsCorner.Runtime.InputManager,{TResult}})
+  commentId: M:CharonsCorner.Runtime.Utilities.IfNotNullThenGet``2(``0,System.Func{``0,``1})
+  parent: CharonsCorner.Runtime.Utilities
+  definition: CharonsCorner.Runtime.Utilities.IfNotNullThenGet``2(``0,System.Func{``0,``1})
+  href: CharonsCorner.Runtime.Utilities.html#CharonsCorner_Runtime_Utilities_IfNotNullThenGet__2___0_System_Func___0___1__
+  name: IfNotNullThenGet<InputManager, TResult>(InputManager, Func<InputManager, TResult>)
+  nameWithType: Utilities.IfNotNullThenGet<InputManager, TResult>(InputManager, Func<InputManager, TResult>)
+  fullName: CharonsCorner.Runtime.Utilities.IfNotNullThenGet<CharonsCorner.Runtime.InputManager, TResult>(CharonsCorner.Runtime.InputManager, System.Func<CharonsCorner.Runtime.InputManager, TResult>)
+  nameWithType.vb: Utilities.IfNotNullThenGet(Of InputManager, TResult)(InputManager, Func(Of InputManager, TResult))
+  fullName.vb: CharonsCorner.Runtime.Utilities.IfNotNullThenGet(Of CharonsCorner.Runtime.InputManager, TResult)(CharonsCorner.Runtime.InputManager, System.Func(Of CharonsCorner.Runtime.InputManager, TResult))
+  name.vb: IfNotNullThenGet(Of InputManager, TResult)(InputManager, Func(Of InputManager, TResult))
+  spec.csharp:
+  - uid: CharonsCorner.Runtime.Utilities.IfNotNullThenGet``2(CharonsCorner.Runtime.InputManager,System.Func{CharonsCorner.Runtime.InputManager,``1})
+    name: IfNotNullThenGet
+    href: CharonsCorner.Runtime.Utilities.html#CharonsCorner_Runtime_Utilities_IfNotNullThenGet__2___0_System_Func___0___1__
+  - name: <
+  - uid: CharonsCorner.Runtime.InputManager
+    name: InputManager
+    href: CharonsCorner.Runtime.InputManager.html
+  - name: ','
+  - name: " "
+  - name: TResult
+  - name: '>'
+  - name: (
+  - uid: CharonsCorner.Runtime.InputManager
+    name: InputManager
+    href: CharonsCorner.Runtime.InputManager.html
+  - name: ','
+  - name: " "
+  - uid: System.Func`2
+    name: Func
+    isExternal: true
+  - name: <
+  - uid: CharonsCorner.Runtime.InputManager
+    name: InputManager
+    href: CharonsCorner.Runtime.InputManager.html
+  - name: ','
+  - name: " "
+  - name: TResult
+  - name: '>'
+  - name: )
+  spec.vb:
+  - uid: CharonsCorner.Runtime.Utilities.IfNotNullThenGet``2(CharonsCorner.Runtime.InputManager,System.Func{CharonsCorner.Runtime.InputManager,``1})
+    name: IfNotNullThenGet
+    href: CharonsCorner.Runtime.Utilities.html#CharonsCorner_Runtime_Utilities_IfNotNullThenGet__2___0_System_Func___0___1__
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: CharonsCorner.Runtime.InputManager
+    name: InputManager
+    href: CharonsCorner.Runtime.InputManager.html
+  - name: ','
+  - name: " "
+  - name: TResult
+  - name: )
+  - name: (
+  - uid: CharonsCorner.Runtime.InputManager
+    name: InputManager
+    href: CharonsCorner.Runtime.InputManager.html
+  - name: ','
+  - name: " "
+  - uid: System.Func`2
+    name: Func
+    isExternal: true
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: CharonsCorner.Runtime.InputManager
+    name: InputManager
+    href: CharonsCorner.Runtime.InputManager.html
+  - name: ','
+  - name: " "
+  - name: TResult
+  - name: )
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: UnityEngine
+  commentId: N:UnityEngine
+  isExternal: true
+  name: UnityEngine
+  nameWithType: UnityEngine
+  fullName: UnityEngine
+- uid: CharonsCorner.Runtime.Singleton`1
+  commentId: T:CharonsCorner.Runtime.Singleton`1
+  href: CharonsCorner.Runtime.Singleton-1.html
+  name: Singleton<T>
+  nameWithType: Singleton<T>
+  fullName: CharonsCorner.Runtime.Singleton<T>
+  nameWithType.vb: Singleton(Of T)
+  fullName.vb: CharonsCorner.Runtime.Singleton(Of T)
+  name.vb: Singleton(Of T)
+  spec.csharp:
+  - uid: CharonsCorner.Runtime.Singleton`1
+    name: Singleton
+    href: CharonsCorner.Runtime.Singleton-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: CharonsCorner.Runtime.Singleton`1
+    name: Singleton
+    href: CharonsCorner.Runtime.Singleton-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: CharonsCorner.Runtime.Singleton`1.Instance
+  commentId: P:CharonsCorner.Runtime.Singleton`1.Instance
+  href: CharonsCorner.Runtime.Singleton-1.html#CharonsCorner_Runtime_Singleton_1_Instance
+  name: Instance
+  nameWithType: Singleton<T>.Instance
+  fullName: CharonsCorner.Runtime.Singleton<T>.Instance
+  nameWithType.vb: Singleton(Of T).Instance
+  fullName.vb: CharonsCorner.Runtime.Singleton(Of T).Instance
+- uid: CharonsCorner.Runtime.Utilities.IfNotNullThenCall``1(``0,System.Action{``0})
+  commentId: M:CharonsCorner.Runtime.Utilities.IfNotNullThenCall``1(``0,System.Action{``0})
+  isExternal: true
+  href: CharonsCorner.Runtime.Utilities.html#CharonsCorner_Runtime_Utilities_IfNotNullThenCall__1___0_System_Action___0__
+  name: IfNotNullThenCall<T>(T, Action<T>)
+  nameWithType: Utilities.IfNotNullThenCall<T>(T, Action<T>)
+  fullName: CharonsCorner.Runtime.Utilities.IfNotNullThenCall<T>(T, System.Action<T>)
+  nameWithType.vb: Utilities.IfNotNullThenCall(Of T)(T, Action(Of T))
+  fullName.vb: CharonsCorner.Runtime.Utilities.IfNotNullThenCall(Of T)(T, System.Action(Of T))
+  name.vb: IfNotNullThenCall(Of T)(T, Action(Of T))
+  spec.csharp:
+  - uid: CharonsCorner.Runtime.Utilities.IfNotNullThenCall``1(``0,System.Action{``0})
+    name: IfNotNullThenCall
+    href: CharonsCorner.Runtime.Utilities.html#CharonsCorner_Runtime_Utilities_IfNotNullThenCall__1___0_System_Action___0__
+  - name: <
+  - name: T
+  - name: '>'
+  - name: (
+  - name: T
+  - name: ','
+  - name: " "
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+  - name: <
+  - name: T
+  - name: '>'
+  - name: )
+  spec.vb:
+  - uid: CharonsCorner.Runtime.Utilities.IfNotNullThenCall``1(``0,System.Action{``0})
+    name: IfNotNullThenCall
+    href: CharonsCorner.Runtime.Utilities.html#CharonsCorner_Runtime_Utilities_IfNotNullThenCall__1___0_System_Action___0__
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: (
+  - name: T
+  - name: ','
+  - name: " "
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: )
+- uid: CharonsCorner.Runtime.Utilities
+  commentId: T:CharonsCorner.Runtime.Utilities
+  parent: CharonsCorner.Runtime
+  href: CharonsCorner.Runtime.Utilities.html
+  name: Utilities
+  nameWithType: Utilities
+  fullName: CharonsCorner.Runtime.Utilities
+- uid: CharonsCorner.Runtime.Utilities.IfNotNullThenGet``2(``0,System.Func{``0,``1})
+  commentId: M:CharonsCorner.Runtime.Utilities.IfNotNullThenGet``2(``0,System.Func{``0,``1})
+  isExternal: true
+  href: CharonsCorner.Runtime.Utilities.html#CharonsCorner_Runtime_Utilities_IfNotNullThenGet__2___0_System_Func___0___1__
+  name: IfNotNullThenGet<T, TResult>(T, Func<T, TResult>)
+  nameWithType: Utilities.IfNotNullThenGet<T, TResult>(T, Func<T, TResult>)
+  fullName: CharonsCorner.Runtime.Utilities.IfNotNullThenGet<T, TResult>(T, System.Func<T, TResult>)
+  nameWithType.vb: Utilities.IfNotNullThenGet(Of T, TResult)(T, Func(Of T, TResult))
+  fullName.vb: CharonsCorner.Runtime.Utilities.IfNotNullThenGet(Of T, TResult)(T, System.Func(Of T, TResult))
+  name.vb: IfNotNullThenGet(Of T, TResult)(T, Func(Of T, TResult))
+  spec.csharp:
+  - uid: CharonsCorner.Runtime.Utilities.IfNotNullThenGet``2(``0,System.Func{``0,``1})
+    name: IfNotNullThenGet
+    href: CharonsCorner.Runtime.Utilities.html#CharonsCorner_Runtime_Utilities_IfNotNullThenGet__2___0_System_Func___0___1__
+  - name: <
+  - name: T
+  - name: ','
+  - name: " "
+  - name: TResult
+  - name: '>'
+  - name: (
+  - name: T
+  - name: ','
+  - name: " "
+  - uid: System.Func`2
+    name: Func
+    isExternal: true
+  - name: <
+  - name: T
+  - name: ','
+  - name: " "
+  - name: TResult
+  - name: '>'
+  - name: )
+  spec.vb:
+  - uid: CharonsCorner.Runtime.Utilities.IfNotNullThenGet``2(``0,System.Func{``0,``1})
+    name: IfNotNullThenGet
+    href: CharonsCorner.Runtime.Utilities.html#CharonsCorner_Runtime_Utilities_IfNotNullThenGet__2___0_System_Func___0___1__
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: ','
+  - name: " "
+  - name: TResult
+  - name: )
+  - name: (
+  - name: T
+  - name: ','
+  - name: " "
+  - uid: System.Func`2
+    name: Func
+    isExternal: true
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: ','
+  - name: " "
+  - name: TResult
+  - name: )
+  - name: )
+- uid: CharonsCorner.Runtime.InputManager.InputActions*
+  commentId: Overload:CharonsCorner.Runtime.InputManager.InputActions
+  href: CharonsCorner.Runtime.InputManager.html#CharonsCorner_Runtime_InputManager_InputActions
+  name: InputActions
+  nameWithType: InputManager.InputActions
+  fullName: CharonsCorner.Runtime.InputManager.InputActions
+- uid: CharonsCorner.Runtime.InputActions
+  commentId: T:CharonsCorner.Runtime.InputActions
+  parent: CharonsCorner.Runtime
+  href: CharonsCorner.Runtime.InputActions.html
+  name: InputActions
+  nameWithType: InputActions
+  fullName: CharonsCorner.Runtime.InputActions
+- uid: System.Action{UnityEngine.Vector2}
+  commentId: T:System.Action{UnityEngine.Vector2}
+  parent: System
+  definition: System.Action`1
+  name: Action<Vector2>
+  nameWithType: Action<Vector2>
+  fullName: System.Action<UnityEngine.Vector2>
+  nameWithType.vb: Action(Of Vector2)
+  fullName.vb: System.Action(Of UnityEngine.Vector2)
+  name.vb: Action(Of Vector2)
+  spec.csharp:
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+  - name: <
+  - uid: UnityEngine.Vector2
+    name: Vector2
+    isExternal: true
+  - name: '>'
+  spec.vb:
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: UnityEngine.Vector2
+    name: Vector2
+    isExternal: true
+  - name: )
+- uid: System.Action`1
+  commentId: T:System.Action`1
+  isExternal: true
+  name: Action<T>
+  nameWithType: Action<T>
+  fullName: System.Action<T>
+  nameWithType.vb: Action(Of T)
+  fullName.vb: System.Action(Of T)
+  name.vb: Action(Of T)
+  spec.csharp:
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Action
+  commentId: T:System.Action
+  parent: System
+  isExternal: true
+  name: Action
+  nameWithType: Action
+  fullName: System.Action
+- uid: System.Action{System.Boolean}
+  commentId: T:System.Action{System.Boolean}
+  parent: System
+  definition: System.Action`1
+  name: Action<bool>
+  nameWithType: Action<bool>
+  fullName: System.Action<bool>
+  nameWithType.vb: Action(Of Boolean)
+  fullName.vb: System.Action(Of Boolean)
+  name.vb: Action(Of Boolean)
+  spec.csharp:
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+  - name: <
+  - uid: System.Boolean
+    name: bool
+    isExternal: true
+  - name: '>'
+  spec.vb:
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Boolean
+    name: Boolean
+    isExternal: true
+  - name: )
+- uid: CharonsCorner.Runtime.InputManager.MoveDirection*
+  commentId: Overload:CharonsCorner.Runtime.InputManager.MoveDirection
+  href: CharonsCorner.Runtime.InputManager.html#CharonsCorner_Runtime_InputManager_MoveDirection
+  name: MoveDirection
+  nameWithType: InputManager.MoveDirection
+  fullName: CharonsCorner.Runtime.InputManager.MoveDirection
+- uid: UnityEngine.Vector2
+  commentId: T:UnityEngine.Vector2
+  parent: UnityEngine
+  isExternal: true
+  name: Vector2
+  nameWithType: Vector2
+  fullName: UnityEngine.Vector2
+- uid: CharonsCorner.Runtime.InputManager.LookDirection*
+  commentId: Overload:CharonsCorner.Runtime.InputManager.LookDirection
+  href: CharonsCorner.Runtime.InputManager.html#CharonsCorner_Runtime_InputManager_LookDirection
+  name: LookDirection
+  nameWithType: InputManager.LookDirection
+  fullName: CharonsCorner.Runtime.InputManager.LookDirection
+- uid: CharonsCorner.Runtime.InputManager.CurrentControlScheme*
+  commentId: Overload:CharonsCorner.Runtime.InputManager.CurrentControlScheme
+  href: CharonsCorner.Runtime.InputManager.html#CharonsCorner_Runtime_InputManager_CurrentControlScheme
+  name: CurrentControlScheme
+  nameWithType: InputManager.CurrentControlScheme
+  fullName: CharonsCorner.Runtime.InputManager.CurrentControlScheme
+- uid: CharonsCorner.Runtime.InputManager.ControlScheme
+  commentId: T:CharonsCorner.Runtime.InputManager.ControlScheme
+  parent: CharonsCorner.Runtime
+  href: CharonsCorner.Runtime.InputManager.html
+  name: InputManager.ControlScheme
+  nameWithType: InputManager.ControlScheme
+  fullName: CharonsCorner.Runtime.InputManager.ControlScheme
+  spec.csharp:
+  - uid: CharonsCorner.Runtime.InputManager
+    name: InputManager
+    href: CharonsCorner.Runtime.InputManager.html
+  - name: .
+  - uid: CharonsCorner.Runtime.InputManager.ControlScheme
+    name: ControlScheme
+    href: CharonsCorner.Runtime.InputManager.ControlScheme.html
+  spec.vb:
+  - uid: CharonsCorner.Runtime.InputManager
+    name: InputManager
+    href: CharonsCorner.Runtime.InputManager.html
+  - name: .
+  - uid: CharonsCorner.Runtime.InputManager.ControlScheme
+    name: ControlScheme
+    href: CharonsCorner.Runtime.InputManager.ControlScheme.html
+- uid: System.Action{CharonsCorner.Runtime.InputManager.ControlScheme}
+  commentId: T:System.Action{CharonsCorner.Runtime.InputManager.ControlScheme}
+  parent: System
+  definition: System.Action`1
+  href: CharonsCorner.Runtime.InputManager.html
+  name: Action<InputManager.ControlScheme>
+  nameWithType: Action<InputManager.ControlScheme>
+  fullName: System.Action<CharonsCorner.Runtime.InputManager.ControlScheme>
+  nameWithType.vb: Action(Of InputManager.ControlScheme)
+  fullName.vb: System.Action(Of CharonsCorner.Runtime.InputManager.ControlScheme)
+  name.vb: Action(Of InputManager.ControlScheme)
+  spec.csharp:
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+  - name: <
+  - uid: CharonsCorner.Runtime.InputManager
+    name: InputManager
+    href: CharonsCorner.Runtime.InputManager.html
+  - name: .
+  - uid: CharonsCorner.Runtime.InputManager.ControlScheme
+    name: ControlScheme
+    href: CharonsCorner.Runtime.InputManager.ControlScheme.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: CharonsCorner.Runtime.InputManager
+    name: InputManager
+    href: CharonsCorner.Runtime.InputManager.html
+  - name: .
+  - uid: CharonsCorner.Runtime.InputManager.ControlScheme
+    name: ControlScheme
+    href: CharonsCorner.Runtime.InputManager.ControlScheme.html
+  - name: )
+- uid: System.Collections.Generic.Dictionary{CharonsCorner.Runtime.InputManager.ControlScheme,System.String}
+  commentId: T:System.Collections.Generic.Dictionary{CharonsCorner.Runtime.InputManager.ControlScheme,System.String}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.Dictionary`2
+  href: CharonsCorner.Runtime.InputManager.html
+  name: Dictionary<InputManager.ControlScheme, string>
+  nameWithType: Dictionary<InputManager.ControlScheme, string>
+  fullName: System.Collections.Generic.Dictionary<CharonsCorner.Runtime.InputManager.ControlScheme, string>
+  nameWithType.vb: Dictionary(Of InputManager.ControlScheme, String)
+  fullName.vb: System.Collections.Generic.Dictionary(Of CharonsCorner.Runtime.InputManager.ControlScheme, String)
+  name.vb: Dictionary(Of InputManager.ControlScheme, String)
+  spec.csharp:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    isExternal: true
+  - name: <
+  - uid: CharonsCorner.Runtime.InputManager
+    name: InputManager
+    href: CharonsCorner.Runtime.InputManager.html
+  - name: .
+  - uid: CharonsCorner.Runtime.InputManager.ControlScheme
+    name: ControlScheme
+    href: CharonsCorner.Runtime.InputManager.ControlScheme.html
+  - name: ','
+  - name: " "
+  - uid: System.String
+    name: string
+    isExternal: true
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    isExternal: true
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: CharonsCorner.Runtime.InputManager
+    name: InputManager
+    href: CharonsCorner.Runtime.InputManager.html
+  - name: .
+  - uid: CharonsCorner.Runtime.InputManager.ControlScheme
+    name: ControlScheme
+    href: CharonsCorner.Runtime.InputManager.ControlScheme.html
+  - name: ','
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+  - name: )
+- uid: System.Collections.Generic.Dictionary`2
+  commentId: T:System.Collections.Generic.Dictionary`2
+  isExternal: true
+  name: Dictionary<TKey, TValue>
+  nameWithType: Dictionary<TKey, TValue>
+  fullName: System.Collections.Generic.Dictionary<TKey, TValue>
+  nameWithType.vb: Dictionary(Of TKey, TValue)
+  fullName.vb: System.Collections.Generic.Dictionary(Of TKey, TValue)
+  name.vb: Dictionary(Of TKey, TValue)
+  spec.csharp:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    isExternal: true
+  - name: <
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    isExternal: true
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+- uid: CharonsCorner.Runtime.InputManager.DisableAllActions*
+  commentId: Overload:CharonsCorner.Runtime.InputManager.DisableAllActions
+  href: CharonsCorner.Runtime.InputManager.html#CharonsCorner_Runtime_InputManager_DisableAllActions
+  name: DisableAllActions
+  nameWithType: InputManager.DisableAllActions
+  fullName: CharonsCorner.Runtime.InputManager.DisableAllActions
+- uid: CharonsCorner.Runtime.InputManager.EnablePlayerActions*
+  commentId: Overload:CharonsCorner.Runtime.InputManager.EnablePlayerActions
+  href: CharonsCorner.Runtime.InputManager.html#CharonsCorner_Runtime_InputManager_EnablePlayerActions
+  name: EnablePlayerActions
+  nameWithType: InputManager.EnablePlayerActions
+  fullName: CharonsCorner.Runtime.InputManager.EnablePlayerActions
+- uid: CharonsCorner.Runtime.InputManager.EnableUIActions*
+  commentId: Overload:CharonsCorner.Runtime.InputManager.EnableUIActions
+  href: CharonsCorner.Runtime.InputManager.html#CharonsCorner_Runtime_InputManager_EnableUIActions
+  name: EnableUIActions
+  nameWithType: InputManager.EnableUIActions
+  fullName: CharonsCorner.Runtime.InputManager.EnableUIActions
+- uid: CharonsCorner.Runtime.InputManager.OnMove*
+  commentId: Overload:CharonsCorner.Runtime.InputManager.OnMove
+  href: CharonsCorner.Runtime.InputManager.html#CharonsCorner_Runtime_InputManager_OnMove_UnityEngine_InputSystem_InputAction_CallbackContext_
+  name: OnMove
+  nameWithType: InputManager.OnMove
+  fullName: CharonsCorner.Runtime.InputManager.OnMove
+- uid: CharonsCorner.Runtime.InputActions.IPlayerActions.OnMove(UnityEngine.InputSystem.InputAction.CallbackContext)
+  commentId: M:CharonsCorner.Runtime.InputActions.IPlayerActions.OnMove(UnityEngine.InputSystem.InputAction.CallbackContext)
+  parent: CharonsCorner.Runtime.InputActions.IPlayerActions
+  isExternal: true
+  href: CharonsCorner.Runtime.InputActions.IPlayerActions.html#CharonsCorner_Runtime_InputActions_IPlayerActions_OnMove_UnityEngine_InputSystem_InputAction_CallbackContext_
+  name: OnMove(CallbackContext)
+  nameWithType: InputActions.IPlayerActions.OnMove(InputAction.CallbackContext)
+  fullName: CharonsCorner.Runtime.InputActions.IPlayerActions.OnMove(UnityEngine.InputSystem.InputAction.CallbackContext)
+  spec.csharp:
+  - uid: CharonsCorner.Runtime.InputActions.IPlayerActions.OnMove(UnityEngine.InputSystem.InputAction.CallbackContext)
+    name: OnMove
+    href: CharonsCorner.Runtime.InputActions.IPlayerActions.html#CharonsCorner_Runtime_InputActions_IPlayerActions_OnMove_UnityEngine_InputSystem_InputAction_CallbackContext_
+  - name: (
+  - uid: UnityEngine.InputSystem.InputAction.CallbackContext
+    name: CallbackContext
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: CharonsCorner.Runtime.InputActions.IPlayerActions.OnMove(UnityEngine.InputSystem.InputAction.CallbackContext)
+    name: OnMove
+    href: CharonsCorner.Runtime.InputActions.IPlayerActions.html#CharonsCorner_Runtime_InputActions_IPlayerActions_OnMove_UnityEngine_InputSystem_InputAction_CallbackContext_
+  - name: (
+  - uid: UnityEngine.InputSystem.InputAction.CallbackContext
+    name: CallbackContext
+    isExternal: true
+  - name: )
+- uid: UnityEngine.InputSystem.InputAction.CallbackContext
+  commentId: T:UnityEngine.InputSystem.InputAction.CallbackContext
+  parent: UnityEngine.InputSystem
+  isExternal: true
+  name: InputAction.CallbackContext
+  nameWithType: InputAction.CallbackContext
+  fullName: UnityEngine.InputSystem.InputAction.CallbackContext
+  spec.csharp:
+  - uid: UnityEngine.InputSystem.InputAction
+    name: InputAction
+    isExternal: true
+  - name: .
+  - uid: UnityEngine.InputSystem.InputAction.CallbackContext
+    name: CallbackContext
+    isExternal: true
+  spec.vb:
+  - uid: UnityEngine.InputSystem.InputAction
+    name: InputAction
+    isExternal: true
+  - name: .
+  - uid: UnityEngine.InputSystem.InputAction.CallbackContext
+    name: CallbackContext
+    isExternal: true
+- uid: UnityEngine.InputSystem
+  commentId: N:UnityEngine.InputSystem
+  isExternal: true
+  name: UnityEngine.InputSystem
+  nameWithType: UnityEngine.InputSystem
+  fullName: UnityEngine.InputSystem
+  spec.csharp:
+  - uid: UnityEngine
+    name: UnityEngine
+    isExternal: true
+  - name: .
+  - uid: UnityEngine.InputSystem
+    name: InputSystem
+    isExternal: true
+  spec.vb:
+  - uid: UnityEngine
+    name: UnityEngine
+    isExternal: true
+  - name: .
+  - uid: UnityEngine.InputSystem
+    name: InputSystem
+    isExternal: true
+- uid: CharonsCorner.Runtime.InputManager.OnLook*
+  commentId: Overload:CharonsCorner.Runtime.InputManager.OnLook
+  href: CharonsCorner.Runtime.InputManager.html#CharonsCorner_Runtime_InputManager_OnLook_UnityEngine_InputSystem_InputAction_CallbackContext_
+  name: OnLook
+  nameWithType: InputManager.OnLook
+  fullName: CharonsCorner.Runtime.InputManager.OnLook
+- uid: CharonsCorner.Runtime.InputActions.IPlayerActions.OnLook(UnityEngine.InputSystem.InputAction.CallbackContext)
+  commentId: M:CharonsCorner.Runtime.InputActions.IPlayerActions.OnLook(UnityEngine.InputSystem.InputAction.CallbackContext)
+  parent: CharonsCorner.Runtime.InputActions.IPlayerActions
+  isExternal: true
+  href: CharonsCorner.Runtime.InputActions.IPlayerActions.html#CharonsCorner_Runtime_InputActions_IPlayerActions_OnLook_UnityEngine_InputSystem_InputAction_CallbackContext_
+  name: OnLook(CallbackContext)
+  nameWithType: InputActions.IPlayerActions.OnLook(InputAction.CallbackContext)
+  fullName: CharonsCorner.Runtime.InputActions.IPlayerActions.OnLook(UnityEngine.InputSystem.InputAction.CallbackContext)
+  spec.csharp:
+  - uid: CharonsCorner.Runtime.InputActions.IPlayerActions.OnLook(UnityEngine.InputSystem.InputAction.CallbackContext)
+    name: OnLook
+    href: CharonsCorner.Runtime.InputActions.IPlayerActions.html#CharonsCorner_Runtime_InputActions_IPlayerActions_OnLook_UnityEngine_InputSystem_InputAction_CallbackContext_
+  - name: (
+  - uid: UnityEngine.InputSystem.InputAction.CallbackContext
+    name: CallbackContext
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: CharonsCorner.Runtime.InputActions.IPlayerActions.OnLook(UnityEngine.InputSystem.InputAction.CallbackContext)
+    name: OnLook
+    href: CharonsCorner.Runtime.InputActions.IPlayerActions.html#CharonsCorner_Runtime_InputActions_IPlayerActions_OnLook_UnityEngine_InputSystem_InputAction_CallbackContext_
+  - name: (
+  - uid: UnityEngine.InputSystem.InputAction.CallbackContext
+    name: CallbackContext
+    isExternal: true
+  - name: )
+- uid: CharonsCorner.Runtime.InputManager.OnJump*
+  commentId: Overload:CharonsCorner.Runtime.InputManager.OnJump
+  href: CharonsCorner.Runtime.InputManager.html#CharonsCorner_Runtime_InputManager_OnJump_UnityEngine_InputSystem_InputAction_CallbackContext_
+  name: OnJump
+  nameWithType: InputManager.OnJump
+  fullName: CharonsCorner.Runtime.InputManager.OnJump
+- uid: CharonsCorner.Runtime.InputActions.IPlayerActions.OnJump(UnityEngine.InputSystem.InputAction.CallbackContext)
+  commentId: M:CharonsCorner.Runtime.InputActions.IPlayerActions.OnJump(UnityEngine.InputSystem.InputAction.CallbackContext)
+  parent: CharonsCorner.Runtime.InputActions.IPlayerActions
+  isExternal: true
+  href: CharonsCorner.Runtime.InputActions.IPlayerActions.html#CharonsCorner_Runtime_InputActions_IPlayerActions_OnJump_UnityEngine_InputSystem_InputAction_CallbackContext_
+  name: OnJump(CallbackContext)
+  nameWithType: InputActions.IPlayerActions.OnJump(InputAction.CallbackContext)
+  fullName: CharonsCorner.Runtime.InputActions.IPlayerActions.OnJump(UnityEngine.InputSystem.InputAction.CallbackContext)
+  spec.csharp:
+  - uid: CharonsCorner.Runtime.InputActions.IPlayerActions.OnJump(UnityEngine.InputSystem.InputAction.CallbackContext)
+    name: OnJump
+    href: CharonsCorner.Runtime.InputActions.IPlayerActions.html#CharonsCorner_Runtime_InputActions_IPlayerActions_OnJump_UnityEngine_InputSystem_InputAction_CallbackContext_
+  - name: (
+  - uid: UnityEngine.InputSystem.InputAction.CallbackContext
+    name: CallbackContext
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: CharonsCorner.Runtime.InputActions.IPlayerActions.OnJump(UnityEngine.InputSystem.InputAction.CallbackContext)
+    name: OnJump
+    href: CharonsCorner.Runtime.InputActions.IPlayerActions.html#CharonsCorner_Runtime_InputActions_IPlayerActions_OnJump_UnityEngine_InputSystem_InputAction_CallbackContext_
+  - name: (
+  - uid: UnityEngine.InputSystem.InputAction.CallbackContext
+    name: CallbackContext
+    isExternal: true
+  - name: )
+- uid: CharonsCorner.Runtime.InputManager.OnInteract*
+  commentId: Overload:CharonsCorner.Runtime.InputManager.OnInteract
+  href: CharonsCorner.Runtime.InputManager.html#CharonsCorner_Runtime_InputManager_OnInteract_UnityEngine_InputSystem_InputAction_CallbackContext_
+  name: OnInteract
+  nameWithType: InputManager.OnInteract
+  fullName: CharonsCorner.Runtime.InputManager.OnInteract
+- uid: CharonsCorner.Runtime.InputActions.IPlayerActions.OnInteract(UnityEngine.InputSystem.InputAction.CallbackContext)
+  commentId: M:CharonsCorner.Runtime.InputActions.IPlayerActions.OnInteract(UnityEngine.InputSystem.InputAction.CallbackContext)
+  parent: CharonsCorner.Runtime.InputActions.IPlayerActions
+  isExternal: true
+  href: CharonsCorner.Runtime.InputActions.IPlayerActions.html#CharonsCorner_Runtime_InputActions_IPlayerActions_OnInteract_UnityEngine_InputSystem_InputAction_CallbackContext_
+  name: OnInteract(CallbackContext)
+  nameWithType: InputActions.IPlayerActions.OnInteract(InputAction.CallbackContext)
+  fullName: CharonsCorner.Runtime.InputActions.IPlayerActions.OnInteract(UnityEngine.InputSystem.InputAction.CallbackContext)
+  spec.csharp:
+  - uid: CharonsCorner.Runtime.InputActions.IPlayerActions.OnInteract(UnityEngine.InputSystem.InputAction.CallbackContext)
+    name: OnInteract
+    href: CharonsCorner.Runtime.InputActions.IPlayerActions.html#CharonsCorner_Runtime_InputActions_IPlayerActions_OnInteract_UnityEngine_InputSystem_InputAction_CallbackContext_
+  - name: (
+  - uid: UnityEngine.InputSystem.InputAction.CallbackContext
+    name: CallbackContext
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: CharonsCorner.Runtime.InputActions.IPlayerActions.OnInteract(UnityEngine.InputSystem.InputAction.CallbackContext)
+    name: OnInteract
+    href: CharonsCorner.Runtime.InputActions.IPlayerActions.html#CharonsCorner_Runtime_InputActions_IPlayerActions_OnInteract_UnityEngine_InputSystem_InputAction_CallbackContext_
+  - name: (
+  - uid: UnityEngine.InputSystem.InputAction.CallbackContext
+    name: CallbackContext
+    isExternal: true
+  - name: )
+- uid: CharonsCorner.Runtime.InputManager.OnDrift*
+  commentId: Overload:CharonsCorner.Runtime.InputManager.OnDrift
+  href: CharonsCorner.Runtime.InputManager.html#CharonsCorner_Runtime_InputManager_OnDrift_UnityEngine_InputSystem_InputAction_CallbackContext_
+  name: OnDrift
+  nameWithType: InputManager.OnDrift
+  fullName: CharonsCorner.Runtime.InputManager.OnDrift
+- uid: CharonsCorner.Runtime.InputActions.IPlayerActions.OnDrift(UnityEngine.InputSystem.InputAction.CallbackContext)
+  commentId: M:CharonsCorner.Runtime.InputActions.IPlayerActions.OnDrift(UnityEngine.InputSystem.InputAction.CallbackContext)
+  parent: CharonsCorner.Runtime.InputActions.IPlayerActions
+  isExternal: true
+  href: CharonsCorner.Runtime.InputActions.IPlayerActions.html#CharonsCorner_Runtime_InputActions_IPlayerActions_OnDrift_UnityEngine_InputSystem_InputAction_CallbackContext_
+  name: OnDrift(CallbackContext)
+  nameWithType: InputActions.IPlayerActions.OnDrift(InputAction.CallbackContext)
+  fullName: CharonsCorner.Runtime.InputActions.IPlayerActions.OnDrift(UnityEngine.InputSystem.InputAction.CallbackContext)
+  spec.csharp:
+  - uid: CharonsCorner.Runtime.InputActions.IPlayerActions.OnDrift(UnityEngine.InputSystem.InputAction.CallbackContext)
+    name: OnDrift
+    href: CharonsCorner.Runtime.InputActions.IPlayerActions.html#CharonsCorner_Runtime_InputActions_IPlayerActions_OnDrift_UnityEngine_InputSystem_InputAction_CallbackContext_
+  - name: (
+  - uid: UnityEngine.InputSystem.InputAction.CallbackContext
+    name: CallbackContext
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: CharonsCorner.Runtime.InputActions.IPlayerActions.OnDrift(UnityEngine.InputSystem.InputAction.CallbackContext)
+    name: OnDrift
+    href: CharonsCorner.Runtime.InputActions.IPlayerActions.html#CharonsCorner_Runtime_InputActions_IPlayerActions_OnDrift_UnityEngine_InputSystem_InputAction_CallbackContext_
+  - name: (
+  - uid: UnityEngine.InputSystem.InputAction.CallbackContext
+    name: CallbackContext
+    isExternal: true
+  - name: )
+- uid: CharonsCorner.Runtime.InputManager.OnPause*
+  commentId: Overload:CharonsCorner.Runtime.InputManager.OnPause
+  href: CharonsCorner.Runtime.InputManager.html#CharonsCorner_Runtime_InputManager_OnPause_UnityEngine_InputSystem_InputAction_CallbackContext_
+  name: OnPause
+  nameWithType: InputManager.OnPause
+  fullName: CharonsCorner.Runtime.InputManager.OnPause
+- uid: CharonsCorner.Runtime.InputActions.IPlayerActions.OnPause(UnityEngine.InputSystem.InputAction.CallbackContext)
+  commentId: M:CharonsCorner.Runtime.InputActions.IPlayerActions.OnPause(UnityEngine.InputSystem.InputAction.CallbackContext)
+  parent: CharonsCorner.Runtime.InputActions.IPlayerActions
+  isExternal: true
+  href: CharonsCorner.Runtime.InputActions.IPlayerActions.html#CharonsCorner_Runtime_InputActions_IPlayerActions_OnPause_UnityEngine_InputSystem_InputAction_CallbackContext_
+  name: OnPause(CallbackContext)
+  nameWithType: InputActions.IPlayerActions.OnPause(InputAction.CallbackContext)
+  fullName: CharonsCorner.Runtime.InputActions.IPlayerActions.OnPause(UnityEngine.InputSystem.InputAction.CallbackContext)
+  spec.csharp:
+  - uid: CharonsCorner.Runtime.InputActions.IPlayerActions.OnPause(UnityEngine.InputSystem.InputAction.CallbackContext)
+    name: OnPause
+    href: CharonsCorner.Runtime.InputActions.IPlayerActions.html#CharonsCorner_Runtime_InputActions_IPlayerActions_OnPause_UnityEngine_InputSystem_InputAction_CallbackContext_
+  - name: (
+  - uid: UnityEngine.InputSystem.InputAction.CallbackContext
+    name: CallbackContext
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: CharonsCorner.Runtime.InputActions.IPlayerActions.OnPause(UnityEngine.InputSystem.InputAction.CallbackContext)
+    name: OnPause
+    href: CharonsCorner.Runtime.InputActions.IPlayerActions.html#CharonsCorner_Runtime_InputActions_IPlayerActions_OnPause_UnityEngine_InputSystem_InputAction_CallbackContext_
+  - name: (
+  - uid: UnityEngine.InputSystem.InputAction.CallbackContext
+    name: CallbackContext
+    isExternal: true
+  - name: )
+- uid: CharonsCorner.Runtime.InputManager.OnUnpause*
+  commentId: Overload:CharonsCorner.Runtime.InputManager.OnUnpause
+  href: CharonsCorner.Runtime.InputManager.html#CharonsCorner_Runtime_InputManager_OnUnpause_UnityEngine_InputSystem_InputAction_CallbackContext_
+  name: OnUnpause
+  nameWithType: InputManager.OnUnpause
+  fullName: CharonsCorner.Runtime.InputManager.OnUnpause
+- uid: CharonsCorner.Runtime.InputActions.IUIActions.OnUnpause(UnityEngine.InputSystem.InputAction.CallbackContext)
+  commentId: M:CharonsCorner.Runtime.InputActions.IUIActions.OnUnpause(UnityEngine.InputSystem.InputAction.CallbackContext)
+  parent: CharonsCorner.Runtime.InputActions.IUIActions
+  isExternal: true
+  href: CharonsCorner.Runtime.InputActions.IUIActions.html#CharonsCorner_Runtime_InputActions_IUIActions_OnUnpause_UnityEngine_InputSystem_InputAction_CallbackContext_
+  name: OnUnpause(CallbackContext)
+  nameWithType: InputActions.IUIActions.OnUnpause(InputAction.CallbackContext)
+  fullName: CharonsCorner.Runtime.InputActions.IUIActions.OnUnpause(UnityEngine.InputSystem.InputAction.CallbackContext)
+  spec.csharp:
+  - uid: CharonsCorner.Runtime.InputActions.IUIActions.OnUnpause(UnityEngine.InputSystem.InputAction.CallbackContext)
+    name: OnUnpause
+    href: CharonsCorner.Runtime.InputActions.IUIActions.html#CharonsCorner_Runtime_InputActions_IUIActions_OnUnpause_UnityEngine_InputSystem_InputAction_CallbackContext_
+  - name: (
+  - uid: UnityEngine.InputSystem.InputAction.CallbackContext
+    name: CallbackContext
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: CharonsCorner.Runtime.InputActions.IUIActions.OnUnpause(UnityEngine.InputSystem.InputAction.CallbackContext)
+    name: OnUnpause
+    href: CharonsCorner.Runtime.InputActions.IUIActions.html#CharonsCorner_Runtime_InputActions_IUIActions_OnUnpause_UnityEngine_InputSystem_InputAction_CallbackContext_
+  - name: (
+  - uid: UnityEngine.InputSystem.InputAction.CallbackContext
+    name: CallbackContext
+    isExternal: true
+  - name: )
+- uid: CharonsCorner.Runtime.InputManager.OnNavigate*
+  commentId: Overload:CharonsCorner.Runtime.InputManager.OnNavigate
+  href: CharonsCorner.Runtime.InputManager.html#CharonsCorner_Runtime_InputManager_OnNavigate_UnityEngine_InputSystem_InputAction_CallbackContext_
+  name: OnNavigate
+  nameWithType: InputManager.OnNavigate
+  fullName: CharonsCorner.Runtime.InputManager.OnNavigate
+- uid: CharonsCorner.Runtime.InputActions.IUIActions.OnNavigate(UnityEngine.InputSystem.InputAction.CallbackContext)
+  commentId: M:CharonsCorner.Runtime.InputActions.IUIActions.OnNavigate(UnityEngine.InputSystem.InputAction.CallbackContext)
+  parent: CharonsCorner.Runtime.InputActions.IUIActions
+  isExternal: true
+  href: CharonsCorner.Runtime.InputActions.IUIActions.html#CharonsCorner_Runtime_InputActions_IUIActions_OnNavigate_UnityEngine_InputSystem_InputAction_CallbackContext_
+  name: OnNavigate(CallbackContext)
+  nameWithType: InputActions.IUIActions.OnNavigate(InputAction.CallbackContext)
+  fullName: CharonsCorner.Runtime.InputActions.IUIActions.OnNavigate(UnityEngine.InputSystem.InputAction.CallbackContext)
+  spec.csharp:
+  - uid: CharonsCorner.Runtime.InputActions.IUIActions.OnNavigate(UnityEngine.InputSystem.InputAction.CallbackContext)
+    name: OnNavigate
+    href: CharonsCorner.Runtime.InputActions.IUIActions.html#CharonsCorner_Runtime_InputActions_IUIActions_OnNavigate_UnityEngine_InputSystem_InputAction_CallbackContext_
+  - name: (
+  - uid: UnityEngine.InputSystem.InputAction.CallbackContext
+    name: CallbackContext
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: CharonsCorner.Runtime.InputActions.IUIActions.OnNavigate(UnityEngine.InputSystem.InputAction.CallbackContext)
+    name: OnNavigate
+    href: CharonsCorner.Runtime.InputActions.IUIActions.html#CharonsCorner_Runtime_InputActions_IUIActions_OnNavigate_UnityEngine_InputSystem_InputAction_CallbackContext_
+  - name: (
+  - uid: UnityEngine.InputSystem.InputAction.CallbackContext
+    name: CallbackContext
+    isExternal: true
+  - name: )
+- uid: CharonsCorner.Runtime.InputManager.OnSubmit*
+  commentId: Overload:CharonsCorner.Runtime.InputManager.OnSubmit
+  href: CharonsCorner.Runtime.InputManager.html#CharonsCorner_Runtime_InputManager_OnSubmit_UnityEngine_InputSystem_InputAction_CallbackContext_
+  name: OnSubmit
+  nameWithType: InputManager.OnSubmit
+  fullName: CharonsCorner.Runtime.InputManager.OnSubmit
+- uid: CharonsCorner.Runtime.InputActions.IUIActions.OnSubmit(UnityEngine.InputSystem.InputAction.CallbackContext)
+  commentId: M:CharonsCorner.Runtime.InputActions.IUIActions.OnSubmit(UnityEngine.InputSystem.InputAction.CallbackContext)
+  parent: CharonsCorner.Runtime.InputActions.IUIActions
+  isExternal: true
+  href: CharonsCorner.Runtime.InputActions.IUIActions.html#CharonsCorner_Runtime_InputActions_IUIActions_OnSubmit_UnityEngine_InputSystem_InputAction_CallbackContext_
+  name: OnSubmit(CallbackContext)
+  nameWithType: InputActions.IUIActions.OnSubmit(InputAction.CallbackContext)
+  fullName: CharonsCorner.Runtime.InputActions.IUIActions.OnSubmit(UnityEngine.InputSystem.InputAction.CallbackContext)
+  spec.csharp:
+  - uid: CharonsCorner.Runtime.InputActions.IUIActions.OnSubmit(UnityEngine.InputSystem.InputAction.CallbackContext)
+    name: OnSubmit
+    href: CharonsCorner.Runtime.InputActions.IUIActions.html#CharonsCorner_Runtime_InputActions_IUIActions_OnSubmit_UnityEngine_InputSystem_InputAction_CallbackContext_
+  - name: (
+  - uid: UnityEngine.InputSystem.InputAction.CallbackContext
+    name: CallbackContext
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: CharonsCorner.Runtime.InputActions.IUIActions.OnSubmit(UnityEngine.InputSystem.InputAction.CallbackContext)
+    name: OnSubmit
+    href: CharonsCorner.Runtime.InputActions.IUIActions.html#CharonsCorner_Runtime_InputActions_IUIActions_OnSubmit_UnityEngine_InputSystem_InputAction_CallbackContext_
+  - name: (
+  - uid: UnityEngine.InputSystem.InputAction.CallbackContext
+    name: CallbackContext
+    isExternal: true
+  - name: )
+- uid: CharonsCorner.Runtime.InputManager.OnCancel*
+  commentId: Overload:CharonsCorner.Runtime.InputManager.OnCancel
+  href: CharonsCorner.Runtime.InputManager.html#CharonsCorner_Runtime_InputManager_OnCancel_UnityEngine_InputSystem_InputAction_CallbackContext_
+  name: OnCancel
+  nameWithType: InputManager.OnCancel
+  fullName: CharonsCorner.Runtime.InputManager.OnCancel
+- uid: CharonsCorner.Runtime.InputActions.IUIActions.OnCancel(UnityEngine.InputSystem.InputAction.CallbackContext)
+  commentId: M:CharonsCorner.Runtime.InputActions.IUIActions.OnCancel(UnityEngine.InputSystem.InputAction.CallbackContext)
+  parent: CharonsCorner.Runtime.InputActions.IUIActions
+  isExternal: true
+  href: CharonsCorner.Runtime.InputActions.IUIActions.html#CharonsCorner_Runtime_InputActions_IUIActions_OnCancel_UnityEngine_InputSystem_InputAction_CallbackContext_
+  name: OnCancel(CallbackContext)
+  nameWithType: InputActions.IUIActions.OnCancel(InputAction.CallbackContext)
+  fullName: CharonsCorner.Runtime.InputActions.IUIActions.OnCancel(UnityEngine.InputSystem.InputAction.CallbackContext)
+  spec.csharp:
+  - uid: CharonsCorner.Runtime.InputActions.IUIActions.OnCancel(UnityEngine.InputSystem.InputAction.CallbackContext)
+    name: OnCancel
+    href: CharonsCorner.Runtime.InputActions.IUIActions.html#CharonsCorner_Runtime_InputActions_IUIActions_OnCancel_UnityEngine_InputSystem_InputAction_CallbackContext_
+  - name: (
+  - uid: UnityEngine.InputSystem.InputAction.CallbackContext
+    name: CallbackContext
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: CharonsCorner.Runtime.InputActions.IUIActions.OnCancel(UnityEngine.InputSystem.InputAction.CallbackContext)
+    name: OnCancel
+    href: CharonsCorner.Runtime.InputActions.IUIActions.html#CharonsCorner_Runtime_InputActions_IUIActions_OnCancel_UnityEngine_InputSystem_InputAction_CallbackContext_
+  - name: (
+  - uid: UnityEngine.InputSystem.InputAction.CallbackContext
+    name: CallbackContext
+    isExternal: true
+  - name: )
+- uid: CharonsCorner.Runtime.InputManager.OnPoint*
+  commentId: Overload:CharonsCorner.Runtime.InputManager.OnPoint
+  href: CharonsCorner.Runtime.InputManager.html#CharonsCorner_Runtime_InputManager_OnPoint_UnityEngine_InputSystem_InputAction_CallbackContext_
+  name: OnPoint
+  nameWithType: InputManager.OnPoint
+  fullName: CharonsCorner.Runtime.InputManager.OnPoint
+- uid: CharonsCorner.Runtime.InputActions.IUIActions.OnPoint(UnityEngine.InputSystem.InputAction.CallbackContext)
+  commentId: M:CharonsCorner.Runtime.InputActions.IUIActions.OnPoint(UnityEngine.InputSystem.InputAction.CallbackContext)
+  parent: CharonsCorner.Runtime.InputActions.IUIActions
+  isExternal: true
+  href: CharonsCorner.Runtime.InputActions.IUIActions.html#CharonsCorner_Runtime_InputActions_IUIActions_OnPoint_UnityEngine_InputSystem_InputAction_CallbackContext_
+  name: OnPoint(CallbackContext)
+  nameWithType: InputActions.IUIActions.OnPoint(InputAction.CallbackContext)
+  fullName: CharonsCorner.Runtime.InputActions.IUIActions.OnPoint(UnityEngine.InputSystem.InputAction.CallbackContext)
+  spec.csharp:
+  - uid: CharonsCorner.Runtime.InputActions.IUIActions.OnPoint(UnityEngine.InputSystem.InputAction.CallbackContext)
+    name: OnPoint
+    href: CharonsCorner.Runtime.InputActions.IUIActions.html#CharonsCorner_Runtime_InputActions_IUIActions_OnPoint_UnityEngine_InputSystem_InputAction_CallbackContext_
+  - name: (
+  - uid: UnityEngine.InputSystem.InputAction.CallbackContext
+    name: CallbackContext
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: CharonsCorner.Runtime.InputActions.IUIActions.OnPoint(UnityEngine.InputSystem.InputAction.CallbackContext)
+    name: OnPoint
+    href: CharonsCorner.Runtime.InputActions.IUIActions.html#CharonsCorner_Runtime_InputActions_IUIActions_OnPoint_UnityEngine_InputSystem_InputAction_CallbackContext_
+  - name: (
+  - uid: UnityEngine.InputSystem.InputAction.CallbackContext
+    name: CallbackContext
+    isExternal: true
+  - name: )
+- uid: CharonsCorner.Runtime.InputManager.OnClick*
+  commentId: Overload:CharonsCorner.Runtime.InputManager.OnClick
+  href: CharonsCorner.Runtime.InputManager.html#CharonsCorner_Runtime_InputManager_OnClick_UnityEngine_InputSystem_InputAction_CallbackContext_
+  name: OnClick
+  nameWithType: InputManager.OnClick
+  fullName: CharonsCorner.Runtime.InputManager.OnClick
+- uid: CharonsCorner.Runtime.InputActions.IUIActions.OnClick(UnityEngine.InputSystem.InputAction.CallbackContext)
+  commentId: M:CharonsCorner.Runtime.InputActions.IUIActions.OnClick(UnityEngine.InputSystem.InputAction.CallbackContext)
+  parent: CharonsCorner.Runtime.InputActions.IUIActions
+  isExternal: true
+  href: CharonsCorner.Runtime.InputActions.IUIActions.html#CharonsCorner_Runtime_InputActions_IUIActions_OnClick_UnityEngine_InputSystem_InputAction_CallbackContext_
+  name: OnClick(CallbackContext)
+  nameWithType: InputActions.IUIActions.OnClick(InputAction.CallbackContext)
+  fullName: CharonsCorner.Runtime.InputActions.IUIActions.OnClick(UnityEngine.InputSystem.InputAction.CallbackContext)
+  spec.csharp:
+  - uid: CharonsCorner.Runtime.InputActions.IUIActions.OnClick(UnityEngine.InputSystem.InputAction.CallbackContext)
+    name: OnClick
+    href: CharonsCorner.Runtime.InputActions.IUIActions.html#CharonsCorner_Runtime_InputActions_IUIActions_OnClick_UnityEngine_InputSystem_InputAction_CallbackContext_
+  - name: (
+  - uid: UnityEngine.InputSystem.InputAction.CallbackContext
+    name: CallbackContext
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: CharonsCorner.Runtime.InputActions.IUIActions.OnClick(UnityEngine.InputSystem.InputAction.CallbackContext)
+    name: OnClick
+    href: CharonsCorner.Runtime.InputActions.IUIActions.html#CharonsCorner_Runtime_InputActions_IUIActions_OnClick_UnityEngine_InputSystem_InputAction_CallbackContext_
+  - name: (
+  - uid: UnityEngine.InputSystem.InputAction.CallbackContext
+    name: CallbackContext
+    isExternal: true
+  - name: )
+- uid: CharonsCorner.Runtime.InputManager.OnRightClick*
+  commentId: Overload:CharonsCorner.Runtime.InputManager.OnRightClick
+  href: CharonsCorner.Runtime.InputManager.html#CharonsCorner_Runtime_InputManager_OnRightClick_UnityEngine_InputSystem_InputAction_CallbackContext_
+  name: OnRightClick
+  nameWithType: InputManager.OnRightClick
+  fullName: CharonsCorner.Runtime.InputManager.OnRightClick
+- uid: CharonsCorner.Runtime.InputActions.IUIActions.OnRightClick(UnityEngine.InputSystem.InputAction.CallbackContext)
+  commentId: M:CharonsCorner.Runtime.InputActions.IUIActions.OnRightClick(UnityEngine.InputSystem.InputAction.CallbackContext)
+  parent: CharonsCorner.Runtime.InputActions.IUIActions
+  isExternal: true
+  href: CharonsCorner.Runtime.InputActions.IUIActions.html#CharonsCorner_Runtime_InputActions_IUIActions_OnRightClick_UnityEngine_InputSystem_InputAction_CallbackContext_
+  name: OnRightClick(CallbackContext)
+  nameWithType: InputActions.IUIActions.OnRightClick(InputAction.CallbackContext)
+  fullName: CharonsCorner.Runtime.InputActions.IUIActions.OnRightClick(UnityEngine.InputSystem.InputAction.CallbackContext)
+  spec.csharp:
+  - uid: CharonsCorner.Runtime.InputActions.IUIActions.OnRightClick(UnityEngine.InputSystem.InputAction.CallbackContext)
+    name: OnRightClick
+    href: CharonsCorner.Runtime.InputActions.IUIActions.html#CharonsCorner_Runtime_InputActions_IUIActions_OnRightClick_UnityEngine_InputSystem_InputAction_CallbackContext_
+  - name: (
+  - uid: UnityEngine.InputSystem.InputAction.CallbackContext
+    name: CallbackContext
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: CharonsCorner.Runtime.InputActions.IUIActions.OnRightClick(UnityEngine.InputSystem.InputAction.CallbackContext)
+    name: OnRightClick
+    href: CharonsCorner.Runtime.InputActions.IUIActions.html#CharonsCorner_Runtime_InputActions_IUIActions_OnRightClick_UnityEngine_InputSystem_InputAction_CallbackContext_
+  - name: (
+  - uid: UnityEngine.InputSystem.InputAction.CallbackContext
+    name: CallbackContext
+    isExternal: true
+  - name: )
+- uid: CharonsCorner.Runtime.InputManager.OnMiddleClick*
+  commentId: Overload:CharonsCorner.Runtime.InputManager.OnMiddleClick
+  href: CharonsCorner.Runtime.InputManager.html#CharonsCorner_Runtime_InputManager_OnMiddleClick_UnityEngine_InputSystem_InputAction_CallbackContext_
+  name: OnMiddleClick
+  nameWithType: InputManager.OnMiddleClick
+  fullName: CharonsCorner.Runtime.InputManager.OnMiddleClick
+- uid: CharonsCorner.Runtime.InputActions.IUIActions.OnMiddleClick(UnityEngine.InputSystem.InputAction.CallbackContext)
+  commentId: M:CharonsCorner.Runtime.InputActions.IUIActions.OnMiddleClick(UnityEngine.InputSystem.InputAction.CallbackContext)
+  parent: CharonsCorner.Runtime.InputActions.IUIActions
+  isExternal: true
+  href: CharonsCorner.Runtime.InputActions.IUIActions.html#CharonsCorner_Runtime_InputActions_IUIActions_OnMiddleClick_UnityEngine_InputSystem_InputAction_CallbackContext_
+  name: OnMiddleClick(CallbackContext)
+  nameWithType: InputActions.IUIActions.OnMiddleClick(InputAction.CallbackContext)
+  fullName: CharonsCorner.Runtime.InputActions.IUIActions.OnMiddleClick(UnityEngine.InputSystem.InputAction.CallbackContext)
+  spec.csharp:
+  - uid: CharonsCorner.Runtime.InputActions.IUIActions.OnMiddleClick(UnityEngine.InputSystem.InputAction.CallbackContext)
+    name: OnMiddleClick
+    href: CharonsCorner.Runtime.InputActions.IUIActions.html#CharonsCorner_Runtime_InputActions_IUIActions_OnMiddleClick_UnityEngine_InputSystem_InputAction_CallbackContext_
+  - name: (
+  - uid: UnityEngine.InputSystem.InputAction.CallbackContext
+    name: CallbackContext
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: CharonsCorner.Runtime.InputActions.IUIActions.OnMiddleClick(UnityEngine.InputSystem.InputAction.CallbackContext)
+    name: OnMiddleClick
+    href: CharonsCorner.Runtime.InputActions.IUIActions.html#CharonsCorner_Runtime_InputActions_IUIActions_OnMiddleClick_UnityEngine_InputSystem_InputAction_CallbackContext_
+  - name: (
+  - uid: UnityEngine.InputSystem.InputAction.CallbackContext
+    name: CallbackContext
+    isExternal: true
+  - name: )
+- uid: CharonsCorner.Runtime.InputManager.OnScrollWheel*
+  commentId: Overload:CharonsCorner.Runtime.InputManager.OnScrollWheel
+  href: CharonsCorner.Runtime.InputManager.html#CharonsCorner_Runtime_InputManager_OnScrollWheel_UnityEngine_InputSystem_InputAction_CallbackContext_
+  name: OnScrollWheel
+  nameWithType: InputManager.OnScrollWheel
+  fullName: CharonsCorner.Runtime.InputManager.OnScrollWheel
+- uid: CharonsCorner.Runtime.InputActions.IUIActions.OnScrollWheel(UnityEngine.InputSystem.InputAction.CallbackContext)
+  commentId: M:CharonsCorner.Runtime.InputActions.IUIActions.OnScrollWheel(UnityEngine.InputSystem.InputAction.CallbackContext)
+  parent: CharonsCorner.Runtime.InputActions.IUIActions
+  isExternal: true
+  href: CharonsCorner.Runtime.InputActions.IUIActions.html#CharonsCorner_Runtime_InputActions_IUIActions_OnScrollWheel_UnityEngine_InputSystem_InputAction_CallbackContext_
+  name: OnScrollWheel(CallbackContext)
+  nameWithType: InputActions.IUIActions.OnScrollWheel(InputAction.CallbackContext)
+  fullName: CharonsCorner.Runtime.InputActions.IUIActions.OnScrollWheel(UnityEngine.InputSystem.InputAction.CallbackContext)
+  spec.csharp:
+  - uid: CharonsCorner.Runtime.InputActions.IUIActions.OnScrollWheel(UnityEngine.InputSystem.InputAction.CallbackContext)
+    name: OnScrollWheel
+    href: CharonsCorner.Runtime.InputActions.IUIActions.html#CharonsCorner_Runtime_InputActions_IUIActions_OnScrollWheel_UnityEngine_InputSystem_InputAction_CallbackContext_
+  - name: (
+  - uid: UnityEngine.InputSystem.InputAction.CallbackContext
+    name: CallbackContext
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: CharonsCorner.Runtime.InputActions.IUIActions.OnScrollWheel(UnityEngine.InputSystem.InputAction.CallbackContext)
+    name: OnScrollWheel
+    href: CharonsCorner.Runtime.InputActions.IUIActions.html#CharonsCorner_Runtime_InputActions_IUIActions_OnScrollWheel_UnityEngine_InputSystem_InputAction_CallbackContext_
+  - name: (
+  - uid: UnityEngine.InputSystem.InputAction.CallbackContext
+    name: CallbackContext
+    isExternal: true
+  - name: )
+- uid: CharonsCorner.Runtime.InputManager.OnTrackedDevicePosition*
+  commentId: Overload:CharonsCorner.Runtime.InputManager.OnTrackedDevicePosition
+  href: CharonsCorner.Runtime.InputManager.html#CharonsCorner_Runtime_InputManager_OnTrackedDevicePosition_UnityEngine_InputSystem_InputAction_CallbackContext_
+  name: OnTrackedDevicePosition
+  nameWithType: InputManager.OnTrackedDevicePosition
+  fullName: CharonsCorner.Runtime.InputManager.OnTrackedDevicePosition
+- uid: CharonsCorner.Runtime.InputActions.IUIActions.OnTrackedDevicePosition(UnityEngine.InputSystem.InputAction.CallbackContext)
+  commentId: M:CharonsCorner.Runtime.InputActions.IUIActions.OnTrackedDevicePosition(UnityEngine.InputSystem.InputAction.CallbackContext)
+  parent: CharonsCorner.Runtime.InputActions.IUIActions
+  isExternal: true
+  href: CharonsCorner.Runtime.InputActions.IUIActions.html#CharonsCorner_Runtime_InputActions_IUIActions_OnTrackedDevicePosition_UnityEngine_InputSystem_InputAction_CallbackContext_
+  name: OnTrackedDevicePosition(CallbackContext)
+  nameWithType: InputActions.IUIActions.OnTrackedDevicePosition(InputAction.CallbackContext)
+  fullName: CharonsCorner.Runtime.InputActions.IUIActions.OnTrackedDevicePosition(UnityEngine.InputSystem.InputAction.CallbackContext)
+  spec.csharp:
+  - uid: CharonsCorner.Runtime.InputActions.IUIActions.OnTrackedDevicePosition(UnityEngine.InputSystem.InputAction.CallbackContext)
+    name: OnTrackedDevicePosition
+    href: CharonsCorner.Runtime.InputActions.IUIActions.html#CharonsCorner_Runtime_InputActions_IUIActions_OnTrackedDevicePosition_UnityEngine_InputSystem_InputAction_CallbackContext_
+  - name: (
+  - uid: UnityEngine.InputSystem.InputAction.CallbackContext
+    name: CallbackContext
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: CharonsCorner.Runtime.InputActions.IUIActions.OnTrackedDevicePosition(UnityEngine.InputSystem.InputAction.CallbackContext)
+    name: OnTrackedDevicePosition
+    href: CharonsCorner.Runtime.InputActions.IUIActions.html#CharonsCorner_Runtime_InputActions_IUIActions_OnTrackedDevicePosition_UnityEngine_InputSystem_InputAction_CallbackContext_
+  - name: (
+  - uid: UnityEngine.InputSystem.InputAction.CallbackContext
+    name: CallbackContext
+    isExternal: true
+  - name: )
+- uid: CharonsCorner.Runtime.InputManager.OnTrackedDeviceOrientation*
+  commentId: Overload:CharonsCorner.Runtime.InputManager.OnTrackedDeviceOrientation
+  href: CharonsCorner.Runtime.InputManager.html#CharonsCorner_Runtime_InputManager_OnTrackedDeviceOrientation_UnityEngine_InputSystem_InputAction_CallbackContext_
+  name: OnTrackedDeviceOrientation
+  nameWithType: InputManager.OnTrackedDeviceOrientation
+  fullName: CharonsCorner.Runtime.InputManager.OnTrackedDeviceOrientation
+- uid: CharonsCorner.Runtime.InputActions.IUIActions.OnTrackedDeviceOrientation(UnityEngine.InputSystem.InputAction.CallbackContext)
+  commentId: M:CharonsCorner.Runtime.InputActions.IUIActions.OnTrackedDeviceOrientation(UnityEngine.InputSystem.InputAction.CallbackContext)
+  parent: CharonsCorner.Runtime.InputActions.IUIActions
+  isExternal: true
+  href: CharonsCorner.Runtime.InputActions.IUIActions.html#CharonsCorner_Runtime_InputActions_IUIActions_OnTrackedDeviceOrientation_UnityEngine_InputSystem_InputAction_CallbackContext_
+  name: OnTrackedDeviceOrientation(CallbackContext)
+  nameWithType: InputActions.IUIActions.OnTrackedDeviceOrientation(InputAction.CallbackContext)
+  fullName: CharonsCorner.Runtime.InputActions.IUIActions.OnTrackedDeviceOrientation(UnityEngine.InputSystem.InputAction.CallbackContext)
+  spec.csharp:
+  - uid: CharonsCorner.Runtime.InputActions.IUIActions.OnTrackedDeviceOrientation(UnityEngine.InputSystem.InputAction.CallbackContext)
+    name: OnTrackedDeviceOrientation
+    href: CharonsCorner.Runtime.InputActions.IUIActions.html#CharonsCorner_Runtime_InputActions_IUIActions_OnTrackedDeviceOrientation_UnityEngine_InputSystem_InputAction_CallbackContext_
+  - name: (
+  - uid: UnityEngine.InputSystem.InputAction.CallbackContext
+    name: CallbackContext
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: CharonsCorner.Runtime.InputActions.IUIActions.OnTrackedDeviceOrientation(UnityEngine.InputSystem.InputAction.CallbackContext)
+    name: OnTrackedDeviceOrientation
+    href: CharonsCorner.Runtime.InputActions.IUIActions.html#CharonsCorner_Runtime_InputActions_IUIActions_OnTrackedDeviceOrientation_UnityEngine_InputSystem_InputAction_CallbackContext_
+  - name: (
+  - uid: UnityEngine.InputSystem.InputAction.CallbackContext
+    name: CallbackContext
+    isExternal: true
+  - name: )
+- uid: CharonsCorner.Runtime.InputManager.LockCursor*
+  commentId: Overload:CharonsCorner.Runtime.InputManager.LockCursor
+  href: CharonsCorner.Runtime.InputManager.html#CharonsCorner_Runtime_InputManager_LockCursor_System_Boolean_
+  name: LockCursor
+  nameWithType: InputManager.LockCursor
+  fullName: CharonsCorner.Runtime.InputManager.LockCursor
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean

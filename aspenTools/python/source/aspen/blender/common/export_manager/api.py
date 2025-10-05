@@ -27,6 +27,7 @@ def export_model_fbx(file_path: str):
     # Export model as FBX
     bpy.ops.export_scene.fbx(
         filepath=file_path,
+        use_custom_props=True,
         apply_unit_scale=True,
         apply_scale_options='FBX_SCALE_ALL',
         use_space_transform=False,
@@ -43,9 +44,11 @@ def export_animation_fbx(file_path: str):
     Args:
         file_path (str): The file path to export to.
     """
+
     # Export animation as FBX
     bpy.ops.export_scene.fbx(
         filepath=file_path,
+        use_custom_props=True,
         apply_unit_scale=True,
         apply_scale_options='FBX_SCALE_ALL',
         use_space_transform=False,
