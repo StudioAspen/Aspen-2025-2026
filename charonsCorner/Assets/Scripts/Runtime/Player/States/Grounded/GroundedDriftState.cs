@@ -21,17 +21,31 @@ namespace CharonsCorner.Runtime
         private float driftTimer;
         private bool boostReady;
         private Tween colorTween;
+        private float externalBoost = 0f;
 
         public bool IsDrifting { get; private set; }
-
         public bool IsBoostReady => boostReady;
         public float DriftCharge => Mathf.Clamp01(driftTimer / DriftThreshold);
+        public float ExternalBoost => externalBoost;
+
+        public float ConsumeExternalBoost()
+        {
+            float boost = externalBoost;
+            externalBoost = 0f;
+            return boost;
+        }
+
+        public void AddExternalBoost(float boost)
+        {
+            externalBoost += boost;
+        }
 
         private protected override void OnEnter()
         {
             IsDrifting = true;
             boostReady = false;
             driftTimer = 0f;
+            externalBoost = 0f;
 
             driftDirection = Utilities.GetCameraBasedMoveInput(
                 CameraManager.Instance.CurrentCamera.transform,
@@ -59,6 +73,7 @@ namespace CharonsCorner.Runtime
             boostReady = false;
             driftTimer = 0f;
             colorTween?.Kill();
+            externalBoost = 0f;
 
             // Reset indicator to red
             if (DriftIndicatorRenderer != null)

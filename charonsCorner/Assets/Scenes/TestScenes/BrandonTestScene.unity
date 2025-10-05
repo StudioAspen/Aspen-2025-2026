@@ -642,9 +642,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   radius: 8.27
-  curveStrength: 15
-  centripetalStrength: 10.01
-  slingshotMultiplier: 4
+  curveStrength: 30
+  centripetalStrength: 80
+  slingshotMultiplier: 8
+  minSlingshotSpeed: 8
+  maxPullTime: 1
   playerLayer:
     serializedVersion: 2
     m_Bits: 64
@@ -3743,7 +3745,7 @@ MonoBehaviour:
       <Damp>k__BackingField: 0
     <MoveState>k__BackingField:
       <Acceleration>k__BackingField: 1
-      <TurnResponsiveness>k__BackingField: 4
+      <TurnResponsiveness>k__BackingField: 6
       <MaxSpeed>k__BackingField: 25
     <DriftState>k__BackingField:
       <AngleOffset>k__BackingField: 20
@@ -3754,7 +3756,7 @@ MonoBehaviour:
       <ReadyColor>k__BackingField: {r: 0, g: 1, b: 0, a: 1}
       <DriftIndicatorRenderer>k__BackingField: {fileID: 1955723815}
       <MinDriftBoost>k__BackingField: 30
-      <MaxDriftBoost>k__BackingField: 45
+      <MaxDriftBoost>k__BackingField: 55
     <GroundCheckDistance>k__BackingField: 0.2
     <GroundCheckRadius>k__BackingField: 0.9
     <GroundLayerMask>k__BackingField:
