@@ -15,7 +15,8 @@
           "src": "../"
         }
       ],
-      "dest": "api"
+      "dest": "api",
+      "filter": "filter.yml"
     }
   ],
   "build": {
@@ -38,13 +39,14 @@
     ],
     "output": "_site",
     "template": [
-      "default",
-      "modern"
+      "templates/unity",
+      "default"
     ],
     "globalMetadata": {
       "_appName": "Charons Corner Documentation",
       "_appTitle": "Charons Corner Documentation",
       "_enableSearch": true,
+      "_enableNewSearch": true,
       "pdf": false
     }
   }
