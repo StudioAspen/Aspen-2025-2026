@@ -1,0 +1,779 @@
+### YamlMime:ManagedReference
+items:
+- uid: CharonsCorner.Runtime.PlayerController
+  commentId: T:CharonsCorner.Runtime.PlayerController
+  id: PlayerController
+  parent: CharonsCorner.Runtime
+  children:
+  - CharonsCorner.Runtime.PlayerController.AirborneSuperState
+  - CharonsCorner.Runtime.PlayerController.CurrentSpeed
+  - CharonsCorner.Runtime.PlayerController.GroundedSuperState
+  - CharonsCorner.Runtime.PlayerController.Input
+  - CharonsCorner.Runtime.PlayerController.IsGrounded
+  - CharonsCorner.Runtime.PlayerController.RigidBody
+  - CharonsCorner.Runtime.PlayerController.SphereCollider
+  - CharonsCorner.Runtime.PlayerController.StateMachine
+  langs:
+  - csharp
+  - vb
+  name: PlayerController
+  nameWithType: PlayerController
+  fullName: CharonsCorner.Runtime.PlayerController
+  type: Class
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/Player/PlayerController.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: PlayerController
+    path: ../Assets/Scripts/Runtime/Player/PlayerController.cs
+    startLine: 4
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  syntax:
+    content: >-
+      [RequireComponent(typeof(Rigidbody))]
+
+      [RequireComponent(typeof(SphereCollider))]
+
+      public class PlayerController : MonoBehaviour
+    content.vb: >-
+      <RequireComponent(GetType(Rigidbody))>
+
+      <RequireComponent(GetType(SphereCollider))>
+
+      Public Class PlayerController Inherits MonoBehaviour
+  inheritance:
+  - System.Object
+  - UnityEngine.Object
+  - UnityEngine.Component
+  - UnityEngine.Behaviour
+  - UnityEngine.MonoBehaviour
+  extensionMethods:
+  - CharonsCorner.Runtime.PlayerController.CharonsCorner.Runtime.Utilities.IfNotNullThenCall``1(System.Action{CharonsCorner.Runtime.PlayerController})
+  - CharonsCorner.Runtime.PlayerController.CharonsCorner.Runtime.Utilities.IfNotNullThenGet``2(System.Func{CharonsCorner.Runtime.PlayerController,{TResult}})
+- uid: CharonsCorner.Runtime.PlayerController.Input
+  commentId: P:CharonsCorner.Runtime.PlayerController.Input
+  id: Input
+  parent: CharonsCorner.Runtime.PlayerController
+  langs:
+  - csharp
+  - vb
+  name: Input
+  nameWithType: PlayerController.Input
+  fullName: CharonsCorner.Runtime.PlayerController.Input
+  type: Property
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/Player/PlayerController.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: Input
+    path: ../Assets/Scripts/Runtime/Player/PlayerController.cs
+    startLine: 8
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  syntax:
+    content: public InputManager Input { get; }
+    parameters: []
+    return:
+      type: CharonsCorner.Runtime.InputManager
+    content.vb: Public Property Input As InputManager
+  overload: CharonsCorner.Runtime.PlayerController.Input*
+- uid: CharonsCorner.Runtime.PlayerController.RigidBody
+  commentId: P:CharonsCorner.Runtime.PlayerController.RigidBody
+  id: RigidBody
+  parent: CharonsCorner.Runtime.PlayerController
+  langs:
+  - csharp
+  - vb
+  name: RigidBody
+  nameWithType: PlayerController.RigidBody
+  fullName: CharonsCorner.Runtime.PlayerController.RigidBody
+  type: Property
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/Player/PlayerController.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: RigidBody
+    path: ../Assets/Scripts/Runtime/Player/PlayerController.cs
+    startLine: 9
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  syntax:
+    content: public Rigidbody RigidBody { get; }
+    parameters: []
+    return:
+      type: UnityEngine.Rigidbody
+    content.vb: Public Property RigidBody As Rigidbody
+  overload: CharonsCorner.Runtime.PlayerController.RigidBody*
+- uid: CharonsCorner.Runtime.PlayerController.SphereCollider
+  commentId: P:CharonsCorner.Runtime.PlayerController.SphereCollider
+  id: SphereCollider
+  parent: CharonsCorner.Runtime.PlayerController
+  langs:
+  - csharp
+  - vb
+  name: SphereCollider
+  nameWithType: PlayerController.SphereCollider
+  fullName: CharonsCorner.Runtime.PlayerController.SphereCollider
+  type: Property
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/Player/PlayerController.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: SphereCollider
+    path: ../Assets/Scripts/Runtime/Player/PlayerController.cs
+    startLine: 10
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  syntax:
+    content: public SphereCollider SphereCollider { get; }
+    parameters: []
+    return:
+      type: UnityEngine.SphereCollider
+    content.vb: Public Property SphereCollider As SphereCollider
+  overload: CharonsCorner.Runtime.PlayerController.SphereCollider*
+- uid: CharonsCorner.Runtime.PlayerController.StateMachine
+  commentId: P:CharonsCorner.Runtime.PlayerController.StateMachine
+  id: StateMachine
+  parent: CharonsCorner.Runtime.PlayerController
+  langs:
+  - csharp
+  - vb
+  name: StateMachine
+  nameWithType: PlayerController.StateMachine
+  fullName: CharonsCorner.Runtime.PlayerController.StateMachine
+  type: Property
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/Player/PlayerController.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: StateMachine
+    path: ../Assets/Scripts/Runtime/Player/PlayerController.cs
+    startLine: 12
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  syntax:
+    content: public StateMachine<PlayerController> StateMachine { get; }
+    parameters: []
+    return:
+      type: CharonsCorner.Runtime.StateMachine{CharonsCorner.Runtime.PlayerController}
+    content.vb: Public Property StateMachine As StateMachine(Of PlayerController)
+  overload: CharonsCorner.Runtime.PlayerController.StateMachine*
+- uid: CharonsCorner.Runtime.PlayerController.GroundedSuperState
+  commentId: P:CharonsCorner.Runtime.PlayerController.GroundedSuperState
+  id: GroundedSuperState
+  parent: CharonsCorner.Runtime.PlayerController
+  langs:
+  - csharp
+  - vb
+  name: GroundedSuperState
+  nameWithType: PlayerController.GroundedSuperState
+  fullName: CharonsCorner.Runtime.PlayerController.GroundedSuperState
+  type: Property
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/Player/PlayerController.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: GroundedSuperState
+    path: ../Assets/Scripts/Runtime/Player/PlayerController.cs
+    startLine: 14
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  syntax:
+    content: public GroundedSuperState GroundedSuperState { get; }
+    parameters: []
+    return:
+      type: CharonsCorner.Runtime.GroundedSuperState
+    content.vb: Public Property GroundedSuperState As GroundedSuperState
+  overload: CharonsCorner.Runtime.PlayerController.GroundedSuperState*
+- uid: CharonsCorner.Runtime.PlayerController.AirborneSuperState
+  commentId: P:CharonsCorner.Runtime.PlayerController.AirborneSuperState
+  id: AirborneSuperState
+  parent: CharonsCorner.Runtime.PlayerController
+  langs:
+  - csharp
+  - vb
+  name: AirborneSuperState
+  nameWithType: PlayerController.AirborneSuperState
+  fullName: CharonsCorner.Runtime.PlayerController.AirborneSuperState
+  type: Property
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/Player/PlayerController.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: AirborneSuperState
+    path: ../Assets/Scripts/Runtime/Player/PlayerController.cs
+    startLine: 15
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  syntax:
+    content: public AirborneSuperState AirborneSuperState { get; }
+    parameters: []
+    return:
+      type: CharonsCorner.Runtime.AirborneSuperState
+    content.vb: Public Property AirborneSuperState As AirborneSuperState
+  overload: CharonsCorner.Runtime.PlayerController.AirborneSuperState*
+- uid: CharonsCorner.Runtime.PlayerController.IsGrounded
+  commentId: P:CharonsCorner.Runtime.PlayerController.IsGrounded
+  id: IsGrounded
+  parent: CharonsCorner.Runtime.PlayerController
+  langs:
+  - csharp
+  - vb
+  name: IsGrounded
+  nameWithType: PlayerController.IsGrounded
+  fullName: CharonsCorner.Runtime.PlayerController.IsGrounded
+  type: Property
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/Player/PlayerController.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: IsGrounded
+    path: ../Assets/Scripts/Runtime/Player/PlayerController.cs
+    startLine: 20
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  summary: Easy access to whether the player is grounded or not from the context. GroundedSuperState handles the actual checking.
+  example: []
+  syntax:
+    content: public bool IsGrounded { get; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public ReadOnly Property IsGrounded As Boolean
+  overload: CharonsCorner.Runtime.PlayerController.IsGrounded*
+- uid: CharonsCorner.Runtime.PlayerController.CurrentSpeed
+  commentId: P:CharonsCorner.Runtime.PlayerController.CurrentSpeed
+  id: CurrentSpeed
+  parent: CharonsCorner.Runtime.PlayerController
+  langs:
+  - csharp
+  - vb
+  name: CurrentSpeed
+  nameWithType: PlayerController.CurrentSpeed
+  fullName: CharonsCorner.Runtime.PlayerController.CurrentSpeed
+  type: Property
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/Player/PlayerController.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: CurrentSpeed
+    path: ../Assets/Scripts/Runtime/Player/PlayerController.cs
+    startLine: 21
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  syntax:
+    content: public float CurrentSpeed { get; }
+    parameters: []
+    return:
+      type: System.Single
+    content.vb: Public ReadOnly Property CurrentSpeed As Single
+  overload: CharonsCorner.Runtime.PlayerController.CurrentSpeed*
+references:
+- uid: CharonsCorner.Runtime
+  commentId: N:CharonsCorner.Runtime
+  href: CharonsCorner.html
+  name: CharonsCorner.Runtime
+  nameWithType: CharonsCorner.Runtime
+  fullName: CharonsCorner.Runtime
+  spec.csharp:
+  - uid: CharonsCorner
+    name: CharonsCorner
+    href: CharonsCorner.html
+  - name: .
+  - uid: CharonsCorner.Runtime
+    name: Runtime
+    href: CharonsCorner.Runtime.html
+  spec.vb:
+  - uid: CharonsCorner
+    name: CharonsCorner
+    href: CharonsCorner.html
+  - name: .
+  - uid: CharonsCorner.Runtime
+    name: Runtime
+    href: CharonsCorner.Runtime.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: UnityEngine.Object
+  commentId: T:UnityEngine.Object
+  parent: UnityEngine
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: UnityEngine.Object
+- uid: UnityEngine.Component
+  commentId: T:UnityEngine.Component
+  parent: UnityEngine
+  isExternal: true
+  name: Component
+  nameWithType: Component
+  fullName: UnityEngine.Component
+- uid: UnityEngine.Behaviour
+  commentId: T:UnityEngine.Behaviour
+  parent: UnityEngine
+  isExternal: true
+  name: Behaviour
+  nameWithType: Behaviour
+  fullName: UnityEngine.Behaviour
+- uid: UnityEngine.MonoBehaviour
+  commentId: T:UnityEngine.MonoBehaviour
+  parent: UnityEngine
+  isExternal: true
+  name: MonoBehaviour
+  nameWithType: MonoBehaviour
+  fullName: UnityEngine.MonoBehaviour
+- uid: CharonsCorner.Runtime.PlayerController.CharonsCorner.Runtime.Utilities.IfNotNullThenCall``1(System.Action{CharonsCorner.Runtime.PlayerController})
+  commentId: M:CharonsCorner.Runtime.Utilities.IfNotNullThenCall``1(``0,System.Action{``0})
+  parent: CharonsCorner.Runtime.Utilities
+  definition: CharonsCorner.Runtime.Utilities.IfNotNullThenCall``1(``0,System.Action{``0})
+  href: CharonsCorner.Runtime.Utilities.html#CharonsCorner_Runtime_Utilities_IfNotNullThenCall__1___0_System_Action___0__
+  name: IfNotNullThenCall<PlayerController>(PlayerController, Action<PlayerController>)
+  nameWithType: Utilities.IfNotNullThenCall<PlayerController>(PlayerController, Action<PlayerController>)
+  fullName: CharonsCorner.Runtime.Utilities.IfNotNullThenCall<CharonsCorner.Runtime.PlayerController>(CharonsCorner.Runtime.PlayerController, System.Action<CharonsCorner.Runtime.PlayerController>)
+  nameWithType.vb: Utilities.IfNotNullThenCall(Of PlayerController)(PlayerController, Action(Of PlayerController))
+  fullName.vb: CharonsCorner.Runtime.Utilities.IfNotNullThenCall(Of CharonsCorner.Runtime.PlayerController)(CharonsCorner.Runtime.PlayerController, System.Action(Of CharonsCorner.Runtime.PlayerController))
+  name.vb: IfNotNullThenCall(Of PlayerController)(PlayerController, Action(Of PlayerController))
+  spec.csharp:
+  - uid: CharonsCorner.Runtime.Utilities.IfNotNullThenCall``1(CharonsCorner.Runtime.PlayerController,System.Action{CharonsCorner.Runtime.PlayerController})
+    name: IfNotNullThenCall
+    href: CharonsCorner.Runtime.Utilities.html#CharonsCorner_Runtime_Utilities_IfNotNullThenCall__1___0_System_Action___0__
+  - name: <
+  - uid: CharonsCorner.Runtime.PlayerController
+    name: PlayerController
+    href: CharonsCorner.Runtime.PlayerController.html
+  - name: '>'
+  - name: (
+  - uid: CharonsCorner.Runtime.PlayerController
+    name: PlayerController
+    href: CharonsCorner.Runtime.PlayerController.html
+  - name: ','
+  - name: " "
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+  - name: <
+  - uid: CharonsCorner.Runtime.PlayerController
+    name: PlayerController
+    href: CharonsCorner.Runtime.PlayerController.html
+  - name: '>'
+  - name: )
+  spec.vb:
+  - uid: CharonsCorner.Runtime.Utilities.IfNotNullThenCall``1(CharonsCorner.Runtime.PlayerController,System.Action{CharonsCorner.Runtime.PlayerController})
+    name: IfNotNullThenCall
+    href: CharonsCorner.Runtime.Utilities.html#CharonsCorner_Runtime_Utilities_IfNotNullThenCall__1___0_System_Action___0__
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: CharonsCorner.Runtime.PlayerController
+    name: PlayerController
+    href: CharonsCorner.Runtime.PlayerController.html
+  - name: )
+  - name: (
+  - uid: CharonsCorner.Runtime.PlayerController
+    name: PlayerController
+    href: CharonsCorner.Runtime.PlayerController.html
+  - name: ','
+  - name: " "
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: CharonsCorner.Runtime.PlayerController
+    name: PlayerController
+    href: CharonsCorner.Runtime.PlayerController.html
+  - name: )
+  - name: )
+- uid: CharonsCorner.Runtime.PlayerController.CharonsCorner.Runtime.Utilities.IfNotNullThenGet``2(System.Func{CharonsCorner.Runtime.PlayerController,{TResult}})
+  commentId: M:CharonsCorner.Runtime.Utilities.IfNotNullThenGet``2(``0,System.Func{``0,``1})
+  parent: CharonsCorner.Runtime.Utilities
+  definition: CharonsCorner.Runtime.Utilities.IfNotNullThenGet``2(``0,System.Func{``0,``1})
+  href: CharonsCorner.Runtime.Utilities.html#CharonsCorner_Runtime_Utilities_IfNotNullThenGet__2___0_System_Func___0___1__
+  name: IfNotNullThenGet<PlayerController, TResult>(PlayerController, Func<PlayerController, TResult>)
+  nameWithType: Utilities.IfNotNullThenGet<PlayerController, TResult>(PlayerController, Func<PlayerController, TResult>)
+  fullName: CharonsCorner.Runtime.Utilities.IfNotNullThenGet<CharonsCorner.Runtime.PlayerController, TResult>(CharonsCorner.Runtime.PlayerController, System.Func<CharonsCorner.Runtime.PlayerController, TResult>)
+  nameWithType.vb: Utilities.IfNotNullThenGet(Of PlayerController, TResult)(PlayerController, Func(Of PlayerController, TResult))
+  fullName.vb: CharonsCorner.Runtime.Utilities.IfNotNullThenGet(Of CharonsCorner.Runtime.PlayerController, TResult)(CharonsCorner.Runtime.PlayerController, System.Func(Of CharonsCorner.Runtime.PlayerController, TResult))
+  name.vb: IfNotNullThenGet(Of PlayerController, TResult)(PlayerController, Func(Of PlayerController, TResult))
+  spec.csharp:
+  - uid: CharonsCorner.Runtime.Utilities.IfNotNullThenGet``2(CharonsCorner.Runtime.PlayerController,System.Func{CharonsCorner.Runtime.PlayerController,``1})
+    name: IfNotNullThenGet
+    href: CharonsCorner.Runtime.Utilities.html#CharonsCorner_Runtime_Utilities_IfNotNullThenGet__2___0_System_Func___0___1__
+  - name: <
+  - uid: CharonsCorner.Runtime.PlayerController
+    name: PlayerController
+    href: CharonsCorner.Runtime.PlayerController.html
+  - name: ','
+  - name: " "
+  - name: TResult
+  - name: '>'
+  - name: (
+  - uid: CharonsCorner.Runtime.PlayerController
+    name: PlayerController
+    href: CharonsCorner.Runtime.PlayerController.html
+  - name: ','
+  - name: " "
+  - uid: System.Func`2
+    name: Func
+    isExternal: true
+  - name: <
+  - uid: CharonsCorner.Runtime.PlayerController
+    name: PlayerController
+    href: CharonsCorner.Runtime.PlayerController.html
+  - name: ','
+  - name: " "
+  - name: TResult
+  - name: '>'
+  - name: )
+  spec.vb:
+  - uid: CharonsCorner.Runtime.Utilities.IfNotNullThenGet``2(CharonsCorner.Runtime.PlayerController,System.Func{CharonsCorner.Runtime.PlayerController,``1})
+    name: IfNotNullThenGet
+    href: CharonsCorner.Runtime.Utilities.html#CharonsCorner_Runtime_Utilities_IfNotNullThenGet__2___0_System_Func___0___1__
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: CharonsCorner.Runtime.PlayerController
+    name: PlayerController
+    href: CharonsCorner.Runtime.PlayerController.html
+  - name: ','
+  - name: " "
+  - name: TResult
+  - name: )
+  - name: (
+  - uid: CharonsCorner.Runtime.PlayerController
+    name: PlayerController
+    href: CharonsCorner.Runtime.PlayerController.html
+  - name: ','
+  - name: " "
+  - uid: System.Func`2
+    name: Func
+    isExternal: true
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: CharonsCorner.Runtime.PlayerController
+    name: PlayerController
+    href: CharonsCorner.Runtime.PlayerController.html
+  - name: ','
+  - name: " "
+  - name: TResult
+  - name: )
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: UnityEngine
+  commentId: N:UnityEngine
+  isExternal: true
+  name: UnityEngine
+  nameWithType: UnityEngine
+  fullName: UnityEngine
+- uid: CharonsCorner.Runtime.Utilities.IfNotNullThenCall``1(``0,System.Action{``0})
+  commentId: M:CharonsCorner.Runtime.Utilities.IfNotNullThenCall``1(``0,System.Action{``0})
+  isExternal: true
+  href: CharonsCorner.Runtime.Utilities.html#CharonsCorner_Runtime_Utilities_IfNotNullThenCall__1___0_System_Action___0__
+  name: IfNotNullThenCall<T>(T, Action<T>)
+  nameWithType: Utilities.IfNotNullThenCall<T>(T, Action<T>)
+  fullName: CharonsCorner.Runtime.Utilities.IfNotNullThenCall<T>(T, System.Action<T>)
+  nameWithType.vb: Utilities.IfNotNullThenCall(Of T)(T, Action(Of T))
+  fullName.vb: CharonsCorner.Runtime.Utilities.IfNotNullThenCall(Of T)(T, System.Action(Of T))
+  name.vb: IfNotNullThenCall(Of T)(T, Action(Of T))
+  spec.csharp:
+  - uid: CharonsCorner.Runtime.Utilities.IfNotNullThenCall``1(``0,System.Action{``0})
+    name: IfNotNullThenCall
+    href: CharonsCorner.Runtime.Utilities.html#CharonsCorner_Runtime_Utilities_IfNotNullThenCall__1___0_System_Action___0__
+  - name: <
+  - name: T
+  - name: '>'
+  - name: (
+  - name: T
+  - name: ','
+  - name: " "
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+  - name: <
+  - name: T
+  - name: '>'
+  - name: )
+  spec.vb:
+  - uid: CharonsCorner.Runtime.Utilities.IfNotNullThenCall``1(``0,System.Action{``0})
+    name: IfNotNullThenCall
+    href: CharonsCorner.Runtime.Utilities.html#CharonsCorner_Runtime_Utilities_IfNotNullThenCall__1___0_System_Action___0__
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: (
+  - name: T
+  - name: ','
+  - name: " "
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: )
+- uid: CharonsCorner.Runtime.Utilities
+  commentId: T:CharonsCorner.Runtime.Utilities
+  parent: CharonsCorner.Runtime
+  href: CharonsCorner.Runtime.Utilities.html
+  name: Utilities
+  nameWithType: Utilities
+  fullName: CharonsCorner.Runtime.Utilities
+- uid: CharonsCorner.Runtime.Utilities.IfNotNullThenGet``2(``0,System.Func{``0,``1})
+  commentId: M:CharonsCorner.Runtime.Utilities.IfNotNullThenGet``2(``0,System.Func{``0,``1})
+  isExternal: true
+  href: CharonsCorner.Runtime.Utilities.html#CharonsCorner_Runtime_Utilities_IfNotNullThenGet__2___0_System_Func___0___1__
+  name: IfNotNullThenGet<T, TResult>(T, Func<T, TResult>)
+  nameWithType: Utilities.IfNotNullThenGet<T, TResult>(T, Func<T, TResult>)
+  fullName: CharonsCorner.Runtime.Utilities.IfNotNullThenGet<T, TResult>(T, System.Func<T, TResult>)
+  nameWithType.vb: Utilities.IfNotNullThenGet(Of T, TResult)(T, Func(Of T, TResult))
+  fullName.vb: CharonsCorner.Runtime.Utilities.IfNotNullThenGet(Of T, TResult)(T, System.Func(Of T, TResult))
+  name.vb: IfNotNullThenGet(Of T, TResult)(T, Func(Of T, TResult))
+  spec.csharp:
+  - uid: CharonsCorner.Runtime.Utilities.IfNotNullThenGet``2(``0,System.Func{``0,``1})
+    name: IfNotNullThenGet
+    href: CharonsCorner.Runtime.Utilities.html#CharonsCorner_Runtime_Utilities_IfNotNullThenGet__2___0_System_Func___0___1__
+  - name: <
+  - name: T
+  - name: ','
+  - name: " "
+  - name: TResult
+  - name: '>'
+  - name: (
+  - name: T
+  - name: ','
+  - name: " "
+  - uid: System.Func`2
+    name: Func
+    isExternal: true
+  - name: <
+  - name: T
+  - name: ','
+  - name: " "
+  - name: TResult
+  - name: '>'
+  - name: )
+  spec.vb:
+  - uid: CharonsCorner.Runtime.Utilities.IfNotNullThenGet``2(``0,System.Func{``0,``1})
+    name: IfNotNullThenGet
+    href: CharonsCorner.Runtime.Utilities.html#CharonsCorner_Runtime_Utilities_IfNotNullThenGet__2___0_System_Func___0___1__
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: ','
+  - name: " "
+  - name: TResult
+  - name: )
+  - name: (
+  - name: T
+  - name: ','
+  - name: " "
+  - uid: System.Func`2
+    name: Func
+    isExternal: true
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: ','
+  - name: " "
+  - name: TResult
+  - name: )
+  - name: )
+- uid: CharonsCorner.Runtime.PlayerController.Input*
+  commentId: Overload:CharonsCorner.Runtime.PlayerController.Input
+  href: CharonsCorner.Runtime.PlayerController.html#CharonsCorner_Runtime_PlayerController_Input
+  name: Input
+  nameWithType: PlayerController.Input
+  fullName: CharonsCorner.Runtime.PlayerController.Input
+- uid: CharonsCorner.Runtime.InputManager
+  commentId: T:CharonsCorner.Runtime.InputManager
+  parent: CharonsCorner.Runtime
+  href: CharonsCorner.Runtime.InputManager.html
+  name: InputManager
+  nameWithType: InputManager
+  fullName: CharonsCorner.Runtime.InputManager
+- uid: CharonsCorner.Runtime.PlayerController.RigidBody*
+  commentId: Overload:CharonsCorner.Runtime.PlayerController.RigidBody
+  href: CharonsCorner.Runtime.PlayerController.html#CharonsCorner_Runtime_PlayerController_RigidBody
+  name: RigidBody
+  nameWithType: PlayerController.RigidBody
+  fullName: CharonsCorner.Runtime.PlayerController.RigidBody
+- uid: UnityEngine.Rigidbody
+  commentId: T:UnityEngine.Rigidbody
+  parent: UnityEngine
+  isExternal: true
+  name: Rigidbody
+  nameWithType: Rigidbody
+  fullName: UnityEngine.Rigidbody
+- uid: CharonsCorner.Runtime.PlayerController.SphereCollider*
+  commentId: Overload:CharonsCorner.Runtime.PlayerController.SphereCollider
+  href: CharonsCorner.Runtime.PlayerController.html#CharonsCorner_Runtime_PlayerController_SphereCollider
+  name: SphereCollider
+  nameWithType: PlayerController.SphereCollider
+  fullName: CharonsCorner.Runtime.PlayerController.SphereCollider
+- uid: UnityEngine.SphereCollider
+  commentId: T:UnityEngine.SphereCollider
+  parent: UnityEngine
+  isExternal: true
+  name: SphereCollider
+  nameWithType: SphereCollider
+  fullName: UnityEngine.SphereCollider
+- uid: CharonsCorner.Runtime.PlayerController.StateMachine*
+  commentId: Overload:CharonsCorner.Runtime.PlayerController.StateMachine
+  href: CharonsCorner.Runtime.PlayerController.html#CharonsCorner_Runtime_PlayerController_StateMachine
+  name: StateMachine
+  nameWithType: PlayerController.StateMachine
+  fullName: CharonsCorner.Runtime.PlayerController.StateMachine
+- uid: CharonsCorner.Runtime.StateMachine{CharonsCorner.Runtime.PlayerController}
+  commentId: T:CharonsCorner.Runtime.StateMachine{CharonsCorner.Runtime.PlayerController}
+  parent: CharonsCorner.Runtime
+  definition: CharonsCorner.Runtime.StateMachine`1
+  href: CharonsCorner.Runtime.StateMachine-1.html
+  name: StateMachine<PlayerController>
+  nameWithType: StateMachine<PlayerController>
+  fullName: CharonsCorner.Runtime.StateMachine<CharonsCorner.Runtime.PlayerController>
+  nameWithType.vb: StateMachine(Of PlayerController)
+  fullName.vb: CharonsCorner.Runtime.StateMachine(Of CharonsCorner.Runtime.PlayerController)
+  name.vb: StateMachine(Of PlayerController)
+  spec.csharp:
+  - uid: CharonsCorner.Runtime.StateMachine`1
+    name: StateMachine
+    href: CharonsCorner.Runtime.StateMachine-1.html
+  - name: <
+  - uid: CharonsCorner.Runtime.PlayerController
+    name: PlayerController
+    href: CharonsCorner.Runtime.PlayerController.html
+  - name: '>'
+  spec.vb:
+  - uid: CharonsCorner.Runtime.StateMachine`1
+    name: StateMachine
+    href: CharonsCorner.Runtime.StateMachine-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: CharonsCorner.Runtime.PlayerController
+    name: PlayerController
+    href: CharonsCorner.Runtime.PlayerController.html
+  - name: )
+- uid: CharonsCorner.Runtime.StateMachine`1
+  commentId: T:CharonsCorner.Runtime.StateMachine`1
+  href: CharonsCorner.Runtime.StateMachine-1.html
+  name: StateMachine<TContext>
+  nameWithType: StateMachine<TContext>
+  fullName: CharonsCorner.Runtime.StateMachine<TContext>
+  nameWithType.vb: StateMachine(Of TContext)
+  fullName.vb: CharonsCorner.Runtime.StateMachine(Of TContext)
+  name.vb: StateMachine(Of TContext)
+  spec.csharp:
+  - uid: CharonsCorner.Runtime.StateMachine`1
+    name: StateMachine
+    href: CharonsCorner.Runtime.StateMachine-1.html
+  - name: <
+  - name: TContext
+  - name: '>'
+  spec.vb:
+  - uid: CharonsCorner.Runtime.StateMachine`1
+    name: StateMachine
+    href: CharonsCorner.Runtime.StateMachine-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TContext
+  - name: )
+- uid: CharonsCorner.Runtime.PlayerController.GroundedSuperState*
+  commentId: Overload:CharonsCorner.Runtime.PlayerController.GroundedSuperState
+  href: CharonsCorner.Runtime.PlayerController.html#CharonsCorner_Runtime_PlayerController_GroundedSuperState
+  name: GroundedSuperState
+  nameWithType: PlayerController.GroundedSuperState
+  fullName: CharonsCorner.Runtime.PlayerController.GroundedSuperState
+- uid: CharonsCorner.Runtime.GroundedSuperState
+  commentId: T:CharonsCorner.Runtime.GroundedSuperState
+  parent: CharonsCorner.Runtime
+  href: CharonsCorner.Runtime.GroundedSuperState.html
+  name: GroundedSuperState
+  nameWithType: GroundedSuperState
+  fullName: CharonsCorner.Runtime.GroundedSuperState
+- uid: CharonsCorner.Runtime.PlayerController.AirborneSuperState*
+  commentId: Overload:CharonsCorner.Runtime.PlayerController.AirborneSuperState
+  href: CharonsCorner.Runtime.PlayerController.html#CharonsCorner_Runtime_PlayerController_AirborneSuperState
+  name: AirborneSuperState
+  nameWithType: PlayerController.AirborneSuperState
+  fullName: CharonsCorner.Runtime.PlayerController.AirborneSuperState
+- uid: CharonsCorner.Runtime.AirborneSuperState
+  commentId: T:CharonsCorner.Runtime.AirborneSuperState
+  parent: CharonsCorner.Runtime
+  href: CharonsCorner.Runtime.AirborneSuperState.html
+  name: AirborneSuperState
+  nameWithType: AirborneSuperState
+  fullName: CharonsCorner.Runtime.AirborneSuperState
+- uid: CharonsCorner.Runtime.PlayerController.IsGrounded*
+  commentId: Overload:CharonsCorner.Runtime.PlayerController.IsGrounded
+  href: CharonsCorner.Runtime.PlayerController.html#CharonsCorner_Runtime_PlayerController_IsGrounded
+  name: IsGrounded
+  nameWithType: PlayerController.IsGrounded
+  fullName: CharonsCorner.Runtime.PlayerController.IsGrounded
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: CharonsCorner.Runtime.PlayerController.CurrentSpeed*
+  commentId: Overload:CharonsCorner.Runtime.PlayerController.CurrentSpeed
+  href: CharonsCorner.Runtime.PlayerController.html#CharonsCorner_Runtime_PlayerController_CurrentSpeed
+  name: CurrentSpeed
+  nameWithType: PlayerController.CurrentSpeed
+  fullName: CharonsCorner.Runtime.PlayerController.CurrentSpeed
+- uid: System.Single
+  commentId: T:System.Single
+  parent: System
+  isExternal: true
+  name: float
+  nameWithType: float
+  fullName: float
+  nameWithType.vb: Single
+  fullName.vb: Single
+  name.vb: Single

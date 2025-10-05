@@ -1,0 +1,658 @@
+### YamlMime:ManagedReference
+items:
+- uid: CharonsCorner.Runtime.SensitivitySetting
+  commentId: T:CharonsCorner.Runtime.SensitivitySetting
+  id: SensitivitySetting
+  parent: CharonsCorner.Runtime
+  children:
+  - CharonsCorner.Runtime.SensitivitySetting.Apply
+  - CharonsCorner.Runtime.SensitivitySetting.CurrentValue
+  - CharonsCorner.Runtime.SensitivitySetting.Discard
+  - CharonsCorner.Runtime.SensitivitySetting.IsDirty
+  - CharonsCorner.Runtime.SensitivitySetting.Load
+  langs:
+  - csharp
+  - vb
+  name: SensitivitySetting
+  nameWithType: SensitivitySetting
+  fullName: CharonsCorner.Runtime.SensitivitySetting
+  type: Class
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/Settings/General/SensitivitySetting.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: SensitivitySetting
+    path: ../Assets/Scripts/Runtime/Settings/General/SensitivitySetting.cs
+    startLine: 6
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  syntax:
+    content: 'public class SensitivitySetting : Setting'
+    content.vb: Public Class SensitivitySetting Inherits Setting
+  inheritance:
+  - System.Object
+  - UnityEngine.Object
+  - UnityEngine.Component
+  - UnityEngine.Behaviour
+  - UnityEngine.MonoBehaviour
+  - CharonsCorner.Runtime.Setting
+  extensionMethods:
+  - CharonsCorner.Runtime.SensitivitySetting.CharonsCorner.Runtime.Utilities.IfNotNullThenCall``1(System.Action{CharonsCorner.Runtime.SensitivitySetting})
+  - CharonsCorner.Runtime.SensitivitySetting.CharonsCorner.Runtime.Utilities.IfNotNullThenGet``2(System.Func{CharonsCorner.Runtime.SensitivitySetting,{TResult}})
+- uid: CharonsCorner.Runtime.SensitivitySetting.CurrentValue
+  commentId: P:CharonsCorner.Runtime.SensitivitySetting.CurrentValue
+  id: CurrentValue
+  parent: CharonsCorner.Runtime.SensitivitySetting
+  langs:
+  - csharp
+  - vb
+  name: CurrentValue
+  nameWithType: SensitivitySetting.CurrentValue
+  fullName: CharonsCorner.Runtime.SensitivitySetting.CurrentValue
+  type: Property
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/Settings/General/SensitivitySetting.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: CurrentValue
+    path: ../Assets/Scripts/Runtime/Settings/General/SensitivitySetting.cs
+    startLine: 10
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  syntax:
+    content: public static float CurrentValue { get; }
+    parameters: []
+    return:
+      type: System.Single
+    content.vb: Public Shared Property CurrentValue As Single
+  overload: CharonsCorner.Runtime.SensitivitySetting.CurrentValue*
+- uid: CharonsCorner.Runtime.SensitivitySetting.Load
+  commentId: M:CharonsCorner.Runtime.SensitivitySetting.Load
+  id: Load
+  parent: CharonsCorner.Runtime.SensitivitySetting
+  langs:
+  - csharp
+  - vb
+  name: Load()
+  nameWithType: SensitivitySetting.Load()
+  fullName: CharonsCorner.Runtime.SensitivitySetting.Load()
+  type: Method
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/Settings/General/SensitivitySetting.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: Load
+    path: ../Assets/Scripts/Runtime/Settings/General/SensitivitySetting.cs
+    startLine: 19
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  summary: >-
+    Equivalent to Awake, but called manually to ensure settings are initialized even if the object is disabled at startup.
+
+    Grab the current value from save store and apply it to the setting.
+  example: []
+  syntax:
+    content: public override void Load()
+    content.vb: Public Overrides Sub Load()
+  overridden: CharonsCorner.Runtime.Setting.Load
+  overload: CharonsCorner.Runtime.SensitivitySetting.Load*
+- uid: CharonsCorner.Runtime.SensitivitySetting.Apply
+  commentId: M:CharonsCorner.Runtime.SensitivitySetting.Apply
+  id: Apply
+  parent: CharonsCorner.Runtime.SensitivitySetting
+  langs:
+  - csharp
+  - vb
+  name: Apply()
+  nameWithType: SensitivitySetting.Apply()
+  fullName: CharonsCorner.Runtime.SensitivitySetting.Apply()
+  type: Method
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/Settings/General/SensitivitySetting.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: Apply
+    path: ../Assets/Scripts/Runtime/Settings/General/SensitivitySetting.cs
+    startLine: 25
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  summary: Save the current value of the setting to save store and apply it to the game.
+  example: []
+  syntax:
+    content: public override void Apply()
+    content.vb: Public Overrides Sub Apply()
+  overridden: CharonsCorner.Runtime.Setting.Apply
+  overload: CharonsCorner.Runtime.SensitivitySetting.Apply*
+- uid: CharonsCorner.Runtime.SensitivitySetting.Discard
+  commentId: M:CharonsCorner.Runtime.SensitivitySetting.Discard
+  id: Discard
+  parent: CharonsCorner.Runtime.SensitivitySetting
+  langs:
+  - csharp
+  - vb
+  name: Discard()
+  nameWithType: SensitivitySetting.Discard()
+  fullName: CharonsCorner.Runtime.SensitivitySetting.Discard()
+  type: Method
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/Settings/General/SensitivitySetting.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: Discard
+    path: ../Assets/Scripts/Runtime/Settings/General/SensitivitySetting.cs
+    startLine: 32
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  summary: Undo any changes made to the setting since the last load or apply.
+  example: []
+  syntax:
+    content: public override void Discard()
+    content.vb: Public Overrides Sub Discard()
+  overridden: CharonsCorner.Runtime.Setting.Discard
+  overload: CharonsCorner.Runtime.SensitivitySetting.Discard*
+- uid: CharonsCorner.Runtime.SensitivitySetting.IsDirty
+  commentId: M:CharonsCorner.Runtime.SensitivitySetting.IsDirty
+  id: IsDirty
+  parent: CharonsCorner.Runtime.SensitivitySetting
+  langs:
+  - csharp
+  - vb
+  name: IsDirty()
+  nameWithType: SensitivitySetting.IsDirty()
+  fullName: CharonsCorner.Runtime.SensitivitySetting.IsDirty()
+  type: Method
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/Settings/General/SensitivitySetting.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: IsDirty
+    path: ../Assets/Scripts/Runtime/Settings/General/SensitivitySetting.cs
+    startLine: 37
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  summary: If the setting has been changed from its last saved state.
+  example: []
+  syntax:
+    content: public override bool IsDirty()
+    return:
+      type: System.Boolean
+      description: ''
+    content.vb: Public Overrides Function IsDirty() As Boolean
+  overridden: CharonsCorner.Runtime.Setting.IsDirty
+  overload: CharonsCorner.Runtime.SensitivitySetting.IsDirty*
+references:
+- uid: CharonsCorner.Runtime
+  commentId: N:CharonsCorner.Runtime
+  href: CharonsCorner.html
+  name: CharonsCorner.Runtime
+  nameWithType: CharonsCorner.Runtime
+  fullName: CharonsCorner.Runtime
+  spec.csharp:
+  - uid: CharonsCorner
+    name: CharonsCorner
+    href: CharonsCorner.html
+  - name: .
+  - uid: CharonsCorner.Runtime
+    name: Runtime
+    href: CharonsCorner.Runtime.html
+  spec.vb:
+  - uid: CharonsCorner
+    name: CharonsCorner
+    href: CharonsCorner.html
+  - name: .
+  - uid: CharonsCorner.Runtime
+    name: Runtime
+    href: CharonsCorner.Runtime.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: UnityEngine.Object
+  commentId: T:UnityEngine.Object
+  parent: UnityEngine
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: UnityEngine.Object
+- uid: UnityEngine.Component
+  commentId: T:UnityEngine.Component
+  parent: UnityEngine
+  isExternal: true
+  name: Component
+  nameWithType: Component
+  fullName: UnityEngine.Component
+- uid: UnityEngine.Behaviour
+  commentId: T:UnityEngine.Behaviour
+  parent: UnityEngine
+  isExternal: true
+  name: Behaviour
+  nameWithType: Behaviour
+  fullName: UnityEngine.Behaviour
+- uid: UnityEngine.MonoBehaviour
+  commentId: T:UnityEngine.MonoBehaviour
+  parent: UnityEngine
+  isExternal: true
+  name: MonoBehaviour
+  nameWithType: MonoBehaviour
+  fullName: UnityEngine.MonoBehaviour
+- uid: CharonsCorner.Runtime.Setting
+  commentId: T:CharonsCorner.Runtime.Setting
+  parent: CharonsCorner.Runtime
+  href: CharonsCorner.Runtime.Setting.html
+  name: Setting
+  nameWithType: Setting
+  fullName: CharonsCorner.Runtime.Setting
+- uid: CharonsCorner.Runtime.SensitivitySetting.CharonsCorner.Runtime.Utilities.IfNotNullThenCall``1(System.Action{CharonsCorner.Runtime.SensitivitySetting})
+  commentId: M:CharonsCorner.Runtime.Utilities.IfNotNullThenCall``1(``0,System.Action{``0})
+  parent: CharonsCorner.Runtime.Utilities
+  definition: CharonsCorner.Runtime.Utilities.IfNotNullThenCall``1(``0,System.Action{``0})
+  href: CharonsCorner.Runtime.Utilities.html#CharonsCorner_Runtime_Utilities_IfNotNullThenCall__1___0_System_Action___0__
+  name: IfNotNullThenCall<SensitivitySetting>(SensitivitySetting, Action<SensitivitySetting>)
+  nameWithType: Utilities.IfNotNullThenCall<SensitivitySetting>(SensitivitySetting, Action<SensitivitySetting>)
+  fullName: CharonsCorner.Runtime.Utilities.IfNotNullThenCall<CharonsCorner.Runtime.SensitivitySetting>(CharonsCorner.Runtime.SensitivitySetting, System.Action<CharonsCorner.Runtime.SensitivitySetting>)
+  nameWithType.vb: Utilities.IfNotNullThenCall(Of SensitivitySetting)(SensitivitySetting, Action(Of SensitivitySetting))
+  fullName.vb: CharonsCorner.Runtime.Utilities.IfNotNullThenCall(Of CharonsCorner.Runtime.SensitivitySetting)(CharonsCorner.Runtime.SensitivitySetting, System.Action(Of CharonsCorner.Runtime.SensitivitySetting))
+  name.vb: IfNotNullThenCall(Of SensitivitySetting)(SensitivitySetting, Action(Of SensitivitySetting))
+  spec.csharp:
+  - uid: CharonsCorner.Runtime.Utilities.IfNotNullThenCall``1(CharonsCorner.Runtime.SensitivitySetting,System.Action{CharonsCorner.Runtime.SensitivitySetting})
+    name: IfNotNullThenCall
+    href: CharonsCorner.Runtime.Utilities.html#CharonsCorner_Runtime_Utilities_IfNotNullThenCall__1___0_System_Action___0__
+  - name: <
+  - uid: CharonsCorner.Runtime.SensitivitySetting
+    name: SensitivitySetting
+    href: CharonsCorner.Runtime.SensitivitySetting.html
+  - name: '>'
+  - name: (
+  - uid: CharonsCorner.Runtime.SensitivitySetting
+    name: SensitivitySetting
+    href: CharonsCorner.Runtime.SensitivitySetting.html
+  - name: ','
+  - name: " "
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+  - name: <
+  - uid: CharonsCorner.Runtime.SensitivitySetting
+    name: SensitivitySetting
+    href: CharonsCorner.Runtime.SensitivitySetting.html
+  - name: '>'
+  - name: )
+  spec.vb:
+  - uid: CharonsCorner.Runtime.Utilities.IfNotNullThenCall``1(CharonsCorner.Runtime.SensitivitySetting,System.Action{CharonsCorner.Runtime.SensitivitySetting})
+    name: IfNotNullThenCall
+    href: CharonsCorner.Runtime.Utilities.html#CharonsCorner_Runtime_Utilities_IfNotNullThenCall__1___0_System_Action___0__
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: CharonsCorner.Runtime.SensitivitySetting
+    name: SensitivitySetting
+    href: CharonsCorner.Runtime.SensitivitySetting.html
+  - name: )
+  - name: (
+  - uid: CharonsCorner.Runtime.SensitivitySetting
+    name: SensitivitySetting
+    href: CharonsCorner.Runtime.SensitivitySetting.html
+  - name: ','
+  - name: " "
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: CharonsCorner.Runtime.SensitivitySetting
+    name: SensitivitySetting
+    href: CharonsCorner.Runtime.SensitivitySetting.html
+  - name: )
+  - name: )
+- uid: CharonsCorner.Runtime.SensitivitySetting.CharonsCorner.Runtime.Utilities.IfNotNullThenGet``2(System.Func{CharonsCorner.Runtime.SensitivitySetting,{TResult}})
+  commentId: M:CharonsCorner.Runtime.Utilities.IfNotNullThenGet``2(``0,System.Func{``0,``1})
+  parent: CharonsCorner.Runtime.Utilities
+  definition: CharonsCorner.Runtime.Utilities.IfNotNullThenGet``2(``0,System.Func{``0,``1})
+  href: CharonsCorner.Runtime.Utilities.html#CharonsCorner_Runtime_Utilities_IfNotNullThenGet__2___0_System_Func___0___1__
+  name: IfNotNullThenGet<SensitivitySetting, TResult>(SensitivitySetting, Func<SensitivitySetting, TResult>)
+  nameWithType: Utilities.IfNotNullThenGet<SensitivitySetting, TResult>(SensitivitySetting, Func<SensitivitySetting, TResult>)
+  fullName: CharonsCorner.Runtime.Utilities.IfNotNullThenGet<CharonsCorner.Runtime.SensitivitySetting, TResult>(CharonsCorner.Runtime.SensitivitySetting, System.Func<CharonsCorner.Runtime.SensitivitySetting, TResult>)
+  nameWithType.vb: Utilities.IfNotNullThenGet(Of SensitivitySetting, TResult)(SensitivitySetting, Func(Of SensitivitySetting, TResult))
+  fullName.vb: CharonsCorner.Runtime.Utilities.IfNotNullThenGet(Of CharonsCorner.Runtime.SensitivitySetting, TResult)(CharonsCorner.Runtime.SensitivitySetting, System.Func(Of CharonsCorner.Runtime.SensitivitySetting, TResult))
+  name.vb: IfNotNullThenGet(Of SensitivitySetting, TResult)(SensitivitySetting, Func(Of SensitivitySetting, TResult))
+  spec.csharp:
+  - uid: CharonsCorner.Runtime.Utilities.IfNotNullThenGet``2(CharonsCorner.Runtime.SensitivitySetting,System.Func{CharonsCorner.Runtime.SensitivitySetting,``1})
+    name: IfNotNullThenGet
+    href: CharonsCorner.Runtime.Utilities.html#CharonsCorner_Runtime_Utilities_IfNotNullThenGet__2___0_System_Func___0___1__
+  - name: <
+  - uid: CharonsCorner.Runtime.SensitivitySetting
+    name: SensitivitySetting
+    href: CharonsCorner.Runtime.SensitivitySetting.html
+  - name: ','
+  - name: " "
+  - name: TResult
+  - name: '>'
+  - name: (
+  - uid: CharonsCorner.Runtime.SensitivitySetting
+    name: SensitivitySetting
+    href: CharonsCorner.Runtime.SensitivitySetting.html
+  - name: ','
+  - name: " "
+  - uid: System.Func`2
+    name: Func
+    isExternal: true
+  - name: <
+  - uid: CharonsCorner.Runtime.SensitivitySetting
+    name: SensitivitySetting
+    href: CharonsCorner.Runtime.SensitivitySetting.html
+  - name: ','
+  - name: " "
+  - name: TResult
+  - name: '>'
+  - name: )
+  spec.vb:
+  - uid: CharonsCorner.Runtime.Utilities.IfNotNullThenGet``2(CharonsCorner.Runtime.SensitivitySetting,System.Func{CharonsCorner.Runtime.SensitivitySetting,``1})
+    name: IfNotNullThenGet
+    href: CharonsCorner.Runtime.Utilities.html#CharonsCorner_Runtime_Utilities_IfNotNullThenGet__2___0_System_Func___0___1__
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: CharonsCorner.Runtime.SensitivitySetting
+    name: SensitivitySetting
+    href: CharonsCorner.Runtime.SensitivitySetting.html
+  - name: ','
+  - name: " "
+  - name: TResult
+  - name: )
+  - name: (
+  - uid: CharonsCorner.Runtime.SensitivitySetting
+    name: SensitivitySetting
+    href: CharonsCorner.Runtime.SensitivitySetting.html
+  - name: ','
+  - name: " "
+  - uid: System.Func`2
+    name: Func
+    isExternal: true
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: CharonsCorner.Runtime.SensitivitySetting
+    name: SensitivitySetting
+    href: CharonsCorner.Runtime.SensitivitySetting.html
+  - name: ','
+  - name: " "
+  - name: TResult
+  - name: )
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: UnityEngine
+  commentId: N:UnityEngine
+  isExternal: true
+  name: UnityEngine
+  nameWithType: UnityEngine
+  fullName: UnityEngine
+- uid: CharonsCorner.Runtime.Utilities.IfNotNullThenCall``1(``0,System.Action{``0})
+  commentId: M:CharonsCorner.Runtime.Utilities.IfNotNullThenCall``1(``0,System.Action{``0})
+  isExternal: true
+  href: CharonsCorner.Runtime.Utilities.html#CharonsCorner_Runtime_Utilities_IfNotNullThenCall__1___0_System_Action___0__
+  name: IfNotNullThenCall<T>(T, Action<T>)
+  nameWithType: Utilities.IfNotNullThenCall<T>(T, Action<T>)
+  fullName: CharonsCorner.Runtime.Utilities.IfNotNullThenCall<T>(T, System.Action<T>)
+  nameWithType.vb: Utilities.IfNotNullThenCall(Of T)(T, Action(Of T))
+  fullName.vb: CharonsCorner.Runtime.Utilities.IfNotNullThenCall(Of T)(T, System.Action(Of T))
+  name.vb: IfNotNullThenCall(Of T)(T, Action(Of T))
+  spec.csharp:
+  - uid: CharonsCorner.Runtime.Utilities.IfNotNullThenCall``1(``0,System.Action{``0})
+    name: IfNotNullThenCall
+    href: CharonsCorner.Runtime.Utilities.html#CharonsCorner_Runtime_Utilities_IfNotNullThenCall__1___0_System_Action___0__
+  - name: <
+  - name: T
+  - name: '>'
+  - name: (
+  - name: T
+  - name: ','
+  - name: " "
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+  - name: <
+  - name: T
+  - name: '>'
+  - name: )
+  spec.vb:
+  - uid: CharonsCorner.Runtime.Utilities.IfNotNullThenCall``1(``0,System.Action{``0})
+    name: IfNotNullThenCall
+    href: CharonsCorner.Runtime.Utilities.html#CharonsCorner_Runtime_Utilities_IfNotNullThenCall__1___0_System_Action___0__
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: (
+  - name: T
+  - name: ','
+  - name: " "
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: )
+- uid: CharonsCorner.Runtime.Utilities
+  commentId: T:CharonsCorner.Runtime.Utilities
+  parent: CharonsCorner.Runtime
+  href: CharonsCorner.Runtime.Utilities.html
+  name: Utilities
+  nameWithType: Utilities
+  fullName: CharonsCorner.Runtime.Utilities
+- uid: CharonsCorner.Runtime.Utilities.IfNotNullThenGet``2(``0,System.Func{``0,``1})
+  commentId: M:CharonsCorner.Runtime.Utilities.IfNotNullThenGet``2(``0,System.Func{``0,``1})
+  isExternal: true
+  href: CharonsCorner.Runtime.Utilities.html#CharonsCorner_Runtime_Utilities_IfNotNullThenGet__2___0_System_Func___0___1__
+  name: IfNotNullThenGet<T, TResult>(T, Func<T, TResult>)
+  nameWithType: Utilities.IfNotNullThenGet<T, TResult>(T, Func<T, TResult>)
+  fullName: CharonsCorner.Runtime.Utilities.IfNotNullThenGet<T, TResult>(T, System.Func<T, TResult>)
+  nameWithType.vb: Utilities.IfNotNullThenGet(Of T, TResult)(T, Func(Of T, TResult))
+  fullName.vb: CharonsCorner.Runtime.Utilities.IfNotNullThenGet(Of T, TResult)(T, System.Func(Of T, TResult))
+  name.vb: IfNotNullThenGet(Of T, TResult)(T, Func(Of T, TResult))
+  spec.csharp:
+  - uid: CharonsCorner.Runtime.Utilities.IfNotNullThenGet``2(``0,System.Func{``0,``1})
+    name: IfNotNullThenGet
+    href: CharonsCorner.Runtime.Utilities.html#CharonsCorner_Runtime_Utilities_IfNotNullThenGet__2___0_System_Func___0___1__
+  - name: <
+  - name: T
+  - name: ','
+  - name: " "
+  - name: TResult
+  - name: '>'
+  - name: (
+  - name: T
+  - name: ','
+  - name: " "
+  - uid: System.Func`2
+    name: Func
+    isExternal: true
+  - name: <
+  - name: T
+  - name: ','
+  - name: " "
+  - name: TResult
+  - name: '>'
+  - name: )
+  spec.vb:
+  - uid: CharonsCorner.Runtime.Utilities.IfNotNullThenGet``2(``0,System.Func{``0,``1})
+    name: IfNotNullThenGet
+    href: CharonsCorner.Runtime.Utilities.html#CharonsCorner_Runtime_Utilities_IfNotNullThenGet__2___0_System_Func___0___1__
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: ','
+  - name: " "
+  - name: TResult
+  - name: )
+  - name: (
+  - name: T
+  - name: ','
+  - name: " "
+  - uid: System.Func`2
+    name: Func
+    isExternal: true
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: ','
+  - name: " "
+  - name: TResult
+  - name: )
+  - name: )
+- uid: CharonsCorner.Runtime.SensitivitySetting.CurrentValue*
+  commentId: Overload:CharonsCorner.Runtime.SensitivitySetting.CurrentValue
+  href: CharonsCorner.Runtime.SensitivitySetting.html#CharonsCorner_Runtime_SensitivitySetting_CurrentValue
+  name: CurrentValue
+  nameWithType: SensitivitySetting.CurrentValue
+  fullName: CharonsCorner.Runtime.SensitivitySetting.CurrentValue
+- uid: System.Single
+  commentId: T:System.Single
+  parent: System
+  isExternal: true
+  name: float
+  nameWithType: float
+  fullName: float
+  nameWithType.vb: Single
+  fullName.vb: Single
+  name.vb: Single
+- uid: CharonsCorner.Runtime.Setting.Load
+  commentId: M:CharonsCorner.Runtime.Setting.Load
+  parent: CharonsCorner.Runtime.Setting
+  href: CharonsCorner.Runtime.Setting.html#CharonsCorner_Runtime_Setting_Load
+  name: Load()
+  nameWithType: Setting.Load()
+  fullName: CharonsCorner.Runtime.Setting.Load()
+  spec.csharp:
+  - uid: CharonsCorner.Runtime.Setting.Load
+    name: Load
+    href: CharonsCorner.Runtime.Setting.html#CharonsCorner_Runtime_Setting_Load
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: CharonsCorner.Runtime.Setting.Load
+    name: Load
+    href: CharonsCorner.Runtime.Setting.html#CharonsCorner_Runtime_Setting_Load
+  - name: (
+  - name: )
+- uid: CharonsCorner.Runtime.SensitivitySetting.Load*
+  commentId: Overload:CharonsCorner.Runtime.SensitivitySetting.Load
+  href: CharonsCorner.Runtime.SensitivitySetting.html#CharonsCorner_Runtime_SensitivitySetting_Load
+  name: Load
+  nameWithType: SensitivitySetting.Load
+  fullName: CharonsCorner.Runtime.SensitivitySetting.Load
+- uid: CharonsCorner.Runtime.Setting.Apply
+  commentId: M:CharonsCorner.Runtime.Setting.Apply
+  parent: CharonsCorner.Runtime.Setting
+  href: CharonsCorner.Runtime.Setting.html#CharonsCorner_Runtime_Setting_Apply
+  name: Apply()
+  nameWithType: Setting.Apply()
+  fullName: CharonsCorner.Runtime.Setting.Apply()
+  spec.csharp:
+  - uid: CharonsCorner.Runtime.Setting.Apply
+    name: Apply
+    href: CharonsCorner.Runtime.Setting.html#CharonsCorner_Runtime_Setting_Apply
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: CharonsCorner.Runtime.Setting.Apply
+    name: Apply
+    href: CharonsCorner.Runtime.Setting.html#CharonsCorner_Runtime_Setting_Apply
+  - name: (
+  - name: )
+- uid: CharonsCorner.Runtime.SensitivitySetting.Apply*
+  commentId: Overload:CharonsCorner.Runtime.SensitivitySetting.Apply
+  href: CharonsCorner.Runtime.SensitivitySetting.html#CharonsCorner_Runtime_SensitivitySetting_Apply
+  name: Apply
+  nameWithType: SensitivitySetting.Apply
+  fullName: CharonsCorner.Runtime.SensitivitySetting.Apply
+- uid: CharonsCorner.Runtime.Setting.Discard
+  commentId: M:CharonsCorner.Runtime.Setting.Discard
+  parent: CharonsCorner.Runtime.Setting
+  href: CharonsCorner.Runtime.Setting.html#CharonsCorner_Runtime_Setting_Discard
+  name: Discard()
+  nameWithType: Setting.Discard()
+  fullName: CharonsCorner.Runtime.Setting.Discard()
+  spec.csharp:
+  - uid: CharonsCorner.Runtime.Setting.Discard
+    name: Discard
+    href: CharonsCorner.Runtime.Setting.html#CharonsCorner_Runtime_Setting_Discard
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: CharonsCorner.Runtime.Setting.Discard
+    name: Discard
+    href: CharonsCorner.Runtime.Setting.html#CharonsCorner_Runtime_Setting_Discard
+  - name: (
+  - name: )
+- uid: CharonsCorner.Runtime.SensitivitySetting.Discard*
+  commentId: Overload:CharonsCorner.Runtime.SensitivitySetting.Discard
+  href: CharonsCorner.Runtime.SensitivitySetting.html#CharonsCorner_Runtime_SensitivitySetting_Discard
+  name: Discard
+  nameWithType: SensitivitySetting.Discard
+  fullName: CharonsCorner.Runtime.SensitivitySetting.Discard
+- uid: CharonsCorner.Runtime.Setting.IsDirty
+  commentId: M:CharonsCorner.Runtime.Setting.IsDirty
+  parent: CharonsCorner.Runtime.Setting
+  href: CharonsCorner.Runtime.Setting.html#CharonsCorner_Runtime_Setting_IsDirty
+  name: IsDirty()
+  nameWithType: Setting.IsDirty()
+  fullName: CharonsCorner.Runtime.Setting.IsDirty()
+  spec.csharp:
+  - uid: CharonsCorner.Runtime.Setting.IsDirty
+    name: IsDirty
+    href: CharonsCorner.Runtime.Setting.html#CharonsCorner_Runtime_Setting_IsDirty
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: CharonsCorner.Runtime.Setting.IsDirty
+    name: IsDirty
+    href: CharonsCorner.Runtime.Setting.html#CharonsCorner_Runtime_Setting_IsDirty
+  - name: (
+  - name: )
+- uid: CharonsCorner.Runtime.SensitivitySetting.IsDirty*
+  commentId: Overload:CharonsCorner.Runtime.SensitivitySetting.IsDirty
+  href: CharonsCorner.Runtime.SensitivitySetting.html#CharonsCorner_Runtime_SensitivitySetting_IsDirty
+  name: IsDirty
+  nameWithType: SensitivitySetting.IsDirty
+  fullName: CharonsCorner.Runtime.SensitivitySetting.IsDirty
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean

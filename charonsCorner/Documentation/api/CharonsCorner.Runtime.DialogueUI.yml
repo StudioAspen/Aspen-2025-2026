@@ -1,0 +1,544 @@
+### YamlMime:ManagedReference
+items:
+- uid: CharonsCorner.Runtime.DialogueUI
+  commentId: T:CharonsCorner.Runtime.DialogueUI
+  id: DialogueUI
+  parent: CharonsCorner.Runtime
+  children:
+  - CharonsCorner.Runtime.DialogueUI.CloseUI
+  - CharonsCorner.Runtime.DialogueUI.SkipTyping
+  langs:
+  - csharp
+  - vb
+  name: DialogueUI
+  nameWithType: DialogueUI
+  fullName: CharonsCorner.Runtime.DialogueUI
+  type: Class
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/Dialogue/DialogueUI.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: DialogueUI
+    path: ../Assets/Scripts/Runtime/Dialogue/DialogueUI.cs
+    startLine: 11
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  syntax:
+    content: 'public class DialogueUI : UIPanel'
+    content.vb: Public Class DialogueUI Inherits UIPanel
+  inheritance:
+  - System.Object
+  - UnityEngine.Object
+  - UnityEngine.Component
+  - UnityEngine.Behaviour
+  - UnityEngine.MonoBehaviour
+  - CharonsCorner.Runtime.UIPanel
+  inheritedMembers:
+  - CharonsCorner.Runtime.UIPanel.DefaultSelectedObject
+  - CharonsCorner.Runtime.UIPanel.Init(CharonsCorner.Runtime.UIManager)
+  - CharonsCorner.Runtime.UIPanel.Show
+  - CharonsCorner.Runtime.UIPanel.Hide
+  extensionMethods:
+  - CharonsCorner.Runtime.DialogueUI.CharonsCorner.Runtime.Utilities.IfNotNullThenCall``1(System.Action{CharonsCorner.Runtime.DialogueUI})
+  - CharonsCorner.Runtime.DialogueUI.CharonsCorner.Runtime.Utilities.IfNotNullThenGet``2(System.Func{CharonsCorner.Runtime.DialogueUI,{TResult}})
+- uid: CharonsCorner.Runtime.DialogueUI.SkipTyping
+  commentId: M:CharonsCorner.Runtime.DialogueUI.SkipTyping
+  id: SkipTyping
+  parent: CharonsCorner.Runtime.DialogueUI
+  langs:
+  - csharp
+  - vb
+  name: SkipTyping()
+  nameWithType: DialogueUI.SkipTyping()
+  fullName: CharonsCorner.Runtime.DialogueUI.SkipTyping()
+  type: Method
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/Dialogue/DialogueUI.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: SkipTyping
+    path: ../Assets/Scripts/Runtime/Dialogue/DialogueUI.cs
+    startLine: 105
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  summary: Stops typing and shows the full text immediately.
+  example: []
+  syntax:
+    content: public void SkipTyping()
+    content.vb: Public Sub SkipTyping()
+  overload: CharonsCorner.Runtime.DialogueUI.SkipTyping*
+- uid: CharonsCorner.Runtime.DialogueUI.CloseUI
+  commentId: M:CharonsCorner.Runtime.DialogueUI.CloseUI
+  id: CloseUI
+  parent: CharonsCorner.Runtime.DialogueUI
+  langs:
+  - csharp
+  - vb
+  name: CloseUI()
+  nameWithType: DialogueUI.CloseUI()
+  fullName: CharonsCorner.Runtime.DialogueUI.CloseUI()
+  type: Method
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/Dialogue/DialogueUI.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: CloseUI
+    path: ../Assets/Scripts/Runtime/Dialogue/DialogueUI.cs
+    startLine: 182
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  summary: >-
+    For when the player wants to close the UI panel.
+
+    This is different from Hide() because it also handles any additional cleanup or state changes needed when closing the UI.
+  example: []
+  syntax:
+    content: public override void CloseUI()
+    content.vb: Public Overrides Sub CloseUI()
+  overridden: CharonsCorner.Runtime.UIPanel.CloseUI
+  overload: CharonsCorner.Runtime.DialogueUI.CloseUI*
+references:
+- uid: CharonsCorner.Runtime
+  commentId: N:CharonsCorner.Runtime
+  href: CharonsCorner.html
+  name: CharonsCorner.Runtime
+  nameWithType: CharonsCorner.Runtime
+  fullName: CharonsCorner.Runtime
+  spec.csharp:
+  - uid: CharonsCorner
+    name: CharonsCorner
+    href: CharonsCorner.html
+  - name: .
+  - uid: CharonsCorner.Runtime
+    name: Runtime
+    href: CharonsCorner.Runtime.html
+  spec.vb:
+  - uid: CharonsCorner
+    name: CharonsCorner
+    href: CharonsCorner.html
+  - name: .
+  - uid: CharonsCorner.Runtime
+    name: Runtime
+    href: CharonsCorner.Runtime.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: UnityEngine.Object
+  commentId: T:UnityEngine.Object
+  parent: UnityEngine
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: UnityEngine.Object
+- uid: UnityEngine.Component
+  commentId: T:UnityEngine.Component
+  parent: UnityEngine
+  isExternal: true
+  name: Component
+  nameWithType: Component
+  fullName: UnityEngine.Component
+- uid: UnityEngine.Behaviour
+  commentId: T:UnityEngine.Behaviour
+  parent: UnityEngine
+  isExternal: true
+  name: Behaviour
+  nameWithType: Behaviour
+  fullName: UnityEngine.Behaviour
+- uid: UnityEngine.MonoBehaviour
+  commentId: T:UnityEngine.MonoBehaviour
+  parent: UnityEngine
+  isExternal: true
+  name: MonoBehaviour
+  nameWithType: MonoBehaviour
+  fullName: UnityEngine.MonoBehaviour
+- uid: CharonsCorner.Runtime.UIPanel
+  commentId: T:CharonsCorner.Runtime.UIPanel
+  parent: CharonsCorner.Runtime
+  href: CharonsCorner.Runtime.UIPanel.html
+  name: UIPanel
+  nameWithType: UIPanel
+  fullName: CharonsCorner.Runtime.UIPanel
+- uid: CharonsCorner.Runtime.UIPanel.DefaultSelectedObject
+  commentId: P:CharonsCorner.Runtime.UIPanel.DefaultSelectedObject
+  parent: CharonsCorner.Runtime.UIPanel
+  href: CharonsCorner.Runtime.UIPanel.html#CharonsCorner_Runtime_UIPanel_DefaultSelectedObject
+  name: DefaultSelectedObject
+  nameWithType: UIPanel.DefaultSelectedObject
+  fullName: CharonsCorner.Runtime.UIPanel.DefaultSelectedObject
+- uid: CharonsCorner.Runtime.UIPanel.Init(CharonsCorner.Runtime.UIManager)
+  commentId: M:CharonsCorner.Runtime.UIPanel.Init(CharonsCorner.Runtime.UIManager)
+  parent: CharonsCorner.Runtime.UIPanel
+  href: CharonsCorner.Runtime.UIPanel.html#CharonsCorner_Runtime_UIPanel_Init_CharonsCorner_Runtime_UIManager_
+  name: Init(UIManager)
+  nameWithType: UIPanel.Init(UIManager)
+  fullName: CharonsCorner.Runtime.UIPanel.Init(CharonsCorner.Runtime.UIManager)
+  spec.csharp:
+  - uid: CharonsCorner.Runtime.UIPanel.Init(CharonsCorner.Runtime.UIManager)
+    name: Init
+    href: CharonsCorner.Runtime.UIPanel.html#CharonsCorner_Runtime_UIPanel_Init_CharonsCorner_Runtime_UIManager_
+  - name: (
+  - uid: CharonsCorner.Runtime.UIManager
+    name: UIManager
+    href: CharonsCorner.Runtime.UIManager.html
+  - name: )
+  spec.vb:
+  - uid: CharonsCorner.Runtime.UIPanel.Init(CharonsCorner.Runtime.UIManager)
+    name: Init
+    href: CharonsCorner.Runtime.UIPanel.html#CharonsCorner_Runtime_UIPanel_Init_CharonsCorner_Runtime_UIManager_
+  - name: (
+  - uid: CharonsCorner.Runtime.UIManager
+    name: UIManager
+    href: CharonsCorner.Runtime.UIManager.html
+  - name: )
+- uid: CharonsCorner.Runtime.UIPanel.Show
+  commentId: M:CharonsCorner.Runtime.UIPanel.Show
+  parent: CharonsCorner.Runtime.UIPanel
+  href: CharonsCorner.Runtime.UIPanel.html#CharonsCorner_Runtime_UIPanel_Show
+  name: Show()
+  nameWithType: UIPanel.Show()
+  fullName: CharonsCorner.Runtime.UIPanel.Show()
+  spec.csharp:
+  - uid: CharonsCorner.Runtime.UIPanel.Show
+    name: Show
+    href: CharonsCorner.Runtime.UIPanel.html#CharonsCorner_Runtime_UIPanel_Show
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: CharonsCorner.Runtime.UIPanel.Show
+    name: Show
+    href: CharonsCorner.Runtime.UIPanel.html#CharonsCorner_Runtime_UIPanel_Show
+  - name: (
+  - name: )
+- uid: CharonsCorner.Runtime.UIPanel.Hide
+  commentId: M:CharonsCorner.Runtime.UIPanel.Hide
+  parent: CharonsCorner.Runtime.UIPanel
+  href: CharonsCorner.Runtime.UIPanel.html#CharonsCorner_Runtime_UIPanel_Hide
+  name: Hide()
+  nameWithType: UIPanel.Hide()
+  fullName: CharonsCorner.Runtime.UIPanel.Hide()
+  spec.csharp:
+  - uid: CharonsCorner.Runtime.UIPanel.Hide
+    name: Hide
+    href: CharonsCorner.Runtime.UIPanel.html#CharonsCorner_Runtime_UIPanel_Hide
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: CharonsCorner.Runtime.UIPanel.Hide
+    name: Hide
+    href: CharonsCorner.Runtime.UIPanel.html#CharonsCorner_Runtime_UIPanel_Hide
+  - name: (
+  - name: )
+- uid: CharonsCorner.Runtime.DialogueUI.CharonsCorner.Runtime.Utilities.IfNotNullThenCall``1(System.Action{CharonsCorner.Runtime.DialogueUI})
+  commentId: M:CharonsCorner.Runtime.Utilities.IfNotNullThenCall``1(``0,System.Action{``0})
+  parent: CharonsCorner.Runtime.Utilities
+  definition: CharonsCorner.Runtime.Utilities.IfNotNullThenCall``1(``0,System.Action{``0})
+  href: CharonsCorner.Runtime.Utilities.html#CharonsCorner_Runtime_Utilities_IfNotNullThenCall__1___0_System_Action___0__
+  name: IfNotNullThenCall<DialogueUI>(DialogueUI, Action<DialogueUI>)
+  nameWithType: Utilities.IfNotNullThenCall<DialogueUI>(DialogueUI, Action<DialogueUI>)
+  fullName: CharonsCorner.Runtime.Utilities.IfNotNullThenCall<CharonsCorner.Runtime.DialogueUI>(CharonsCorner.Runtime.DialogueUI, System.Action<CharonsCorner.Runtime.DialogueUI>)
+  nameWithType.vb: Utilities.IfNotNullThenCall(Of DialogueUI)(DialogueUI, Action(Of DialogueUI))
+  fullName.vb: CharonsCorner.Runtime.Utilities.IfNotNullThenCall(Of CharonsCorner.Runtime.DialogueUI)(CharonsCorner.Runtime.DialogueUI, System.Action(Of CharonsCorner.Runtime.DialogueUI))
+  name.vb: IfNotNullThenCall(Of DialogueUI)(DialogueUI, Action(Of DialogueUI))
+  spec.csharp:
+  - uid: CharonsCorner.Runtime.Utilities.IfNotNullThenCall``1(CharonsCorner.Runtime.DialogueUI,System.Action{CharonsCorner.Runtime.DialogueUI})
+    name: IfNotNullThenCall
+    href: CharonsCorner.Runtime.Utilities.html#CharonsCorner_Runtime_Utilities_IfNotNullThenCall__1___0_System_Action___0__
+  - name: <
+  - uid: CharonsCorner.Runtime.DialogueUI
+    name: DialogueUI
+    href: CharonsCorner.Runtime.DialogueUI.html
+  - name: '>'
+  - name: (
+  - uid: CharonsCorner.Runtime.DialogueUI
+    name: DialogueUI
+    href: CharonsCorner.Runtime.DialogueUI.html
+  - name: ','
+  - name: " "
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+  - name: <
+  - uid: CharonsCorner.Runtime.DialogueUI
+    name: DialogueUI
+    href: CharonsCorner.Runtime.DialogueUI.html
+  - name: '>'
+  - name: )
+  spec.vb:
+  - uid: CharonsCorner.Runtime.Utilities.IfNotNullThenCall``1(CharonsCorner.Runtime.DialogueUI,System.Action{CharonsCorner.Runtime.DialogueUI})
+    name: IfNotNullThenCall
+    href: CharonsCorner.Runtime.Utilities.html#CharonsCorner_Runtime_Utilities_IfNotNullThenCall__1___0_System_Action___0__
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: CharonsCorner.Runtime.DialogueUI
+    name: DialogueUI
+    href: CharonsCorner.Runtime.DialogueUI.html
+  - name: )
+  - name: (
+  - uid: CharonsCorner.Runtime.DialogueUI
+    name: DialogueUI
+    href: CharonsCorner.Runtime.DialogueUI.html
+  - name: ','
+  - name: " "
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: CharonsCorner.Runtime.DialogueUI
+    name: DialogueUI
+    href: CharonsCorner.Runtime.DialogueUI.html
+  - name: )
+  - name: )
+- uid: CharonsCorner.Runtime.DialogueUI.CharonsCorner.Runtime.Utilities.IfNotNullThenGet``2(System.Func{CharonsCorner.Runtime.DialogueUI,{TResult}})
+  commentId: M:CharonsCorner.Runtime.Utilities.IfNotNullThenGet``2(``0,System.Func{``0,``1})
+  parent: CharonsCorner.Runtime.Utilities
+  definition: CharonsCorner.Runtime.Utilities.IfNotNullThenGet``2(``0,System.Func{``0,``1})
+  href: CharonsCorner.Runtime.Utilities.html#CharonsCorner_Runtime_Utilities_IfNotNullThenGet__2___0_System_Func___0___1__
+  name: IfNotNullThenGet<DialogueUI, TResult>(DialogueUI, Func<DialogueUI, TResult>)
+  nameWithType: Utilities.IfNotNullThenGet<DialogueUI, TResult>(DialogueUI, Func<DialogueUI, TResult>)
+  fullName: CharonsCorner.Runtime.Utilities.IfNotNullThenGet<CharonsCorner.Runtime.DialogueUI, TResult>(CharonsCorner.Runtime.DialogueUI, System.Func<CharonsCorner.Runtime.DialogueUI, TResult>)
+  nameWithType.vb: Utilities.IfNotNullThenGet(Of DialogueUI, TResult)(DialogueUI, Func(Of DialogueUI, TResult))
+  fullName.vb: CharonsCorner.Runtime.Utilities.IfNotNullThenGet(Of CharonsCorner.Runtime.DialogueUI, TResult)(CharonsCorner.Runtime.DialogueUI, System.Func(Of CharonsCorner.Runtime.DialogueUI, TResult))
+  name.vb: IfNotNullThenGet(Of DialogueUI, TResult)(DialogueUI, Func(Of DialogueUI, TResult))
+  spec.csharp:
+  - uid: CharonsCorner.Runtime.Utilities.IfNotNullThenGet``2(CharonsCorner.Runtime.DialogueUI,System.Func{CharonsCorner.Runtime.DialogueUI,``1})
+    name: IfNotNullThenGet
+    href: CharonsCorner.Runtime.Utilities.html#CharonsCorner_Runtime_Utilities_IfNotNullThenGet__2___0_System_Func___0___1__
+  - name: <
+  - uid: CharonsCorner.Runtime.DialogueUI
+    name: DialogueUI
+    href: CharonsCorner.Runtime.DialogueUI.html
+  - name: ','
+  - name: " "
+  - name: TResult
+  - name: '>'
+  - name: (
+  - uid: CharonsCorner.Runtime.DialogueUI
+    name: DialogueUI
+    href: CharonsCorner.Runtime.DialogueUI.html
+  - name: ','
+  - name: " "
+  - uid: System.Func`2
+    name: Func
+    isExternal: true
+  - name: <
+  - uid: CharonsCorner.Runtime.DialogueUI
+    name: DialogueUI
+    href: CharonsCorner.Runtime.DialogueUI.html
+  - name: ','
+  - name: " "
+  - name: TResult
+  - name: '>'
+  - name: )
+  spec.vb:
+  - uid: CharonsCorner.Runtime.Utilities.IfNotNullThenGet``2(CharonsCorner.Runtime.DialogueUI,System.Func{CharonsCorner.Runtime.DialogueUI,``1})
+    name: IfNotNullThenGet
+    href: CharonsCorner.Runtime.Utilities.html#CharonsCorner_Runtime_Utilities_IfNotNullThenGet__2___0_System_Func___0___1__
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: CharonsCorner.Runtime.DialogueUI
+    name: DialogueUI
+    href: CharonsCorner.Runtime.DialogueUI.html
+  - name: ','
+  - name: " "
+  - name: TResult
+  - name: )
+  - name: (
+  - uid: CharonsCorner.Runtime.DialogueUI
+    name: DialogueUI
+    href: CharonsCorner.Runtime.DialogueUI.html
+  - name: ','
+  - name: " "
+  - uid: System.Func`2
+    name: Func
+    isExternal: true
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: CharonsCorner.Runtime.DialogueUI
+    name: DialogueUI
+    href: CharonsCorner.Runtime.DialogueUI.html
+  - name: ','
+  - name: " "
+  - name: TResult
+  - name: )
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: UnityEngine
+  commentId: N:UnityEngine
+  isExternal: true
+  name: UnityEngine
+  nameWithType: UnityEngine
+  fullName: UnityEngine
+- uid: CharonsCorner.Runtime.Utilities.IfNotNullThenCall``1(``0,System.Action{``0})
+  commentId: M:CharonsCorner.Runtime.Utilities.IfNotNullThenCall``1(``0,System.Action{``0})
+  isExternal: true
+  href: CharonsCorner.Runtime.Utilities.html#CharonsCorner_Runtime_Utilities_IfNotNullThenCall__1___0_System_Action___0__
+  name: IfNotNullThenCall<T>(T, Action<T>)
+  nameWithType: Utilities.IfNotNullThenCall<T>(T, Action<T>)
+  fullName: CharonsCorner.Runtime.Utilities.IfNotNullThenCall<T>(T, System.Action<T>)
+  nameWithType.vb: Utilities.IfNotNullThenCall(Of T)(T, Action(Of T))
+  fullName.vb: CharonsCorner.Runtime.Utilities.IfNotNullThenCall(Of T)(T, System.Action(Of T))
+  name.vb: IfNotNullThenCall(Of T)(T, Action(Of T))
+  spec.csharp:
+  - uid: CharonsCorner.Runtime.Utilities.IfNotNullThenCall``1(``0,System.Action{``0})
+    name: IfNotNullThenCall
+    href: CharonsCorner.Runtime.Utilities.html#CharonsCorner_Runtime_Utilities_IfNotNullThenCall__1___0_System_Action___0__
+  - name: <
+  - name: T
+  - name: '>'
+  - name: (
+  - name: T
+  - name: ','
+  - name: " "
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+  - name: <
+  - name: T
+  - name: '>'
+  - name: )
+  spec.vb:
+  - uid: CharonsCorner.Runtime.Utilities.IfNotNullThenCall``1(``0,System.Action{``0})
+    name: IfNotNullThenCall
+    href: CharonsCorner.Runtime.Utilities.html#CharonsCorner_Runtime_Utilities_IfNotNullThenCall__1___0_System_Action___0__
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: (
+  - name: T
+  - name: ','
+  - name: " "
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: )
+- uid: CharonsCorner.Runtime.Utilities
+  commentId: T:CharonsCorner.Runtime.Utilities
+  parent: CharonsCorner.Runtime
+  href: CharonsCorner.Runtime.Utilities.html
+  name: Utilities
+  nameWithType: Utilities
+  fullName: CharonsCorner.Runtime.Utilities
+- uid: CharonsCorner.Runtime.Utilities.IfNotNullThenGet``2(``0,System.Func{``0,``1})
+  commentId: M:CharonsCorner.Runtime.Utilities.IfNotNullThenGet``2(``0,System.Func{``0,``1})
+  isExternal: true
+  href: CharonsCorner.Runtime.Utilities.html#CharonsCorner_Runtime_Utilities_IfNotNullThenGet__2___0_System_Func___0___1__
+  name: IfNotNullThenGet<T, TResult>(T, Func<T, TResult>)
+  nameWithType: Utilities.IfNotNullThenGet<T, TResult>(T, Func<T, TResult>)
+  fullName: CharonsCorner.Runtime.Utilities.IfNotNullThenGet<T, TResult>(T, System.Func<T, TResult>)
+  nameWithType.vb: Utilities.IfNotNullThenGet(Of T, TResult)(T, Func(Of T, TResult))
+  fullName.vb: CharonsCorner.Runtime.Utilities.IfNotNullThenGet(Of T, TResult)(T, System.Func(Of T, TResult))
+  name.vb: IfNotNullThenGet(Of T, TResult)(T, Func(Of T, TResult))
+  spec.csharp:
+  - uid: CharonsCorner.Runtime.Utilities.IfNotNullThenGet``2(``0,System.Func{``0,``1})
+    name: IfNotNullThenGet
+    href: CharonsCorner.Runtime.Utilities.html#CharonsCorner_Runtime_Utilities_IfNotNullThenGet__2___0_System_Func___0___1__
+  - name: <
+  - name: T
+  - name: ','
+  - name: " "
+  - name: TResult
+  - name: '>'
+  - name: (
+  - name: T
+  - name: ','
+  - name: " "
+  - uid: System.Func`2
+    name: Func
+    isExternal: true
+  - name: <
+  - name: T
+  - name: ','
+  - name: " "
+  - name: TResult
+  - name: '>'
+  - name: )
+  spec.vb:
+  - uid: CharonsCorner.Runtime.Utilities.IfNotNullThenGet``2(``0,System.Func{``0,``1})
+    name: IfNotNullThenGet
+    href: CharonsCorner.Runtime.Utilities.html#CharonsCorner_Runtime_Utilities_IfNotNullThenGet__2___0_System_Func___0___1__
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: ','
+  - name: " "
+  - name: TResult
+  - name: )
+  - name: (
+  - name: T
+  - name: ','
+  - name: " "
+  - uid: System.Func`2
+    name: Func
+    isExternal: true
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: ','
+  - name: " "
+  - name: TResult
+  - name: )
+  - name: )
+- uid: CharonsCorner.Runtime.DialogueUI.SkipTyping*
+  commentId: Overload:CharonsCorner.Runtime.DialogueUI.SkipTyping
+  href: CharonsCorner.Runtime.DialogueUI.html#CharonsCorner_Runtime_DialogueUI_SkipTyping
+  name: SkipTyping
+  nameWithType: DialogueUI.SkipTyping
+  fullName: CharonsCorner.Runtime.DialogueUI.SkipTyping
+- uid: CharonsCorner.Runtime.UIPanel.CloseUI
+  commentId: M:CharonsCorner.Runtime.UIPanel.CloseUI
+  parent: CharonsCorner.Runtime.UIPanel
+  href: CharonsCorner.Runtime.UIPanel.html#CharonsCorner_Runtime_UIPanel_CloseUI
+  name: CloseUI()
+  nameWithType: UIPanel.CloseUI()
+  fullName: CharonsCorner.Runtime.UIPanel.CloseUI()
+  spec.csharp:
+  - uid: CharonsCorner.Runtime.UIPanel.CloseUI
+    name: CloseUI
+    href: CharonsCorner.Runtime.UIPanel.html#CharonsCorner_Runtime_UIPanel_CloseUI
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: CharonsCorner.Runtime.UIPanel.CloseUI
+    name: CloseUI
+    href: CharonsCorner.Runtime.UIPanel.html#CharonsCorner_Runtime_UIPanel_CloseUI
+  - name: (
+  - name: )
+- uid: CharonsCorner.Runtime.DialogueUI.CloseUI*
+  commentId: Overload:CharonsCorner.Runtime.DialogueUI.CloseUI
+  href: CharonsCorner.Runtime.DialogueUI.html#CharonsCorner_Runtime_DialogueUI_CloseUI
+  name: CloseUI
+  nameWithType: DialogueUI.CloseUI
+  fullName: CharonsCorner.Runtime.DialogueUI.CloseUI

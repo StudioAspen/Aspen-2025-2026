@@ -1,0 +1,459 @@
+### YamlMime:ManagedReference
+items:
+- uid: CharonsCorner.Runtime.IntRange
+  commentId: T:CharonsCorner.Runtime.IntRange
+  id: IntRange
+  parent: CharonsCorner.Runtime
+  children:
+  - CharonsCorner.Runtime.IntRange.#ctor(System.Int32,System.Int32)
+  - CharonsCorner.Runtime.IntRange.Clamp(System.Int32)
+  - CharonsCorner.Runtime.IntRange.Clamp01(System.Int32)
+  - CharonsCorner.Runtime.IntRange.Contains(System.Int32)
+  - CharonsCorner.Runtime.IntRange.InverseLerp(System.Int32)
+  - CharonsCorner.Runtime.IntRange.Lerp(System.Single)
+  - CharonsCorner.Runtime.IntRange.Max
+  - CharonsCorner.Runtime.IntRange.Min
+  - CharonsCorner.Runtime.IntRange.RandomValue
+  langs:
+  - csharp
+  - vb
+  name: IntRange
+  nameWithType: IntRange
+  fullName: CharonsCorner.Runtime.IntRange
+  type: Struct
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/Utilities/IntRange.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: IntRange
+    path: ../Assets/Scripts/Runtime/Utilities/IntRange.cs
+    startLine: 4
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  syntax:
+    content: >-
+      [Serializable]
+
+      public struct IntRange
+    content.vb: >-
+      <Serializable>
+
+      Public Structure IntRange
+  attributes:
+  - type: System.SerializableAttribute
+    ctor: System.SerializableAttribute.#ctor
+    arguments: []
+- uid: CharonsCorner.Runtime.IntRange.Min
+  commentId: F:CharonsCorner.Runtime.IntRange.Min
+  id: Min
+  parent: CharonsCorner.Runtime.IntRange
+  langs:
+  - csharp
+  - vb
+  name: Min
+  nameWithType: IntRange.Min
+  fullName: CharonsCorner.Runtime.IntRange.Min
+  type: Field
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/Utilities/IntRange.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: Min
+    path: ../Assets/Scripts/Runtime/Utilities/IntRange.cs
+    startLine: 7
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  syntax:
+    content: public int Min
+    return:
+      type: System.Int32
+    content.vb: Public Min As Integer
+- uid: CharonsCorner.Runtime.IntRange.Max
+  commentId: F:CharonsCorner.Runtime.IntRange.Max
+  id: Max
+  parent: CharonsCorner.Runtime.IntRange
+  langs:
+  - csharp
+  - vb
+  name: Max
+  nameWithType: IntRange.Max
+  fullName: CharonsCorner.Runtime.IntRange.Max
+  type: Field
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/Utilities/IntRange.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: Max
+    path: ../Assets/Scripts/Runtime/Utilities/IntRange.cs
+    startLine: 8
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  syntax:
+    content: public int Max
+    return:
+      type: System.Int32
+    content.vb: Public Max As Integer
+- uid: CharonsCorner.Runtime.IntRange.#ctor(System.Int32,System.Int32)
+  commentId: M:CharonsCorner.Runtime.IntRange.#ctor(System.Int32,System.Int32)
+  id: '#ctor(System.Int32,System.Int32)'
+  parent: CharonsCorner.Runtime.IntRange
+  langs:
+  - csharp
+  - vb
+  name: IntRange(int, int)
+  nameWithType: IntRange.IntRange(int, int)
+  fullName: CharonsCorner.Runtime.IntRange.IntRange(int, int)
+  type: Constructor
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/Utilities/IntRange.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: .ctor
+    path: ../Assets/Scripts/Runtime/Utilities/IntRange.cs
+    startLine: 10
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  syntax:
+    content: public IntRange(int min, int max)
+    parameters:
+    - id: min
+      type: System.Int32
+    - id: max
+      type: System.Int32
+    content.vb: Public Sub New(min As Integer, max As Integer)
+  overload: CharonsCorner.Runtime.IntRange.#ctor*
+  nameWithType.vb: IntRange.New(Integer, Integer)
+  fullName.vb: CharonsCorner.Runtime.IntRange.New(Integer, Integer)
+  name.vb: New(Integer, Integer)
+- uid: CharonsCorner.Runtime.IntRange.Clamp(System.Int32)
+  commentId: M:CharonsCorner.Runtime.IntRange.Clamp(System.Int32)
+  id: Clamp(System.Int32)
+  parent: CharonsCorner.Runtime.IntRange
+  langs:
+  - csharp
+  - vb
+  name: Clamp(int)
+  nameWithType: IntRange.Clamp(int)
+  fullName: CharonsCorner.Runtime.IntRange.Clamp(int)
+  type: Method
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/Utilities/IntRange.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: Clamp
+    path: ../Assets/Scripts/Runtime/Utilities/IntRange.cs
+    startLine: 20
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  summary: >-
+    Clamps the value between the minimum and maximum values of the range.
+
+    Returns the clamped value.
+  example: []
+  syntax:
+    content: public int Clamp(int value)
+    parameters:
+    - id: value
+      type: System.Int32
+    return:
+      type: System.Int32
+    content.vb: Public Function Clamp(value As Integer) As Integer
+  overload: CharonsCorner.Runtime.IntRange.Clamp*
+  nameWithType.vb: IntRange.Clamp(Integer)
+  fullName.vb: CharonsCorner.Runtime.IntRange.Clamp(Integer)
+  name.vb: Clamp(Integer)
+- uid: CharonsCorner.Runtime.IntRange.Clamp01(System.Int32)
+  commentId: M:CharonsCorner.Runtime.IntRange.Clamp01(System.Int32)
+  id: Clamp01(System.Int32)
+  parent: CharonsCorner.Runtime.IntRange
+  langs:
+  - csharp
+  - vb
+  name: Clamp01(int)
+  nameWithType: IntRange.Clamp01(int)
+  fullName: CharonsCorner.Runtime.IntRange.Clamp01(int)
+  type: Method
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/Utilities/IntRange.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: Clamp01
+    path: ../Assets/Scripts/Runtime/Utilities/IntRange.cs
+    startLine: 25
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  summary: >-
+    Clamps the value between the minimum and maximum values of the range
+
+    and returns a value between 0 and 1, where 0 corresponds to Min and 1 corresponds to Max.
+  example: []
+  syntax:
+    content: public float Clamp01(int value)
+    parameters:
+    - id: value
+      type: System.Int32
+    return:
+      type: System.Single
+    content.vb: Public Function Clamp01(value As Integer) As Single
+  overload: CharonsCorner.Runtime.IntRange.Clamp01*
+  nameWithType.vb: IntRange.Clamp01(Integer)
+  fullName.vb: CharonsCorner.Runtime.IntRange.Clamp01(Integer)
+  name.vb: Clamp01(Integer)
+- uid: CharonsCorner.Runtime.IntRange.Contains(System.Int32)
+  commentId: M:CharonsCorner.Runtime.IntRange.Contains(System.Int32)
+  id: Contains(System.Int32)
+  parent: CharonsCorner.Runtime.IntRange
+  langs:
+  - csharp
+  - vb
+  name: Contains(int)
+  nameWithType: IntRange.Contains(int)
+  fullName: CharonsCorner.Runtime.IntRange.Contains(int)
+  type: Method
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/Utilities/IntRange.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: Contains
+    path: ../Assets/Scripts/Runtime/Utilities/IntRange.cs
+    startLine: 29
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  summary: Checks if the value is within the range defined by Min and Max.
+  example: []
+  syntax:
+    content: public bool Contains(int value)
+    parameters:
+    - id: value
+      type: System.Int32
+    return:
+      type: System.Boolean
+    content.vb: Public Function Contains(value As Integer) As Boolean
+  overload: CharonsCorner.Runtime.IntRange.Contains*
+  nameWithType.vb: IntRange.Contains(Integer)
+  fullName.vb: CharonsCorner.Runtime.IntRange.Contains(Integer)
+  name.vb: Contains(Integer)
+- uid: CharonsCorner.Runtime.IntRange.Lerp(System.Single)
+  commentId: M:CharonsCorner.Runtime.IntRange.Lerp(System.Single)
+  id: Lerp(System.Single)
+  parent: CharonsCorner.Runtime.IntRange
+  langs:
+  - csharp
+  - vb
+  name: Lerp(float)
+  nameWithType: IntRange.Lerp(float)
+  fullName: CharonsCorner.Runtime.IntRange.Lerp(float)
+  type: Method
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/Utilities/IntRange.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: Lerp
+    path: ../Assets/Scripts/Runtime/Utilities/IntRange.cs
+    startLine: 33
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  summary: Linearly interpolates between Min and Max based on the parameter t.
+  example: []
+  syntax:
+    content: public int Lerp(float t)
+    parameters:
+    - id: t
+      type: System.Single
+    return:
+      type: System.Int32
+    content.vb: Public Function Lerp(t As Single) As Integer
+  overload: CharonsCorner.Runtime.IntRange.Lerp*
+  nameWithType.vb: IntRange.Lerp(Single)
+  fullName.vb: CharonsCorner.Runtime.IntRange.Lerp(Single)
+  name.vb: Lerp(Single)
+- uid: CharonsCorner.Runtime.IntRange.InverseLerp(System.Int32)
+  commentId: M:CharonsCorner.Runtime.IntRange.InverseLerp(System.Int32)
+  id: InverseLerp(System.Int32)
+  parent: CharonsCorner.Runtime.IntRange
+  langs:
+  - csharp
+  - vb
+  name: InverseLerp(int)
+  nameWithType: IntRange.InverseLerp(int)
+  fullName: CharonsCorner.Runtime.IntRange.InverseLerp(int)
+  type: Method
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/Utilities/IntRange.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: InverseLerp
+    path: ../Assets/Scripts/Runtime/Utilities/IntRange.cs
+    startLine: 38
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  summary: >-
+    Gets the parameter t that corresponds to the given value within the range
+
+    such that Min corresponds to 0 and Max corresponds to 1.
+  example: []
+  syntax:
+    content: public float InverseLerp(int value)
+    parameters:
+    - id: value
+      type: System.Int32
+    return:
+      type: System.Single
+    content.vb: Public Function InverseLerp(value As Integer) As Single
+  overload: CharonsCorner.Runtime.IntRange.InverseLerp*
+  nameWithType.vb: IntRange.InverseLerp(Integer)
+  fullName.vb: CharonsCorner.Runtime.IntRange.InverseLerp(Integer)
+  name.vb: InverseLerp(Integer)
+- uid: CharonsCorner.Runtime.IntRange.RandomValue
+  commentId: M:CharonsCorner.Runtime.IntRange.RandomValue
+  id: RandomValue
+  parent: CharonsCorner.Runtime.IntRange
+  langs:
+  - csharp
+  - vb
+  name: RandomValue()
+  nameWithType: IntRange.RandomValue()
+  fullName: CharonsCorner.Runtime.IntRange.RandomValue()
+  type: Method
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/Utilities/IntRange.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: RandomValue
+    path: ../Assets/Scripts/Runtime/Utilities/IntRange.cs
+    startLine: 42
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  summary: Gets a random value within the range defined by Min and Max.
+  example: []
+  syntax:
+    content: public int RandomValue()
+    return:
+      type: System.Int32
+    content.vb: Public Function RandomValue() As Integer
+  overload: CharonsCorner.Runtime.IntRange.RandomValue*
+references:
+- uid: CharonsCorner.Runtime
+  commentId: N:CharonsCorner.Runtime
+  href: CharonsCorner.html
+  name: CharonsCorner.Runtime
+  nameWithType: CharonsCorner.Runtime
+  fullName: CharonsCorner.Runtime
+  spec.csharp:
+  - uid: CharonsCorner
+    name: CharonsCorner
+    href: CharonsCorner.html
+  - name: .
+  - uid: CharonsCorner.Runtime
+    name: Runtime
+    href: CharonsCorner.Runtime.html
+  spec.vb:
+  - uid: CharonsCorner
+    name: CharonsCorner
+    href: CharonsCorner.html
+  - name: .
+  - uid: CharonsCorner.Runtime
+    name: Runtime
+    href: CharonsCorner.Runtime.html
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: CharonsCorner.Runtime.IntRange.#ctor*
+  commentId: Overload:CharonsCorner.Runtime.IntRange.#ctor
+  href: CharonsCorner.Runtime.IntRange.html#CharonsCorner_Runtime_IntRange__ctor_System_Int32_System_Int32_
+  name: IntRange
+  nameWithType: IntRange.IntRange
+  fullName: CharonsCorner.Runtime.IntRange.IntRange
+  nameWithType.vb: IntRange.New
+  fullName.vb: CharonsCorner.Runtime.IntRange.New
+  name.vb: New
+- uid: CharonsCorner.Runtime.IntRange.Clamp*
+  commentId: Overload:CharonsCorner.Runtime.IntRange.Clamp
+  href: CharonsCorner.Runtime.IntRange.html#CharonsCorner_Runtime_IntRange_Clamp_System_Int32_
+  name: Clamp
+  nameWithType: IntRange.Clamp
+  fullName: CharonsCorner.Runtime.IntRange.Clamp
+- uid: CharonsCorner.Runtime.IntRange.Clamp01*
+  commentId: Overload:CharonsCorner.Runtime.IntRange.Clamp01
+  href: CharonsCorner.Runtime.IntRange.html#CharonsCorner_Runtime_IntRange_Clamp01_System_Int32_
+  name: Clamp01
+  nameWithType: IntRange.Clamp01
+  fullName: CharonsCorner.Runtime.IntRange.Clamp01
+- uid: System.Single
+  commentId: T:System.Single
+  parent: System
+  isExternal: true
+  name: float
+  nameWithType: float
+  fullName: float
+  nameWithType.vb: Single
+  fullName.vb: Single
+  name.vb: Single
+- uid: CharonsCorner.Runtime.IntRange.Contains*
+  commentId: Overload:CharonsCorner.Runtime.IntRange.Contains
+  href: CharonsCorner.Runtime.IntRange.html#CharonsCorner_Runtime_IntRange_Contains_System_Int32_
+  name: Contains
+  nameWithType: IntRange.Contains
+  fullName: CharonsCorner.Runtime.IntRange.Contains
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: CharonsCorner.Runtime.IntRange.Lerp*
+  commentId: Overload:CharonsCorner.Runtime.IntRange.Lerp
+  href: CharonsCorner.Runtime.IntRange.html#CharonsCorner_Runtime_IntRange_Lerp_System_Single_
+  name: Lerp
+  nameWithType: IntRange.Lerp
+  fullName: CharonsCorner.Runtime.IntRange.Lerp
+- uid: CharonsCorner.Runtime.IntRange.InverseLerp*
+  commentId: Overload:CharonsCorner.Runtime.IntRange.InverseLerp
+  href: CharonsCorner.Runtime.IntRange.html#CharonsCorner_Runtime_IntRange_InverseLerp_System_Int32_
+  name: InverseLerp
+  nameWithType: IntRange.InverseLerp
+  fullName: CharonsCorner.Runtime.IntRange.InverseLerp
+- uid: CharonsCorner.Runtime.IntRange.RandomValue*
+  commentId: Overload:CharonsCorner.Runtime.IntRange.RandomValue
+  href: CharonsCorner.Runtime.IntRange.html#CharonsCorner_Runtime_IntRange_RandomValue
+  name: RandomValue
+  nameWithType: IntRange.RandomValue
+  fullName: CharonsCorner.Runtime.IntRange.RandomValue

@@ -1,0 +1,486 @@
+### YamlMime:ManagedReference
+items:
+- uid: CharonsCorner.Runtime.BootstrapConfigSO
+  commentId: T:CharonsCorner.Runtime.BootstrapConfigSO
+  id: BootstrapConfigSO
+  parent: CharonsCorner.Runtime
+  children:
+  - CharonsCorner.Runtime.BootstrapConfigSO.GetSceneInitialState(Eflatun.SceneReference.SceneReference)
+  - CharonsCorner.Runtime.BootstrapConfigSO.Initialize
+  langs:
+  - csharp
+  - vb
+  name: BootstrapConfigSO
+  nameWithType: BootstrapConfigSO
+  fullName: CharonsCorner.Runtime.BootstrapConfigSO
+  type: Class
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/Bootstrap/BootstrapConfigSO.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: BootstrapConfigSO
+    path: ../Assets/Scripts/Runtime/Bootstrap/BootstrapConfigSO.cs
+    startLine: 9
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  syntax:
+    content: >-
+      [CreateAssetMenu(fileName = "BootstrapConfig", menuName = "CharonsCorner/Bootstrap/Config")]
+
+      public class BootstrapConfigSO : ScriptableObject
+    content.vb: >-
+      <CreateAssetMenu(fileName:="BootstrapConfig", menuName:="CharonsCorner/Bootstrap/Config")>
+
+      Public Class BootstrapConfigSO Inherits ScriptableObject
+  inheritance:
+  - System.Object
+  - UnityEngine.Object
+  - UnityEngine.ScriptableObject
+  extensionMethods:
+  - CharonsCorner.Runtime.BootstrapConfigSO.CharonsCorner.Runtime.Utilities.IfNotNullThenCall``1(System.Action{CharonsCorner.Runtime.BootstrapConfigSO})
+  - CharonsCorner.Runtime.BootstrapConfigSO.CharonsCorner.Runtime.Utilities.IfNotNullThenGet``2(System.Func{CharonsCorner.Runtime.BootstrapConfigSO,{TResult}})
+  attributes:
+  - type: UnityEngine.CreateAssetMenuAttribute
+    ctor: UnityEngine.CreateAssetMenuAttribute.#ctor
+    arguments: []
+    namedArguments:
+    - name: fileName
+      type: System.String
+      value: BootstrapConfig
+    - name: menuName
+      type: System.String
+      value: CharonsCorner/Bootstrap/Config
+- uid: CharonsCorner.Runtime.BootstrapConfigSO.Initialize
+  commentId: M:CharonsCorner.Runtime.BootstrapConfigSO.Initialize
+  id: Initialize
+  parent: CharonsCorner.Runtime.BootstrapConfigSO
+  langs:
+  - csharp
+  - vb
+  name: Initialize()
+  nameWithType: BootstrapConfigSO.Initialize()
+  fullName: CharonsCorner.Runtime.BootstrapConfigSO.Initialize()
+  type: Method
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/Bootstrap/BootstrapConfigSO.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: Initialize
+    path: ../Assets/Scripts/Runtime/Bootstrap/BootstrapConfigSO.cs
+    startLine: 25
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  summary: >-
+    Initializes the dictionary that maps scene names to their initial game states.
+
+    Called in Bootstrap awake.
+  example: []
+  syntax:
+    content: public void Initialize()
+    content.vb: Public Sub Initialize()
+  overload: CharonsCorner.Runtime.BootstrapConfigSO.Initialize*
+- uid: CharonsCorner.Runtime.BootstrapConfigSO.GetSceneInitialState(Eflatun.SceneReference.SceneReference)
+  commentId: M:CharonsCorner.Runtime.BootstrapConfigSO.GetSceneInitialState(Eflatun.SceneReference.SceneReference)
+  id: GetSceneInitialState(Eflatun.SceneReference.SceneReference)
+  parent: CharonsCorner.Runtime.BootstrapConfigSO
+  langs:
+  - csharp
+  - vb
+  name: GetSceneInitialState(SceneReference)
+  nameWithType: BootstrapConfigSO.GetSceneInitialState(SceneReference)
+  fullName: CharonsCorner.Runtime.BootstrapConfigSO.GetSceneInitialState(Eflatun.SceneReference.SceneReference)
+  type: Method
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/Bootstrap/BootstrapConfigSO.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: GetSceneInitialState
+    path: ../Assets/Scripts/Runtime/Bootstrap/BootstrapConfigSO.cs
+    startLine: 37
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  summary: >-
+    Gets the initial game state for a given scene from the dictionary.
+
+    Returns Gameplay state if the scene is not found in the dictionary.
+  example: []
+  syntax:
+    content: public GameState GetSceneInitialState(SceneReference scene)
+    parameters:
+    - id: scene
+      type: Eflatun.SceneReference.SceneReference
+    return:
+      type: CharonsCorner.Runtime.GameState
+    content.vb: Public Function GetSceneInitialState(scene As SceneReference) As GameState
+  overload: CharonsCorner.Runtime.BootstrapConfigSO.GetSceneInitialState*
+references:
+- uid: CharonsCorner.Runtime
+  commentId: N:CharonsCorner.Runtime
+  href: CharonsCorner.html
+  name: CharonsCorner.Runtime
+  nameWithType: CharonsCorner.Runtime
+  fullName: CharonsCorner.Runtime
+  spec.csharp:
+  - uid: CharonsCorner
+    name: CharonsCorner
+    href: CharonsCorner.html
+  - name: .
+  - uid: CharonsCorner.Runtime
+    name: Runtime
+    href: CharonsCorner.Runtime.html
+  spec.vb:
+  - uid: CharonsCorner
+    name: CharonsCorner
+    href: CharonsCorner.html
+  - name: .
+  - uid: CharonsCorner.Runtime
+    name: Runtime
+    href: CharonsCorner.Runtime.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: UnityEngine.Object
+  commentId: T:UnityEngine.Object
+  parent: UnityEngine
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: UnityEngine.Object
+- uid: UnityEngine.ScriptableObject
+  commentId: T:UnityEngine.ScriptableObject
+  parent: UnityEngine
+  isExternal: true
+  name: ScriptableObject
+  nameWithType: ScriptableObject
+  fullName: UnityEngine.ScriptableObject
+- uid: CharonsCorner.Runtime.BootstrapConfigSO.CharonsCorner.Runtime.Utilities.IfNotNullThenCall``1(System.Action{CharonsCorner.Runtime.BootstrapConfigSO})
+  commentId: M:CharonsCorner.Runtime.Utilities.IfNotNullThenCall``1(``0,System.Action{``0})
+  parent: CharonsCorner.Runtime.Utilities
+  definition: CharonsCorner.Runtime.Utilities.IfNotNullThenCall``1(``0,System.Action{``0})
+  href: CharonsCorner.Runtime.Utilities.html#CharonsCorner_Runtime_Utilities_IfNotNullThenCall__1___0_System_Action___0__
+  name: IfNotNullThenCall<BootstrapConfigSO>(BootstrapConfigSO, Action<BootstrapConfigSO>)
+  nameWithType: Utilities.IfNotNullThenCall<BootstrapConfigSO>(BootstrapConfigSO, Action<BootstrapConfigSO>)
+  fullName: CharonsCorner.Runtime.Utilities.IfNotNullThenCall<CharonsCorner.Runtime.BootstrapConfigSO>(CharonsCorner.Runtime.BootstrapConfigSO, System.Action<CharonsCorner.Runtime.BootstrapConfigSO>)
+  nameWithType.vb: Utilities.IfNotNullThenCall(Of BootstrapConfigSO)(BootstrapConfigSO, Action(Of BootstrapConfigSO))
+  fullName.vb: CharonsCorner.Runtime.Utilities.IfNotNullThenCall(Of CharonsCorner.Runtime.BootstrapConfigSO)(CharonsCorner.Runtime.BootstrapConfigSO, System.Action(Of CharonsCorner.Runtime.BootstrapConfigSO))
+  name.vb: IfNotNullThenCall(Of BootstrapConfigSO)(BootstrapConfigSO, Action(Of BootstrapConfigSO))
+  spec.csharp:
+  - uid: CharonsCorner.Runtime.Utilities.IfNotNullThenCall``1(CharonsCorner.Runtime.BootstrapConfigSO,System.Action{CharonsCorner.Runtime.BootstrapConfigSO})
+    name: IfNotNullThenCall
+    href: CharonsCorner.Runtime.Utilities.html#CharonsCorner_Runtime_Utilities_IfNotNullThenCall__1___0_System_Action___0__
+  - name: <
+  - uid: CharonsCorner.Runtime.BootstrapConfigSO
+    name: BootstrapConfigSO
+    href: CharonsCorner.Runtime.BootstrapConfigSO.html
+  - name: '>'
+  - name: (
+  - uid: CharonsCorner.Runtime.BootstrapConfigSO
+    name: BootstrapConfigSO
+    href: CharonsCorner.Runtime.BootstrapConfigSO.html
+  - name: ','
+  - name: " "
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+  - name: <
+  - uid: CharonsCorner.Runtime.BootstrapConfigSO
+    name: BootstrapConfigSO
+    href: CharonsCorner.Runtime.BootstrapConfigSO.html
+  - name: '>'
+  - name: )
+  spec.vb:
+  - uid: CharonsCorner.Runtime.Utilities.IfNotNullThenCall``1(CharonsCorner.Runtime.BootstrapConfigSO,System.Action{CharonsCorner.Runtime.BootstrapConfigSO})
+    name: IfNotNullThenCall
+    href: CharonsCorner.Runtime.Utilities.html#CharonsCorner_Runtime_Utilities_IfNotNullThenCall__1___0_System_Action___0__
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: CharonsCorner.Runtime.BootstrapConfigSO
+    name: BootstrapConfigSO
+    href: CharonsCorner.Runtime.BootstrapConfigSO.html
+  - name: )
+  - name: (
+  - uid: CharonsCorner.Runtime.BootstrapConfigSO
+    name: BootstrapConfigSO
+    href: CharonsCorner.Runtime.BootstrapConfigSO.html
+  - name: ','
+  - name: " "
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: CharonsCorner.Runtime.BootstrapConfigSO
+    name: BootstrapConfigSO
+    href: CharonsCorner.Runtime.BootstrapConfigSO.html
+  - name: )
+  - name: )
+- uid: CharonsCorner.Runtime.BootstrapConfigSO.CharonsCorner.Runtime.Utilities.IfNotNullThenGet``2(System.Func{CharonsCorner.Runtime.BootstrapConfigSO,{TResult}})
+  commentId: M:CharonsCorner.Runtime.Utilities.IfNotNullThenGet``2(``0,System.Func{``0,``1})
+  parent: CharonsCorner.Runtime.Utilities
+  definition: CharonsCorner.Runtime.Utilities.IfNotNullThenGet``2(``0,System.Func{``0,``1})
+  href: CharonsCorner.Runtime.Utilities.html#CharonsCorner_Runtime_Utilities_IfNotNullThenGet__2___0_System_Func___0___1__
+  name: IfNotNullThenGet<BootstrapConfigSO, TResult>(BootstrapConfigSO, Func<BootstrapConfigSO, TResult>)
+  nameWithType: Utilities.IfNotNullThenGet<BootstrapConfigSO, TResult>(BootstrapConfigSO, Func<BootstrapConfigSO, TResult>)
+  fullName: CharonsCorner.Runtime.Utilities.IfNotNullThenGet<CharonsCorner.Runtime.BootstrapConfigSO, TResult>(CharonsCorner.Runtime.BootstrapConfigSO, System.Func<CharonsCorner.Runtime.BootstrapConfigSO, TResult>)
+  nameWithType.vb: Utilities.IfNotNullThenGet(Of BootstrapConfigSO, TResult)(BootstrapConfigSO, Func(Of BootstrapConfigSO, TResult))
+  fullName.vb: CharonsCorner.Runtime.Utilities.IfNotNullThenGet(Of CharonsCorner.Runtime.BootstrapConfigSO, TResult)(CharonsCorner.Runtime.BootstrapConfigSO, System.Func(Of CharonsCorner.Runtime.BootstrapConfigSO, TResult))
+  name.vb: IfNotNullThenGet(Of BootstrapConfigSO, TResult)(BootstrapConfigSO, Func(Of BootstrapConfigSO, TResult))
+  spec.csharp:
+  - uid: CharonsCorner.Runtime.Utilities.IfNotNullThenGet``2(CharonsCorner.Runtime.BootstrapConfigSO,System.Func{CharonsCorner.Runtime.BootstrapConfigSO,``1})
+    name: IfNotNullThenGet
+    href: CharonsCorner.Runtime.Utilities.html#CharonsCorner_Runtime_Utilities_IfNotNullThenGet__2___0_System_Func___0___1__
+  - name: <
+  - uid: CharonsCorner.Runtime.BootstrapConfigSO
+    name: BootstrapConfigSO
+    href: CharonsCorner.Runtime.BootstrapConfigSO.html
+  - name: ','
+  - name: " "
+  - name: TResult
+  - name: '>'
+  - name: (
+  - uid: CharonsCorner.Runtime.BootstrapConfigSO
+    name: BootstrapConfigSO
+    href: CharonsCorner.Runtime.BootstrapConfigSO.html
+  - name: ','
+  - name: " "
+  - uid: System.Func`2
+    name: Func
+    isExternal: true
+  - name: <
+  - uid: CharonsCorner.Runtime.BootstrapConfigSO
+    name: BootstrapConfigSO
+    href: CharonsCorner.Runtime.BootstrapConfigSO.html
+  - name: ','
+  - name: " "
+  - name: TResult
+  - name: '>'
+  - name: )
+  spec.vb:
+  - uid: CharonsCorner.Runtime.Utilities.IfNotNullThenGet``2(CharonsCorner.Runtime.BootstrapConfigSO,System.Func{CharonsCorner.Runtime.BootstrapConfigSO,``1})
+    name: IfNotNullThenGet
+    href: CharonsCorner.Runtime.Utilities.html#CharonsCorner_Runtime_Utilities_IfNotNullThenGet__2___0_System_Func___0___1__
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: CharonsCorner.Runtime.BootstrapConfigSO
+    name: BootstrapConfigSO
+    href: CharonsCorner.Runtime.BootstrapConfigSO.html
+  - name: ','
+  - name: " "
+  - name: TResult
+  - name: )
+  - name: (
+  - uid: CharonsCorner.Runtime.BootstrapConfigSO
+    name: BootstrapConfigSO
+    href: CharonsCorner.Runtime.BootstrapConfigSO.html
+  - name: ','
+  - name: " "
+  - uid: System.Func`2
+    name: Func
+    isExternal: true
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: CharonsCorner.Runtime.BootstrapConfigSO
+    name: BootstrapConfigSO
+    href: CharonsCorner.Runtime.BootstrapConfigSO.html
+  - name: ','
+  - name: " "
+  - name: TResult
+  - name: )
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: UnityEngine
+  commentId: N:UnityEngine
+  isExternal: true
+  name: UnityEngine
+  nameWithType: UnityEngine
+  fullName: UnityEngine
+- uid: CharonsCorner.Runtime.Utilities.IfNotNullThenCall``1(``0,System.Action{``0})
+  commentId: M:CharonsCorner.Runtime.Utilities.IfNotNullThenCall``1(``0,System.Action{``0})
+  isExternal: true
+  href: CharonsCorner.Runtime.Utilities.html#CharonsCorner_Runtime_Utilities_IfNotNullThenCall__1___0_System_Action___0__
+  name: IfNotNullThenCall<T>(T, Action<T>)
+  nameWithType: Utilities.IfNotNullThenCall<T>(T, Action<T>)
+  fullName: CharonsCorner.Runtime.Utilities.IfNotNullThenCall<T>(T, System.Action<T>)
+  nameWithType.vb: Utilities.IfNotNullThenCall(Of T)(T, Action(Of T))
+  fullName.vb: CharonsCorner.Runtime.Utilities.IfNotNullThenCall(Of T)(T, System.Action(Of T))
+  name.vb: IfNotNullThenCall(Of T)(T, Action(Of T))
+  spec.csharp:
+  - uid: CharonsCorner.Runtime.Utilities.IfNotNullThenCall``1(``0,System.Action{``0})
+    name: IfNotNullThenCall
+    href: CharonsCorner.Runtime.Utilities.html#CharonsCorner_Runtime_Utilities_IfNotNullThenCall__1___0_System_Action___0__
+  - name: <
+  - name: T
+  - name: '>'
+  - name: (
+  - name: T
+  - name: ','
+  - name: " "
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+  - name: <
+  - name: T
+  - name: '>'
+  - name: )
+  spec.vb:
+  - uid: CharonsCorner.Runtime.Utilities.IfNotNullThenCall``1(``0,System.Action{``0})
+    name: IfNotNullThenCall
+    href: CharonsCorner.Runtime.Utilities.html#CharonsCorner_Runtime_Utilities_IfNotNullThenCall__1___0_System_Action___0__
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: (
+  - name: T
+  - name: ','
+  - name: " "
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: )
+- uid: CharonsCorner.Runtime.Utilities
+  commentId: T:CharonsCorner.Runtime.Utilities
+  parent: CharonsCorner.Runtime
+  href: CharonsCorner.Runtime.Utilities.html
+  name: Utilities
+  nameWithType: Utilities
+  fullName: CharonsCorner.Runtime.Utilities
+- uid: CharonsCorner.Runtime.Utilities.IfNotNullThenGet``2(``0,System.Func{``0,``1})
+  commentId: M:CharonsCorner.Runtime.Utilities.IfNotNullThenGet``2(``0,System.Func{``0,``1})
+  isExternal: true
+  href: CharonsCorner.Runtime.Utilities.html#CharonsCorner_Runtime_Utilities_IfNotNullThenGet__2___0_System_Func___0___1__
+  name: IfNotNullThenGet<T, TResult>(T, Func<T, TResult>)
+  nameWithType: Utilities.IfNotNullThenGet<T, TResult>(T, Func<T, TResult>)
+  fullName: CharonsCorner.Runtime.Utilities.IfNotNullThenGet<T, TResult>(T, System.Func<T, TResult>)
+  nameWithType.vb: Utilities.IfNotNullThenGet(Of T, TResult)(T, Func(Of T, TResult))
+  fullName.vb: CharonsCorner.Runtime.Utilities.IfNotNullThenGet(Of T, TResult)(T, System.Func(Of T, TResult))
+  name.vb: IfNotNullThenGet(Of T, TResult)(T, Func(Of T, TResult))
+  spec.csharp:
+  - uid: CharonsCorner.Runtime.Utilities.IfNotNullThenGet``2(``0,System.Func{``0,``1})
+    name: IfNotNullThenGet
+    href: CharonsCorner.Runtime.Utilities.html#CharonsCorner_Runtime_Utilities_IfNotNullThenGet__2___0_System_Func___0___1__
+  - name: <
+  - name: T
+  - name: ','
+  - name: " "
+  - name: TResult
+  - name: '>'
+  - name: (
+  - name: T
+  - name: ','
+  - name: " "
+  - uid: System.Func`2
+    name: Func
+    isExternal: true
+  - name: <
+  - name: T
+  - name: ','
+  - name: " "
+  - name: TResult
+  - name: '>'
+  - name: )
+  spec.vb:
+  - uid: CharonsCorner.Runtime.Utilities.IfNotNullThenGet``2(``0,System.Func{``0,``1})
+    name: IfNotNullThenGet
+    href: CharonsCorner.Runtime.Utilities.html#CharonsCorner_Runtime_Utilities_IfNotNullThenGet__2___0_System_Func___0___1__
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: ','
+  - name: " "
+  - name: TResult
+  - name: )
+  - name: (
+  - name: T
+  - name: ','
+  - name: " "
+  - uid: System.Func`2
+    name: Func
+    isExternal: true
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: ','
+  - name: " "
+  - name: TResult
+  - name: )
+  - name: )
+- uid: CharonsCorner.Runtime.BootstrapConfigSO.Initialize*
+  commentId: Overload:CharonsCorner.Runtime.BootstrapConfigSO.Initialize
+  href: CharonsCorner.Runtime.BootstrapConfigSO.html#CharonsCorner_Runtime_BootstrapConfigSO_Initialize
+  name: Initialize
+  nameWithType: BootstrapConfigSO.Initialize
+  fullName: CharonsCorner.Runtime.BootstrapConfigSO.Initialize
+- uid: CharonsCorner.Runtime.BootstrapConfigSO.GetSceneInitialState*
+  commentId: Overload:CharonsCorner.Runtime.BootstrapConfigSO.GetSceneInitialState
+  href: CharonsCorner.Runtime.BootstrapConfigSO.html#CharonsCorner_Runtime_BootstrapConfigSO_GetSceneInitialState_Eflatun_SceneReference_SceneReference_
+  name: GetSceneInitialState
+  nameWithType: BootstrapConfigSO.GetSceneInitialState
+  fullName: CharonsCorner.Runtime.BootstrapConfigSO.GetSceneInitialState
+- uid: Eflatun.SceneReference.SceneReference
+  commentId: T:Eflatun.SceneReference.SceneReference
+  parent: Eflatun.SceneReference
+  isExternal: true
+  name: SceneReference
+  nameWithType: SceneReference
+  fullName: Eflatun.SceneReference.SceneReference
+- uid: CharonsCorner.Runtime.GameState
+  commentId: T:CharonsCorner.Runtime.GameState
+  parent: CharonsCorner.Runtime
+  href: CharonsCorner.Runtime.GameState.html
+  name: GameState
+  nameWithType: GameState
+  fullName: CharonsCorner.Runtime.GameState
+- uid: Eflatun.SceneReference
+  commentId: N:Eflatun.SceneReference
+  isExternal: true
+  name: Eflatun.SceneReference
+  nameWithType: Eflatun.SceneReference
+  fullName: Eflatun.SceneReference
+  spec.csharp:
+  - uid: Eflatun
+    name: Eflatun
+    isExternal: true
+  - name: .
+  - uid: Eflatun.SceneReference
+    name: SceneReference
+    isExternal: true
+  spec.vb:
+  - uid: Eflatun
+    name: Eflatun
+    isExternal: true
+  - name: .
+  - uid: Eflatun.SceneReference
+    name: SceneReference
+    isExternal: true

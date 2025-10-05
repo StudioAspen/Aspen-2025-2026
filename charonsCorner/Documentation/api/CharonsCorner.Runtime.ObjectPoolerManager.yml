@@ -1,0 +1,560 @@
+### YamlMime:ManagedReference
+items:
+- uid: CharonsCorner.Runtime.ObjectPoolerManager
+  commentId: T:CharonsCorner.Runtime.ObjectPoolerManager
+  id: ObjectPoolerManager
+  parent: CharonsCorner.Runtime
+  children:
+  - CharonsCorner.Runtime.ObjectPoolerManager.SpawnPooledObject``1(CharonsCorner.Runtime.PoolableObject,System.Nullable{UnityEngine.Vector3},UnityEngine.Transform)
+  langs:
+  - csharp
+  - vb
+  name: ObjectPoolerManager
+  nameWithType: ObjectPoolerManager
+  fullName: CharonsCorner.Runtime.ObjectPoolerManager
+  type: Class
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/ObjectPool/ObjectPoolerManager.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: ObjectPoolerManager
+    path: ../Assets/Scripts/Runtime/ObjectPool/ObjectPoolerManager.cs
+    startLine: 5
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  syntax:
+    content: 'public class ObjectPoolerManager : Singleton<ObjectPoolerManager>'
+    content.vb: Public Class ObjectPoolerManager Inherits Singleton(Of ObjectPoolerManager)
+  inheritance:
+  - System.Object
+  - UnityEngine.Object
+  - UnityEngine.Component
+  - UnityEngine.Behaviour
+  - UnityEngine.MonoBehaviour
+  - CharonsCorner.Runtime.Singleton{CharonsCorner.Runtime.ObjectPoolerManager}
+  inheritedMembers:
+  - CharonsCorner.Runtime.Singleton{CharonsCorner.Runtime.ObjectPoolerManager}.Instance
+  extensionMethods:
+  - CharonsCorner.Runtime.ObjectPoolerManager.CharonsCorner.Runtime.Utilities.IfNotNullThenCall``1(System.Action{CharonsCorner.Runtime.ObjectPoolerManager})
+  - CharonsCorner.Runtime.ObjectPoolerManager.CharonsCorner.Runtime.Utilities.IfNotNullThenGet``2(System.Func{CharonsCorner.Runtime.ObjectPoolerManager,{TResult}})
+- uid: CharonsCorner.Runtime.ObjectPoolerManager.SpawnPooledObject``1(CharonsCorner.Runtime.PoolableObject,System.Nullable{UnityEngine.Vector3},UnityEngine.Transform)
+  commentId: M:CharonsCorner.Runtime.ObjectPoolerManager.SpawnPooledObject``1(CharonsCorner.Runtime.PoolableObject,System.Nullable{UnityEngine.Vector3},UnityEngine.Transform)
+  id: SpawnPooledObject``1(CharonsCorner.Runtime.PoolableObject,System.Nullable{UnityEngine.Vector3},UnityEngine.Transform)
+  parent: CharonsCorner.Runtime.ObjectPoolerManager
+  langs:
+  - csharp
+  - vb
+  name: SpawnPooledObject<T>(PoolableObject, Vector3?, Transform)
+  nameWithType: ObjectPoolerManager.SpawnPooledObject<T>(PoolableObject, Vector3?, Transform)
+  fullName: CharonsCorner.Runtime.ObjectPoolerManager.SpawnPooledObject<T>(CharonsCorner.Runtime.PoolableObject, UnityEngine.Vector3?, UnityEngine.Transform)
+  type: Method
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/ObjectPool/ObjectPoolerManager.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: SpawnPooledObject
+    path: ../Assets/Scripts/Runtime/ObjectPool/ObjectPoolerManager.cs
+    startLine: 25
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  summary: Spawns a prefab by using an existing pooler or creating a new one if it doesnt exist.
+  example: []
+  syntax:
+    content: 'public T SpawnPooledObject<T>(PoolableObject newPrefab, Vector3? position = null, Transform parent = null) where T : MonoBehaviour'
+    parameters:
+    - id: newPrefab
+      type: CharonsCorner.Runtime.PoolableObject
+    - id: position
+      type: System.Nullable{UnityEngine.Vector3}
+    - id: parent
+      type: UnityEngine.Transform
+    typeParameters:
+    - id: T
+    return:
+      type: '{T}'
+    content.vb: Public Function SpawnPooledObject(Of T As MonoBehaviour)(newPrefab As PoolableObject, position As Vector3? = Nothing, parent As Transform = Nothing) As T
+  overload: CharonsCorner.Runtime.ObjectPoolerManager.SpawnPooledObject*
+  nameWithType.vb: ObjectPoolerManager.SpawnPooledObject(Of T)(PoolableObject, Vector3?, Transform)
+  fullName.vb: CharonsCorner.Runtime.ObjectPoolerManager.SpawnPooledObject(Of T)(CharonsCorner.Runtime.PoolableObject, UnityEngine.Vector3?, UnityEngine.Transform)
+  name.vb: SpawnPooledObject(Of T)(PoolableObject, Vector3?, Transform)
+references:
+- uid: CharonsCorner.Runtime
+  commentId: N:CharonsCorner.Runtime
+  href: CharonsCorner.html
+  name: CharonsCorner.Runtime
+  nameWithType: CharonsCorner.Runtime
+  fullName: CharonsCorner.Runtime
+  spec.csharp:
+  - uid: CharonsCorner
+    name: CharonsCorner
+    href: CharonsCorner.html
+  - name: .
+  - uid: CharonsCorner.Runtime
+    name: Runtime
+    href: CharonsCorner.Runtime.html
+  spec.vb:
+  - uid: CharonsCorner
+    name: CharonsCorner
+    href: CharonsCorner.html
+  - name: .
+  - uid: CharonsCorner.Runtime
+    name: Runtime
+    href: CharonsCorner.Runtime.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: UnityEngine.Object
+  commentId: T:UnityEngine.Object
+  parent: UnityEngine
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: UnityEngine.Object
+- uid: UnityEngine.Component
+  commentId: T:UnityEngine.Component
+  parent: UnityEngine
+  isExternal: true
+  name: Component
+  nameWithType: Component
+  fullName: UnityEngine.Component
+- uid: UnityEngine.Behaviour
+  commentId: T:UnityEngine.Behaviour
+  parent: UnityEngine
+  isExternal: true
+  name: Behaviour
+  nameWithType: Behaviour
+  fullName: UnityEngine.Behaviour
+- uid: UnityEngine.MonoBehaviour
+  commentId: T:UnityEngine.MonoBehaviour
+  parent: UnityEngine
+  isExternal: true
+  name: MonoBehaviour
+  nameWithType: MonoBehaviour
+  fullName: UnityEngine.MonoBehaviour
+- uid: CharonsCorner.Runtime.Singleton{CharonsCorner.Runtime.ObjectPoolerManager}
+  commentId: T:CharonsCorner.Runtime.Singleton{CharonsCorner.Runtime.ObjectPoolerManager}
+  parent: CharonsCorner.Runtime
+  definition: CharonsCorner.Runtime.Singleton`1
+  href: CharonsCorner.Runtime.Singleton-1.html
+  name: Singleton<ObjectPoolerManager>
+  nameWithType: Singleton<ObjectPoolerManager>
+  fullName: CharonsCorner.Runtime.Singleton<CharonsCorner.Runtime.ObjectPoolerManager>
+  nameWithType.vb: Singleton(Of ObjectPoolerManager)
+  fullName.vb: CharonsCorner.Runtime.Singleton(Of CharonsCorner.Runtime.ObjectPoolerManager)
+  name.vb: Singleton(Of ObjectPoolerManager)
+  spec.csharp:
+  - uid: CharonsCorner.Runtime.Singleton`1
+    name: Singleton
+    href: CharonsCorner.Runtime.Singleton-1.html
+  - name: <
+  - uid: CharonsCorner.Runtime.ObjectPoolerManager
+    name: ObjectPoolerManager
+    href: CharonsCorner.Runtime.ObjectPoolerManager.html
+  - name: '>'
+  spec.vb:
+  - uid: CharonsCorner.Runtime.Singleton`1
+    name: Singleton
+    href: CharonsCorner.Runtime.Singleton-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: CharonsCorner.Runtime.ObjectPoolerManager
+    name: ObjectPoolerManager
+    href: CharonsCorner.Runtime.ObjectPoolerManager.html
+  - name: )
+- uid: CharonsCorner.Runtime.Singleton{CharonsCorner.Runtime.ObjectPoolerManager}.Instance
+  commentId: P:CharonsCorner.Runtime.Singleton{CharonsCorner.Runtime.ObjectPoolerManager}.Instance
+  parent: CharonsCorner.Runtime.Singleton{CharonsCorner.Runtime.ObjectPoolerManager}
+  definition: CharonsCorner.Runtime.Singleton`1.Instance
+  href: CharonsCorner.Runtime.Singleton-1.html#CharonsCorner_Runtime_Singleton_1_Instance
+  name: Instance
+  nameWithType: Singleton<ObjectPoolerManager>.Instance
+  fullName: CharonsCorner.Runtime.Singleton<CharonsCorner.Runtime.ObjectPoolerManager>.Instance
+  nameWithType.vb: Singleton(Of ObjectPoolerManager).Instance
+  fullName.vb: CharonsCorner.Runtime.Singleton(Of CharonsCorner.Runtime.ObjectPoolerManager).Instance
+- uid: CharonsCorner.Runtime.ObjectPoolerManager.CharonsCorner.Runtime.Utilities.IfNotNullThenCall``1(System.Action{CharonsCorner.Runtime.ObjectPoolerManager})
+  commentId: M:CharonsCorner.Runtime.Utilities.IfNotNullThenCall``1(``0,System.Action{``0})
+  parent: CharonsCorner.Runtime.Utilities
+  definition: CharonsCorner.Runtime.Utilities.IfNotNullThenCall``1(``0,System.Action{``0})
+  href: CharonsCorner.Runtime.Utilities.html#CharonsCorner_Runtime_Utilities_IfNotNullThenCall__1___0_System_Action___0__
+  name: IfNotNullThenCall<ObjectPoolerManager>(ObjectPoolerManager, Action<ObjectPoolerManager>)
+  nameWithType: Utilities.IfNotNullThenCall<ObjectPoolerManager>(ObjectPoolerManager, Action<ObjectPoolerManager>)
+  fullName: CharonsCorner.Runtime.Utilities.IfNotNullThenCall<CharonsCorner.Runtime.ObjectPoolerManager>(CharonsCorner.Runtime.ObjectPoolerManager, System.Action<CharonsCorner.Runtime.ObjectPoolerManager>)
+  nameWithType.vb: Utilities.IfNotNullThenCall(Of ObjectPoolerManager)(ObjectPoolerManager, Action(Of ObjectPoolerManager))
+  fullName.vb: CharonsCorner.Runtime.Utilities.IfNotNullThenCall(Of CharonsCorner.Runtime.ObjectPoolerManager)(CharonsCorner.Runtime.ObjectPoolerManager, System.Action(Of CharonsCorner.Runtime.ObjectPoolerManager))
+  name.vb: IfNotNullThenCall(Of ObjectPoolerManager)(ObjectPoolerManager, Action(Of ObjectPoolerManager))
+  spec.csharp:
+  - uid: CharonsCorner.Runtime.Utilities.IfNotNullThenCall``1(CharonsCorner.Runtime.ObjectPoolerManager,System.Action{CharonsCorner.Runtime.ObjectPoolerManager})
+    name: IfNotNullThenCall
+    href: CharonsCorner.Runtime.Utilities.html#CharonsCorner_Runtime_Utilities_IfNotNullThenCall__1___0_System_Action___0__
+  - name: <
+  - uid: CharonsCorner.Runtime.ObjectPoolerManager
+    name: ObjectPoolerManager
+    href: CharonsCorner.Runtime.ObjectPoolerManager.html
+  - name: '>'
+  - name: (
+  - uid: CharonsCorner.Runtime.ObjectPoolerManager
+    name: ObjectPoolerManager
+    href: CharonsCorner.Runtime.ObjectPoolerManager.html
+  - name: ','
+  - name: " "
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+  - name: <
+  - uid: CharonsCorner.Runtime.ObjectPoolerManager
+    name: ObjectPoolerManager
+    href: CharonsCorner.Runtime.ObjectPoolerManager.html
+  - name: '>'
+  - name: )
+  spec.vb:
+  - uid: CharonsCorner.Runtime.Utilities.IfNotNullThenCall``1(CharonsCorner.Runtime.ObjectPoolerManager,System.Action{CharonsCorner.Runtime.ObjectPoolerManager})
+    name: IfNotNullThenCall
+    href: CharonsCorner.Runtime.Utilities.html#CharonsCorner_Runtime_Utilities_IfNotNullThenCall__1___0_System_Action___0__
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: CharonsCorner.Runtime.ObjectPoolerManager
+    name: ObjectPoolerManager
+    href: CharonsCorner.Runtime.ObjectPoolerManager.html
+  - name: )
+  - name: (
+  - uid: CharonsCorner.Runtime.ObjectPoolerManager
+    name: ObjectPoolerManager
+    href: CharonsCorner.Runtime.ObjectPoolerManager.html
+  - name: ','
+  - name: " "
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: CharonsCorner.Runtime.ObjectPoolerManager
+    name: ObjectPoolerManager
+    href: CharonsCorner.Runtime.ObjectPoolerManager.html
+  - name: )
+  - name: )
+- uid: CharonsCorner.Runtime.ObjectPoolerManager.CharonsCorner.Runtime.Utilities.IfNotNullThenGet``2(System.Func{CharonsCorner.Runtime.ObjectPoolerManager,{TResult}})
+  commentId: M:CharonsCorner.Runtime.Utilities.IfNotNullThenGet``2(``0,System.Func{``0,``1})
+  parent: CharonsCorner.Runtime.Utilities
+  definition: CharonsCorner.Runtime.Utilities.IfNotNullThenGet``2(``0,System.Func{``0,``1})
+  href: CharonsCorner.Runtime.Utilities.html#CharonsCorner_Runtime_Utilities_IfNotNullThenGet__2___0_System_Func___0___1__
+  name: IfNotNullThenGet<ObjectPoolerManager, TResult>(ObjectPoolerManager, Func<ObjectPoolerManager, TResult>)
+  nameWithType: Utilities.IfNotNullThenGet<ObjectPoolerManager, TResult>(ObjectPoolerManager, Func<ObjectPoolerManager, TResult>)
+  fullName: CharonsCorner.Runtime.Utilities.IfNotNullThenGet<CharonsCorner.Runtime.ObjectPoolerManager, TResult>(CharonsCorner.Runtime.ObjectPoolerManager, System.Func<CharonsCorner.Runtime.ObjectPoolerManager, TResult>)
+  nameWithType.vb: Utilities.IfNotNullThenGet(Of ObjectPoolerManager, TResult)(ObjectPoolerManager, Func(Of ObjectPoolerManager, TResult))
+  fullName.vb: CharonsCorner.Runtime.Utilities.IfNotNullThenGet(Of CharonsCorner.Runtime.ObjectPoolerManager, TResult)(CharonsCorner.Runtime.ObjectPoolerManager, System.Func(Of CharonsCorner.Runtime.ObjectPoolerManager, TResult))
+  name.vb: IfNotNullThenGet(Of ObjectPoolerManager, TResult)(ObjectPoolerManager, Func(Of ObjectPoolerManager, TResult))
+  spec.csharp:
+  - uid: CharonsCorner.Runtime.Utilities.IfNotNullThenGet``2(CharonsCorner.Runtime.ObjectPoolerManager,System.Func{CharonsCorner.Runtime.ObjectPoolerManager,``1})
+    name: IfNotNullThenGet
+    href: CharonsCorner.Runtime.Utilities.html#CharonsCorner_Runtime_Utilities_IfNotNullThenGet__2___0_System_Func___0___1__
+  - name: <
+  - uid: CharonsCorner.Runtime.ObjectPoolerManager
+    name: ObjectPoolerManager
+    href: CharonsCorner.Runtime.ObjectPoolerManager.html
+  - name: ','
+  - name: " "
+  - name: TResult
+  - name: '>'
+  - name: (
+  - uid: CharonsCorner.Runtime.ObjectPoolerManager
+    name: ObjectPoolerManager
+    href: CharonsCorner.Runtime.ObjectPoolerManager.html
+  - name: ','
+  - name: " "
+  - uid: System.Func`2
+    name: Func
+    isExternal: true
+  - name: <
+  - uid: CharonsCorner.Runtime.ObjectPoolerManager
+    name: ObjectPoolerManager
+    href: CharonsCorner.Runtime.ObjectPoolerManager.html
+  - name: ','
+  - name: " "
+  - name: TResult
+  - name: '>'
+  - name: )
+  spec.vb:
+  - uid: CharonsCorner.Runtime.Utilities.IfNotNullThenGet``2(CharonsCorner.Runtime.ObjectPoolerManager,System.Func{CharonsCorner.Runtime.ObjectPoolerManager,``1})
+    name: IfNotNullThenGet
+    href: CharonsCorner.Runtime.Utilities.html#CharonsCorner_Runtime_Utilities_IfNotNullThenGet__2___0_System_Func___0___1__
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: CharonsCorner.Runtime.ObjectPoolerManager
+    name: ObjectPoolerManager
+    href: CharonsCorner.Runtime.ObjectPoolerManager.html
+  - name: ','
+  - name: " "
+  - name: TResult
+  - name: )
+  - name: (
+  - uid: CharonsCorner.Runtime.ObjectPoolerManager
+    name: ObjectPoolerManager
+    href: CharonsCorner.Runtime.ObjectPoolerManager.html
+  - name: ','
+  - name: " "
+  - uid: System.Func`2
+    name: Func
+    isExternal: true
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: CharonsCorner.Runtime.ObjectPoolerManager
+    name: ObjectPoolerManager
+    href: CharonsCorner.Runtime.ObjectPoolerManager.html
+  - name: ','
+  - name: " "
+  - name: TResult
+  - name: )
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: UnityEngine
+  commentId: N:UnityEngine
+  isExternal: true
+  name: UnityEngine
+  nameWithType: UnityEngine
+  fullName: UnityEngine
+- uid: CharonsCorner.Runtime.Singleton`1
+  commentId: T:CharonsCorner.Runtime.Singleton`1
+  href: CharonsCorner.Runtime.Singleton-1.html
+  name: Singleton<T>
+  nameWithType: Singleton<T>
+  fullName: CharonsCorner.Runtime.Singleton<T>
+  nameWithType.vb: Singleton(Of T)
+  fullName.vb: CharonsCorner.Runtime.Singleton(Of T)
+  name.vb: Singleton(Of T)
+  spec.csharp:
+  - uid: CharonsCorner.Runtime.Singleton`1
+    name: Singleton
+    href: CharonsCorner.Runtime.Singleton-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: CharonsCorner.Runtime.Singleton`1
+    name: Singleton
+    href: CharonsCorner.Runtime.Singleton-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: CharonsCorner.Runtime.Singleton`1.Instance
+  commentId: P:CharonsCorner.Runtime.Singleton`1.Instance
+  href: CharonsCorner.Runtime.Singleton-1.html#CharonsCorner_Runtime_Singleton_1_Instance
+  name: Instance
+  nameWithType: Singleton<T>.Instance
+  fullName: CharonsCorner.Runtime.Singleton<T>.Instance
+  nameWithType.vb: Singleton(Of T).Instance
+  fullName.vb: CharonsCorner.Runtime.Singleton(Of T).Instance
+- uid: CharonsCorner.Runtime.Utilities.IfNotNullThenCall``1(``0,System.Action{``0})
+  commentId: M:CharonsCorner.Runtime.Utilities.IfNotNullThenCall``1(``0,System.Action{``0})
+  isExternal: true
+  href: CharonsCorner.Runtime.Utilities.html#CharonsCorner_Runtime_Utilities_IfNotNullThenCall__1___0_System_Action___0__
+  name: IfNotNullThenCall<T>(T, Action<T>)
+  nameWithType: Utilities.IfNotNullThenCall<T>(T, Action<T>)
+  fullName: CharonsCorner.Runtime.Utilities.IfNotNullThenCall<T>(T, System.Action<T>)
+  nameWithType.vb: Utilities.IfNotNullThenCall(Of T)(T, Action(Of T))
+  fullName.vb: CharonsCorner.Runtime.Utilities.IfNotNullThenCall(Of T)(T, System.Action(Of T))
+  name.vb: IfNotNullThenCall(Of T)(T, Action(Of T))
+  spec.csharp:
+  - uid: CharonsCorner.Runtime.Utilities.IfNotNullThenCall``1(``0,System.Action{``0})
+    name: IfNotNullThenCall
+    href: CharonsCorner.Runtime.Utilities.html#CharonsCorner_Runtime_Utilities_IfNotNullThenCall__1___0_System_Action___0__
+  - name: <
+  - name: T
+  - name: '>'
+  - name: (
+  - name: T
+  - name: ','
+  - name: " "
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+  - name: <
+  - name: T
+  - name: '>'
+  - name: )
+  spec.vb:
+  - uid: CharonsCorner.Runtime.Utilities.IfNotNullThenCall``1(``0,System.Action{``0})
+    name: IfNotNullThenCall
+    href: CharonsCorner.Runtime.Utilities.html#CharonsCorner_Runtime_Utilities_IfNotNullThenCall__1___0_System_Action___0__
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: (
+  - name: T
+  - name: ','
+  - name: " "
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: )
+- uid: CharonsCorner.Runtime.Utilities
+  commentId: T:CharonsCorner.Runtime.Utilities
+  parent: CharonsCorner.Runtime
+  href: CharonsCorner.Runtime.Utilities.html
+  name: Utilities
+  nameWithType: Utilities
+  fullName: CharonsCorner.Runtime.Utilities
+- uid: CharonsCorner.Runtime.Utilities.IfNotNullThenGet``2(``0,System.Func{``0,``1})
+  commentId: M:CharonsCorner.Runtime.Utilities.IfNotNullThenGet``2(``0,System.Func{``0,``1})
+  isExternal: true
+  href: CharonsCorner.Runtime.Utilities.html#CharonsCorner_Runtime_Utilities_IfNotNullThenGet__2___0_System_Func___0___1__
+  name: IfNotNullThenGet<T, TResult>(T, Func<T, TResult>)
+  nameWithType: Utilities.IfNotNullThenGet<T, TResult>(T, Func<T, TResult>)
+  fullName: CharonsCorner.Runtime.Utilities.IfNotNullThenGet<T, TResult>(T, System.Func<T, TResult>)
+  nameWithType.vb: Utilities.IfNotNullThenGet(Of T, TResult)(T, Func(Of T, TResult))
+  fullName.vb: CharonsCorner.Runtime.Utilities.IfNotNullThenGet(Of T, TResult)(T, System.Func(Of T, TResult))
+  name.vb: IfNotNullThenGet(Of T, TResult)(T, Func(Of T, TResult))
+  spec.csharp:
+  - uid: CharonsCorner.Runtime.Utilities.IfNotNullThenGet``2(``0,System.Func{``0,``1})
+    name: IfNotNullThenGet
+    href: CharonsCorner.Runtime.Utilities.html#CharonsCorner_Runtime_Utilities_IfNotNullThenGet__2___0_System_Func___0___1__
+  - name: <
+  - name: T
+  - name: ','
+  - name: " "
+  - name: TResult
+  - name: '>'
+  - name: (
+  - name: T
+  - name: ','
+  - name: " "
+  - uid: System.Func`2
+    name: Func
+    isExternal: true
+  - name: <
+  - name: T
+  - name: ','
+  - name: " "
+  - name: TResult
+  - name: '>'
+  - name: )
+  spec.vb:
+  - uid: CharonsCorner.Runtime.Utilities.IfNotNullThenGet``2(``0,System.Func{``0,``1})
+    name: IfNotNullThenGet
+    href: CharonsCorner.Runtime.Utilities.html#CharonsCorner_Runtime_Utilities_IfNotNullThenGet__2___0_System_Func___0___1__
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: ','
+  - name: " "
+  - name: TResult
+  - name: )
+  - name: (
+  - name: T
+  - name: ','
+  - name: " "
+  - uid: System.Func`2
+    name: Func
+    isExternal: true
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: ','
+  - name: " "
+  - name: TResult
+  - name: )
+  - name: )
+- uid: CharonsCorner.Runtime.ObjectPoolerManager.SpawnPooledObject*
+  commentId: Overload:CharonsCorner.Runtime.ObjectPoolerManager.SpawnPooledObject
+  href: CharonsCorner.Runtime.ObjectPoolerManager.html#CharonsCorner_Runtime_ObjectPoolerManager_SpawnPooledObject__1_CharonsCorner_Runtime_PoolableObject_System_Nullable_UnityEngine_Vector3__UnityEngine_Transform_
+  name: SpawnPooledObject
+  nameWithType: ObjectPoolerManager.SpawnPooledObject
+  fullName: CharonsCorner.Runtime.ObjectPoolerManager.SpawnPooledObject
+- uid: CharonsCorner.Runtime.PoolableObject
+  commentId: T:CharonsCorner.Runtime.PoolableObject
+  parent: CharonsCorner.Runtime
+  href: CharonsCorner.Runtime.PoolableObject.html
+  name: PoolableObject
+  nameWithType: PoolableObject
+  fullName: CharonsCorner.Runtime.PoolableObject
+- uid: System.Nullable{UnityEngine.Vector3}
+  commentId: T:System.Nullable{UnityEngine.Vector3}
+  parent: System
+  definition: System.Nullable`1
+  name: Vector3?
+  nameWithType: Vector3?
+  fullName: UnityEngine.Vector3?
+  spec.csharp:
+  - uid: UnityEngine.Vector3
+    name: Vector3
+    isExternal: true
+  - name: '?'
+  spec.vb:
+  - uid: UnityEngine.Vector3
+    name: Vector3
+    isExternal: true
+  - name: '?'
+- uid: UnityEngine.Transform
+  commentId: T:UnityEngine.Transform
+  parent: UnityEngine
+  isExternal: true
+  name: Transform
+  nameWithType: Transform
+  fullName: UnityEngine.Transform
+- uid: '{T}'
+  commentId: '!:T'
+  definition: T
+  name: T
+  nameWithType: T
+  fullName: T
+- uid: System.Nullable`1
+  commentId: T:System.Nullable`1
+  isExternal: true
+  name: Nullable<T>
+  nameWithType: Nullable<T>
+  fullName: System.Nullable<T>
+  nameWithType.vb: Nullable(Of T)
+  fullName.vb: System.Nullable(Of T)
+  name.vb: Nullable(Of T)
+  spec.csharp:
+  - uid: System.Nullable`1
+    name: Nullable
+    isExternal: true
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Nullable`1
+    name: Nullable
+    isExternal: true
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: T
+  name: T
+  nameWithType: T
+  fullName: T
