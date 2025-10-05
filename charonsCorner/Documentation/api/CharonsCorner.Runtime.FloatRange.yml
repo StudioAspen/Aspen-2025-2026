@@ -1,0 +1,668 @@
+### YamlMime:ManagedReference
+items:
+- uid: CharonsCorner.Runtime.FloatRange
+  commentId: T:CharonsCorner.Runtime.FloatRange
+  id: FloatRange
+  parent: CharonsCorner.Runtime
+  children:
+  - CharonsCorner.Runtime.FloatRange.#ctor(System.Single,System.Single)
+  - CharonsCorner.Runtime.FloatRange.Clamp(System.Single)
+  - CharonsCorner.Runtime.FloatRange.Clamp01(System.Single)
+  - CharonsCorner.Runtime.FloatRange.Contains(System.Single)
+  - CharonsCorner.Runtime.FloatRange.InverseLerp(System.Single)
+  - CharonsCorner.Runtime.FloatRange.Lerp(System.Single)
+  - CharonsCorner.Runtime.FloatRange.Max
+  - CharonsCorner.Runtime.FloatRange.Min
+  - CharonsCorner.Runtime.FloatRange.RandomValue
+  langs:
+  - csharp
+  - vb
+  name: FloatRange
+  nameWithType: FloatRange
+  fullName: CharonsCorner.Runtime.FloatRange
+  type: Struct
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/Utilities/FloatRange.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: FloatRange
+    path: ../Assets/Scripts/Runtime/Utilities/FloatRange.cs
+    startLine: 4
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  syntax:
+    content: >-
+      [Serializable]
+
+      public struct FloatRange
+    content.vb: >-
+      <Serializable>
+
+      Public Structure FloatRange
+  inheritedMembers:
+  - System.ValueType.Equals(System.Object)
+  - System.ValueType.GetHashCode
+  - System.ValueType.ToString
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetType
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  attributes:
+  - type: System.SerializableAttribute
+    ctor: System.SerializableAttribute.#ctor
+    arguments: []
+- uid: CharonsCorner.Runtime.FloatRange.Min
+  commentId: F:CharonsCorner.Runtime.FloatRange.Min
+  id: Min
+  parent: CharonsCorner.Runtime.FloatRange
+  langs:
+  - csharp
+  - vb
+  name: Min
+  nameWithType: FloatRange.Min
+  fullName: CharonsCorner.Runtime.FloatRange.Min
+  type: Field
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/Utilities/FloatRange.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: Min
+    path: ../Assets/Scripts/Runtime/Utilities/FloatRange.cs
+    startLine: 7
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  syntax:
+    content: public float Min
+    return:
+      type: System.Single
+    content.vb: Public Min As Single
+- uid: CharonsCorner.Runtime.FloatRange.Max
+  commentId: F:CharonsCorner.Runtime.FloatRange.Max
+  id: Max
+  parent: CharonsCorner.Runtime.FloatRange
+  langs:
+  - csharp
+  - vb
+  name: Max
+  nameWithType: FloatRange.Max
+  fullName: CharonsCorner.Runtime.FloatRange.Max
+  type: Field
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/Utilities/FloatRange.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: Max
+    path: ../Assets/Scripts/Runtime/Utilities/FloatRange.cs
+    startLine: 8
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  syntax:
+    content: public float Max
+    return:
+      type: System.Single
+    content.vb: Public Max As Single
+- uid: CharonsCorner.Runtime.FloatRange.#ctor(System.Single,System.Single)
+  commentId: M:CharonsCorner.Runtime.FloatRange.#ctor(System.Single,System.Single)
+  id: '#ctor(System.Single,System.Single)'
+  parent: CharonsCorner.Runtime.FloatRange
+  langs:
+  - csharp
+  - vb
+  name: FloatRange(float, float)
+  nameWithType: FloatRange.FloatRange(float, float)
+  fullName: CharonsCorner.Runtime.FloatRange.FloatRange(float, float)
+  type: Constructor
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/Utilities/FloatRange.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: .ctor
+    path: ../Assets/Scripts/Runtime/Utilities/FloatRange.cs
+    startLine: 10
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  syntax:
+    content: public FloatRange(float min, float max)
+    parameters:
+    - id: min
+      type: System.Single
+    - id: max
+      type: System.Single
+    content.vb: Public Sub New(min As Single, max As Single)
+  overload: CharonsCorner.Runtime.FloatRange.#ctor*
+  nameWithType.vb: FloatRange.New(Single, Single)
+  fullName.vb: CharonsCorner.Runtime.FloatRange.New(Single, Single)
+  name.vb: New(Single, Single)
+- uid: CharonsCorner.Runtime.FloatRange.Clamp(System.Single)
+  commentId: M:CharonsCorner.Runtime.FloatRange.Clamp(System.Single)
+  id: Clamp(System.Single)
+  parent: CharonsCorner.Runtime.FloatRange
+  langs:
+  - csharp
+  - vb
+  name: Clamp(float)
+  nameWithType: FloatRange.Clamp(float)
+  fullName: CharonsCorner.Runtime.FloatRange.Clamp(float)
+  type: Method
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/Utilities/FloatRange.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: Clamp
+    path: ../Assets/Scripts/Runtime/Utilities/FloatRange.cs
+    startLine: 20
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  summary: >-
+    Clamps the value between the minimum and maximum values of the range.
+
+    Returns the clamped value.
+  example: []
+  syntax:
+    content: public float Clamp(float value)
+    parameters:
+    - id: value
+      type: System.Single
+    return:
+      type: System.Single
+    content.vb: Public Function Clamp(value As Single) As Single
+  overload: CharonsCorner.Runtime.FloatRange.Clamp*
+  nameWithType.vb: FloatRange.Clamp(Single)
+  fullName.vb: CharonsCorner.Runtime.FloatRange.Clamp(Single)
+  name.vb: Clamp(Single)
+- uid: CharonsCorner.Runtime.FloatRange.Clamp01(System.Single)
+  commentId: M:CharonsCorner.Runtime.FloatRange.Clamp01(System.Single)
+  id: Clamp01(System.Single)
+  parent: CharonsCorner.Runtime.FloatRange
+  langs:
+  - csharp
+  - vb
+  name: Clamp01(float)
+  nameWithType: FloatRange.Clamp01(float)
+  fullName: CharonsCorner.Runtime.FloatRange.Clamp01(float)
+  type: Method
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/Utilities/FloatRange.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: Clamp01
+    path: ../Assets/Scripts/Runtime/Utilities/FloatRange.cs
+    startLine: 25
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  summary: >-
+    Clamps the value between the minimum and maximum values of the range
+
+    and returns a value between 0 and 1, where 0 corresponds to Min and 1 corresponds to Max.
+  example: []
+  syntax:
+    content: public float Clamp01(float value)
+    parameters:
+    - id: value
+      type: System.Single
+    return:
+      type: System.Single
+    content.vb: Public Function Clamp01(value As Single) As Single
+  overload: CharonsCorner.Runtime.FloatRange.Clamp01*
+  nameWithType.vb: FloatRange.Clamp01(Single)
+  fullName.vb: CharonsCorner.Runtime.FloatRange.Clamp01(Single)
+  name.vb: Clamp01(Single)
+- uid: CharonsCorner.Runtime.FloatRange.Contains(System.Single)
+  commentId: M:CharonsCorner.Runtime.FloatRange.Contains(System.Single)
+  id: Contains(System.Single)
+  parent: CharonsCorner.Runtime.FloatRange
+  langs:
+  - csharp
+  - vb
+  name: Contains(float)
+  nameWithType: FloatRange.Contains(float)
+  fullName: CharonsCorner.Runtime.FloatRange.Contains(float)
+  type: Method
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/Utilities/FloatRange.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: Contains
+    path: ../Assets/Scripts/Runtime/Utilities/FloatRange.cs
+    startLine: 29
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  summary: Checks if the value is within the range defined by Min and Max.
+  example: []
+  syntax:
+    content: public bool Contains(float value)
+    parameters:
+    - id: value
+      type: System.Single
+    return:
+      type: System.Boolean
+    content.vb: Public Function Contains(value As Single) As Boolean
+  overload: CharonsCorner.Runtime.FloatRange.Contains*
+  nameWithType.vb: FloatRange.Contains(Single)
+  fullName.vb: CharonsCorner.Runtime.FloatRange.Contains(Single)
+  name.vb: Contains(Single)
+- uid: CharonsCorner.Runtime.FloatRange.Lerp(System.Single)
+  commentId: M:CharonsCorner.Runtime.FloatRange.Lerp(System.Single)
+  id: Lerp(System.Single)
+  parent: CharonsCorner.Runtime.FloatRange
+  langs:
+  - csharp
+  - vb
+  name: Lerp(float)
+  nameWithType: FloatRange.Lerp(float)
+  fullName: CharonsCorner.Runtime.FloatRange.Lerp(float)
+  type: Method
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/Utilities/FloatRange.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: Lerp
+    path: ../Assets/Scripts/Runtime/Utilities/FloatRange.cs
+    startLine: 33
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  summary: Linearly interpolates between Min and Max based on the parameter t.
+  example: []
+  syntax:
+    content: public float Lerp(float t)
+    parameters:
+    - id: t
+      type: System.Single
+    return:
+      type: System.Single
+    content.vb: Public Function Lerp(t As Single) As Single
+  overload: CharonsCorner.Runtime.FloatRange.Lerp*
+  nameWithType.vb: FloatRange.Lerp(Single)
+  fullName.vb: CharonsCorner.Runtime.FloatRange.Lerp(Single)
+  name.vb: Lerp(Single)
+- uid: CharonsCorner.Runtime.FloatRange.InverseLerp(System.Single)
+  commentId: M:CharonsCorner.Runtime.FloatRange.InverseLerp(System.Single)
+  id: InverseLerp(System.Single)
+  parent: CharonsCorner.Runtime.FloatRange
+  langs:
+  - csharp
+  - vb
+  name: InverseLerp(float)
+  nameWithType: FloatRange.InverseLerp(float)
+  fullName: CharonsCorner.Runtime.FloatRange.InverseLerp(float)
+  type: Method
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/Utilities/FloatRange.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: InverseLerp
+    path: ../Assets/Scripts/Runtime/Utilities/FloatRange.cs
+    startLine: 38
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  summary: >-
+    Gets the parameter t that corresponds to the given value within the range
+
+    such that Min corresponds to 0 and Max corresponds to 1.
+  example: []
+  syntax:
+    content: public float InverseLerp(float value)
+    parameters:
+    - id: value
+      type: System.Single
+    return:
+      type: System.Single
+    content.vb: Public Function InverseLerp(value As Single) As Single
+  overload: CharonsCorner.Runtime.FloatRange.InverseLerp*
+  nameWithType.vb: FloatRange.InverseLerp(Single)
+  fullName.vb: CharonsCorner.Runtime.FloatRange.InverseLerp(Single)
+  name.vb: InverseLerp(Single)
+- uid: CharonsCorner.Runtime.FloatRange.RandomValue
+  commentId: M:CharonsCorner.Runtime.FloatRange.RandomValue
+  id: RandomValue
+  parent: CharonsCorner.Runtime.FloatRange
+  langs:
+  - csharp
+  - vb
+  name: RandomValue()
+  nameWithType: FloatRange.RandomValue()
+  fullName: CharonsCorner.Runtime.FloatRange.RandomValue()
+  type: Method
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/Utilities/FloatRange.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: RandomValue
+    path: ../Assets/Scripts/Runtime/Utilities/FloatRange.cs
+    startLine: 42
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  summary: Gets a random value within the range defined by Min and Max.
+  example: []
+  syntax:
+    content: public float RandomValue()
+    return:
+      type: System.Single
+    content.vb: Public Function RandomValue() As Single
+  overload: CharonsCorner.Runtime.FloatRange.RandomValue*
+references:
+- uid: CharonsCorner.Runtime
+  commentId: N:CharonsCorner.Runtime
+  href: CharonsCorner.html
+  name: CharonsCorner.Runtime
+  nameWithType: CharonsCorner.Runtime
+  fullName: CharonsCorner.Runtime
+  spec.csharp:
+  - uid: CharonsCorner
+    name: CharonsCorner
+    href: CharonsCorner.html
+  - name: .
+  - uid: CharonsCorner.Runtime
+    name: Runtime
+    href: CharonsCorner.Runtime.html
+  spec.vb:
+  - uid: CharonsCorner
+    name: CharonsCorner
+    href: CharonsCorner.html
+  - name: .
+  - uid: CharonsCorner.Runtime
+    name: Runtime
+    href: CharonsCorner.Runtime.html
+- uid: System.ValueType.Equals(System.Object)
+  commentId: M:System.ValueType.Equals(System.Object)
+  parent: System.ValueType
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype.equals
+  name: Equals(object)
+  nameWithType: ValueType.Equals(object)
+  fullName: System.ValueType.Equals(object)
+  nameWithType.vb: ValueType.Equals(Object)
+  fullName.vb: System.ValueType.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.ValueType.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.equals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.ValueType.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.equals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.ValueType.GetHashCode
+  commentId: M:System.ValueType.GetHashCode
+  parent: System.ValueType
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype.gethashcode
+  name: GetHashCode()
+  nameWithType: ValueType.GetHashCode()
+  fullName: System.ValueType.GetHashCode()
+  spec.csharp:
+  - uid: System.ValueType.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.ValueType.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.gethashcode
+  - name: (
+  - name: )
+- uid: System.ValueType.ToString
+  commentId: M:System.ValueType.ToString
+  parent: System.ValueType
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype.tostring
+  name: ToString()
+  nameWithType: ValueType.ToString()
+  fullName: System.ValueType.ToString()
+  spec.csharp:
+  - uid: System.ValueType.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.ValueType.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.ValueType
+  commentId: T:System.ValueType
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype
+  name: ValueType
+  nameWithType: ValueType
+  fullName: System.ValueType
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: System.Single
+  commentId: T:System.Single
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.single
+  name: float
+  nameWithType: float
+  fullName: float
+  nameWithType.vb: Single
+  fullName.vb: Single
+  name.vb: Single
+- uid: CharonsCorner.Runtime.FloatRange.#ctor*
+  commentId: Overload:CharonsCorner.Runtime.FloatRange.#ctor
+  href: CharonsCorner.Runtime.FloatRange.html#CharonsCorner_Runtime_FloatRange__ctor_System_Single_System_Single_
+  name: FloatRange
+  nameWithType: FloatRange.FloatRange
+  fullName: CharonsCorner.Runtime.FloatRange.FloatRange
+  nameWithType.vb: FloatRange.New
+  fullName.vb: CharonsCorner.Runtime.FloatRange.New
+  name.vb: New
+- uid: CharonsCorner.Runtime.FloatRange.Clamp*
+  commentId: Overload:CharonsCorner.Runtime.FloatRange.Clamp
+  href: CharonsCorner.Runtime.FloatRange.html#CharonsCorner_Runtime_FloatRange_Clamp_System_Single_
+  name: Clamp
+  nameWithType: FloatRange.Clamp
+  fullName: CharonsCorner.Runtime.FloatRange.Clamp
+- uid: CharonsCorner.Runtime.FloatRange.Clamp01*
+  commentId: Overload:CharonsCorner.Runtime.FloatRange.Clamp01
+  href: CharonsCorner.Runtime.FloatRange.html#CharonsCorner_Runtime_FloatRange_Clamp01_System_Single_
+  name: Clamp01
+  nameWithType: FloatRange.Clamp01
+  fullName: CharonsCorner.Runtime.FloatRange.Clamp01
+- uid: CharonsCorner.Runtime.FloatRange.Contains*
+  commentId: Overload:CharonsCorner.Runtime.FloatRange.Contains
+  href: CharonsCorner.Runtime.FloatRange.html#CharonsCorner_Runtime_FloatRange_Contains_System_Single_
+  name: Contains
+  nameWithType: FloatRange.Contains
+  fullName: CharonsCorner.Runtime.FloatRange.Contains
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: CharonsCorner.Runtime.FloatRange.Lerp*
+  commentId: Overload:CharonsCorner.Runtime.FloatRange.Lerp
+  href: CharonsCorner.Runtime.FloatRange.html#CharonsCorner_Runtime_FloatRange_Lerp_System_Single_
+  name: Lerp
+  nameWithType: FloatRange.Lerp
+  fullName: CharonsCorner.Runtime.FloatRange.Lerp
+- uid: CharonsCorner.Runtime.FloatRange.InverseLerp*
+  commentId: Overload:CharonsCorner.Runtime.FloatRange.InverseLerp
+  href: CharonsCorner.Runtime.FloatRange.html#CharonsCorner_Runtime_FloatRange_InverseLerp_System_Single_
+  name: InverseLerp
+  nameWithType: FloatRange.InverseLerp
+  fullName: CharonsCorner.Runtime.FloatRange.InverseLerp
+- uid: CharonsCorner.Runtime.FloatRange.RandomValue*
+  commentId: Overload:CharonsCorner.Runtime.FloatRange.RandomValue
+  href: CharonsCorner.Runtime.FloatRange.html#CharonsCorner_Runtime_FloatRange_RandomValue
+  name: RandomValue
+  nameWithType: FloatRange.RandomValue
+  fullName: CharonsCorner.Runtime.FloatRange.RandomValue

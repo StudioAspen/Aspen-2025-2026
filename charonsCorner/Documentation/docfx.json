@@ -1,0 +1,51 @@
+{
+  "$schema": "https://raw.githubusercontent.com/dotnet/docfx/main/schemas/docfx.schema.json",
+  "metadata": [
+    {
+      "src": [
+        {
+          "files": [
+            "Assembly-CSharp.csproj",
+            "Assembly-CSharp-Editor.csproj",
+            "CharonsCorner.Runtime.csproj",
+            "CharonsCorner.Editor.csproj",
+            "CharonsCorner.LevelEditor.csproj",
+            "CharonsCorner.LevelEditor.Editor.csproj"
+          ],
+          "src": "../"
+        }
+      ],
+      "dest": "api"
+    }
+  ],
+  "build": {
+    "content": [
+      {
+        "files": [
+          "**/*.{md,yml}"
+        ],
+        "exclude": [
+          "_site/**"
+        ]
+      }
+    ],
+    "resource": [
+      {
+        "files": [
+          "images/**"
+        ]
+      }
+    ],
+    "output": "_site",
+    "template": [
+      "default",
+      "modern"
+    ],
+    "globalMetadata": {
+      "_appName": "Charons Corner Documentation",
+      "_appTitle": "Charons Corner Documentation",
+      "_enableSearch": true,
+      "pdf": false
+    }
+  }
+}

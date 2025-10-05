@@ -1,0 +1,991 @@
+### YamlMime:ManagedReference
+items:
+- uid: CharonsCorner.Runtime.SuperState`1
+  commentId: T:CharonsCorner.Runtime.SuperState`1
+  id: SuperState`1
+  parent: CharonsCorner.Runtime
+  children:
+  - CharonsCorner.Runtime.SuperState`1.Destroy
+  - CharonsCorner.Runtime.SuperState`1.Enter
+  - CharonsCorner.Runtime.SuperState`1.Exit
+  - CharonsCorner.Runtime.SuperState`1.FixedUpdate
+  - CharonsCorner.Runtime.SuperState`1.InitialSubState
+  - CharonsCorner.Runtime.SuperState`1.SubStateMachine
+  - CharonsCorner.Runtime.SuperState`1.Update
+  langs:
+  - csharp
+  - vb
+  name: SuperState<TContext>
+  nameWithType: SuperState<TContext>
+  fullName: CharonsCorner.Runtime.SuperState<TContext>
+  type: Class
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/StateMachine/SuperState.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: SuperState
+    path: ../Assets/Scripts/Runtime/StateMachine/SuperState.cs
+    startLine: 5
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  syntax:
+    content: >-
+      [Serializable]
+
+      public abstract class SuperState<TContext> : State<TContext> where TContext : MonoBehaviour
+    typeParameters:
+    - id: TContext
+    content.vb: >-
+      <Serializable>
+
+      Public MustInherit Class SuperState(Of TContext As MonoBehaviour) Inherits State(Of TContext)
+  inheritance:
+  - System.Object
+  - CharonsCorner.Runtime.State{{TContext}}
+  derivedClasses:
+  - CharonsCorner.Runtime.AirborneSuperState
+  - CharonsCorner.Runtime.GroundedSuperState
+  inheritedMembers:
+  - CharonsCorner.Runtime.State{{TContext}}.Init(CharonsCorner.Runtime.StateMachine{{TContext}},{TContext})
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+  attributes:
+  - type: System.SerializableAttribute
+    ctor: System.SerializableAttribute.#ctor
+    arguments: []
+  nameWithType.vb: SuperState(Of TContext)
+  fullName.vb: CharonsCorner.Runtime.SuperState(Of TContext)
+  name.vb: SuperState(Of TContext)
+- uid: CharonsCorner.Runtime.SuperState`1.SubStateMachine
+  commentId: P:CharonsCorner.Runtime.SuperState`1.SubStateMachine
+  id: SubStateMachine
+  parent: CharonsCorner.Runtime.SuperState`1
+  langs:
+  - csharp
+  - vb
+  name: SubStateMachine
+  nameWithType: SuperState<TContext>.SubStateMachine
+  fullName: CharonsCorner.Runtime.SuperState<TContext>.SubStateMachine
+  type: Property
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/StateMachine/SuperState.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: SubStateMachine
+    path: ../Assets/Scripts/Runtime/StateMachine/SuperState.cs
+    startLine: 8
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  syntax:
+    content: public StateMachine<TContext> SubStateMachine { get; }
+    parameters: []
+    return:
+      type: CharonsCorner.Runtime.StateMachine{{TContext}}
+    content.vb: Public Property SubStateMachine As StateMachine(Of TContext)
+  overload: CharonsCorner.Runtime.SuperState`1.SubStateMachine*
+  nameWithType.vb: SuperState(Of TContext).SubStateMachine
+  fullName.vb: CharonsCorner.Runtime.SuperState(Of TContext).SubStateMachine
+- uid: CharonsCorner.Runtime.SuperState`1.InitialSubState
+  commentId: P:CharonsCorner.Runtime.SuperState`1.InitialSubState
+  id: InitialSubState
+  parent: CharonsCorner.Runtime.SuperState`1
+  langs:
+  - csharp
+  - vb
+  name: InitialSubState
+  nameWithType: SuperState<TContext>.InitialSubState
+  fullName: CharonsCorner.Runtime.SuperState<TContext>.InitialSubState
+  type: Property
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/StateMachine/SuperState.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: InitialSubState
+    path: ../Assets/Scripts/Runtime/StateMachine/SuperState.cs
+    startLine: 10
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  syntax:
+    content: public abstract State<TContext> InitialSubState { get; }
+    parameters: []
+    return:
+      type: CharonsCorner.Runtime.State{{TContext}}
+    content.vb: Public MustOverride ReadOnly Property InitialSubState As State(Of TContext)
+  overload: CharonsCorner.Runtime.SuperState`1.InitialSubState*
+  nameWithType.vb: SuperState(Of TContext).InitialSubState
+  fullName.vb: CharonsCorner.Runtime.SuperState(Of TContext).InitialSubState
+- uid: CharonsCorner.Runtime.SuperState`1.Destroy
+  commentId: M:CharonsCorner.Runtime.SuperState`1.Destroy
+  id: Destroy
+  parent: CharonsCorner.Runtime.SuperState`1
+  langs:
+  - csharp
+  - vb
+  name: Destroy()
+  nameWithType: SuperState<TContext>.Destroy()
+  fullName: CharonsCorner.Runtime.SuperState<TContext>.Destroy()
+  type: Method
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/StateMachine/SuperState.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: Destroy
+    path: ../Assets/Scripts/Runtime/StateMachine/SuperState.cs
+    startLine: 20
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  example: []
+  syntax:
+    content: public override void Destroy()
+    content.vb: Public Overrides Sub Destroy()
+  overridden: CharonsCorner.Runtime.State{{TContext}}.Destroy
+  overload: CharonsCorner.Runtime.SuperState`1.Destroy*
+  nameWithType.vb: SuperState(Of TContext).Destroy()
+  fullName.vb: CharonsCorner.Runtime.SuperState(Of TContext).Destroy()
+- uid: CharonsCorner.Runtime.SuperState`1.Enter
+  commentId: M:CharonsCorner.Runtime.SuperState`1.Enter
+  id: Enter
+  parent: CharonsCorner.Runtime.SuperState`1
+  langs:
+  - csharp
+  - vb
+  name: Enter()
+  nameWithType: SuperState<TContext>.Enter()
+  fullName: CharonsCorner.Runtime.SuperState<TContext>.Enter()
+  type: Method
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/StateMachine/SuperState.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: Enter
+    path: ../Assets/Scripts/Runtime/StateMachine/SuperState.cs
+    startLine: 26
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  example: []
+  syntax:
+    content: public override void Enter()
+    content.vb: Public Overrides Sub Enter()
+  overridden: CharonsCorner.Runtime.State{{TContext}}.Enter
+  overload: CharonsCorner.Runtime.SuperState`1.Enter*
+  nameWithType.vb: SuperState(Of TContext).Enter()
+  fullName.vb: CharonsCorner.Runtime.SuperState(Of TContext).Enter()
+- uid: CharonsCorner.Runtime.SuperState`1.Exit
+  commentId: M:CharonsCorner.Runtime.SuperState`1.Exit
+  id: Exit
+  parent: CharonsCorner.Runtime.SuperState`1
+  langs:
+  - csharp
+  - vb
+  name: Exit()
+  nameWithType: SuperState<TContext>.Exit()
+  fullName: CharonsCorner.Runtime.SuperState<TContext>.Exit()
+  type: Method
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/StateMachine/SuperState.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: Exit
+    path: ../Assets/Scripts/Runtime/StateMachine/SuperState.cs
+    startLine: 32
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  example: []
+  syntax:
+    content: public override void Exit()
+    content.vb: Public Overrides Sub [Exit]()
+  overridden: CharonsCorner.Runtime.State{{TContext}}.Exit
+  overload: CharonsCorner.Runtime.SuperState`1.Exit*
+  nameWithType.vb: SuperState(Of TContext).Exit()
+  fullName.vb: CharonsCorner.Runtime.SuperState(Of TContext).Exit()
+- uid: CharonsCorner.Runtime.SuperState`1.Update
+  commentId: M:CharonsCorner.Runtime.SuperState`1.Update
+  id: Update
+  parent: CharonsCorner.Runtime.SuperState`1
+  langs:
+  - csharp
+  - vb
+  name: Update()
+  nameWithType: SuperState<TContext>.Update()
+  fullName: CharonsCorner.Runtime.SuperState<TContext>.Update()
+  type: Method
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/StateMachine/SuperState.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: Update
+    path: ../Assets/Scripts/Runtime/StateMachine/SuperState.cs
+    startLine: 38
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  example: []
+  syntax:
+    content: public override void Update()
+    content.vb: Public Overrides Sub Update()
+  overridden: CharonsCorner.Runtime.State{{TContext}}.Update
+  overload: CharonsCorner.Runtime.SuperState`1.Update*
+  nameWithType.vb: SuperState(Of TContext).Update()
+  fullName.vb: CharonsCorner.Runtime.SuperState(Of TContext).Update()
+- uid: CharonsCorner.Runtime.SuperState`1.FixedUpdate
+  commentId: M:CharonsCorner.Runtime.SuperState`1.FixedUpdate
+  id: FixedUpdate
+  parent: CharonsCorner.Runtime.SuperState`1
+  langs:
+  - csharp
+  - vb
+  name: FixedUpdate()
+  nameWithType: SuperState<TContext>.FixedUpdate()
+  fullName: CharonsCorner.Runtime.SuperState<TContext>.FixedUpdate()
+  type: Method
+  source:
+    remote:
+      path: charonsCorner/Assets/Scripts/Runtime/StateMachine/SuperState.cs
+      branch: development
+      repo: https://github.com/StudioAspen/Aspen-2025-2026.git
+    id: FixedUpdate
+    path: ../Assets/Scripts/Runtime/StateMachine/SuperState.cs
+    startLine: 51
+  assemblies:
+  - CharonsCorner.Runtime
+  namespace: CharonsCorner.Runtime
+  example: []
+  syntax:
+    content: public override void FixedUpdate()
+    content.vb: Public Overrides Sub FixedUpdate()
+  overridden: CharonsCorner.Runtime.State{{TContext}}.FixedUpdate
+  overload: CharonsCorner.Runtime.SuperState`1.FixedUpdate*
+  nameWithType.vb: SuperState(Of TContext).FixedUpdate()
+  fullName.vb: CharonsCorner.Runtime.SuperState(Of TContext).FixedUpdate()
+references:
+- uid: CharonsCorner.Runtime
+  commentId: N:CharonsCorner.Runtime
+  href: CharonsCorner.html
+  name: CharonsCorner.Runtime
+  nameWithType: CharonsCorner.Runtime
+  fullName: CharonsCorner.Runtime
+  spec.csharp:
+  - uid: CharonsCorner
+    name: CharonsCorner
+    href: CharonsCorner.html
+  - name: .
+  - uid: CharonsCorner.Runtime
+    name: Runtime
+    href: CharonsCorner.Runtime.html
+  spec.vb:
+  - uid: CharonsCorner
+    name: CharonsCorner
+    href: CharonsCorner.html
+  - name: .
+  - uid: CharonsCorner.Runtime
+    name: Runtime
+    href: CharonsCorner.Runtime.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: CharonsCorner.Runtime.State{{TContext}}
+  commentId: T:CharonsCorner.Runtime.State{`0}
+  parent: CharonsCorner.Runtime
+  definition: CharonsCorner.Runtime.State`1
+  href: CharonsCorner.Runtime.State-1.html
+  name: State<TContext>
+  nameWithType: State<TContext>
+  fullName: CharonsCorner.Runtime.State<TContext>
+  nameWithType.vb: State(Of TContext)
+  fullName.vb: CharonsCorner.Runtime.State(Of TContext)
+  name.vb: State(Of TContext)
+  spec.csharp:
+  - uid: CharonsCorner.Runtime.State`1
+    name: State
+    href: CharonsCorner.Runtime.State-1.html
+  - name: <
+  - name: TContext
+  - name: '>'
+  spec.vb:
+  - uid: CharonsCorner.Runtime.State`1
+    name: State
+    href: CharonsCorner.Runtime.State-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TContext
+  - name: )
+- uid: CharonsCorner.Runtime.State{{TContext}}.Init(CharonsCorner.Runtime.StateMachine{{TContext}},{TContext})
+  commentId: M:CharonsCorner.Runtime.State{`0}.Init(CharonsCorner.Runtime.StateMachine{`0},`0)
+  parent: CharonsCorner.Runtime.State{{TContext}}
+  definition: CharonsCorner.Runtime.State`1.Init(CharonsCorner.Runtime.StateMachine{`0},`0)
+  href: CharonsCorner.Runtime.State-1.html#CharonsCorner_Runtime_State_1_Init_CharonsCorner_Runtime_StateMachine__0___0_
+  name: Init(StateMachine<TContext>, TContext)
+  nameWithType: State<TContext>.Init(StateMachine<TContext>, TContext)
+  fullName: CharonsCorner.Runtime.State<TContext>.Init(CharonsCorner.Runtime.StateMachine<TContext>, TContext)
+  nameWithType.vb: State(Of TContext).Init(StateMachine(Of TContext), TContext)
+  fullName.vb: CharonsCorner.Runtime.State(Of TContext).Init(CharonsCorner.Runtime.StateMachine(Of TContext), TContext)
+  name.vb: Init(StateMachine(Of TContext), TContext)
+  spec.csharp:
+  - uid: CharonsCorner.Runtime.State{`0}.Init(CharonsCorner.Runtime.StateMachine{`0},`0)
+    name: Init
+    href: CharonsCorner.Runtime.State-1.html#CharonsCorner_Runtime_State_1_Init_CharonsCorner_Runtime_StateMachine__0___0_
+  - name: (
+  - uid: CharonsCorner.Runtime.StateMachine`1
+    name: StateMachine
+    href: CharonsCorner.Runtime.StateMachine-1.html
+  - name: <
+  - name: TContext
+  - name: '>'
+  - name: ','
+  - name: " "
+  - name: TContext
+  - name: )
+  spec.vb:
+  - uid: CharonsCorner.Runtime.State{`0}.Init(CharonsCorner.Runtime.StateMachine{`0},`0)
+    name: Init
+    href: CharonsCorner.Runtime.State-1.html#CharonsCorner_Runtime_State_1_Init_CharonsCorner_Runtime_StateMachine__0___0_
+  - name: (
+  - uid: CharonsCorner.Runtime.StateMachine`1
+    name: StateMachine
+    href: CharonsCorner.Runtime.StateMachine-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TContext
+  - name: )
+  - name: ','
+  - name: " "
+  - name: TContext
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: CharonsCorner.Runtime.State`1
+  commentId: T:CharonsCorner.Runtime.State`1
+  href: CharonsCorner.Runtime.State-1.html
+  name: State<TContext>
+  nameWithType: State<TContext>
+  fullName: CharonsCorner.Runtime.State<TContext>
+  nameWithType.vb: State(Of TContext)
+  fullName.vb: CharonsCorner.Runtime.State(Of TContext)
+  name.vb: State(Of TContext)
+  spec.csharp:
+  - uid: CharonsCorner.Runtime.State`1
+    name: State
+    href: CharonsCorner.Runtime.State-1.html
+  - name: <
+  - name: TContext
+  - name: '>'
+  spec.vb:
+  - uid: CharonsCorner.Runtime.State`1
+    name: State
+    href: CharonsCorner.Runtime.State-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TContext
+  - name: )
+- uid: CharonsCorner.Runtime.State`1.Init(CharonsCorner.Runtime.StateMachine{`0},`0)
+  commentId: M:CharonsCorner.Runtime.State`1.Init(CharonsCorner.Runtime.StateMachine{`0},`0)
+  href: CharonsCorner.Runtime.State-1.html#CharonsCorner_Runtime_State_1_Init_CharonsCorner_Runtime_StateMachine__0___0_
+  name: Init(StateMachine<TContext>, TContext)
+  nameWithType: State<TContext>.Init(StateMachine<TContext>, TContext)
+  fullName: CharonsCorner.Runtime.State<TContext>.Init(CharonsCorner.Runtime.StateMachine<TContext>, TContext)
+  nameWithType.vb: State(Of TContext).Init(StateMachine(Of TContext), TContext)
+  fullName.vb: CharonsCorner.Runtime.State(Of TContext).Init(CharonsCorner.Runtime.StateMachine(Of TContext), TContext)
+  name.vb: Init(StateMachine(Of TContext), TContext)
+  spec.csharp:
+  - uid: CharonsCorner.Runtime.State`1.Init(CharonsCorner.Runtime.StateMachine{`0},`0)
+    name: Init
+    href: CharonsCorner.Runtime.State-1.html#CharonsCorner_Runtime_State_1_Init_CharonsCorner_Runtime_StateMachine__0___0_
+  - name: (
+  - uid: CharonsCorner.Runtime.StateMachine`1
+    name: StateMachine
+    href: CharonsCorner.Runtime.StateMachine-1.html
+  - name: <
+  - name: TContext
+  - name: '>'
+  - name: ','
+  - name: " "
+  - name: TContext
+  - name: )
+  spec.vb:
+  - uid: CharonsCorner.Runtime.State`1.Init(CharonsCorner.Runtime.StateMachine{`0},`0)
+    name: Init
+    href: CharonsCorner.Runtime.State-1.html#CharonsCorner_Runtime_State_1_Init_CharonsCorner_Runtime_StateMachine__0___0_
+  - name: (
+  - uid: CharonsCorner.Runtime.StateMachine`1
+    name: StateMachine
+    href: CharonsCorner.Runtime.StateMachine-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TContext
+  - name: )
+  - name: ','
+  - name: " "
+  - name: TContext
+  - name: )
+- uid: CharonsCorner.Runtime.SuperState`1.SubStateMachine*
+  commentId: Overload:CharonsCorner.Runtime.SuperState`1.SubStateMachine
+  href: CharonsCorner.Runtime.SuperState-1.html#CharonsCorner_Runtime_SuperState_1_SubStateMachine
+  name: SubStateMachine
+  nameWithType: SuperState<TContext>.SubStateMachine
+  fullName: CharonsCorner.Runtime.SuperState<TContext>.SubStateMachine
+  nameWithType.vb: SuperState(Of TContext).SubStateMachine
+  fullName.vb: CharonsCorner.Runtime.SuperState(Of TContext).SubStateMachine
+- uid: CharonsCorner.Runtime.StateMachine{{TContext}}
+  commentId: T:CharonsCorner.Runtime.StateMachine{`0}
+  parent: CharonsCorner.Runtime
+  definition: CharonsCorner.Runtime.StateMachine`1
+  href: CharonsCorner.Runtime.StateMachine-1.html
+  name: StateMachine<TContext>
+  nameWithType: StateMachine<TContext>
+  fullName: CharonsCorner.Runtime.StateMachine<TContext>
+  nameWithType.vb: StateMachine(Of TContext)
+  fullName.vb: CharonsCorner.Runtime.StateMachine(Of TContext)
+  name.vb: StateMachine(Of TContext)
+  spec.csharp:
+  - uid: CharonsCorner.Runtime.StateMachine`1
+    name: StateMachine
+    href: CharonsCorner.Runtime.StateMachine-1.html
+  - name: <
+  - name: TContext
+  - name: '>'
+  spec.vb:
+  - uid: CharonsCorner.Runtime.StateMachine`1
+    name: StateMachine
+    href: CharonsCorner.Runtime.StateMachine-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TContext
+  - name: )
+- uid: CharonsCorner.Runtime.StateMachine`1
+  commentId: T:CharonsCorner.Runtime.StateMachine`1
+  href: CharonsCorner.Runtime.StateMachine-1.html
+  name: StateMachine<TContext>
+  nameWithType: StateMachine<TContext>
+  fullName: CharonsCorner.Runtime.StateMachine<TContext>
+  nameWithType.vb: StateMachine(Of TContext)
+  fullName.vb: CharonsCorner.Runtime.StateMachine(Of TContext)
+  name.vb: StateMachine(Of TContext)
+  spec.csharp:
+  - uid: CharonsCorner.Runtime.StateMachine`1
+    name: StateMachine
+    href: CharonsCorner.Runtime.StateMachine-1.html
+  - name: <
+  - name: TContext
+  - name: '>'
+  spec.vb:
+  - uid: CharonsCorner.Runtime.StateMachine`1
+    name: StateMachine
+    href: CharonsCorner.Runtime.StateMachine-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TContext
+  - name: )
+- uid: CharonsCorner.Runtime.SuperState`1.InitialSubState*
+  commentId: Overload:CharonsCorner.Runtime.SuperState`1.InitialSubState
+  href: CharonsCorner.Runtime.SuperState-1.html#CharonsCorner_Runtime_SuperState_1_InitialSubState
+  name: InitialSubState
+  nameWithType: SuperState<TContext>.InitialSubState
+  fullName: CharonsCorner.Runtime.SuperState<TContext>.InitialSubState
+  nameWithType.vb: SuperState(Of TContext).InitialSubState
+  fullName.vb: CharonsCorner.Runtime.SuperState(Of TContext).InitialSubState
+- uid: CharonsCorner.Runtime.State{{TContext}}.Destroy
+  commentId: M:CharonsCorner.Runtime.State{`0}.Destroy
+  parent: CharonsCorner.Runtime.State{{TContext}}
+  definition: CharonsCorner.Runtime.State`1.Destroy
+  href: CharonsCorner.Runtime.State-1.html#CharonsCorner_Runtime_State_1_Destroy
+  name: Destroy()
+  nameWithType: State<TContext>.Destroy()
+  fullName: CharonsCorner.Runtime.State<TContext>.Destroy()
+  nameWithType.vb: State(Of TContext).Destroy()
+  fullName.vb: CharonsCorner.Runtime.State(Of TContext).Destroy()
+  spec.csharp:
+  - uid: CharonsCorner.Runtime.State{`0}.Destroy
+    name: Destroy
+    href: CharonsCorner.Runtime.State-1.html#CharonsCorner_Runtime_State_1_Destroy
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: CharonsCorner.Runtime.State{`0}.Destroy
+    name: Destroy
+    href: CharonsCorner.Runtime.State-1.html#CharonsCorner_Runtime_State_1_Destroy
+  - name: (
+  - name: )
+- uid: CharonsCorner.Runtime.SuperState`1.Destroy*
+  commentId: Overload:CharonsCorner.Runtime.SuperState`1.Destroy
+  href: CharonsCorner.Runtime.SuperState-1.html#CharonsCorner_Runtime_SuperState_1_Destroy
+  name: Destroy
+  nameWithType: SuperState<TContext>.Destroy
+  fullName: CharonsCorner.Runtime.SuperState<TContext>.Destroy
+  nameWithType.vb: SuperState(Of TContext).Destroy
+  fullName.vb: CharonsCorner.Runtime.SuperState(Of TContext).Destroy
+- uid: CharonsCorner.Runtime.State`1.Destroy
+  commentId: M:CharonsCorner.Runtime.State`1.Destroy
+  href: CharonsCorner.Runtime.State-1.html#CharonsCorner_Runtime_State_1_Destroy
+  name: Destroy()
+  nameWithType: State<TContext>.Destroy()
+  fullName: CharonsCorner.Runtime.State<TContext>.Destroy()
+  nameWithType.vb: State(Of TContext).Destroy()
+  fullName.vb: CharonsCorner.Runtime.State(Of TContext).Destroy()
+  spec.csharp:
+  - uid: CharonsCorner.Runtime.State`1.Destroy
+    name: Destroy
+    href: CharonsCorner.Runtime.State-1.html#CharonsCorner_Runtime_State_1_Destroy
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: CharonsCorner.Runtime.State`1.Destroy
+    name: Destroy
+    href: CharonsCorner.Runtime.State-1.html#CharonsCorner_Runtime_State_1_Destroy
+  - name: (
+  - name: )
+- uid: CharonsCorner.Runtime.State{{TContext}}.Enter
+  commentId: M:CharonsCorner.Runtime.State{`0}.Enter
+  parent: CharonsCorner.Runtime.State{{TContext}}
+  definition: CharonsCorner.Runtime.State`1.Enter
+  href: CharonsCorner.Runtime.State-1.html#CharonsCorner_Runtime_State_1_Enter
+  name: Enter()
+  nameWithType: State<TContext>.Enter()
+  fullName: CharonsCorner.Runtime.State<TContext>.Enter()
+  nameWithType.vb: State(Of TContext).Enter()
+  fullName.vb: CharonsCorner.Runtime.State(Of TContext).Enter()
+  spec.csharp:
+  - uid: CharonsCorner.Runtime.State{`0}.Enter
+    name: Enter
+    href: CharonsCorner.Runtime.State-1.html#CharonsCorner_Runtime_State_1_Enter
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: CharonsCorner.Runtime.State{`0}.Enter
+    name: Enter
+    href: CharonsCorner.Runtime.State-1.html#CharonsCorner_Runtime_State_1_Enter
+  - name: (
+  - name: )
+- uid: CharonsCorner.Runtime.SuperState`1.Enter*
+  commentId: Overload:CharonsCorner.Runtime.SuperState`1.Enter
+  href: CharonsCorner.Runtime.SuperState-1.html#CharonsCorner_Runtime_SuperState_1_Enter
+  name: Enter
+  nameWithType: SuperState<TContext>.Enter
+  fullName: CharonsCorner.Runtime.SuperState<TContext>.Enter
+  nameWithType.vb: SuperState(Of TContext).Enter
+  fullName.vb: CharonsCorner.Runtime.SuperState(Of TContext).Enter
+- uid: CharonsCorner.Runtime.State`1.Enter
+  commentId: M:CharonsCorner.Runtime.State`1.Enter
+  href: CharonsCorner.Runtime.State-1.html#CharonsCorner_Runtime_State_1_Enter
+  name: Enter()
+  nameWithType: State<TContext>.Enter()
+  fullName: CharonsCorner.Runtime.State<TContext>.Enter()
+  nameWithType.vb: State(Of TContext).Enter()
+  fullName.vb: CharonsCorner.Runtime.State(Of TContext).Enter()
+  spec.csharp:
+  - uid: CharonsCorner.Runtime.State`1.Enter
+    name: Enter
+    href: CharonsCorner.Runtime.State-1.html#CharonsCorner_Runtime_State_1_Enter
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: CharonsCorner.Runtime.State`1.Enter
+    name: Enter
+    href: CharonsCorner.Runtime.State-1.html#CharonsCorner_Runtime_State_1_Enter
+  - name: (
+  - name: )
+- uid: CharonsCorner.Runtime.State{{TContext}}.Exit
+  commentId: M:CharonsCorner.Runtime.State{`0}.Exit
+  parent: CharonsCorner.Runtime.State{{TContext}}
+  definition: CharonsCorner.Runtime.State`1.Exit
+  href: CharonsCorner.Runtime.State-1.html#CharonsCorner_Runtime_State_1_Exit
+  name: Exit()
+  nameWithType: State<TContext>.Exit()
+  fullName: CharonsCorner.Runtime.State<TContext>.Exit()
+  nameWithType.vb: State(Of TContext).Exit()
+  fullName.vb: CharonsCorner.Runtime.State(Of TContext).Exit()
+  spec.csharp:
+  - uid: CharonsCorner.Runtime.State{`0}.Exit
+    name: Exit
+    href: CharonsCorner.Runtime.State-1.html#CharonsCorner_Runtime_State_1_Exit
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: CharonsCorner.Runtime.State{`0}.Exit
+    name: Exit
+    href: CharonsCorner.Runtime.State-1.html#CharonsCorner_Runtime_State_1_Exit
+  - name: (
+  - name: )
+- uid: CharonsCorner.Runtime.SuperState`1.Exit*
+  commentId: Overload:CharonsCorner.Runtime.SuperState`1.Exit
+  href: CharonsCorner.Runtime.SuperState-1.html#CharonsCorner_Runtime_SuperState_1_Exit
+  name: Exit
+  nameWithType: SuperState<TContext>.Exit
+  fullName: CharonsCorner.Runtime.SuperState<TContext>.Exit
+  nameWithType.vb: SuperState(Of TContext).Exit
+  fullName.vb: CharonsCorner.Runtime.SuperState(Of TContext).Exit
+- uid: CharonsCorner.Runtime.State`1.Exit
+  commentId: M:CharonsCorner.Runtime.State`1.Exit
+  href: CharonsCorner.Runtime.State-1.html#CharonsCorner_Runtime_State_1_Exit
+  name: Exit()
+  nameWithType: State<TContext>.Exit()
+  fullName: CharonsCorner.Runtime.State<TContext>.Exit()
+  nameWithType.vb: State(Of TContext).Exit()
+  fullName.vb: CharonsCorner.Runtime.State(Of TContext).Exit()
+  spec.csharp:
+  - uid: CharonsCorner.Runtime.State`1.Exit
+    name: Exit
+    href: CharonsCorner.Runtime.State-1.html#CharonsCorner_Runtime_State_1_Exit
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: CharonsCorner.Runtime.State`1.Exit
+    name: Exit
+    href: CharonsCorner.Runtime.State-1.html#CharonsCorner_Runtime_State_1_Exit
+  - name: (
+  - name: )
+- uid: CharonsCorner.Runtime.State{{TContext}}.Update
+  commentId: M:CharonsCorner.Runtime.State{`0}.Update
+  parent: CharonsCorner.Runtime.State{{TContext}}
+  definition: CharonsCorner.Runtime.State`1.Update
+  href: CharonsCorner.Runtime.State-1.html#CharonsCorner_Runtime_State_1_Update
+  name: Update()
+  nameWithType: State<TContext>.Update()
+  fullName: CharonsCorner.Runtime.State<TContext>.Update()
+  nameWithType.vb: State(Of TContext).Update()
+  fullName.vb: CharonsCorner.Runtime.State(Of TContext).Update()
+  spec.csharp:
+  - uid: CharonsCorner.Runtime.State{`0}.Update
+    name: Update
+    href: CharonsCorner.Runtime.State-1.html#CharonsCorner_Runtime_State_1_Update
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: CharonsCorner.Runtime.State{`0}.Update
+    name: Update
+    href: CharonsCorner.Runtime.State-1.html#CharonsCorner_Runtime_State_1_Update
+  - name: (
+  - name: )
+- uid: CharonsCorner.Runtime.SuperState`1.Update*
+  commentId: Overload:CharonsCorner.Runtime.SuperState`1.Update
+  href: CharonsCorner.Runtime.SuperState-1.html#CharonsCorner_Runtime_SuperState_1_Update
+  name: Update
+  nameWithType: SuperState<TContext>.Update
+  fullName: CharonsCorner.Runtime.SuperState<TContext>.Update
+  nameWithType.vb: SuperState(Of TContext).Update
+  fullName.vb: CharonsCorner.Runtime.SuperState(Of TContext).Update
+- uid: CharonsCorner.Runtime.State`1.Update
+  commentId: M:CharonsCorner.Runtime.State`1.Update
+  href: CharonsCorner.Runtime.State-1.html#CharonsCorner_Runtime_State_1_Update
+  name: Update()
+  nameWithType: State<TContext>.Update()
+  fullName: CharonsCorner.Runtime.State<TContext>.Update()
+  nameWithType.vb: State(Of TContext).Update()
+  fullName.vb: CharonsCorner.Runtime.State(Of TContext).Update()
+  spec.csharp:
+  - uid: CharonsCorner.Runtime.State`1.Update
+    name: Update
+    href: CharonsCorner.Runtime.State-1.html#CharonsCorner_Runtime_State_1_Update
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: CharonsCorner.Runtime.State`1.Update
+    name: Update
+    href: CharonsCorner.Runtime.State-1.html#CharonsCorner_Runtime_State_1_Update
+  - name: (
+  - name: )
+- uid: CharonsCorner.Runtime.State{{TContext}}.FixedUpdate
+  commentId: M:CharonsCorner.Runtime.State{`0}.FixedUpdate
+  parent: CharonsCorner.Runtime.State{{TContext}}
+  definition: CharonsCorner.Runtime.State`1.FixedUpdate
+  href: CharonsCorner.Runtime.State-1.html#CharonsCorner_Runtime_State_1_FixedUpdate
+  name: FixedUpdate()
+  nameWithType: State<TContext>.FixedUpdate()
+  fullName: CharonsCorner.Runtime.State<TContext>.FixedUpdate()
+  nameWithType.vb: State(Of TContext).FixedUpdate()
+  fullName.vb: CharonsCorner.Runtime.State(Of TContext).FixedUpdate()
+  spec.csharp:
+  - uid: CharonsCorner.Runtime.State{`0}.FixedUpdate
+    name: FixedUpdate
+    href: CharonsCorner.Runtime.State-1.html#CharonsCorner_Runtime_State_1_FixedUpdate
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: CharonsCorner.Runtime.State{`0}.FixedUpdate
+    name: FixedUpdate
+    href: CharonsCorner.Runtime.State-1.html#CharonsCorner_Runtime_State_1_FixedUpdate
+  - name: (
+  - name: )
+- uid: CharonsCorner.Runtime.SuperState`1.FixedUpdate*
+  commentId: Overload:CharonsCorner.Runtime.SuperState`1.FixedUpdate
+  href: CharonsCorner.Runtime.SuperState-1.html#CharonsCorner_Runtime_SuperState_1_FixedUpdate
+  name: FixedUpdate
+  nameWithType: SuperState<TContext>.FixedUpdate
+  fullName: CharonsCorner.Runtime.SuperState<TContext>.FixedUpdate
+  nameWithType.vb: SuperState(Of TContext).FixedUpdate
+  fullName.vb: CharonsCorner.Runtime.SuperState(Of TContext).FixedUpdate
+- uid: CharonsCorner.Runtime.State`1.FixedUpdate
+  commentId: M:CharonsCorner.Runtime.State`1.FixedUpdate
+  href: CharonsCorner.Runtime.State-1.html#CharonsCorner_Runtime_State_1_FixedUpdate
+  name: FixedUpdate()
+  nameWithType: State<TContext>.FixedUpdate()
+  fullName: CharonsCorner.Runtime.State<TContext>.FixedUpdate()
+  nameWithType.vb: State(Of TContext).FixedUpdate()
+  fullName.vb: CharonsCorner.Runtime.State(Of TContext).FixedUpdate()
+  spec.csharp:
+  - uid: CharonsCorner.Runtime.State`1.FixedUpdate
+    name: FixedUpdate
+    href: CharonsCorner.Runtime.State-1.html#CharonsCorner_Runtime_State_1_FixedUpdate
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: CharonsCorner.Runtime.State`1.FixedUpdate
+    name: FixedUpdate
+    href: CharonsCorner.Runtime.State-1.html#CharonsCorner_Runtime_State_1_FixedUpdate
+  - name: (
+  - name: )
