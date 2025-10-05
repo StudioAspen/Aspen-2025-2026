@@ -7,13 +7,13 @@ namespace CharonsCorner.Runtime
 {
     public static class EncryptionUtilities
     {
-        private static readonly byte[] key;
-        private static readonly byte[] initializationVector;
+        private static readonly byte[] Key;
+        private static readonly byte[] InitializationVector;
 
         static EncryptionUtilities()
         {
             string passphrase = "YourMomHahahahaha!!!!!";
-            GetKeyAndIV(passphrase, out key, out initializationVector);
+            GetKeyAndIV(passphrase, out Key, out InitializationVector);
         }
 
         /// <summary>
@@ -41,8 +41,8 @@ namespace CharonsCorner.Runtime
         public static string Encrypt(string plainText)
         {
             using var aes = Aes.Create();
-            aes.Key = key;
-            aes.IV = initializationVector;
+            aes.Key = Key;
+            aes.IV = InitializationVector;
 
             using var encryptor = aes.CreateEncryptor();
             byte[] input = Encoding.UTF8.GetBytes(plainText);
@@ -53,8 +53,8 @@ namespace CharonsCorner.Runtime
         public static string Decrypt(string cipherText)
         {
             using var aes = Aes.Create();
-            aes.Key = key;
-            aes.IV = initializationVector;
+            aes.Key = Key;
+            aes.IV = InitializationVector;
 
             using var decryptor = aes.CreateDecryptor();
             byte[] input = Convert.FromBase64String(cipherText);

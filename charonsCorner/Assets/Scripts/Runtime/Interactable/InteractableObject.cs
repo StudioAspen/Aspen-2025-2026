@@ -9,11 +9,11 @@ namespace CharonsCorner.Runtime
     public class InteractableObject : MonoBehaviour
     {
         [Header("References")]
-        [SerializeField] private Collider triggerCollider;
-        [SerializeField] private GameObject inputDisplayerCanvasObject;
+        [SerializeField] private Collider _triggerCollider;
+        [SerializeField] private GameObject _inputDisplayerCanvasObject;
 
         [Space]
-        [SerializeField, ReadOnly] private bool isOverlapping;
+        [SerializeField, ReadOnly] private bool _isOverlapping;
 
         [Space]
         public UnityEvent OnInteract = new UnityEvent();
@@ -33,11 +33,11 @@ namespace CharonsCorner.Runtime
             if (gameObject.layer != LayerMask.NameToLayer("Interactable"))
                 gameObject.layer = LayerMask.NameToLayer("Interactable");
 
-            if (triggerCollider == null)
-                triggerCollider = GetComponent<Collider>();
+            if (_triggerCollider == null)
+                _triggerCollider = GetComponent<Collider>();
 
-            if (triggerCollider != null && !triggerCollider.isTrigger)
-                triggerCollider.isTrigger = true;
+            if (_triggerCollider != null && !_triggerCollider.isTrigger)
+                _triggerCollider.isTrigger = true;
         }
 
         private void OnEnable()
@@ -45,7 +45,7 @@ namespace CharonsCorner.Runtime
             InputManager.Instance.Interact += InputManager_Interact;
             GameManager.Instance.OnGameStateChanged += GameManager_OnGameStateChanged;
 
-            inputDisplayerCanvasObject.SetActive(false);
+            _inputDisplayerCanvasObject.SetActive(false);
         }
 
         private void OnDisable()
@@ -59,7 +59,7 @@ namespace CharonsCorner.Runtime
 
         private void InputManager_Interact()
         {
-            if (!isOverlapping)
+            if (!_isOverlapping)
                 return;
 
             OnInteract.Invoke();
@@ -67,25 +67,25 @@ namespace CharonsCorner.Runtime
 
         private void OnTriggerEnter(Collider other)
         {
-            isOverlapping = true; // No need to filter because this object only looks for player layer
-            inputDisplayerCanvasObject.SetActive(GameManager.Instance.CurrentGameState == GameState.Gameplay);
+            _isOverlapping = true; // No need to filter because this object only looks for player layer
+            _inputDisplayerCanvasObject.SetActive(GameManager.Instance.CurrentGameState == GameState.Gameplay);
         }
 
         private void OnTriggerExit(Collider other)
         {
-            isOverlapping = false;
-            inputDisplayerCanvasObject.SetActive(false);
+            _isOverlapping = false;
+            _inputDisplayerCanvasObject.SetActive(false);
         }
 
         private void GameManager_OnGameStateChanged(GameState newState)
         {
             if(newState != GameState.Gameplay)
             {
-                inputDisplayerCanvasObject.SetActive(false);
+                _inputDisplayerCanvasObject.SetActive(false);
                 return;
             }
 
-            inputDisplayerCanvasObject.SetActive(isOverlapping);
+            _inputDisplayerCanvasObject.SetActive(_isOverlapping);
         }
     }
 }

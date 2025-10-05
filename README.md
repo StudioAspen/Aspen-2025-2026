@@ -12,3 +12,4 @@ Unity Version 6000.0.25f1
 6. https://github.com/Haruma-K/uPalette
 7. https://github.com/rlabrecque/Steamworks.NET
 8. https://github.com/mackysoft/Unity-SerializeReferenceExtensions
+9. https://assetstore.unity.com/packages/tools/animation/animancer-pro-v8-293522
