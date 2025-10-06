@@ -8,23 +8,24 @@ namespace CharonsCorner.Runtime
     [RequireComponent(typeof(Rigidbody))]
     public class PrototypePlayerController : MonoBehaviour
     {
-        [field: SerializeField] public float Speed {get; private set;}
-        [field: SerializeField] public float GroundDrag {get; private set;}
         [field: SerializeField] public float GravityAmount {get; private set;}
 
-        [Header("Ground Layer")]
+        [Header("Ground Check")]
         [field: SerializeField]
         public float GroundCheckLength { get; private set; } = 1.1f;
         [field: SerializeField] public LayerMask GroundLayer {get; private set;}
         
+        
         [field:SerializeField] public Transform Orientation { get; private set; }
 
         public Rigidbody Rb { get; private set; }
-        
+        public SphereCollider Collider { get; private set; }
+        public bool Grounded { get; private set; }
         
         [field: Header("State Machine")]
         [field: SerializeField] public StateMachine<PrototypePlayerController> StateMachine { get; private set; }
-        [field: SerializeField] public GroundSuperState Grounded { get; private set; } = new();
+        [field: SerializeField] public GroundSuperState GroundState { get; private set; } = new();
+        [field: SerializeField] public AirSuperState AirState { get; private set; } = new();
 
 
         [NonSerialized] public String CurrentSubState;
@@ -32,11 +33,13 @@ namespace CharonsCorner.Runtime
         private void Awake()
         {
             Rb = GetComponent<Rigidbody>();
+            Collider = GetComponent<SphereCollider>();
             SetupStateMachine();
         }
 
         private void Update()
         {
+            HandleTransitions();
             StateMachine.Update();
             if (Input.GetKeyDown(KeyCode.R))
             {
@@ -47,8 +50,9 @@ namespace CharonsCorner.Runtime
         
         private void FixedUpdate()
         {
-            StateMachine.FixedUpdate();
             ApplyGravity();
+            CheckGrounded();
+            StateMachine.FixedUpdate();
         }
 
         private void ApplyGravity()
@@ -56,12 +60,24 @@ namespace CharonsCorner.Runtime
             Rb.AddForce(Vector3.down * GravityAmount, ForceMode.Acceleration);
         }
 
-
-        public bool IsGrounded()
+        private void HandleTransitions()
         {
-            return Physics.Raycast(transform.position, Vector3.down, GroundCheckLength, GroundLayer);
+            if (Grounded)
+            {
+                StateMachine.ChangeState(GroundState);
+            }
+            else
+            {
+                StateMachine.ChangeState(AirState);
+            }
         }
-        
+
+
+        private void CheckGrounded()
+        {
+            Grounded = Physics.CheckSphere(transform.position + Vector3.down * GroundCheckLength, Collider.radius * 0.9f, GroundLayer);
+        }
+
         /// <summary>
         /// Runs in awake. Sets up the state machine and all the states for the player controller.
         /// </summary>
@@ -69,16 +85,26 @@ namespace CharonsCorner.Runtime
         {
             StateMachine = new StateMachine<PrototypePlayerController>(this);
 
-            Grounded.Init(StateMachine, this);
-
-            StateMachine.ChangeState(Grounded, true);
+            GroundState.Init(StateMachine, this);
+            AirState.Init(StateMachine, this);
+            
+            StateMachine.ChangeState(GroundState, true);
         }
 
         private void OnDrawGizmos()
         {
-            Handles.color = Color.red;
-            Handles.Label(transform.position + Vector3.up, 
-                StateMachine.CurrentState + ">" + CurrentSubState);
+            if (Application.isPlaying)
+            {
+                Gizmos.color = Grounded ? Color.green : Color.red;
+                Gizmos.DrawWireSphere(transform.position - Vector3.up * GroundCheckLength, Collider.radius * 0.9f);
+                
+                GUIStyle style = new GUIStyle();
+                style.alignment = TextAnchor.MiddleCenter;
+                style.normal.textColor = Color.red;
+                style.fontSize = 40;
+                Handles.Label(transform.position + Vector3.up, 
+                    StateMachine.CurrentState.GetType().Name + ">" + CurrentSubState, style);
+            }
         }
     }
 }

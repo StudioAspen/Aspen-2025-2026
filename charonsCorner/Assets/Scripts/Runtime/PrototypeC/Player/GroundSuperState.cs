@@ -7,6 +7,7 @@ namespace CharonsCorner.Runtime
     {
         public override State<PrototypePlayerController> InitialSubState => MoveState;
 
+        [field: SerializeField] public float GroundDrag {get; private set;}
         [field: SerializeField] public GroundIdleState IdleState { get; private set; } = new();
         [field: SerializeField] public GroundMoveState MoveState { get; private set; } = new();
 
@@ -18,7 +19,7 @@ namespace CharonsCorner.Runtime
 
         private protected override void OnEnter()
         {
-            
+            context.Rb.linearDamping = GroundDrag;
         }
 
         private protected override void OnExit()
@@ -28,17 +29,6 @@ namespace CharonsCorner.Runtime
 
         private protected override void OnUpdate()
         {
-            Vector2 input = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
-            if (input.magnitude > 0.01f)
-            {
-                SubStateMachine.ChangeState(MoveState);
-                context.CurrentSubState = MoveState.ToString();
-            }
-            else
-            {
-                SubStateMachine.ChangeState(IdleState);
-                context.CurrentSubState = IdleState.ToString();
-            }
         }
 
         private protected override void OnFixedUpdate()
@@ -48,6 +38,18 @@ namespace CharonsCorner.Runtime
 
         private protected override State<PrototypePlayerController> GetTransition()
         {
+            Vector2 input = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+            if (input.magnitude > 0.01f)
+            {
+                context.CurrentSubState = MoveState.GetType().Name;
+                return MoveState;
+            }
+            else
+            {
+                context.CurrentSubState = IdleState.GetType().Name;
+                return IdleState;
+                
+            }
             return null;
         }
     }

@@ -3,9 +3,10 @@ using UnityEngine;
 namespace CharonsCorner.Runtime
 {
     [System.Serializable]
-    public class GroundMoveState : State<PrototypePlayerController>
+    public class AirMoveState : State<PrototypePlayerController>
     {
         [field: SerializeField] public float Speed {get; private set;}
+
         private protected override void OnEnter()
         {
             
