@@ -1,3 +1,5 @@
+using System;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -21,10 +23,11 @@ namespace CharonsCorner.Runtime
         
         
         [field: Header("State Machine")]
-        [field: SerializeField] public StateMachine<PrototypePlayerController> Sm { get; private set; }
-        [field: SerializeField] public GroundedSuperState Grounded { get; private set; } = new();
-        [field: SerializeField] public AirborneSuperState Airborne { get; private set; } = new();
+        [field: SerializeField] public StateMachine<PrototypePlayerController> StateMachine { get; private set; }
+        [field: SerializeField] public GroundSuperState Grounded { get; private set; } = new();
 
+
+        [NonSerialized] public String CurrentSubState;
 
         private void Awake()
         {
@@ -34,24 +37,27 @@ namespace CharonsCorner.Runtime
 
         private void Update()
         {
+            StateMachine.Update();
             if (Input.GetKeyDown(KeyCode.R))
             {
                 SceneManager.LoadScene(2);
             }
+            
         }
         
         private void FixedUpdate()
         {
+            StateMachine.FixedUpdate();
+            ApplyGravity();
+        }
+
+        private void ApplyGravity()
+        {
             Rb.AddForce(Vector3.down * GravityAmount, ForceMode.Acceleration);
-            
-            Rb.linearDamping = IsGrounded() ? GroundDrag : 0;
-            
-            Vector2 input = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
-            Rb.AddForce(Orientation.forward * (input.y * Speed) + Orientation.right * (input.x * Speed), ForceMode.VelocityChange);
         }
 
 
-        private bool IsGrounded()
+        public bool IsGrounded()
         {
             return Physics.Raycast(transform.position, Vector3.down, GroundCheckLength, GroundLayer);
         }
@@ -61,11 +67,18 @@ namespace CharonsCorner.Runtime
         /// </summary>
         private void SetupStateMachine()
         {
-            Sm = new StateMachine<PrototypePlayerController>(this);
+            StateMachine = new StateMachine<PrototypePlayerController>(this);
 
-            // Grounded.Init(Sm, this);
+            Grounded.Init(StateMachine, this);
 
-            // StateMachine.ChangeState(Grounded, true);
+            StateMachine.ChangeState(Grounded, true);
+        }
+
+        private void OnDrawGizmos()
+        {
+            Handles.color = Color.red;
+            Handles.Label(transform.position + Vector3.up, 
+                StateMachine.CurrentState + ">" + CurrentSubState);
         }
     }
 }

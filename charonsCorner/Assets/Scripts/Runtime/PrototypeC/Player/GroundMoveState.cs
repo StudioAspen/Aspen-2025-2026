@@ -26,6 +26,12 @@ namespace CharonsCorner.Runtime
 
         private protected override void OnFixedUpdate()
         {
+                        
+            context.Rb.linearDamping = context.IsGrounded() ? context.GroundDrag : 0;
+            
+            Vector2 input = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+            
+            context.Rb.AddForce(context.Orientation.forward * (input.y * context.Speed) + context.Orientation.right * (input.x * context.Speed), ForceMode.VelocityChange);
         }
 
         private protected override State<PrototypePlayerController> GetTransition()

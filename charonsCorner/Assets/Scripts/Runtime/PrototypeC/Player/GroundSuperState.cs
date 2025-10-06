@@ -18,15 +18,27 @@ namespace CharonsCorner.Runtime
 
         private protected override void OnEnter()
         {
+            
         }
 
         private protected override void OnExit()
         {
+            
         }
 
         private protected override void OnUpdate()
         {
-
+            Vector2 input = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+            if (input.magnitude > 0.01f)
+            {
+                SubStateMachine.ChangeState(MoveState);
+                context.CurrentSubState = MoveState.ToString();
+            }
+            else
+            {
+                SubStateMachine.ChangeState(IdleState);
+                context.CurrentSubState = IdleState.ToString();
+            }
         }
 
         private protected override void OnFixedUpdate()
