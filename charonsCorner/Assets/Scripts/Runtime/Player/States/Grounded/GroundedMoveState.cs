@@ -43,7 +43,7 @@ namespace CharonsCorner.Runtime
             }
 
             // Torque scales with how much you're turning
-            Vector3 turnTorque = TurnResponsiveness * directionChangeFactor * Vector3.Cross(Vector3.up, desiredDirection);
+            Vector3 turnTorque = 20f * TurnResponsiveness * directionChangeFactor * Vector3.Cross(Vector3.up, desiredDirection);
 
             // Propulsion torque based on speed for snappy direction changes at low speed
             float speedFactor = Mathf.Clamp01(context.RigidBody.linearVelocity.magnitude / MaxSpeed);
