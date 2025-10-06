@@ -536,14 +536,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12104891ff0149b082aef4a7db66e22b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <Speed>k__BackingField: 1
-  <GroundDrag>k__BackingField: 2
   <GravityAmount>k__BackingField: 30
   <GroundCheckLength>k__BackingField: 1.1
   <GroundLayer>k__BackingField:
     serializedVersion: 2
     m_Bits: 8
   <Orientation>k__BackingField: {fileID: 4359243323156565108}
+  <StateMachine>k__BackingField:
+    currentStateName: 
+  <GroundState>k__BackingField:
+    <SubStateMachine>k__BackingField:
+      currentStateName: 
+    <GroundDrag>k__BackingField: 2
+    <MoveState>k__BackingField:
+      <Speed>k__BackingField: 1
+  <AirState>k__BackingField:
+    <SubStateMachine>k__BackingField:
+      currentStateName: 
+    <MoveState>k__BackingField:
+      <Speed>k__BackingField: 0.5
 --- !u!114 &7562710238517373384
 MonoBehaviour:
   m_ObjectHideFlags: 0
