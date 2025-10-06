@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace CharonsCorner.PrototypeC
+namespace CharonsCorner.Runtime
 {
     [RequireComponent(typeof(SphereCollider))]
     [RequireComponent(typeof(Rigidbody))]

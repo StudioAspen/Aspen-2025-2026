@@ -1,10 +1,7 @@
-using System;
 using UnityEngine;
-using CharonsCorner.Runtime;
-using NUnit.Framework;
 using UnityEngine.SceneManagement;
 
-namespace CharonsCorner.PrototypeC
+namespace CharonsCorner.Runtime
 {
     [RequireComponent(typeof(Rigidbody))]
     public class PrototypePlayerController : MonoBehaviour
@@ -23,15 +20,16 @@ namespace CharonsCorner.PrototypeC
         public Rigidbody Rb { get; private set; }
         
         
-        // [field: Header("State Machine")]
-        // [field: SerializeField] public StateMachine<PrototypePlayerController> StateMachine { get; private set; }
-        // [field: SerializeField] public GroundedSuperState Grounded { get; private set; } = new();
-        // [field: SerializeField] public AirborneSuperState Airborne { get; private set; } = new();
+        [field: Header("State Machine")]
+        [field: SerializeField] public StateMachine<PrototypePlayerController> Sm { get; private set; }
+        [field: SerializeField] public GroundedSuperState Grounded { get; private set; } = new();
+        [field: SerializeField] public AirborneSuperState Airborne { get; private set; } = new();
 
 
         private void Awake()
         {
             Rb = GetComponent<Rigidbody>();
+            SetupStateMachine();
         }
 
         private void Update()
@@ -56,6 +54,18 @@ namespace CharonsCorner.PrototypeC
         private bool IsGrounded()
         {
             return Physics.Raycast(transform.position, Vector3.down, GroundCheckLength, GroundLayer);
+        }
+        
+        /// <summary>
+        /// Runs in awake. Sets up the state machine and all the states for the player controller.
+        /// </summary>
+        private void SetupStateMachine()
+        {
+            Sm = new StateMachine<PrototypePlayerController>(this);
+
+            // Grounded.Init(Sm, this);
+
+            // StateMachine.ChangeState(Grounded, true);
         }
     }
 }

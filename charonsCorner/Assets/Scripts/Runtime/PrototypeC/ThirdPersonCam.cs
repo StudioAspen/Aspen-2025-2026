@@ -1,9 +1,6 @@
-using System;
-using Unity.Cinemachine;
 using UnityEngine;
-using UnityEngine.Serialization;
 
-namespace CharonsCorner.PrototypeC
+namespace CharonsCorner.Runtime
 {
     public class ThirdPersonCam : MonoBehaviour
     {
