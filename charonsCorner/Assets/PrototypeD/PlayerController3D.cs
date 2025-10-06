@@ -38,6 +38,9 @@ public class PlayerController3D : MonoBehaviour
     public AnimationCurve boostRecoverCurve = AnimationCurve.Linear(0, 1, 1, 0); // evaluate 0..1 and Lerp(boost->cruise, curve)
     [Tooltip("Maximum time player can hold brake before auto-dash triggers")]
     public float brakeHoldMaxTime = 2f;
+    [Tooltip("Permanent speed increase after Dash")] // Fonz
+    public float speedPercentageIncrease = 1.4f; // Fonz - increase speed after each boost, base 40% increase
+
     [Header("Boost FOV")]
     [Tooltip("FOV to zoom out to during boost burst")]
     public float boostFOV = 70f;
@@ -591,6 +594,7 @@ public class PlayerController3D : MonoBehaviour
             if (boostRecoverElapsed >= boostRecoverTime)
             {
                 isBoostRecovering = false;
+                forwardCruiseSpeed = forwardCruiseSpeed * speedPercentageIncrease; //Fonz - increase speed after each boost
                 currentForwardSpeed = forwardCruiseSpeed;
             }
         }
