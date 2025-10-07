@@ -1,30 +1,32 @@
 using UnityEngine;
+using CharonsCorner.Runtime;
 
-namespace CharonsCorner.Runtime
+public class PlayerCollector : MonoBehaviour
 {
-    public class PlayerCollector : MonoBehaviour
+    [SerializeField]
+    private PlayerAbility playerAbility;
+    [SerializeField]
+    private ItemPowerSO itemPowerSO;
+
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    void Start()
     {
-        [SerializeField]
-        private PlayerAbility playerAbility;
-
-        // Start is called once before the first execution of Update after the MonoBehaviour is created
-        void Start()
-        {
         
-        }
+    }
 
-        // Update is called once per frame
-        void Update()
-        {
+    // Update is called once per frame
+    void Update()
+    {
         
-        }
+    }
 
-        private void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Collectible"))
         {
-            if (other.CompareTag("Collectible"))
-            {
-                Destroy(other.gameObject);
-            }
+            playerAbility.currentItemIndex = other.GetComponent<ItemCollectable>().itemIndex;
+            playerAbility.currentUses = itemPowerSO.itemList[playerAbility.currentItemIndex].GetComponent<ItemPower>().itemUses;
+            Destroy(other.gameObject);
         }
     }
 }

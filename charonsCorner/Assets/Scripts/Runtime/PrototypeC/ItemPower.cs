@@ -1,24 +1,22 @@
 using UnityEngine;
 
-namespace CharonsCorner.Runtime
+public abstract class ItemPower : MonoBehaviour
 {
-    public abstract class ItemPower : MonoBehaviour
+    public string itemName;
+    public int itemUses;
+
+
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    void Start()
     {
-        public string itemName;
-        public string itemUses;
 
-        // Start is called once before the first execution of Update after the MonoBehaviour is created
-        void Start()
-        {
-        
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-        
-        }
-
-        public abstract void itemPower();
     }
+
+    // Update is called once per frame
+    void Update()
+    {
+        
+    }
+
+    public abstract void itemPower(Rigidbody rigidbody);
 }

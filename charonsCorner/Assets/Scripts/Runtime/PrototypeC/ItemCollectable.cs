@@ -4,6 +4,8 @@ namespace CharonsCorner.Runtime
 {
     public class ItemCollectable : MonoBehaviour
     {
+        public int itemIndex;
+
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
         {
