@@ -15,7 +15,7 @@ namespace CharonsCorner.Runtime
         public bool Obfuscate { get; private set; }
         public string FilePath => Path.Combine(Application.persistentDataPath, $"{FileName}");
 
-        private Dictionary<string, string> _data = new();
+        private Dictionary<string, string> data = new();
 
         /// <summary>
         /// Constructs a new SaveStore with the specified file name and obfuscation setting.
@@ -25,7 +25,7 @@ namespace CharonsCorner.Runtime
             FileName = fileName;
             Obfuscate = obfuscate;
 
-            _data = Load();
+            data = Load();
         }
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace CharonsCorner.Runtime
         /// </summary>
         public void Save()
         {
-            Save(_data);
+            Save(data);
         }
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace CharonsCorner.Runtime
 
             File.WriteAllText(FilePath, json);
 
-            this._data = data;
+            this.data = data;
         }
 
         /// <summary>
@@ -111,33 +111,33 @@ namespace CharonsCorner.Runtime
 
         private string GetValue(string key, string defaultValue = null)
         {
-            if (_data.TryGetValue(key, out string value))
+            if (data.TryGetValue(key, out string value))
                 return value;
             return defaultValue;
         }
 
         private void SetValue(string key, string value)
         {
-            if (_data.ContainsKey(key))
-                _data[key] = value;
+            if (data.ContainsKey(key))
+                data[key] = value;
             else
-                _data.Add(key, value);
+                data.Add(key, value);
 
             Save(); // Automatically save after setting a value
         }
 
-        public bool HasKey(string key) => _data.ContainsKey(key);
+        public bool HasKey(string key) => data.ContainsKey(key);
         public void DeleteKey(string key)
         {
-            if (_data.ContainsKey(key))
+            if (data.ContainsKey(key))
             {
-                _data.Remove(key);
+                data.Remove(key);
                 Save(); // Automatically save after deleting a key
             }
         }
         public void DeleteAll()
         {
-            _data.Clear();
+            data.Clear();
             Save(); // Automatically save after clearing all values
         }
 

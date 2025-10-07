@@ -4,17 +4,17 @@ namespace CharonsCorner.Runtime
 {
     public class SettingsWarning : MonoBehaviour
     {
-        [SerializeField] private SettingsUI _settingsUI;
-        [SerializeField] private GameObject _warningDefaultSelectedObject;
+        [SerializeField] private SettingsUI settingsUI;
+        [SerializeField] private GameObject warningDefaultSelectedObject;
 
         private void OnEnable()
         {
-            UIManager.Instance.ChangeCurrentSelectedObject(_warningDefaultSelectedObject);
+            UIManager.Instance.ChangeCurrentSelectedObject(warningDefaultSelectedObject);
         }
 
         private void OnDisable()
         {
-            UIManager.Instance.ChangeCurrentSelectedObject(_settingsUI.DefaultSelectedObject);
+            UIManager.Instance.ChangeCurrentSelectedObject(settingsUI.DefaultSelectedObject);
         }
     }
 }

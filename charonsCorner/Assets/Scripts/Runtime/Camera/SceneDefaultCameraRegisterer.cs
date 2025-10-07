@@ -5,12 +5,12 @@ namespace CharonsCorner.Runtime
 {
     public class SceneDefaultCameraRegisterer : MonoBehaviour
     {
-        [SerializeField] private CinemachineCamera _cinemachineCamera;
-        [SerializeField] private bool _changeToActiveCamera = false;
+        [SerializeField] private CinemachineCamera cinemachineCamera;
+        [SerializeField] private bool changeToActiveCamera = false;
 
         private void Start()
         {
-            CameraManager.Instance.RegisterSceneDefaultCamera(_cinemachineCamera, _changeToActiveCamera);
+            CameraManager.Instance.RegisterSceneDefaultCamera(cinemachineCamera, changeToActiveCamera);
         }
     }
 }

@@ -19,21 +19,21 @@ namespace CharonsCorner.Runtime
         public event Action<SubSettingsUI> OnSettingsUIChanged = delegate { };
 
         [Header("UI Elements")]
-        [SerializeField] private SubSettingsUI _generalSubSettingsUI;
-        [SerializeField] private SubSettingsUI _graphicsSubSettingsUI;
-        [SerializeField] private SubSettingsUI _audioSubSettingsUI;
-        [SerializeField] private SubSettingsUI _controlsSubSettingsUI;
-        [SerializeField] private GameObject _warningPanelObject;
+        [SerializeField] private SubSettingsUI generalSubSettingsUI;
+        [SerializeField] private SubSettingsUI graphicsSubSettingsUI;
+        [SerializeField] private SubSettingsUI audioSubSettingsUI;
+        [SerializeField] private SubSettingsUI controlsSubSettingsUI;
+        [SerializeField] private GameObject warningPanelObject;
 
         private protected override void Initialize()
         {
             // Initialize the sub-settings UIs
             List<SubSettingsUI> subSettingsUIs = new List<SubSettingsUI>
             {
-                _generalSubSettingsUI,
-                _graphicsSubSettingsUI,
-                _audioSubSettingsUI,
-                _controlsSubSettingsUI
+                generalSubSettingsUI,
+                graphicsSubSettingsUI,
+                audioSubSettingsUI,
+                controlsSubSettingsUI
             };
             foreach(SubSettingsUI subSettingsUI in subSettingsUIs)
             {
@@ -46,7 +46,7 @@ namespace CharonsCorner.Runtime
         {
             InputManager.Instance.Unpause += InputManager_Unpause;
 
-            ChangeSettingsUI(_generalSubSettingsUI);
+            ChangeSettingsUI(generalSubSettingsUI);
         }
 
         private void OnDisable()
@@ -66,7 +66,7 @@ namespace CharonsCorner.Runtime
 
             if (CurrentSettingsUI != null && CurrentSettingsUI.IsDirty)
             {
-                _warningPanelObject.SetActive(true);
+                warningPanelObject.SetActive(true);
                 return;
             }
 
@@ -80,10 +80,10 @@ namespace CharonsCorner.Runtime
         }
 
         // Called by button UI events
-        public void ChangeToGeneralSettings() => ChangeSettingsUI(_generalSubSettingsUI);
-        public void ChangeToGraphicsSettings() => ChangeSettingsUI(_graphicsSubSettingsUI);
-        public void ChangeToAudioSettings() => ChangeSettingsUI(_audioSubSettingsUI);
-        public void ChangeToControlsSettings() => ChangeSettingsUI(_controlsSubSettingsUI);
+        public void ChangeToGeneralSettings() => ChangeSettingsUI(generalSubSettingsUI);
+        public void ChangeToGraphicsSettings() => ChangeSettingsUI(graphicsSubSettingsUI);
+        public void ChangeToAudioSettings() => ChangeSettingsUI(audioSubSettingsUI);
+        public void ChangeToControlsSettings() => ChangeSettingsUI(controlsSubSettingsUI);
         public void ApplyCurrentSubSettings() => CurrentSettingsUI.IfNotNullThenCall(subSettingsUI => subSettingsUI.Apply());
         public void DiscardCurrentSubSettings() => CurrentSettingsUI.IfNotNullThenCall(subSettingsUI => subSettingsUI.Discard());
 
@@ -91,14 +91,14 @@ namespace CharonsCorner.Runtime
         {
             if (CurrentSettingsUI != null && CurrentSettingsUI.IsDirty)
             {
-                _warningPanelObject.SetActive(true);
+                warningPanelObject.SetActive(true);
                 return;
             }
 
             if (GameManager.Instance.CurrentGameState == GameState.Title)
-                _uiManager.HideAllPanels();
+                uiManager.HideAllPanels();
             else
-                _uiManager.ShowPanel(UIManager.PanelName.PauseMenu);
+                uiManager.ShowPanel(UIManager.PanelName.PauseMenu);
         }
 
         private void InputManager_Unpause() => CloseUI();

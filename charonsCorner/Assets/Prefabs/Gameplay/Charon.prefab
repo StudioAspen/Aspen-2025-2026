@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 4654614006380001279}
   - component: {fileID: 1237692140379531003}
   - component: {fileID: 3753544221577819239}
-  - component: {fileID: 2251239428750671827}
   - component: {fileID: 8024124051656696801}
   m_Layer: 8
   m_Name: Charon
@@ -52,63 +51,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04c6bfdb43eebe8438a514364ad19f14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _animator: {fileID: 2251239428750671827}
-  _animatorFadeDuration: 0.2
-  _reactionAnimations:
+  animator: {fileID: 2385237347357089333}
+  animationSpeed: 4
+  reactionAnimations:
     _serializedList:
     - Key: 0
       Value:
-        _FadeDuration: 0.25
-        _Speed: 1
-        _Events:
-          _NormalizedTimes: []
-          _Callbacks: []
-          _Names: []
-        _Clip: {fileID: -203655887218126122, guid: 6736714e17dc0794780d608ea71d59df, type: 3}
-        _NormalizedStartTime: NaN
+        <ParameterHash>k__BackingField: 2081823275
     - Key: 1
       Value:
-        _FadeDuration: 0.25
-        _Speed: 1
-        _Events:
-          _NormalizedTimes: []
-          _Callbacks: []
-          _Names: []
-        _Clip: {fileID: -203655887218126122, guid: 791a319bc9212c347881e89f08cebe75, type: 3}
-        _NormalizedStartTime: NaN
+        <ParameterHash>k__BackingField: 575724972
     - Key: 2
       Value:
-        _FadeDuration: 0.25
-        _Speed: 1
-        _Events:
-          _NormalizedTimes: []
-          _Callbacks: []
-          _Names: []
-        _Clip: {fileID: -203655887218126122, guid: e4d4b55f1f7a3cf4580d3c4c7fad4daa, type: 3}
-        _NormalizedStartTime: NaN
+        <ParameterHash>k__BackingField: -1151759338
     - Key: 3
       Value:
-        _FadeDuration: 0.25
-        _Speed: 1
-        _Events:
-          _NormalizedTimes: []
-          _Callbacks: []
-          _Names: []
-        _Clip: {fileID: -203655887218126122, guid: 89cad8abeaa30e34bb1a32229f6e1035, type: 3}
-        _NormalizedStartTime: NaN
+        <ParameterHash>k__BackingField: -866206592
     - Key: 4
       Value:
-        _FadeDuration: 0.25
-        _Speed: 1
-        _Events:
-          _NormalizedTimes: []
-          _Callbacks: []
-          _Names: []
-        _Clip: {fileID: -203655887218126122, guid: 00c55401e132f1f498c1e24e812571fe, type: 3}
-        _NormalizedStartTime: NaN
-  references:
-    version: 2
-    RefIds: []
+        <ParameterHash>k__BackingField: 1379543331
 --- !u!114 &4654614006380001279
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -121,9 +82,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 424d0a6c52a9fae4a9cffd9fd3d139b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _opener: {fileID: 11400000, guid: 8954636d548cc4c43b3102bc613fb6c7, type: 2}
-  _useCamera: 1
-  _cinemachineCamera: {fileID: 5454533530177445654}
+  opener: {fileID: 11400000, guid: 8954636d548cc4c43b3102bc613fb6c7, type: 2}
+  useCamera: 1
+  cinemachineCamera: {fileID: 5454533530177445654}
 --- !u!114 &1237692140379531003
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -136,9 +97,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08214906e2056454e8634313eec99aef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _triggerCollider: {fileID: 8024124051656696801}
-  _inputDisplayerCanvasObject: {fileID: 4222030149569433524}
-  _isOverlapping: 0
+  triggerCollider: {fileID: 8024124051656696801}
+  inputDisplayerCanvasObject: {fileID: 4222030149569433524}
+  isOverlapping: 0
   OnInteract:
     m_PersistentCalls:
       m_Calls:
@@ -166,25 +127,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 339397434d88238418cfefc01ece9172, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _inputAction: {fileID: 1781555164194001046, guid: 052faaac586de48259a63d0c4782560b, type: 3}
-  _inputDisplayText: {fileID: 8559723929055134538}
-  _autoDetectControlScheme: 1
-  _controlScheme: 0
---- !u!114 &2251239428750671827
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3239045656199082840}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0ad50f81b1d25c441943c37a89ba23f6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _Animator: {fileID: 2385237347357089333}
-  _Transitions: {fileID: 0}
-  _ActionOnDisable: 0
+  inputAction: {fileID: 1781555164194001046, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  inputDisplayText: {fileID: 8559723929055134538}
+  autoDetectControlScheme: 1
+  controlScheme: 0
 --- !u!135 &8024124051656696801
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -333,7 +279,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6edfd8fb992098b499429e9046d81831, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _targetCamera: {fileID: 0}
+  targetCamera: {fileID: 0}
 --- !u!223 &5244385305501070070
 Canvas:
   m_ObjectHideFlags: 0
@@ -680,7 +626,7 @@ PrefabInstance:
     - target: {fileID: 5866666021909216657, guid: 9fdd4b2a4fbf52941a5fb83cfb997936, type: 3}
       propertyPath: m_Controller
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 9100000, guid: 395544df50bae78419ba5950d37daead, type: 2}
     - target: {fileID: 5866666021909216657, guid: 9fdd4b2a4fbf52941a5fb83cfb997936, type: 3}
       propertyPath: m_ApplyRootMotion
       value: 0

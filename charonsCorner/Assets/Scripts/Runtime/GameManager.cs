@@ -37,9 +37,9 @@ namespace CharonsCorner.Runtime
         public event Action<GameState> OnGameStateChanged = delegate { };
 
         [Header("References")]
-        [SerializeField] private SceneReference _titleScene;
-        [SerializeField] private SceneReference _hubScene;
-        [SerializeField] private SceneReference _tutorialScene;
+        [SerializeField] private SceneReference titleScene;
+        [SerializeField] private SceneReference hubScene;
+        [SerializeField] private SceneReference tutorialScene;
 
         private protected override void Awake()
         {
@@ -76,6 +76,7 @@ namespace CharonsCorner.Runtime
                     Time.timeScale = 1f;
                     UIManager.Instance.HideAllPanels();
                     InputManager.Instance.EnableUIActions();
+                    InputManager.Instance.LockCursor(false);
                     break;
                 case GameState.Loading:
                     Time.timeScale = 0f;
@@ -86,6 +87,7 @@ namespace CharonsCorner.Runtime
                     Time.timeScale = 1f;
                     UIManager.Instance.HideAllPanels();
                     InputManager.Instance.EnablePlayerActions();
+                    InputManager.Instance.LockCursor(true);
                     // If the Steam overlay is open, pause the game
                     if(SteamOverlayListener.IsOverlayOpen)
                         ChangeGameState(GameState.Paused);
@@ -93,14 +95,17 @@ namespace CharonsCorner.Runtime
                 case GameState.Dialogue:
                     Time.timeScale = 1f;
                     UIManager.Instance.ShowPanel(UIManager.PanelName.Dialogue);
+                    InputManager.Instance.LockCursor(false);
                     break;
                 case GameState.Paused:
                     Time.timeScale = 0f;
                     UIManager.Instance.ShowPanel(UIManager.PanelName.PauseMenu);
+                    InputManager.Instance.LockCursor(false);
                     break;
                 case GameState.GameplayConfirm:
                     Time.timeScale = 1f;
                     UIManager.Instance.ShowPanel(UIManager.PanelName.Confirm);
+                    InputManager.Instance.LockCursor(false);
                     break;
                 case GameState.Cutscene:
                     Time.timeScale = 1f;
@@ -137,7 +142,7 @@ namespace CharonsCorner.Runtime
         /// </summary>
         public void StartGame()
         {
-            SwitchScenes(_hubScene, GameState.Gameplay).Forget();
+            SwitchScenes(hubScene, GameState.Gameplay).Forget();
         }
 
         /// <summary>
@@ -149,12 +154,12 @@ namespace CharonsCorner.Runtime
         /// <summary>
         /// Helper method to switch back to the title scene and set the game state to Title.
         /// </summary>
-        public void ReturnToMenu() => SwitchScenes(_titleScene, GameState.Title).Forget();
+        public void ReturnToMenu() => SwitchScenes(titleScene, GameState.Title).Forget();
 
         /// <summary>
         /// Helper method to switch back to the hub scene and set the game state to Gameplay.
         /// </summary>
-        public void ReturnToHub() => SwitchScenes(_hubScene, GameState.Gameplay).Forget();
+        public void ReturnToHub() => SwitchScenes(hubScene, GameState.Gameplay).Forget();
 
         public SceneReference GetCurrentScene() => SceneReference.FromScenePath(SceneManager.GetActiveScene().path);
 
