@@ -25,7 +25,7 @@ namespace CharonsCorner.Runtime
         public void Restart() => GameManager.Instance.ReloadScene(GameState.Gameplay);
 
         // Called by button UI event
-        public void ShowSettingsPanel() => uiManager.ShowPanel(UIManager.PanelName.Settings);
+        public void ShowSettingsPanel() => _uiManager.ShowPanel(UIManager.PanelName.Settings);
 
         // Called by button UI event
         public void GoBackToMenu() => GameManager.Instance.ReturnToMenu();

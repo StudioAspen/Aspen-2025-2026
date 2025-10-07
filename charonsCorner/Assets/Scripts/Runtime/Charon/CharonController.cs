@@ -1,3 +1,4 @@
+using Animancer;
 using AYellowpaper.SerializedCollections;
 using NaughtyAttributes;
 using UnityEngine;
@@ -6,66 +7,56 @@ namespace CharonsCorner.Runtime
 {
     public class CharonController : MonoBehaviour
     {
-        private DialogueManager dialogueManager;
+        private DialogueManager _dialogueManager;
 
-        [SerializeField] private Animator animator;
+        [Header("References")]
+        [SerializeField] private AnimancerComponent _animator;
 
         [Header("Config")]
-        [SerializeField] private float animationSpeed = 1f;
+        [SerializeField] private float _animatorFadeDuration = 0.2f;
 
-        [System.Serializable]
-        public class AnimationParameterContainer
-        {
-            private Animator animator;
-            [field: SerializeField, AnimatorParam("animator")] public int ParameterHash { get; private set; }
-            public void SetAnimator(Animator animator) => this.animator = animator;
-        }
-
-        [SerializeField, SerializedDictionary("Reaction", "Animation Parameter")]
-        private SerializedDictionary<DialogueReaction, AnimationParameterContainer> reactionAnimations;
-
-        private void OnValidate()
-        {
-            foreach(AnimationParameterContainer container in reactionAnimations.Values)
-                container.SetAnimator(animator);
-        }
+        [SerializeField, SerializedDictionary("Reaction", "Animation Clip")]
+        private SerializedDictionary<DialogueReaction, ClipTransition> _reactionAnimations;
 
         private void Awake()
         {
-            dialogueManager = FindFirstObjectByType<DialogueManager>(FindObjectsInactive.Include);
+            _dialogueManager = FindFirstObjectByType<DialogueManager>(FindObjectsInactive.Include);
 
-            dialogueManager.OnDialogueOpenerStarted += DialogueManager_OnDialogueOpenerStarted;
-            dialogueManager.OnDialogueStarted += DialogueManager_OnDialogueStarted;
-            dialogueManager.OnDialogueEnded += DialogueManager_OnDialogueEnded;
+            _dialogueManager.OnDialogueOpenerStarted += DialogueManager_OnDialogueOpenerStarted;
+            _dialogueManager.OnDialogueStarted += DialogueManager_OnDialogueStarted;
+            _dialogueManager.OnDialogueEnded += DialogueManager_OnDialogueEnded;
+        }
 
-            animator.speed = animationSpeed;
+        private void Start()
+        {
+            _animator.Play(_reactionAnimations[DialogueReaction.Idle], _animatorFadeDuration);
         }
 
         private void OnDestroy()
         {
-            if(dialogueManager != null)
+            if(_dialogueManager != null)
             {
-                dialogueManager.OnDialogueOpenerStarted -= DialogueManager_OnDialogueOpenerStarted;
-                dialogueManager.OnDialogueStarted -= DialogueManager_OnDialogueStarted;
-                dialogueManager.OnDialogueEnded -= DialogueManager_OnDialogueEnded;
+                _dialogueManager.OnDialogueOpenerStarted -= DialogueManager_OnDialogueOpenerStarted;
+                _dialogueManager.OnDialogueStarted -= DialogueManager_OnDialogueStarted;
+                _dialogueManager.OnDialogueEnded -= DialogueManager_OnDialogueEnded;
             }
         }
 
         private void DialogueManager_OnDialogueOpenerStarted(DialogueOpenerSO opener)
         {
-            animator.SetTrigger(reactionAnimations[opener.Reaction].ParameterHash);
+            _animator.Play(_reactionAnimations[opener.Reaction], _animatorFadeDuration);
             opener.ApplyEffects();
         }
 
         private void DialogueManager_OnDialogueStarted(DialogueSO dialogue)
         {
-            animator.SetTrigger(reactionAnimations[dialogue.Reaction].ParameterHash);
+            _animator.Play(_reactionAnimations[dialogue.Reaction], _animatorFadeDuration);
             dialogue.ApplyEffects();
         }
 
         private void DialogueManager_OnDialogueEnded()
         {
-            animator.SetTrigger(reactionAnimations[DialogueReaction.Idle].ParameterHash);
+            _animator.Play(_reactionAnimations[DialogueReaction.Idle], _animatorFadeDuration);
         }
     }
 }

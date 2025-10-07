@@ -9,10 +9,10 @@ for %%I in ("%APPS_DIR%\..") do set "PROJECT_ROOT=%%~fI"
 
 echo Project Root: %PROJECT_ROOT%
 
-set UV_DIR=%PROJECT_ROOT%\aspenTools\python\uv\
-set UV_PATH=%UV_DIR%uv.exe
-set VENV_DIR=%UV_DIR%..\venv
-set REQS_TXT=%UV_DIR%requirements.txt
+set "UV_DIR=%PROJECT_ROOT%\aspenTools\python\uv\"
+set "UV_PATH=%UV_DIR%uv.exe"
+set "VENV_DIR=%UV_DIR%..\venv"
+set "REQS_TXT=%UV_DIR%requirements.txt"
 
 echo Venv: %VENV_DIR%
 
@@ -23,7 +23,7 @@ if not exist "%VENV_DIR%" (
 
 call "%VENV_DIR%\Scripts\activate.bat"
 
-"%UV_PATH%" pip install -r %REQS_TXT%
+"%UV_PATH%" pip install -r "%REQS_TXT%"
 
 REM Set paths relative to project root
 set "BLENDER_PATH=%PROJECT_ROOT%\aspenTools\Blender\blender.exe"

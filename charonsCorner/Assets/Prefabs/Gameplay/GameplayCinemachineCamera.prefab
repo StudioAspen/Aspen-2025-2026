@@ -14,7 +14,6 @@ GameObject:
   - component: {fileID: 9194331922620406372}
   - component: {fileID: 7056525876318405914}
   - component: {fileID: 526683063067528195}
-  - component: {fileID: 2071458422734880173}
   - component: {fileID: 8446799887837855137}
   m_Layer: 0
   m_Name: GameplayCinemachineCamera
@@ -96,7 +95,7 @@ MonoBehaviour:
   TargetOffset: {x: 0, y: 0, z: 0}
   TrackerSettings:
     BindingMode: 4
-    PositionDamping: {x: 0.25, y: 0.25, z: 0.25}
+    PositionDamping: {x: 0, y: 0.5, z: 0}
     AngularDampingMode: 0
     RotationDamping: {x: 1, y: 1, z: 1}
     QuaternionDamping: 1
@@ -167,7 +166,7 @@ MonoBehaviour:
       Offset: {x: 0, y: 0}
   CenterOnActivate: 1
   TargetOffset: {x: 0, y: 0, z: 0}
-  Damping: {x: 0.2, y: 0.2}
+  Damping: {x: 0, y: 0}
   Lookahead:
     Enabled: 1
     Time: 0
@@ -229,44 +228,6 @@ MonoBehaviour:
     NearLimit: 5
     FarLimit: 30
     MaxQualityBoost: 0.2
---- !u!114 &2071458422734880173
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 244906395302872331}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3f1f3a85503b6f547b0b8fb72255525e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ScanRecursively: 0
-  SuppressInputWhileBlending: 1
-  IgnoreTimeScale: 0
-  m_ControllerManager:
-    Controllers:
-    - Name: Look Orbit X
-      Owner: {fileID: 2749639564793349238}
-      Enabled: 1
-      InputValue: 0
-      Driver:
-        AccelTime: 0
-        DecelTime: 0
-    - Name: Look Orbit Y
-      Owner: {fileID: 2749639564793349238}
-      Enabled: 1
-      InputValue: 0
-      Driver:
-        AccelTime: 0
-        DecelTime: 0
-    - Name: Orbit Scale
-      Owner: {fileID: 2749639564793349238}
-      Enabled: 1
-      InputValue: 0
-      Driver:
-        AccelTime: 0
-        DecelTime: 0
 --- !u!114 &8446799887837855137
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -279,6 +240,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34bcfe160424d64429f7eaca32651523, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cinemachineCamera: {fileID: 4309236162557638298}
-  cameraType: 0
-  changeToActiveCamera: 1
+  _cinemachineCamera: {fileID: 4309236162557638298}
+  _changeToActiveCamera: 1

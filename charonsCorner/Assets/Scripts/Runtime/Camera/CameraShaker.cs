@@ -6,20 +6,20 @@ namespace CharonsCorner.Runtime
 {
     public class CameraShaker
     {
-        private CameraManager cameraManager;
+        private CameraManager _cameraManager;
 
-        private CinemachineBasicMultiChannelPerlin cinemachineBasicMultiChannelPerlin;
+        private CinemachineBasicMultiChannelPerlin _cinemachineBasicMultiChannelPerlin;
 
-        private float startingAmplitude;
-        private float startingFrequency;
-        private float shakeTimer;
-        private float shakeDuration;
+        private float _startingAmplitude;
+        private float _startingFrequency;
+        private float _shakeTimer;
+        private float _shakeDuration;
 
         public CameraShaker(CameraManager manager)
         {
-            cameraManager = manager;
+            _cameraManager = manager;
 
-            cameraManager.OnActiveCameraChanged += CameraManager_OnActiveCameraChanged;
+            _cameraManager.OnActiveCameraChanged += CameraManager_OnActiveCameraChanged;
         }
 
         /// <summary>
@@ -30,54 +30,54 @@ namespace CharonsCorner.Runtime
         /// <param name="duration">How long will the camera be shaking.</param>
         public void ShakeCamera(float amplitude, float frequency, float duration)
         {
-            if(cameraManager.CurrentCamera == null)
+            if(_cameraManager.CurrentCamera == null)
             {
                 Debug.LogWarning("Current camera is not set. Cannot shake camera.");
                 return;
             }
 
-            cinemachineBasicMultiChannelPerlin = cameraManager.CurrentCamera.GetComponent<CinemachineBasicMultiChannelPerlin>();
-            if(cinemachineBasicMultiChannelPerlin == null )
+            _cinemachineBasicMultiChannelPerlin = _cameraManager.CurrentCamera.GetComponent<CinemachineBasicMultiChannelPerlin>();
+            if(_cinemachineBasicMultiChannelPerlin == null )
             {
                 Debug.LogWarning("CinemachineBasicMultiChannelPerlin component not found on the current camera. Cannot shake camera.");
                 return;
             }
 
-            cinemachineBasicMultiChannelPerlin.ReSeed();
+            _cinemachineBasicMultiChannelPerlin.ReSeed();
 
-            cinemachineBasicMultiChannelPerlin.AmplitudeGain = amplitude;
-            cinemachineBasicMultiChannelPerlin.FrequencyGain = frequency;
-            startingAmplitude = amplitude;
-            startingFrequency = frequency;
-            shakeDuration = duration;
-            shakeTimer = duration;
+            _cinemachineBasicMultiChannelPerlin.AmplitudeGain = amplitude;
+            _cinemachineBasicMultiChannelPerlin.FrequencyGain = frequency;
+            _startingAmplitude = amplitude;
+            _startingFrequency = frequency;
+            _shakeDuration = duration;
+            _shakeTimer = duration;
         }
 
         private void StopShake()
         {
-            cinemachineBasicMultiChannelPerlin.AmplitudeGain = 0f;
-            cinemachineBasicMultiChannelPerlin.FrequencyGain = 0f;
-            shakeTimer = 0f;
+            _cinemachineBasicMultiChannelPerlin.AmplitudeGain = 0f;
+            _cinemachineBasicMultiChannelPerlin.FrequencyGain = 0f;
+            _shakeTimer = 0f;
         }
 
         public void Update()
         {
-            if (cinemachineBasicMultiChannelPerlin == null)
+            if (_cinemachineBasicMultiChannelPerlin == null)
                 return;
 
-            if (shakeTimer > 0)
+            if (_shakeTimer > 0)
             {
-                shakeTimer -= Time.deltaTime;
+                _shakeTimer -= Time.deltaTime;
 
-                cinemachineBasicMultiChannelPerlin.AmplitudeGain =
-                    Mathf.Lerp(startingAmplitude, 0, 1 - (shakeTimer / shakeDuration));
-                cinemachineBasicMultiChannelPerlin.FrequencyGain =
-                    Mathf.Lerp(startingFrequency, 0, 1 - (shakeTimer / shakeDuration));
+                _cinemachineBasicMultiChannelPerlin.AmplitudeGain =
+                    Mathf.Lerp(_startingAmplitude, 0, 1 - (_shakeTimer / _shakeDuration));
+                _cinemachineBasicMultiChannelPerlin.FrequencyGain =
+                    Mathf.Lerp(_startingFrequency, 0, 1 - (_shakeTimer / _shakeDuration));
             }
             else
             {
-                cinemachineBasicMultiChannelPerlin.AmplitudeGain = 0f;
-                cinemachineBasicMultiChannelPerlin.FrequencyGain = 0f;
+                _cinemachineBasicMultiChannelPerlin.AmplitudeGain = 0f;
+                _cinemachineBasicMultiChannelPerlin.FrequencyGain = 0f;
             }
         }
 
@@ -89,8 +89,8 @@ namespace CharonsCorner.Runtime
                 return;
             }
 
-            cinemachineBasicMultiChannelPerlin = newCamera.GetComponent<CinemachineBasicMultiChannelPerlin>();
-            if (cinemachineBasicMultiChannelPerlin == null)
+            _cinemachineBasicMultiChannelPerlin = newCamera.GetComponent<CinemachineBasicMultiChannelPerlin>();
+            if (_cinemachineBasicMultiChannelPerlin == null)
             {
                 StopShake();
                 return;
@@ -99,7 +99,7 @@ namespace CharonsCorner.Runtime
 
         public void Dispose()
         {
-            cameraManager.OnActiveCameraChanged -= CameraManager_OnActiveCameraChanged;
+            _cameraManager.OnActiveCameraChanged -= CameraManager_OnActiveCameraChanged;
         }
     }
 }

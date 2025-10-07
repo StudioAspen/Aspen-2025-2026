@@ -7,7 +7,7 @@ namespace CharonsCorner.Runtime
     public class TouchInteractable : MonoBehaviour
     {
         [Header("References")]
-        [SerializeField] private Collider triggerCollider;
+        [SerializeField] private Collider _triggerCollider;
 
         [Space]
         public UnityEvent OnTouch = new UnityEvent();
@@ -27,11 +27,11 @@ namespace CharonsCorner.Runtime
             if (gameObject.layer != LayerMask.NameToLayer("TouchInteractable"))
                 gameObject.layer = LayerMask.NameToLayer("TouchInteractable");
 
-            if (triggerCollider == null)
-                triggerCollider = GetComponent<Collider>();
+            if (_triggerCollider == null)
+                _triggerCollider = GetComponent<Collider>();
 
-            if (triggerCollider != null && !triggerCollider.isTrigger)
-                triggerCollider.isTrigger = true;
+            if (_triggerCollider != null && !_triggerCollider.isTrigger)
+                _triggerCollider.isTrigger = true;
         }
 
         private void OnTriggerEnter(Collider other)

@@ -7,52 +7,52 @@ namespace CharonsCorner.Runtime
 {
     public class ResolutionSetting : Setting
     {
-        private protected override string saveKey => "Resolution";
-        private static int defaultValue => 0; // Default to the first resolution in the list (highest available in this case)
+        private protected override string SaveKey => "Resolution";
+        private static int DefaultValue => 0; // Default to the first resolution in the list (highest available in this case)
         public static int CurrentIndex { get; private set; }
 
-        [SerializeField] private TMP_Dropdown resolutionDropdown;
+        [SerializeField] private TMP_Dropdown _resolutionDropdown;
 
-        private static List<Resolution> validResolutions;
+        private static List<Resolution> _validResolutions;
 
         private void OnEnable()
         {
-            resolutionDropdown.value = CurrentIndex;
+            _resolutionDropdown.value = CurrentIndex;
         }
 
         public override void Load()
         {
-            validResolutions = GetValidResolutions();
+            _validResolutions = GetValidResolutions();
 
             // Clear existing options and add new ones
-            resolutionDropdown.ClearOptions();
-            foreach (Resolution resolution in validResolutions)
-                resolutionDropdown.options.Add(new TMP_Dropdown.OptionData($"{resolution.width}x{resolution.height}"));
+            _resolutionDropdown.ClearOptions();
+            foreach (Resolution resolution in _validResolutions)
+                _resolutionDropdown.options.Add(new TMP_Dropdown.OptionData($"{resolution.width}x{resolution.height}"));
 
-            CurrentIndex = SaveManager.SettingsStore.GetInt(saveKey, defaultValue);
-            CurrentIndex = Mathf.Clamp(CurrentIndex, 0, validResolutions.Count - 1); // Ensure index is within bounds
-            resolutionDropdown.value = CurrentIndex;
+            CurrentIndex = SaveManager.SettingsStore.GetInt(SaveKey, DefaultValue);
+            CurrentIndex = Mathf.Clamp(CurrentIndex, 0, _validResolutions.Count - 1); // Ensure index is within bounds
+            _resolutionDropdown.value = CurrentIndex;
 
-            Resolution selectedResolution = validResolutions[CurrentIndex];
+            Resolution selectedResolution = _validResolutions[CurrentIndex];
             SetResolution(selectedResolution);
         }
 
         public override void Apply()
         {
-            int windowModeIndex = resolutionDropdown.value;
-            SaveManager.SettingsStore.SetInt(saveKey, windowModeIndex);
+            int windowModeIndex = _resolutionDropdown.value;
+            SaveManager.SettingsStore.SetInt(SaveKey, windowModeIndex);
             CurrentIndex = windowModeIndex;
 
-            Resolution selectedResolution = validResolutions[CurrentIndex];
+            Resolution selectedResolution = _validResolutions[CurrentIndex];
             SetResolution(selectedResolution);
         }
 
         public override void Discard()
         {
-            resolutionDropdown.value = CurrentIndex;
+            _resolutionDropdown.value = CurrentIndex;
         }
 
-        public override bool IsDirty() => resolutionDropdown.value != CurrentIndex;
+        public override bool IsDirty() => _resolutionDropdown.value != CurrentIndex;
 
         /// <summary>
         /// Filter out duplicate resolutions based on width and height,

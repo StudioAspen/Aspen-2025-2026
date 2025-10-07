@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace CharonsCorner.Runtime
 {
@@ -19,6 +20,11 @@ namespace CharonsCorner.Runtime
             Instance = this as T;
 
             DontDestroyOnLoad(gameObject);
+        }
+
+        private void OnDestroy()
+        {
+            Instance = null;
         }
     }
 }
