@@ -206,7 +206,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 11957237}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.08908325, y: 3.768803e-15, z: -3.3707737e-16, w: 0.9960242}
+  m_LocalRotation: {x: 0.08908321, y: -0.000000009854163, z: 8.8134455e-10, w: 0.9960242}
   m_LocalPosition: {x: 0, y: 3.5, z: -4.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -651,12 +651,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   splineContainer: {fileID: 119522286}
-  meshFilter: {fileID: 119522288}
-  width: 10
-  thickness: 1
-  segments: 100
-  enableGizmos: 0
-  gizmoRadius: 0.181
+  pathMeshFilter: {fileID: 0}
+  _segmentLength: 3
+  _intersections: []
 --- !u!114 &119522286
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2442,7 +2439,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1517420150
 Transform:
   m_ObjectHideFlags: 0
@@ -2620,7 +2617,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 100, y: 1, z: 100}
+  m_LocalScale: {x: 1000, y: 1, z: 1000}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -3570,19 +3567,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4769553812181494271, guid: fe195e5f19e31904988d84b793e7ab7e, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.99602425
+      value: 0.9960242
       objectReference: {fileID: 0}
     - target: {fileID: 4769553812181494271, guid: fe195e5f19e31904988d84b793e7ab7e, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.08908324
+      value: 0.0890832
       objectReference: {fileID: 0}
     - target: {fileID: 4769553812181494271, guid: fe195e5f19e31904988d84b793e7ab7e, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 3.7799997e-15
+      value: -0.000000009854163
       objectReference: {fileID: 0}
     - target: {fileID: 4769553812181494271, guid: fe195e5f19e31904988d84b793e7ab7e, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -4.622643e-16
+      value: 8.8134383e-10
       objectReference: {fileID: 0}
     - target: {fileID: 4769553812181494271, guid: fe195e5f19e31904988d84b793e7ab7e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -3691,14 +3688,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb0cfa39b597dd34faef5bdef5481848, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <BallVisual>k__BackingField: {fileID: 1955723814}
   <StateMachine>k__BackingField:
     currentStateName: 
   <GroundedSuperState>k__BackingField:
     <SubStateMachine>k__BackingField:
       currentStateName: 
-    <IdleState>k__BackingField:
-      <Damp>k__BackingField: 0
     <MoveState>k__BackingField:
       <Acceleration>k__BackingField: 1
       <TurnResponsiveness>k__BackingField: 1
