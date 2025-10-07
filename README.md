@@ -1,7 +1,7 @@
 # Charon's Corner
 
 ## Technology
-Unity Version 6000.0.25f1
+Unity Version 6000.0.58f2
 
 ## External Packages
 1. https://assetstore.unity.com/packages/tools/utilities/naughtyattributes-129996?srsltid=AfmBOoprkHTjWzQvgWzYaUZykCsw4aIkdRD3BAS3deK_-Y97zlyGl3tL
