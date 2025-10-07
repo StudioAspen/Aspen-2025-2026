@@ -5,7 +5,7 @@ namespace CharonsCorner.Runtime
     [System.Serializable]
     public class GroundedMoveState : State<PlayerController>
     {
-        [field: SerializeField] public float Acceleration { get; private set; } = 1f;
+        [field: SerializeField] public float Acceleration { get; private set; } = 15f;
         [field: SerializeField] public float TurnResponsiveness { get; private set; } = 1f;
         [field: SerializeField] public float MaxSpeed { get; private set; } = 25f;
 

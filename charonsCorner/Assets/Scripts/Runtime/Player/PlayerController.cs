@@ -53,6 +53,26 @@ namespace CharonsCorner.Runtime
             // Draws the ground check sphere in the editor for visualization
             Gizmos.color = Color.red;
             Gizmos.DrawWireSphere(transform.position + GroundedSuperState.GroundCheckDistance * Vector3.down, GroundedSuperState.GroundCheckRadius);
+
+           
+            if (Application.isPlaying)
+            {
+                // Forward (Z axis)
+                Gizmos.color = Color.blue;
+                Gizmos.DrawLine(transform.position, transform.position + transform.forward * 2f);
+
+                // Right (X axis)
+                Gizmos.color = Color.green;
+                Gizmos.DrawLine(transform.position, transform.position + transform.right * 2f);
+
+                // Velocity direction (actual movement)
+                if (RigidBody != null)
+                {
+                    Gizmos.color = Color.yellow;
+                    Vector3 velocityDir = RigidBody.linearVelocity;
+                    Gizmos.DrawLine(transform.position, transform.position + velocityDir.normalized * 2f);
+                }
+            }
         }
 
         private void Update()
