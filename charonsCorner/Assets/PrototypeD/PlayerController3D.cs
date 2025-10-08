@@ -154,6 +154,11 @@ public class PlayerController3D : MonoBehaviour
 
     public float crouchHeight = 1f;
     public float normalHeight = 2f;
+
+
+    public DashManagerScript dmScript;
+
+
     void Awake()
     {
         cc = GetComponent<CharacterController>();
@@ -170,8 +175,10 @@ public class PlayerController3D : MonoBehaviour
     }
     void Start()
     {
-
-      
+        
+        // this has to be changed later not actually necessary
+        forwardCruiseSpeed = dmScript.maxPlayerSpeed;
+        boostSpeed = dmScript.DashSpeed;
 
         if (vcam != null)
         {
@@ -288,11 +295,14 @@ public class PlayerController3D : MonoBehaviour
         }
 
         // ---- BRAKE (Left Mouse) ----
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetKeyDown(KeyCode.LeftShift) && dmScript.chargeCounter != 0)
         {
             if (!isJumping && !isSquashing)
             {
                 StartBrake();
+
+                // mess with timescale
+                dmScript.slowTime();
             }
         }
 
@@ -314,11 +324,12 @@ public class PlayerController3D : MonoBehaviour
             targetCameraYaw = (currentBrakeAngle / brakeTurnAngle) * cameraTurnAngle;
 
             // --- Release brake: apply exit angle & boost ---
-            if (Input.GetMouseButtonUp(0))
+            if (Input.GetKeyUp(KeyCode.LeftShift))
             {
                 EndBrakeAndStartBoost();
                 targetDutch = 0f;
                 targetCameraYaw = 0f;
+                dmScript.resumeNormalTime();
             }
 
             if (brakePreview != null)
@@ -434,7 +445,7 @@ public class PlayerController3D : MonoBehaviour
         hasRotatedDuringBrake = false;
 
         // Start boost & recovery as before
-        currentForwardSpeed = boostSpeed;
+        currentForwardSpeed = dmScript.da;
         isBoostRecovering = true;
         boostRecoverElapsed = 0f;
     }
