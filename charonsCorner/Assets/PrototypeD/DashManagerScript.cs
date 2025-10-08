@@ -22,11 +22,11 @@ public class DashManagerScript : MonoBehaviour
     public float DashSpeed = 0f;
     public float PullBackSpeed = 0f;
 
+    public bool reachedMaxSpeed = false;
 
     [SerializeField] private Slider slider1;
+    [SerializeField] private PlayerController3D PC3DScript;
 
-
-    private bool checkingDistance = false;
 
     private Vector3 lastPosition;
     private float targetDistance = 1f;
@@ -46,6 +46,15 @@ public class DashManagerScript : MonoBehaviour
     void Update()
     {
 
+        if (PC3DScript.forwardCruiseSpeed > maxPlayerSpeed && PC3DScript.isBoostRecovering == true)
+        {
+            PC3DScript.forwardCruiseSpeed -= PullBackSpeed;
+            
+        }
+        if (PC3DScript.forwardCruiseSpeed <= maxPlayerSpeed &&  PC3DScript.boostRecoverElapsed >= PC3DScript.boostRecoverTime)
+        {
+            reachedMaxSpeed = true;
+        }
 
         if (isTracking == true)
         {

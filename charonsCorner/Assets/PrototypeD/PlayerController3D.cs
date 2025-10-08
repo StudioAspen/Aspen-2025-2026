@@ -54,8 +54,10 @@ public class PlayerController3D : MonoBehaviour
     private float brakeElapsed = 0f;
     private float preBrakeSpeed = 0f;
     private bool hasRotatedDuringBrake = false;
-    private bool isBoostRecovering = false;
-    private float boostRecoverElapsed = 0f;
+    // change back to private later
+    public bool isBoostRecovering = false;
+    // change back to private later
+    public float boostRecoverElapsed = 0f;
 
     [Header("Squash / Charge Jump (Hold Right Mouse Button)")]
     [Tooltip("Y scale to use while squashed (e.g. 0.4)")]
@@ -445,7 +447,7 @@ public class PlayerController3D : MonoBehaviour
         hasRotatedDuringBrake = false;
 
         // Start boost & recovery as before
-        currentForwardSpeed = dmScript.da;
+        currentForwardSpeed = dmScript.DashSpeed;
         isBoostRecovering = true;
         boostRecoverElapsed = 0f;
     }
@@ -602,8 +604,9 @@ public class PlayerController3D : MonoBehaviour
             float eval = boostRecoverCurve.Evaluate(t);
             // Lerp from boostSpeed -> forwardCruiseSpeed using curve (curve should go 0->1 mapping)
             currentForwardSpeed = Mathf.Lerp(boostSpeed, forwardCruiseSpeed, eval);
-            if (boostRecoverElapsed >= boostRecoverTime)
+            if (boostRecoverElapsed >= boostRecoverTime && dmScript.reachedMaxSpeed == true)
             {
+                Debug.Log("perma boost");
                 isBoostRecovering = false;
                 forwardCruiseSpeed = forwardCruiseSpeed * speedPercentageIncrease; //Fonz - increase speed after each boost
                 currentForwardSpeed = forwardCruiseSpeed;
