@@ -36,10 +36,16 @@ public class PlayerController3D : MonoBehaviour
     [Tooltip("How long it takes to go from boostSpeed back to cruise")]
     public float boostRecoverTime = 1f;
     public AnimationCurve boostRecoverCurve = AnimationCurve.Linear(0, 1, 1, 0); // evaluate 0..1 and Lerp(boost->cruise, curve)
-    [Tooltip("Maximum time player can hold brake before auto-dash triggers")]
-    public float brakeHoldMaxTime = 2f;
+    [Tooltip("Maximum time player has to hold break when low speed")] // Fonz
+    public float brakeHoldMaxTime = 2f; // Fonz - The time a player can spend in dash aim mode at the lowest possible speed
+    [Tooltip("Minimum time player has to hold break when high speed")] // Fonz
+    public float brakeHoldMinTime = 0.5f; // Fonz - The time a player can spend in dash aim mode at the highest possible speed
+    [Tooltip("Time player has to hold break")] // Fonz
+    public float brakeHoldTime = 2f; // Fonz - time to hold brake, between min and max based on speed, starts at max
     [Tooltip("Permanent speed increase after Dash")] // Fonz
     public float speedPercentageIncrease = 1.4f; // Fonz - increase speed after each boost, base 40% increase
+    [Tooltip("Number of Speed Increases applied")]
+    public int numSpeedIncreases = 0; // Fonz - number of speed increases applied
 
     [Header("Boost FOV")]
     [Tooltip("FOV to zoom out to during boost burst")]
@@ -222,8 +228,7 @@ public class PlayerController3D : MonoBehaviour
        
         if (hit.gameObject.tag == "Death")
         {
-            forwardCruiseSpeed = 12;
-
+            resetSpeed();
         }
 
         if (hit.gameObject.tag == "Pin")
@@ -235,8 +240,7 @@ public class PlayerController3D : MonoBehaviour
             }
             else
             {
-                forwardCruiseSpeed = 12;
-
+                resetSpeed();
             }
 
         }
@@ -578,6 +582,10 @@ public class PlayerController3D : MonoBehaviour
             brakeElapsed += dt;
             brakeHoldElapsed += dt;
 
+            // Fonz - determine brake hold time based on current speed
+            float tempBrakeVal = (float)numSpeedIncreases / 4f; // 0 to 1 based on number of increases
+            brakeHoldTime = Mathf.Lerp(brakeHoldMaxTime, brakeHoldMinTime, tempBrakeVal);
+
             float t = Mathf.Clamp01(brakeElapsed / Mathf.Max(0.0001f, brakeTime));
             float eval = brakeCurve.Evaluate(t);
             currentForwardSpeed = Mathf.Lerp(preBrakeSpeed, brakeTargetSpeed, eval);
@@ -587,7 +595,7 @@ public class PlayerController3D : MonoBehaviour
                 vcam.Lens.FieldOfView = Mathf.Lerp(defaultFOV, squashFOV, holdPercent);
             }
             // Auto-release if held too long
-            if (brakeHoldElapsed >= brakeHoldMaxTime)
+            if (brakeHoldElapsed >= brakeHoldTime)
             {
                 EndBrakeAndStartBoost();
                 targetDutch = 0f;
@@ -609,6 +617,7 @@ public class PlayerController3D : MonoBehaviour
                 Debug.Log("perma boost");
                 isBoostRecovering = false;
                 forwardCruiseSpeed = forwardCruiseSpeed * speedPercentageIncrease; //Fonz - increase speed after each boost
+                numSpeedIncreases += 1; // Fonz - count number of speed increases
                 currentForwardSpeed = forwardCruiseSpeed;
             }
         }
@@ -779,5 +788,24 @@ public class PlayerController3D : MonoBehaviour
         Gizmos.DrawLine(transform.position, transform.position + transform.forward * 2f);
         Gizmos.color = Color.yellow;
         Gizmos.DrawLine(transform.position, transform.position + transform.right * 2f);
+    }
+
+    // Fonz - added for my TestUI
+    public float GetCurrentForwardSpeed()
+    {
+        return currentForwardSpeed;
+    }
+
+    // Fonz - added for my TestUI
+    public float GetBrakeHoldElapsed()
+    {
+        return brakeHoldElapsed;
+    }
+
+    // Fonz - reset speed function, called on hitting an obstacle, used to reset speed to base value
+    public void resetSpeed()
+    {
+        forwardCruiseSpeed = 12;
+        numSpeedIncreases = 0; // reset speed increases
     }
 }
