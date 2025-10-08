@@ -1,5 +1,6 @@
 using UnityEngine;
 using CharonsCorner.Runtime;
+using CharonsCorner.ItemPowers;
 
 public class PlayerCollector : MonoBehaviour
 {
