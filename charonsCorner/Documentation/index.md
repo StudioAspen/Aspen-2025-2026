@@ -4,6 +4,8 @@ _layout: landing
 
 # This is the **HOMEPAGE**.
 
-1. Goto API for code documentation for our project.
-2. Documentation is automatically generated from the XML comments in our scripts.
-3. Link to non-programming docs: https://sites.google.com/egdcollective.org/studioaspen/home?authuser=3 
+Refer to [Markdown](http://daringfireball.net/projects/markdown/) for how to write markdown files.
+
+## Quick Start Notes:
+
+1. Add images to the *images* folder if the file is referencing an image.

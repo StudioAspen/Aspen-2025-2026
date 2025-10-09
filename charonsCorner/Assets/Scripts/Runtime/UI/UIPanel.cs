@@ -6,7 +6,7 @@ namespace CharonsCorner.Runtime
 {
     public abstract class UIPanel : MonoBehaviour
     {
-        private protected UIManager _uiManager;
+        private protected UIManager uiManager;
 
         [field: SerializeField] public GameObject DefaultSelectedObject { get; private set; }
 
@@ -16,7 +16,7 @@ namespace CharonsCorner.Runtime
         /// <param name="manager"></param>
         public void Init(UIManager manager)
         {
-            _uiManager = manager;
+            uiManager = manager;
             Initialize();
         }
 

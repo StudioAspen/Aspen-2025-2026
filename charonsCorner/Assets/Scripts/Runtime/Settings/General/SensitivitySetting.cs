@@ -6,35 +6,35 @@ namespace CharonsCorner.Runtime
 {
     public class SensitivitySetting : Setting
     {
-        private protected override string SaveKey => "Sensitivity";
-        private static readonly int DefaultValue = 50;
+        private protected override string saveKey => "Sensitivity";
+        private static readonly int defaultValue = 50;
         public static float CurrentValue { get; private set; }
 
-        [SerializeField] private Slider _sensitivitySlider;
+        [SerializeField] private Slider sensitivitySlider;
 
         private void OnEnable()
         {
-            _sensitivitySlider.value = CurrentValue;
+            sensitivitySlider.value = CurrentValue;
         }
 
         public override void Load()
         {
-            CurrentValue = SaveManager.SettingsStore.GetInt(SaveKey, DefaultValue);
-            _sensitivitySlider.value = CurrentValue;
+            CurrentValue = SaveManager.SettingsStore.GetInt(saveKey, defaultValue);
+            sensitivitySlider.value = CurrentValue;
         }
 
         public override void Apply()
         {
-            int sensitivityValue = (int)_sensitivitySlider.value;
-            SaveManager.SettingsStore.SetInt(SaveKey, sensitivityValue);
+            int sensitivityValue = (int)sensitivitySlider.value;
+            SaveManager.SettingsStore.SetInt(saveKey, sensitivityValue);
             CurrentValue = sensitivityValue;
         }
 
         public override void Discard()
         {
-            _sensitivitySlider.value = CurrentValue;
+            sensitivitySlider.value = CurrentValue;
         }
 
-        public override bool IsDirty() => _sensitivitySlider.value != CurrentValue;
+        public override bool IsDirty() => sensitivitySlider.value != CurrentValue;
     }
 }

@@ -57,7 +57,7 @@ namespace CharonsCorner.Runtime
         };
         #endregion
 
-        private CursorLockMode _desiredCursorLockState;
+        private CursorLockMode desiredCursorLockState;
 
         private protected override void Awake()
         {
@@ -224,7 +224,7 @@ namespace CharonsCorner.Runtime
         public void LockCursor(bool locked)
         {
             // Always remember the user's preference
-            _desiredCursorLockState = locked ? CursorLockMode.Locked : CursorLockMode.None;
+            desiredCursorLockState = locked ? CursorLockMode.Locked : CursorLockMode.None;
 
             ApplyCursorLockState();
         }
@@ -242,8 +242,8 @@ namespace CharonsCorner.Runtime
                 return;
             }
 
-            Cursor.lockState = _desiredCursorLockState;
-            Cursor.visible = _desiredCursorLockState != CursorLockMode.Locked;
+            Cursor.lockState = desiredCursorLockState;
+            Cursor.visible = desiredCursorLockState != CursorLockMode.Locked;
         }
     }
 }

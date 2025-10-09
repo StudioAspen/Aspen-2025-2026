@@ -7,25 +7,25 @@ namespace CharonsCorner.Runtime
     [RequireComponent(typeof(TMP_Text))]
     public class SliderValueText : MonoBehaviour
     {
-        [SerializeField] private Slider _slider;
-        private TMP_Text _valueText;
+        [SerializeField] private Slider slider;
+        private TMP_Text valueText;
 
         private void Awake()
         {
-            _valueText = GetComponent<TMP_Text>();
+            valueText = GetComponent<TMP_Text>();
         }
 
         private void Start()
         {
-            _slider.onValueChanged.AddListener(Slider_OnValueChanged);
+            slider.onValueChanged.AddListener(Slider_OnValueChanged);
 
-            FormatValueText(_slider.value);
+            FormatValueText(slider.value);
         }
 
         private void OnDestroy()
         {
-            if(_slider != null)
-                _slider.onValueChanged.RemoveListener(Slider_OnValueChanged);
+            if(slider != null)
+                slider.onValueChanged.RemoveListener(Slider_OnValueChanged);
         }
 
         private void Slider_OnValueChanged(float value)
@@ -35,10 +35,10 @@ namespace CharonsCorner.Runtime
 
         private void FormatValueText(float value)
         {
-            if(_slider.wholeNumbers)
-                _valueText.text = Mathf.RoundToInt(value).ToString(); // Round to nearest whole number
+            if(slider.wholeNumbers)
+                valueText.text = Mathf.RoundToInt(value).ToString(); // Round to nearest whole number
             else
-                _valueText.text = value.ToString("F2"); // Format to 2 decimal places
+                valueText.text = value.ToString("F2"); // Format to 2 decimal places
         }
     }
 }

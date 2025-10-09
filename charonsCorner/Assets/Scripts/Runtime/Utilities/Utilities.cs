@@ -99,15 +99,5 @@ namespace CharonsCorner.Runtime
 
             return (forward * moveInput.y + right * moveInput.x).normalized;
         }
-
-        /// <summary>
-        /// Calculates the jump force from the jump height using the physics equation
-        /// </summary>
-        public static float GetJumpForce(float jumpHeight, float gravity) => Mathf.Sqrt(2f * gravity * jumpHeight);
-        
-        /// <summary>
-        /// Checks to see if a layer exists in the layer mask
-        /// </summary>
-        public static bool Contains(this LayerMask mask, int layer) => (mask.value & (1 << layer)) != 0;
     }
 }

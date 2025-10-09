@@ -5,19 +5,19 @@ namespace CharonsCorner.Runtime
 {
     public class ObjectPooler : MonoBehaviour
     {
-        private PoolableObject _objectPrefab;
+        private PoolableObject objectPrefab;
 
-        private ObjectPool<PoolableObject> _objectPool;
+        private ObjectPool<PoolableObject> objectPool;
 
         public void Init(PoolableObject objectPrefab, int capacity, int maxSize)
         {
-            this._objectPrefab = objectPrefab;
-            _objectPool = new ObjectPool<PoolableObject>(CreateObject, OnGetFromPool, OnReleaseToPool, OnDestroyObject, true, capacity, maxSize);
+            this.objectPrefab = objectPrefab;
+            objectPool = new ObjectPool<PoolableObject>(CreateObject, OnGetFromPool, OnReleaseToPool, OnDestroyObject, true, capacity, maxSize);
         }
 
         private PoolableObject CreateObject()
         {
-            PoolableObject newObject = Instantiate(_objectPrefab, new Vector3(0f, 100000f, 0f), Quaternion.identity, transform);
+            PoolableObject newObject = Instantiate(objectPrefab, new Vector3(0f, 100000f, 0f), Quaternion.identity, transform);
             newObject.SetObjectPooler(this);
 
             return newObject;
@@ -41,7 +41,7 @@ namespace CharonsCorner.Runtime
         #region Factory
         public T SpawnObject<T>(Vector3? position = null, Transform parent = null) where T : Component
         {
-            PoolableObject spawnedObject = _objectPool.Get();
+            PoolableObject spawnedObject = objectPool.Get();
 
             // Set position if provided, otherwise default to zero
             spawnedObject.transform.position = position ?? Vector3.zero;
@@ -65,7 +65,7 @@ namespace CharonsCorner.Runtime
         /// </summary>
         public void ReleaseObject(PoolableObject pooledObject)
         {
-            _objectPool.Release(pooledObject);
+            objectPool.Release(pooledObject);
         }
         #endregion
     }

@@ -7,7 +7,10 @@ namespace CharonsCorner.Runtime
     public class StateMachine<TContext> where TContext : MonoBehaviour
     {
         public TContext Context { get; private set; }
+
         public State<TContext> CurrentState { get; private set; }
+        [SerializeField, ReadOnly, AllowNesting] private string currentStateName = "None";
+
         public bool HasTransitionedThisFrame { get; private set; } = false;
 
         public StateMachine(TContext context)
@@ -35,6 +38,8 @@ namespace CharonsCorner.Runtime
             CurrentState?.Exit();
             CurrentState = newState;
             CurrentState?.Enter();
+
+            currentStateName = CurrentState != null ? CurrentState.GetType().Name : "None";
         }
 
         public void Update()
@@ -52,6 +57,7 @@ namespace CharonsCorner.Runtime
         {
             CurrentState?.Exit();
             CurrentState = null;
+            currentStateName = "None";
         }
 
         public void Destroy()
