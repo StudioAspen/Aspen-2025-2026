@@ -24,8 +24,22 @@ namespace CharonsCorner.Runtime
         private protected override void OnFixedUpdate()
         {
             Vector2 input = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
-            
-            context.Rb.AddForce(context.Orientation.forward * (input.y * Speed) + context.Orientation.right * (input.x * Speed), ForceMode.VelocityChange);
+
+            Vector3 forwardOriented;
+            Vector3 rightOriented;
+            if (context.SlopeSensor.IsOnSlope)
+            {
+                RaycastHit hit = context.SlopeSensor.Hit;
+                forwardOriented = Vector3.Cross(context.Orientation.right, hit.normal).normalized;
+                rightOriented = Vector3.Cross(hit.normal, forwardOriented).normalized;
+                
+            }
+            else
+            {
+                forwardOriented = context.Orientation.forward;
+                rightOriented = context.Orientation.right;
+            }
+            context.Rb.AddForce(forwardOriented * (input.y * Speed) + rightOriented * (input.x * Speed), ForceMode.VelocityChange);
         }
 
         private protected override State<PrototypePlayerController> GetTransition()
