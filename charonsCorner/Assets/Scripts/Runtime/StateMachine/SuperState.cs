@@ -6,13 +6,12 @@ namespace CharonsCorner.Runtime
     [System.Serializable]
     public abstract class SuperState<TContext> : State<TContext> where TContext : MonoBehaviour
     {
-        [field: Header("States")]
-        [field: SerializeField] public StateMachine<TContext> SubStateMachine { get; private set; }
+        public StateMachine<TContext> SubStateMachine { get; private set; }
         public abstract State<TContext> InitialSubState { get; }
 
         private protected override void OnInit()
         {
-            SubStateMachine = new StateMachine<TContext>(context);
+            SubStateMachine = new StateMachine<TContext>(_context);
             InitializeSubStates();
         }
 

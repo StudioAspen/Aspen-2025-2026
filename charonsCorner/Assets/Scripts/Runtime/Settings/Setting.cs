@@ -7,7 +7,7 @@ namespace CharonsCorner.Runtime
         /// <summary>
         /// The key used to store the setting in the save store.
         /// </summary>
-        private protected abstract string saveKey { get; }
+        private protected abstract string SaveKey { get; }
 
         /// <summary>
         /// Save the current value of the setting to save store and apply it to the game.

@@ -5,7 +5,7 @@ namespace CharonsCorner.Runtime
 {
     public class TitleManager : MonoBehaviour
     {
-        [SerializeField] private GameObject defaultSelectedObject;
+        [SerializeField] private GameObject _defaultSelectedObject;
 
         private void Start()
         {
@@ -19,7 +19,7 @@ namespace CharonsCorner.Runtime
                 UIManager.Instance.OnUIClose -= UIManager_OnUIClose;
         }
 
-        private void UIManager_OnUIClose() => UIManager.Instance.ChangeCurrentSelectedObject(defaultSelectedObject);
+        private void UIManager_OnUIClose() => UIManager.Instance.ChangeCurrentSelectedObject(_defaultSelectedObject);
 
         // Called by button UI events
         public void StartGame() => GameManager.Instance.StartGame();

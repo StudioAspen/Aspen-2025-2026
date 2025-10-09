@@ -8,46 +8,46 @@ namespace CharonsCorner.Runtime
 {
     public class InputRebindSetting : Setting
     {
-        private protected override string saveKey => $"{actionToRebind.name}";
+        private protected override string SaveKey => $"{_actionToRebind.name}";
 
         [Header("Config")]
-        [SerializeField] private InputActionReference actionToRebind;
-        private int keyboardBindingIndex;
-        private int mouseBindingIndex;
-        private int gamepadBindingIndex;
-        private InputActionRebindingExtensions.RebindingOperation rebindingOperation;
+        [SerializeField] private InputActionReference _actionToRebind;
+        private int _keyboardBindingIndex;
+        private int _mouseBindingIndex;
+        private int _gamepadBindingIndex;
+        private InputActionRebindingExtensions.RebindingOperation _rebindingOperation;
 
         [Header("UI Elements")]
-        [SerializeField] private Button keyboardMouseRebindButton;
-        [SerializeField] private Button gamepadRebindButton;
-        private TMP_Text keyboardMouseRebindButtonText;
-        private TMP_Text gamepadRebindButtonText;
+        [SerializeField] private Button _keyboardMouseRebindButton;
+        [SerializeField] private Button _gamepadRebindButton;
+        private TMP_Text _keyboardMouseRebindButtonText;
+        private TMP_Text _gamepadRebindButtonText;
 
         private void Awake()
         {
-            keyboardBindingIndex = actionToRebind.action.bindings.IndexOf(binding => binding.groups.Contains("Keyboard"));
-            mouseBindingIndex = actionToRebind.action.bindings.IndexOf(binding => binding.groups.Contains("Mouse"));
-            gamepadBindingIndex = actionToRebind.action.bindings.IndexOf(binding => binding.groups.Contains("Gamepad"));
+            _keyboardBindingIndex = _actionToRebind.action.bindings.IndexOf(binding => binding.groups.Contains("Keyboard"));
+            _mouseBindingIndex = _actionToRebind.action.bindings.IndexOf(binding => binding.groups.Contains("Mouse"));
+            _gamepadBindingIndex = _actionToRebind.action.bindings.IndexOf(binding => binding.groups.Contains("Gamepad"));
 
-            keyboardMouseRebindButtonText = keyboardMouseRebindButton.GetComponentInChildren<TMP_Text>();
-            gamepadRebindButtonText = gamepadRebindButton.GetComponentInChildren<TMP_Text>();
+            _keyboardMouseRebindButtonText = _keyboardMouseRebindButton.GetComponentInChildren<TMP_Text>();
+            _gamepadRebindButtonText = _gamepadRebindButton.GetComponentInChildren<TMP_Text>();
         }
 
         public void StartKeyboardRebind()
         {
-            keyboardMouseRebindButtonText.text = "...";
+            _keyboardMouseRebindButtonText.text = "...";
 
-            actionToRebind.action.Disable();
+            _actionToRebind.action.Disable();
 
-            rebindingOperation = actionToRebind.action
+            _rebindingOperation = _actionToRebind.action
                 .PerformInteractiveRebinding()
                 .WithControlsExcluding("Mouse")
                 .WithControlsExcluding("Gamepad")
                 .OnMatchWaitForAnother(0.1f)
                 .OnComplete(operation =>
                 {
-                    actionToRebind.action.Enable();
-                    keyboardMouseRebindButtonText.text = actionToRebind.action.GetBindingDisplayString(keyboardBindingIndex);
+                    _actionToRebind.action.Enable();
+                    _keyboardMouseRebindButtonText.text = _actionToRebind.action.GetBindingDisplayString(_keyboardBindingIndex);
                     operation.Dispose();
                 })
                 .Start();
@@ -55,19 +55,19 @@ namespace CharonsCorner.Runtime
 
         public void StartMouseRebind()
         {
-            keyboardMouseRebindButtonText.text = "...";
+            _keyboardMouseRebindButtonText.text = "...";
 
-            actionToRebind.action.Disable();
+            _actionToRebind.action.Disable();
 
-            rebindingOperation = actionToRebind.action
+            _rebindingOperation = _actionToRebind.action
                 .PerformInteractiveRebinding()
                 .WithControlsExcluding("Keyboard")
                 .WithControlsExcluding("Gamepad")
                 .OnMatchWaitForAnother(0.1f)
                 .OnComplete(operation =>
                 {
-                    actionToRebind.action.Enable();
-                    keyboardMouseRebindButtonText.text = actionToRebind.action.GetBindingDisplayString(mouseBindingIndex);
+                    _actionToRebind.action.Enable();
+                    _keyboardMouseRebindButtonText.text = _actionToRebind.action.GetBindingDisplayString(_mouseBindingIndex);
                     operation.Dispose();
                 })
                 .Start();
@@ -75,19 +75,19 @@ namespace CharonsCorner.Runtime
 
         public void StartGamepadRebind()
         {
-            gamepadRebindButtonText.text = "...";
+            _gamepadRebindButtonText.text = "...";
 
-            actionToRebind.action.Disable();
+            _actionToRebind.action.Disable();
 
-            rebindingOperation = actionToRebind.action
+            _rebindingOperation = _actionToRebind.action
                 .PerformInteractiveRebinding()
                 .WithControlsExcluding("Keyboard")
                 .WithControlsExcluding("Mouse")
                 .OnMatchWaitForAnother(0.1f)
                 .OnComplete(operation =>
                 {
-                    actionToRebind.action.Enable();
-                    gamepadRebindButtonText.text = actionToRebind.action.GetBindingDisplayString(gamepadBindingIndex);
+                    _actionToRebind.action.Enable();
+                    _gamepadRebindButtonText.text = _actionToRebind.action.GetBindingDisplayString(_gamepadBindingIndex);
                     operation.Dispose();
                 })
                 .Start();
@@ -95,11 +95,11 @@ namespace CharonsCorner.Runtime
 
         public void CancelRebind()
         {
-            rebindingOperation?.Cancel();
-            rebindingOperation?.Dispose();
-            rebindingOperation = null;
-            keyboardMouseRebindButtonText.text = actionToRebind.action.GetBindingDisplayString(actionToRebind.action.bindings.IndexOf(binding => binding.groups.Contains("Keyboard")));
-            gamepadRebindButtonText.text = actionToRebind.action.GetBindingDisplayString(actionToRebind.action.bindings.IndexOf(binding => binding.groups.Contains("Gamepad")));
+            _rebindingOperation?.Cancel();
+            _rebindingOperation?.Dispose();
+            _rebindingOperation = null;
+            _keyboardMouseRebindButtonText.text = _actionToRebind.action.GetBindingDisplayString(_actionToRebind.action.bindings.IndexOf(binding => binding.groups.Contains("Keyboard")));
+            _gamepadRebindButtonText.text = _actionToRebind.action.GetBindingDisplayString(_actionToRebind.action.bindings.IndexOf(binding => binding.groups.Contains("Gamepad")));
         }
 
         public override void Apply()
