@@ -612,7 +612,7 @@ public class PlayerController3D : MonoBehaviour
             float eval = boostRecoverCurve.Evaluate(t);
             // Lerp from boostSpeed -> forwardCruiseSpeed using curve (curve should go 0->1 mapping)
             currentForwardSpeed = Mathf.Lerp(boostSpeed, forwardCruiseSpeed, eval);
-            if (boostRecoverElapsed >= boostRecoverTime && dmScript.reachedMaxSpeed == true)
+            if (boostRecoverElapsed >= boostRecoverTime)
             {
                 Debug.Log("perma boost");
                 isBoostRecovering = false;

@@ -46,15 +46,15 @@ public class DashManagerScript : MonoBehaviour
     void Update()
     {
 
-        if (PC3DScript.forwardCruiseSpeed > maxPlayerSpeed && PC3DScript.isBoostRecovering == true)
-        {
-            PC3DScript.forwardCruiseSpeed -= PullBackSpeed;
+        // if (PC3DScript.forwardCruiseSpeed > maxPlayerSpeed && PC3DScript.isBoostRecovering == true)
+        // {
+        //     PC3DScript.forwardCruiseSpeed -= PullBackSpeed;
             
-        }
-        if (PC3DScript.forwardCruiseSpeed <= maxPlayerSpeed &&  PC3DScript.boostRecoverElapsed >= PC3DScript.boostRecoverTime)
-        {
-            reachedMaxSpeed = true;
-        }
+        // }
+        // if (PC3DScript.forwardCruiseSpeed <= maxPlayerSpeed &&  PC3DScript.boostRecoverElapsed >= PC3DScript.boostRecoverTime)
+        // {
+        //     reachedMaxSpeed = true;
+        // }
 
         if (isTracking == true)
         {
