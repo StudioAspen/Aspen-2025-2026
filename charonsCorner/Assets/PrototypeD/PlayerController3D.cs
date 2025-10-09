@@ -308,7 +308,7 @@ public class PlayerController3D : MonoBehaviour
                 StartBrake();
 
                 // mess with timescale
-                dmScript.slowTime();
+                // dmScript.slowTime();
             }
         }
 
