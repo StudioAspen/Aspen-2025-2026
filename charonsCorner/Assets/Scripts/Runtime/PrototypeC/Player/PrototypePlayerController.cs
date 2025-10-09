@@ -80,6 +80,11 @@ namespace CharonsCorner.Runtime
             Grounded = Physics.CheckSphere(transform.position + Vector3.down * GroundCheckLength, Collider.radius * 0.9f, GroundLayer);
         }
 
+        public void setGravity(float value)
+        {
+            GravityAmount  = value;            
+        }
+
         /// <summary>
         /// Runs in awake. Sets up the state machine and all the states for the player controller.
         /// </summary>
