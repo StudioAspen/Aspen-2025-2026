@@ -7,11 +7,10 @@ namespace CharonsCorner.Runtime
     public class GroundMoveState : State<PrototypePlayerController>
     {
         [Header("Speed Settings")]
-        [SerializeField] private float maxSpeed = 25f;
-        [SerializeField] private float acceleration = 30f;
-        [SerializeField] private float deceleration = 10f;
-        [SerializeField] private float slopeBoost = 10f; // optional slope influence
-        private float targetSpeed;
+        [field:SerializeField] public float MaxSpeed {get; private set;} = 25f;
+        [field:SerializeField] public float Acceleration {get; private set;} = 30f;
+        [field:SerializeField] public float Deceleration {get; private set;} = 10f;
+        [field:SerializeField] public float SlopeBoost {get; private set;} = 10f; // optional slope influence
         private protected override void OnEnter()
         {
             
@@ -34,7 +33,7 @@ namespace CharonsCorner.Runtime
             // Perform deceleration if we aren't pressing an input direction
             if (input == Vector2.zero)
             {
-                context.Rb.AddForce(-context.Rb.linearVelocity.normalized * deceleration, ForceMode.Acceleration);
+                context.Rb.AddForce(-context.Rb.linearVelocity.normalized * Deceleration, ForceMode.Acceleration);
             }
             
             Vector3 forwardOriented;
@@ -49,7 +48,7 @@ namespace CharonsCorner.Runtime
                 
                 // Add additional force down a slope.
                 float slopeFactor = Mathf.Clamp01(context.SlopeSensor.CurrentSlopeAngle / context.SlopeSensor.MaxSlopeAngle);
-                bonusForce += Vector3.ProjectOnPlane(Vector3.down, context.SlopeSensor.Hit.normal) * (slopeBoost * slopeFactor);
+                bonusForce += Vector3.ProjectOnPlane(Vector3.down, context.SlopeSensor.Hit.normal) * (SlopeBoost * slopeFactor);
             }
             else
             {
@@ -57,13 +56,13 @@ namespace CharonsCorner.Runtime
                 rightOriented = context.Orientation.right;
             }
 
-            Vector3 inputForce = forwardOriented * (input.y * acceleration) + rightOriented * (input.x * acceleration);
+            Vector3 inputForce = forwardOriented * (input.y * Acceleration) + rightOriented * (input.x * Acceleration);
             context.Rb.AddForce(inputForce + bonusForce, ForceMode.Acceleration);
             
             // Clamp max velocity manually
-            if (context.Rb.linearVelocity.magnitude > maxSpeed)
+            if (context.Rb.linearVelocity.magnitude > MaxSpeed)
             {
-                context.Rb.linearVelocity = context.Rb.linearVelocity.normalized * maxSpeed;
+                context.Rb.linearVelocity = context.Rb.linearVelocity.normalized * MaxSpeed;
             }
             
         }
