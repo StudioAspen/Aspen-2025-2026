@@ -5,15 +5,20 @@ public class PlayerStanceDisplay : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private PlayerController playerController; 
-    [SerializeField] private TMP_Text stanceText; 
+    [SerializeField] private TMP_Text infoText;
+
 
     void Update()
     {
         //Null Check:
-        if (playerController == null || stanceText == null) return;
+        if (playerController == null || infoText == null) return;
 
-        // Get the current stance from the player controller
+
         var stance = playerController._state.Stance;
-        stanceText.text = $"Stance: {stance}";
+        var velocity = playerController._state.Velocity;
+        var acceleration = playerController._state.Acceleration;
+        var speed = velocity.magnitude;
+
+        infoText.text = $"Stance: {stance}\n" + $"Velocity: {velocity:F2}\n" + $"Speed: {speed:F2}\n";
     }
 }

@@ -3,8 +3,11 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    [Header("Refrences: ")]
     [SerializeField] private PlayerController playerCharacter;
     [SerializeField] private PlayerCamera playerCamera;
+    [SerializeField] private CameraSpring cameraSpring;
+    [SerializeField] private CameraLean cameraLean;
 
     private InputActions _inputActions;
 
@@ -15,6 +18,9 @@ public class Player : MonoBehaviour
 
         playerCharacter.Initialize();
         playerCamera.Initialize(playerCharacter.getCameraTarget());
+
+        cameraSpring.Initialize();
+        cameraLean.Initialize();
     }
 
     void Update()
@@ -43,6 +49,12 @@ public class Player : MonoBehaviour
 
     void LateUpdate()
     {
-        playerCamera.UpdatePosition(playerCharacter.getCameraTarget());
+        var deltaTime = Time.deltaTime;
+        var cameraTarget = playerCharacter.getCameraTarget();
+        var state = playerCharacter.GetState();
+
+        playerCamera.UpdatePosition(cameraTarget);
+        cameraSpring.UpdateSpring(deltaTime, cameraTarget.up);
+        cameraLean.UpdateLean(deltaTime, state.Stance is Stance.Slide, state.Acceleration, cameraTarget.up);
     }
 }
