@@ -20,6 +20,7 @@ namespace CharonsCorner.Runtime
 
         public Rigidbody Rb { get; private set; }
         public SphereCollider Collider { get; private set; }
+        public SlopeSensor SlopeSensor { get; private set; }
         public bool Grounded { get; private set; }
         
         [field: Header("State Machine")]
@@ -34,6 +35,7 @@ namespace CharonsCorner.Runtime
         {
             Rb = GetComponent<Rigidbody>();
             Collider = GetComponent<SphereCollider>();
+            SlopeSensor = GetComponentInChildren<SlopeSensor>();
             SetupStateMachine();
         }
 
@@ -76,6 +78,11 @@ namespace CharonsCorner.Runtime
         private void CheckGrounded()
         {
             Grounded = Physics.CheckSphere(transform.position + Vector3.down * GroundCheckLength, Collider.radius * 0.9f, GroundLayer);
+        }
+
+        public void setGravity(float value)
+        {
+            GravityAmount  = value;            
         }
 
         /// <summary>

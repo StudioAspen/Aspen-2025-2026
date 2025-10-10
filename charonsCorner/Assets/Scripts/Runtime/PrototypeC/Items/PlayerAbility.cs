@@ -1,6 +1,7 @@
 using CharonsCorner.Runtime;
 using UnityEngine;
 using CharonsCorner.ItemPowers;
+using System.Collections;
 
 public class PlayerAbility : MonoBehaviour
 {
@@ -9,6 +10,13 @@ public class PlayerAbility : MonoBehaviour
     public int currentItemIndex = -1;
     public int currentUses;
     public Rigidbody playerRb;
+
+    private IEnumerator changeGravity(float gravity, float duration)
+    {
+        GetComponent<PrototypePlayerController>().setGravity(gravity);
+        yield return new WaitForSeconds(duration);
+        GetComponent<PrototypePlayerController>().setGravity(30);
+    }
 
     void Start()
     {
@@ -23,5 +31,10 @@ public class PlayerAbility : MonoBehaviour
             itemPowerSO.itemList[currentItemIndex].GetComponent<ItemPower>().itemPower(playerRb);
             currentUses--;
         }
+    }
+
+    public void modGravity(float gravity, float duration)
+    {
+        StartCoroutine(changeGravity(gravity, duration));
     }
 }
