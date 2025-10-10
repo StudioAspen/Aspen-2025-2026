@@ -42,7 +42,7 @@ namespace CharonsCorner.Runtime
             Debug.Log($"Bootstrapped scene, {targetScene.Name}, successfully.");
             GameManager.Instance.ChangeGameState(_bootstrapConfig.GetSceneInitialState(targetScene), true);
 #else
-            await SceneManager.LoadSceneAsync(titleScene.Name);
+            await SceneManager.LoadSceneAsync(_titleScene.Name);
             GameManager.Instance.ChangeGameState(GameState.Title, true);
 #endif
             Destroy(gameObject);
