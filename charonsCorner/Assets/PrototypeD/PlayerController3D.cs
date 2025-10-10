@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 using Unity.Cinemachine;
 using UnityEngine.SceneManagement;
+using MoreMountains.Tools;
 
 [RequireComponent(typeof(CharacterController))]
 public class PlayerController3D : MonoBehaviour
@@ -228,6 +229,11 @@ public class PlayerController3D : MonoBehaviour
 
     }
 
+
+    public float SpeedThreshold = 16f;
+    // public float resetBaseSpeed = 12;
+    public float baseSpeedIncrease = 2;
+
     void OnControllerColliderHit(ControllerColliderHit hit)
     {
        
@@ -248,6 +254,23 @@ public class PlayerController3D : MonoBehaviour
                 resetSpeed();
             }
 
+        }
+
+        if(hit.gameObject.tag == "RegPin")
+        {
+            Destroy(hit.gameObject);
+        }
+
+        if (hit.gameObject.tag == "HevPin")
+        {
+            if (currentForwardSpeed >= SpeedThreshold)
+            {
+                forwardCruiseSpeed += baseSpeedIncrease;
+                Destroy(hit.gameObject);
+            }
+
+            else if (currentForwardSpeed <= SpeedThreshold)
+                resetSpeed();
         }
     }
 
@@ -560,12 +583,16 @@ public class PlayerController3D : MonoBehaviour
 
     private void UpdateSpeedsAndStates(float dt)
     {
-      
+
+        // CONTSANT GRAVITY
+        ApplyConstantGravity(dt);
+
+
         // If we are jumping we only update jump vertical and keep forward at cruise
         if (isJumping)
         {
             // Apply gravity
-            verticalVelocity += gravity * dt;
+            // verticalVelocity += gravity * dt;
 
             // Move vertically
             Vector3 verticalMove = Vector3.up * verticalVelocity * dt;
@@ -573,10 +600,10 @@ public class PlayerController3D : MonoBehaviour
 
             // Check if grounded after moving
             // Check if grounded after moving
-            if (cc.isGrounded && verticalVelocity <= 0f)
+            if (isGrounded() && verticalVelocity <= 0f)
             {
                 isJumping = false;
-                verticalVelocity = -1f; // small downward to keep grounded
+                verticalVelocity = -0.1f; // small downward to keep grounded
                 knockoverMode = false;  //  landed, turn off knockover
             }
             // Still update lateral while in air
@@ -707,10 +734,11 @@ public class PlayerController3D : MonoBehaviour
             // No sideways sliding while braking
             currentLateralSpeed = 0f;
         }
-     
+
 
         // Lateral acceleration (works in all non-jump states too, and while jumping)
         UpdateLateralSpeed(dt);
+        // ApplyMovement();
     }
    
     private void UpdateLateralSpeed(float dt)
@@ -819,4 +847,32 @@ public class PlayerController3D : MonoBehaviour
         forwardCruiseSpeed = 12;
         numSpeedIncreases = 0; // reset speed increases
     }
+
+    private void ApplyConstantGravity(float dt)
+    {
+        if (!isGrounded())
+            verticalVelocity += gravity * dt;
+        else
+        {
+            if (verticalVelocity <= 0)
+                verticalVelocity = -0.1f;
+        }
+        // apply vertical movement
+        Vector3 verticalMove = Vector3.up * verticalVelocity * dt;
+        cc.Move(verticalMove);
+    }
+
+    public LayerMask groundLayer;
+
+    private bool isGrounded()
+    {
+        float raylength = 1.5f;
+        Vector3 rayStart = transform.position + Vector3.up * 0.1f;
+
+        if (Physics.Raycast(rayStart, Vector3.down, raylength, groundLayer))
+            return true;
+
+        return cc.isGrounded;
+    }
+
 }

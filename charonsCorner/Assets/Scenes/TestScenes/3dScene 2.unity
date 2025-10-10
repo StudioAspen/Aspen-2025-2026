@@ -445,8 +445,8 @@ GameObject:
   - component: {fileID: 220909724}
   - component: {fileID: 220909729}
   m_Layer: 0
-  m_Name: Capsule
-  m_TagString: Pin
+  m_Name: RegPin
+  m_TagString: RegPin
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -501,7 +501,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 7642af0b783286240bb58af9b7be7525, type: 2}
+  - {fileID: -4565884009001823619, guid: 9fdd4b2a4fbf52941a5fb83cfb997936, type: 3}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -540,7 +540,7 @@ Transform:
   m_GameObject: {fileID: 220909723}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 13.066407, y: 5.337327, z: 43.232414}
+  m_LocalPosition: {x: 15.15, y: 5.337327, z: 14.44}
   m_LocalScale: {x: 1.58, y: 1.58, z: 1.58}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -886,7 +886,7 @@ Transform:
   m_GameObject: {fileID: 472455065}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 3.76, z: -8.8}
+  m_LocalPosition: {x: 0, y: 3.76, z: -44.3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1041,8 +1041,8 @@ GameObject:
   - component: {fileID: 603478593}
   - component: {fileID: 603478592}
   m_Layer: 0
-  m_Name: Capsule (1)
-  m_TagString: Pin
+  m_Name: HevPin
+  m_TagString: HevPin
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1118,7 +1118,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 7642af0b783286240bb58af9b7be7525, type: 2}
+  - {fileID: 2100000, guid: 381af3e20fb6fd24aa63a18af833e98a, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1157,7 +1157,7 @@ Transform:
   m_GameObject: {fileID: 603478591}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 12.726408, y: 10.437326, z: 20.062414}
+  m_LocalPosition: {x: 10.25, y: 5.63, z: 14.3}
   m_LocalScale: {x: 1.58, y: 1.58, z: 1.58}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -1311,7 +1311,7 @@ GameObject:
   - component: {fileID: 786049823}
   - component: {fileID: 786049822}
   - component: {fileID: 786049821}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Plane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3014,7 +3014,7 @@ Transform:
   m_GameObject: {fileID: 1455225511}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 3.76, z: -8.8}
+  m_LocalPosition: {x: 0, y: 3.76, z: -44.3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3090,6 +3090,7 @@ GameObject:
   - component: {fileID: 1639137165}
   - component: {fileID: 1639137164}
   - component: {fileID: 1639137170}
+  - component: {fileID: 1639137171}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
@@ -3204,6 +3205,10 @@ MonoBehaviour:
   brakeHoldTime: 2
   speedPercentageIncrease: 1.4
   numSpeedIncreases: 0
+  brakeAngleAdjustSpeed: 135
+  brakeAngleAdjustSpeedMin: 50
+  brakeAngleAdjustSpeedMax: 175
+  brakeTurnAngle: 90
   boostFOV: 120
   boostFOVTime: 0.2
   boostZOffsetDelta: -3
@@ -3301,7 +3306,6 @@ MonoBehaviour:
   maxJumpChargeTime: 1.8
   lateralReleaseDamping: 20
   lateralAxis: Horizontal
-  brakeTurnAngle: 90
   gravity: -40
   squashedRadius: 0.35
   vcam: {fileID: 1455225513}
@@ -3314,11 +3318,15 @@ MonoBehaviour:
   cameraYawAmount: 90
   cameraYawLerpSpeed: 5
   knockoverMode: 0
-  brakeAngleAdjustSpeed: 135
   brakePreview: {fileID: 43169266}
   crouchHeight: 0
   normalHeight: 2
   dmScript: {fileID: 1639137170}
+  SpeedThreshold: 16
+  baseSpeedIncrease: 2
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 8
 --- !u!143 &1639137165
 CharacterController:
   m_ObjectHideFlags: 0
@@ -3406,7 +3414,7 @@ Transform:
   m_GameObject: {fileID: 1639137163}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.04, z: 0}
+  m_LocalPosition: {x: 0, y: 1.04, z: -35.5}
   m_LocalScale: {x: 2.66, y: 2.66, z: 2.66}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -3439,6 +3447,27 @@ MonoBehaviour:
   reachedMaxSpeed: 0
   slider1: {fileID: 28014075}
   PC3DScript: {fileID: 1639137164}
+--- !u!135 &1639137171
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1639137163}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1641115066
 GameObject:
   m_ObjectHideFlags: 0
@@ -4050,7 +4079,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!65 &1933506583
 BoxCollider:
   m_ObjectHideFlags: 0
