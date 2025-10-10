@@ -13,7 +13,7 @@ namespace CharonsCorner.Runtime
         [Header("Base Impulses")]
         [SerializeField] private float _baseHorizontalImpulse = 6f;
         [SerializeField] private float _baseUpwardImpulse = 4f;
-        [SerializeField] private float _baseTorqueImpulse = 2f; // So the pin can spin a bit
+        [SerializeField] private float _baseTorqueImpulse = 1f; // So the pin can spin a bit
 
         [Header("Speed")]
         [SerializeField] private float _minSpeedForKnockback = 1f;
