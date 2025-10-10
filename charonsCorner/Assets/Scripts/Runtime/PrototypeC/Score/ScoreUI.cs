@@ -8,7 +8,7 @@ namespace CharonsCorner.Runtime
     /// </summary>
     public class ScoreUI : MonoBehaviour
     {
-        private TextMeshProUGUI _scoreText;
+        [SerializeField] private TextMeshProUGUI _scoreText;
 
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
