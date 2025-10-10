@@ -30,7 +30,6 @@ public class PlayerAbility : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space) && currentItemIndex > -1 && currentUses > 0) 
         {
             itemPowerSO.itemList[currentItemIndex].GetComponent<ItemPower>().itemPower(playerRb);
-            currentUses--;
         }
     }
 
