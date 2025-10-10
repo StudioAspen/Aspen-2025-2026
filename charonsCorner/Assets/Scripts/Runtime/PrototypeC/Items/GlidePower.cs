@@ -31,6 +31,7 @@ namespace CharonsCorner.Runtime
             //Rb.AddForce(myUp * jumpForce, ForceMode.Impulse);
             //Rb.AddForce(go.GetComponent<PrototypePlayerController>().Orientation.up * jumpForce, ForceMode.Impulse);
             go.GetComponent<PlayerAbility>().modGravity(gravity, glideDuration);
+            go.GetComponent<PlayerAbility>().currentUses--;
         }
     }
 }
