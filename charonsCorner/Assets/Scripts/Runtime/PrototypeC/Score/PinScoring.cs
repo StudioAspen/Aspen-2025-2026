@@ -36,7 +36,7 @@ namespace CharonsCorner.Runtime
         }
 
         /// <summary>
-        /// Count this pin as scored.
+        /// Add the score to the player's score, and count this pin as scored.
         /// </summary>
         private void ScoreOnce()
         {
