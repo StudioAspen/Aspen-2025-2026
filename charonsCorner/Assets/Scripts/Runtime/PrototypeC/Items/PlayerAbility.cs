@@ -10,6 +10,7 @@ public class PlayerAbility : MonoBehaviour
     public int currentItemIndex = -1;
     public int currentUses;
     public Rigidbody playerRb;
+    public GameObject bulletShooter;
 
     private IEnumerator changeGravity(float gravity, float duration)
     {
@@ -36,5 +37,10 @@ public class PlayerAbility : MonoBehaviour
     public void modGravity(float gravity, float duration)
     {
         StartCoroutine(changeGravity(gravity, duration));
+    }
+
+    public void enableBulletShooter()
+    {
+        bulletShooter.SetActive(true);
     }
 }

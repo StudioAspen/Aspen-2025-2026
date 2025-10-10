@@ -7,5 +7,6 @@ namespace CharonsCorner.Runtime
     public class ItemPowerSO : ScriptableObject
     {
         public List<GameObject> itemList = new List<GameObject>();
+
     }
 }

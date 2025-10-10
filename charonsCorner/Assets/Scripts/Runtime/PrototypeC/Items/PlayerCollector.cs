@@ -27,6 +27,10 @@ public class PlayerCollector : MonoBehaviour
         {
             playerAbility.currentItemIndex = other.GetComponent<ItemCollectable>().itemIndex;
             playerAbility.currentUses = itemPowerSO.itemList[playerAbility.currentItemIndex].GetComponent<ItemPower>().itemUses;
+            if (other.GetComponent<ItemCollectable>().itemIndex == 3)
+            {
+                playerAbility.enableBulletShooter();
+            }
             Destroy(other.gameObject);
         }
     }
