@@ -10,6 +10,7 @@ namespace CharonsCorner.Runtime
         public GameObject player;
         public Vector3 playerOffset;
         public GameObject firePoint;
+        public GameObject bullet;
 
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
@@ -20,7 +21,13 @@ namespace CharonsCorner.Runtime
         // Update is called once per frame
         void Update()
         {
-        
+            transform.position = player.transform.position + playerOffset;
+            Vector3 mousePos = Input.mousePosition;
+            mousePos.z = -(transform.position.x - Camera.main.transform.position.x);
+            Vector3 worldPos = Camera.main.ScreenToWorldPoint(mousePos);
+            transform.LookAt(worldPos);
         }
+
+
     }
 }
