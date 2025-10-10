@@ -29,8 +29,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1908398185359762518}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.25340134, y: 0.000000028829616, z: -0.000000007551949, w: 0.9673613}
-  m_LocalPosition: {x: 0, y: 7.14, z: -4}
+  m_LocalRotation: {x: 0.18033099, y: 0.00000000414151, z: -7.592899e-10, w: 0.98360604}
+  m_LocalPosition: {x: 0, y: 7.14, z: -5.93}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -103,13 +103,13 @@ MonoBehaviour:
   Radius: 10
   Orbits:
     Top:
-      Radius: 2
-      Height: 5
+      Radius: 4.86
+      Height: 4.12
     Center:
-      Radius: 4
+      Radius: 5.93
       Height: 2.25
     Bottom:
-      Radius: 2.5
+      Radius: 4.53
       Height: 0.1
     SplineCurvature: 0.5
   RecenteringTarget: 2
@@ -592,7 +592,7 @@ Rigidbody:
   m_GameObject: {fileID: 7899314738565538664}
   serializedVersion: 4
   m_Mass: 8
-  m_Drag: 2
+  m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
@@ -629,18 +629,23 @@ MonoBehaviour:
     m_Bits: 8
   <Orientation>k__BackingField: {fileID: 4359243323156565108}
   <StateMachine>k__BackingField:
-    currentStateName: 
+    currentStateName: AirSuperState
   <GroundState>k__BackingField:
     <SubStateMachine>k__BackingField:
-      currentStateName: 
-    <GroundDrag>k__BackingField: 2
+      currentStateName: None
     <MoveState>k__BackingField:
-      <Speed>k__BackingField: 1
+      <MaxSpeed>k__BackingField: 35
+      <Acceleration>k__BackingField: 50
+      <Deceleration>k__BackingField: 15
+      <SlopeBoost>k__BackingField: 150
   <AirState>k__BackingField:
     <SubStateMachine>k__BackingField:
-      currentStateName: 
+      currentStateName: AirMoveState
     <MoveState>k__BackingField:
-      <Speed>k__BackingField: 0.5
+      <MaxFlatSpeed>k__BackingField: 40
+      <MaxVerticalSpeed>k__BackingField: 20
+      <Acceleration>k__BackingField: 20
+      <Deceleration>k__BackingField: 5
 --- !u!114 &7562710238517373384
 MonoBehaviour:
   m_ObjectHideFlags: 0

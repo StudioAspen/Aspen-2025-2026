@@ -6,8 +6,6 @@ namespace CharonsCorner.Runtime
     public class GroundSuperState : SuperState<PrototypePlayerController>
     {
         public override State<PrototypePlayerController> InitialSubState => MoveState;
-
-        [field: SerializeField] public float GroundDrag {get; private set;}
         [field: SerializeField] public GroundIdleState IdleState { get; private set; } = new();
         [field: SerializeField] public GroundMoveState MoveState { get; private set; } = new();
 
@@ -19,7 +17,6 @@ namespace CharonsCorner.Runtime
 
         private protected override void OnEnter()
         {
-            context.Rb.linearDamping = GroundDrag;
         }
 
         private protected override void OnExit()
@@ -46,8 +43,8 @@ namespace CharonsCorner.Runtime
             }
             else
             {
-                context.CurrentSubState = IdleState.GetType().Name;
-                return IdleState;
+                // context.CurrentSubState = IdleState.GetType().Name;
+                // return IdleState;
                 
             }
             return null;
