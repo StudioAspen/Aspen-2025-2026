@@ -1,4 +1,5 @@
 using UnityEngine;
+using DG.Tweening;
 
 namespace CharonsCorner.Runtime
 {
@@ -6,7 +7,7 @@ namespace CharonsCorner.Runtime
     [RequireComponent(typeof(SphereCollider))]
     public class PlayerController : MonoBehaviour
     {
-        public InputManager Input { get; private set; } // For quick access
+        public InputManager Input { get; private set; }
         public Rigidbody RigidBody { get; private set; }
         public SphereCollider SphereCollider { get; private set; }
 
@@ -15,11 +16,18 @@ namespace CharonsCorner.Runtime
         [field: SerializeField] public GroundedSuperState GroundedSuperState { get; private set; } = new();
         [field: SerializeField] public AirborneSuperState AirborneSuperState { get; private set; } = new();
 
-        /// <summary>
-        /// Easy access to whether the player is grounded or not from the context. GroundedSuperState handles the actual checking.
-        /// </summary>
         public bool IsGrounded => GroundedSuperState.IsGrounded;
         public float CurrentSpeed => RigidBody.linearVelocity.magnitude;
+
+        // --- Size Toggle Fields ---
+        [Header("Size Settings")]
+        public Vector3 normalScale = Vector3.one;
+        public Vector3 bigScale = new Vector3(2f, 2f, 2f);
+        public float normalMass = 1f;
+        public float bigMass = 4f;
+        public float normalGravity = -9.81f;
+        public float bigGravity = -19.62f; // Example: double gravity when big
+        private bool isBig = false;
 
         private void Awake()
         {
@@ -28,19 +36,9 @@ namespace CharonsCorner.Runtime
             SphereCollider = GetComponent<SphereCollider>();
 
             SetupStateMachine();
-        }
 
-        /// <summary>
-        /// Runs in awake. Sets up the state machine and all the states for the player controller.
-        /// </summary>
-        private void SetupStateMachine()
-        {
-            StateMachine = new StateMachine<PlayerController>(this);
-
-            GroundedSuperState.Init(StateMachine, this);
-            AirborneSuperState.Init(StateMachine, this);
-
-            StateMachine.ChangeState(GroundedSuperState, true);
+            // Ensure starting size is normal
+            SetSize(false);
         }
 
         private void OnDestroy()
@@ -50,22 +48,17 @@ namespace CharonsCorner.Runtime
 
         private void OnDrawGizmos()
         {
-            // Draws the ground check sphere in the editor for visualization
             Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(transform.position + GroundedSuperState.GroundCheckDistance * Vector3.down, GroundedSuperState.GroundCheckRadius);
+            Gizmos.DrawWireSphere(transform.position + GroundedSuperState.BaseGroundCheckDistance * Vector3.down, GroundedSuperState.BaseGroundCheckRadius);
 
-           
             if (Application.isPlaying)
             {
-                // Forward (Z axis)
                 Gizmos.color = Color.blue;
                 Gizmos.DrawLine(transform.position, transform.position + transform.forward * 2f);
 
-                // Right (X axis)
                 Gizmos.color = Color.green;
                 Gizmos.DrawLine(transform.position, transform.position + transform.right * 2f);
 
-                // Velocity direction (actual movement)
                 if (RigidBody != null)
                 {
                     Gizmos.color = Color.yellow;
@@ -78,13 +71,48 @@ namespace CharonsCorner.Runtime
         private void Update()
         {
             StateMachine.Update();
+
+            // --- Size Toggle Logic ---
+            if (UnityEngine.Input.GetMouseButtonDown(1))
+            {
+                isBig = !isBig;
+                SetSize(isBig);
+            }
         }
 
         private void FixedUpdate()
         {
             GroundedSuperState.CheckGrounded();
-
             StateMachine.FixedUpdate();
+
+            // Apply custom gravity
+            float gravity = isBig ? bigGravity : normalGravity;
+            RigidBody.AddForce(Vector3.up * gravity * RigidBody.mass, ForceMode.Force);
+        }
+
+        private void SetupStateMachine()
+        {
+            StateMachine = new StateMachine<PlayerController>(this);
+
+            GroundedSuperState.Init(StateMachine, this);
+            AirborneSuperState.Init(StateMachine, this);
+
+            StateMachine.ChangeState(GroundedSuperState, true);
+        }
+
+        // --- Helper to Set Size ---
+        private void SetSize(bool big)
+        {
+            Vector3 targetScale = big ? bigScale : normalScale;
+            float targetMass = big ? bigMass : normalMass;
+            float targetGravity = big ? bigGravity : normalGravity;
+            float duration = 0.3f; // If using DOTween
+
+            // Smoothly animate the scale change
+            transform.DOScale(targetScale, duration).SetEase(Ease.OutBack);
+
+            // Set Rigidbody mass
+            RigidBody.mass = targetMass;
         }
     }
 }
