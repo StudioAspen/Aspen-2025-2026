@@ -29,7 +29,7 @@ public class PlayerController3D : MonoBehaviour
     [Tooltip("How fast forward speed should be reduced while braking")]
     public float brakeTargetSpeed = 1.5f;
     [Tooltip("Time to interpolate from current speed down to brakeTargetSpeed")]
-    public float brakeTime = 0.15f;
+    public float brakeTime = 0.5f;
     public AnimationCurve brakeCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
 
     [Tooltip("Boost speed applied immediately when player releases brake")]
@@ -844,7 +844,7 @@ public class PlayerController3D : MonoBehaviour
     // Fonz - reset speed function, called on hitting an obstacle, used to reset speed to base value
     public void resetSpeed()
     {
-        forwardCruiseSpeed = 12;
+        forwardCruiseSpeed = dmScript.maxPlayerSpeed;
         numSpeedIncreases = 0; // reset speed increases
     }
 
