@@ -36,7 +36,7 @@ public class TestUI : MonoBehaviour
             {
                 textMesh.text = "Speed: " + playerController3D.GetCurrentForwardSpeed().ToString("F2") +
                     "\n Speed Increases: " + playerController3D.numSpeedIncreases.ToString() +
-                    "\n Brake Time: " + playerController3D.brakeHoldTime.ToString() +
+                    "\n Brake Turn Speed: " + playerController3D.brakeAngleAdjustSpeed.ToString() +
                     "\n BrakeHoldElapsed: " + playerController3D.GetBrakeHoldElapsed().ToString() +
                     "\n BrakeHoldTime: " + playerController3D.brakeHoldTime.ToString();
             }

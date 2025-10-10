@@ -47,6 +47,16 @@ public class PlayerController3D : MonoBehaviour
     [Tooltip("Number of Speed Increases applied")]
     public int numSpeedIncreases = 0; // Fonz - number of speed increases applied
 
+    [Tooltip("How fast the brake angle rotates while holding A/D (degrees per second).")]
+    public float brakeAngleAdjustSpeed; // Fonz - Being Adjusted for "Implement Less left and right control based on speed" card
+    public float brakeAngleAdjustSpeedMin = 50f; // Fonz - Minimum turn speed at max speed
+    public float brakeAngleAdjustSpeedMax = 175f; // Fonz - Maximum turn speed at min speed
+
+    private float currentBrakeAngle = 0f;     // <<< NEW
+    
+    [Tooltip("Rotation snap angle applied when rotating in brake (degrees). +/- 90 by default.")]
+    public float brakeTurnAngle = 90f;
+
     [Header("Boost FOV")]
     [Tooltip("FOV to zoom out to during boost burst")]
     public float boostFOV = 70f;
@@ -104,8 +114,6 @@ public class PlayerController3D : MonoBehaviour
     [Tooltip("Key/axis for left/right movement (uses Unity's Horizontal by default). You can also use A/D or arrows.")]
     public string lateralAxis = "Horizontal";
 
-    [Tooltip("Rotation snap angle applied when rotating in brake (degrees). +/- 90 by default.")]
-    public float brakeTurnAngle = 90f;
     [Header("Jump/Gravity Settings")]
     public float gravity = -20f;     // downward acceleration
     private float verticalVelocity;  // current vertical speed
@@ -153,10 +161,7 @@ public class PlayerController3D : MonoBehaviour
     // Add this at the top with other state flags
     [Header("Knockover Mode")]
     public bool knockoverMode = false;
-    [Tooltip("How fast the brake angle rotates while holding A/D (degrees per second).")]
-    public float brakeAngleAdjustSpeed = 60f; // <<< NEW
 
-    private float currentBrakeAngle = 0f;     // <<< NEW
     [Header("Brake Preview")]
     public Transform brakePreview; // assign child object in inspector
 
@@ -300,7 +305,7 @@ public class PlayerController3D : MonoBehaviour
             lateralHoldTime = 0f;
         }
 
-        // ---- BRAKE (Left Mouse) ----
+        // ---- BRAKE (Left Shift) ----
         if (Input.GetKeyDown(KeyCode.LeftShift) && dmScript.chargeCounter != 0)
         {
             if (!isJumping && !isSquashing)
@@ -314,6 +319,9 @@ public class PlayerController3D : MonoBehaviour
 
         if (isBraking)
         {
+            // Fonz - Implement Less left and right control based on speed
+            brakeAngleAdjustSpeed = Mathf.Lerp(brakeAngleAdjustSpeedMin, brakeAngleAdjustSpeedMax, (float)numSpeedIncreases / 4f); // Fonz - Implement Less left and right control based on speed
+
             // --- Angle control ---
             float h = Input.GetAxisRaw("Horizontal"); // -1,0,1
             if (Mathf.Abs(h) > 0.01f)
@@ -616,8 +624,11 @@ public class PlayerController3D : MonoBehaviour
             {
                 Debug.Log("perma boost");
                 isBoostRecovering = false;
-                forwardCruiseSpeed = forwardCruiseSpeed * speedPercentageIncrease; //Fonz - increase speed after each boost
-                numSpeedIncreases += 1; // Fonz - count number of speed increases
+                if (numSpeedIncreases < 4) // Fonz - limit number of speed increases to 4
+                {
+                    forwardCruiseSpeed = forwardCruiseSpeed * speedPercentageIncrease; //Fonz - increase speed after each boost
+                    numSpeedIncreases += 1; // Fonz - count number of speed increases
+                }
                 currentForwardSpeed = forwardCruiseSpeed;
             }
         }
