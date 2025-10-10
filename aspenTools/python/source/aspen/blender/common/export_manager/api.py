@@ -2,6 +2,10 @@ import os
 
 import bpy
 
+from aspen.core.telemetry import trace
+_tracer = trace.get_blender_tracer()
+
+@trace.trace_blender_function()
 def save_textures():
     """Save textures in blend file."""
     for image in bpy.data.images:
@@ -15,6 +19,7 @@ def save_textures():
             image.file_format = 'PNG'
             image.save()
 
+@trace.trace_blender_function()
 def export_model_fbx(file_path: str):
     """Export selection as FBX at the specified file path.
 
@@ -38,6 +43,7 @@ def export_model_fbx(file_path: str):
         axis_up='Z'
     )
 
+@trace.trace_blender_function()
 def export_animation_fbx(file_path: str):
     """Export selection as FBX at the specified file path.
 

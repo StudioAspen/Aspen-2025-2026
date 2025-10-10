@@ -1,4 +1,11 @@
 # Charon's Corner
+[EGD Collective's Game Studo Program's](https://www.egdcollective.org/fellowship) 2025-2026 Game.
+Planned Steam release: April 2026.
+
+## Overview
+Charon's Corner is a high-speed 3D cart-racing inspired project reimagining Greek Mythology’s ferryman of death as a bowler who sends souls to the afterlife by bowling their skulls down a bowling lane that reconnects them with their past-lives.
+
+[Slides](https://docs.google.com/presentation/d/1_qFCe_0lGyAp1YJ8p8N0U-g-jGhcmMnU0f31RmEgCIs/edit?slide=id.g3625d78e2bf_0_57#slide=id.g3625d78e2bf_0_57)
 
 ## Technology
 Unity Version 6000.0.25f1

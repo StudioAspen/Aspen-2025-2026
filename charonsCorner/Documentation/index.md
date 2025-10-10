@@ -2,10 +2,7 @@
 _layout: landing
 ---
 
-# This is the **HOMEPAGE**.
-
-Refer to [Markdown](http://daringfireball.net/projects/markdown/) for how to write markdown files.
-
-## Quick Start Notes:
-
-1. Add images to the *images* folder if the file is referencing an image.
+# API Documentation for Charon's Corner
+1. Documentation is automatically generated from the XML comments in our scripts
+2. Contact @samsonahh on Discord if your scripts are not here
+3. Link to non-programming docs: [Aspen Docs](https://sites.google.com/egdcollective.org/studioaspen/home?authuser=3)
