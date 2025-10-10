@@ -32,22 +32,22 @@ namespace CharonsCorner.Runtime
             Vector3 worldPos = Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0));
             transform.LookAt(worldPos);
 
-            if (Input.GetKeyDown(KeyCode.Space) && timer <= 0 && itemUses > 0)
+            if (Input.GetKeyDown(KeyCode.Space) &&  playerAbility.currentUses > 0)
             {
                 GameObject newBullet = Instantiate(bullet, firePoint.transform.position, firePoint.transform.rotation);
                 newBullet.GetComponent<Rigidbody>().AddForce(-newBullet.transform.forward * bulletForce, ForceMode.Impulse);
-                timer = shootCoolDown;
+                //timer = shootCoolDown;
                 playerAbility.currentUses--;
-                if (playerAbility.currentUses == 0)
+                /*if (playerAbility.currentUses == 0)
                 {
                     gameObject.SetActive(false);
-                }
+                }*/
             }
 
-            if (timer > 0)
+            /*if (timer > 0)
             {
                 timer -= Time.deltaTime;
-            }
+            }*/
         }
 
 
