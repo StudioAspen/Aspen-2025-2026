@@ -310,7 +310,7 @@ GameObject:
   - component: {fileID: 132572774}
   m_Layer: 0
   m_Name: Capsule (4)
-  m_TagString: Pin
+  m_TagString: RegPin
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -548,7 +548,7 @@ GameObject:
   - component: {fileID: 220909729}
   m_Layer: 0
   m_Name: Capsule
-  m_TagString: Pin
+  m_TagString: RegPin
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1293,7 +1293,7 @@ GameObject:
   - component: {fileID: 603478592}
   m_Layer: 0
   m_Name: Capsule (1)
-  m_TagString: Pin
+  m_TagString: RegPin
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1562,7 +1562,7 @@ GameObject:
   - component: {fileID: 786049823}
   - component: {fileID: 786049822}
   - component: {fileID: 786049821}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Plane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2455,7 +2455,7 @@ GameObject:
   - component: {fileID: 1027946962}
   m_Layer: 0
   m_Name: Capsule (2)
-  m_TagString: Pin
+  m_TagString: RegPin
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2627,7 +2627,7 @@ GameObject:
   - component: {fileID: 1204835294}
   m_Layer: 0
   m_Name: Capsule (5)
-  m_TagString: Pin
+  m_TagString: HevPin
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2703,7 +2703,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 0971fdb959759a046bdfc5d2ad10bb46, type: 2}
+  - {fileID: 2100000, guid: 27873ec6b29e3b549991ab85fac9c9f2, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2763,7 +2763,7 @@ GameObject:
   - component: {fileID: 1253342725}
   m_Layer: 0
   m_Name: Capsule (6)
-  m_TagString: Pin
+  m_TagString: RegPin
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3453,7 +3453,7 @@ MonoBehaviour:
   brakeHoldMaxTime: 1
   brakeHoldMinTime: 0.25
   brakeHoldTime: 1
-  speedPercentageIncrease: 1.4
+  speedPercentageIncrease: 1.2
   numSpeedIncreases: 0
   brakeAngleAdjustSpeed: 135
   brakeAngleAdjustSpeedMin: 50
@@ -3572,6 +3572,11 @@ MonoBehaviour:
   crouchHeight: 0
   normalHeight: 2
   dmScript: {fileID: 1639137170}
+  SpeedThreshold: 16
+  baseSpeedIncrease: 2
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 8
 --- !u!143 &1639137165
 CharacterController:
   m_ObjectHideFlags: 0

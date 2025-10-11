@@ -259,6 +259,8 @@ public class PlayerController3D : MonoBehaviour
         if(hit.gameObject.tag == "RegPin")
         {
             Destroy(hit.gameObject);
+            forwardCruiseSpeed += 1;
+
         }
 
         if (hit.gameObject.tag == "HevPin")
@@ -342,25 +344,26 @@ public class PlayerController3D : MonoBehaviour
 
         if (isBraking)
         {
-            // Fonz - Implement Less left and right control based on speed
-            brakeAngleAdjustSpeed = Mathf.Lerp(brakeAngleAdjustSpeedMin, brakeAngleAdjustSpeedMax, (float)numSpeedIncreases / 4f); // Fonz - Implement Less left and right control based on speed
+            // Adjust turn responsiveness based on speed level
+            brakeAngleAdjustSpeed = Mathf.Lerp(brakeAngleAdjustSpeedMin, brakeAngleAdjustSpeedMax, (float)numSpeedIncreases / 4f);
 
-            // --- Angle control ---
-            float h = Input.GetAxisRaw("Horizontal"); // -1,0,1
-            if (Mathf.Abs(h) > 0.01f)
-            {
-                currentBrakeAngle += h * brakeAngleAdjustSpeed * dt;
-                currentBrakeAngle = Mathf.Clamp(currentBrakeAngle, -brakeTurnAngle, brakeTurnAngle);
-            }
+            // --- Mouse control ---
+            // Get mouse delta X each frame (movement since last frame)
+            float mouseX = Input.GetAxisRaw("Mouse X");
 
-            // --- Camera dutch and yaw feedback ---
-            // tilt camera proportionally to stored angle
+            // Scale mouse sensitivity relative to brakeAngleAdjustSpeed
+            // This controls how far the mouse can rotate the angle each frame.
+            float sensitivity = brakeAngleAdjustSpeed * 0.02f; // tweak this multiplier for feel
+
+            // Increment angle based on mouse delta
+            currentBrakeAngle += mouseX * sensitivity;
+            currentBrakeAngle = Mathf.Clamp(currentBrakeAngle, -brakeTurnAngle, brakeTurnAngle);
+
+            // --- Camera dutch + yaw feedback ---
             targetDutch = (currentBrakeAngle / brakeTurnAngle) * maxDutchAngle;
-
-            // yaw camera proportionally too
             targetCameraYaw = (currentBrakeAngle / brakeTurnAngle) * cameraTurnAngle;
 
-            // --- Release brake: apply exit angle & boost ---
+            // --- Release brake ---
             if (Input.GetKeyUp(KeyCode.LeftShift))
             {
                 EndBrakeAndStartBoost();
@@ -369,9 +372,9 @@ public class PlayerController3D : MonoBehaviour
                 dmScript.resumeNormalTime();
             }
 
+            // --- Update preview ---
             if (brakePreview != null)
             {
-                Quaternion previewRot = Quaternion.Euler(0f, currentBrakeAngle, 0f);
                 brakePreview.localRotation = Quaternion.Euler(90f, currentBrakeAngle, 0f);
             }
         }
