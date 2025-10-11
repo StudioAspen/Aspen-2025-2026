@@ -15,7 +15,7 @@ namespace CharonsCorner.Runtime
 
         void Start()
         {
-        
+            itemName = "Glide";
         }
 
         // Update is called once per frame

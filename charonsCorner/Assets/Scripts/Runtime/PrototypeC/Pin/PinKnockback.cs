@@ -26,7 +26,6 @@ namespace CharonsCorner.Runtime
 
         private Rigidbody _rigidbody;
         private float _lastHitTime = -10f; // Start negative for first collision
-        private bool _activated;
 
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
@@ -58,11 +57,6 @@ namespace CharonsCorner.Runtime
             if (Time.time - _lastHitTime < _hitCooldown) return;
             _lastHitTime = Time.time;
 
-            if (_rigidbody.isKinematic)
-            {
-                _rigidbody.isKinematic = false;
-                _activated = true;
-            }
 
             float speed = GetApproachSpeed(collision);
             float t = Mathf.InverseLerp(_minSpeedForKnockback, _maxSpeedForKnockback, speed);

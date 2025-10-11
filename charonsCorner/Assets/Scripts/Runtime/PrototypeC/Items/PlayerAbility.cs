@@ -31,6 +31,10 @@ public class PlayerAbility : MonoBehaviour
         {
             itemPowerSO.itemList[currentItemIndex].GetComponent<ItemPower>().itemPower(playerRb);
         }
+        else if (currentItemIndex > -1 && currentUses <= 0)
+        {
+            ItemManager.Instance.RemoveItem();
+        }
     }
 
     public void modGravity(float gravity, float duration)
