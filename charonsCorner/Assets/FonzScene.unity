@@ -226,7 +226,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &43169266
 Transform:
   m_ObjectHideFlags: 0
@@ -987,7 +987,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 472455065}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0.14932765, y: -0.000000023306773, z: 0.0000000035198107, w: 0.9887878}
   m_LocalPosition: {x: 24.9, y: 4.043, z: -382.59998}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -3204,8 +3204,9 @@ GameObject:
   - component: {fileID: 1455225514}
   - component: {fileID: 1455225513}
   - component: {fileID: 1455225518}
-  - component: {fileID: 1455225519}
+  - component: {fileID: 1455225521}
   - component: {fileID: 1455225516}
+  - component: {fileID: 1455225520}
   m_Layer: 0
   m_Name: CinemachineCamera
   m_TagString: Untagged
@@ -3264,7 +3265,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1455225511}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0.14932762, y: 0, z: 0, w: 0.9887878}
   m_LocalPosition: {x: 24.9, y: 4.043, z: -382.59998}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -3314,7 +3315,7 @@ MonoBehaviour:
     RotationDamping: {x: 1, y: 1, z: 1}
     QuaternionDamping: 1
   FollowOffset: {x: 0, y: 2.72, z: -8.8}
---- !u!114 &1455225519
+--- !u!114 &1455225520
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3323,10 +3324,41 @@ MonoBehaviour:
   m_GameObject: {fileID: 1455225511}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4afa82ae3200b82408d605c3dbdd1e38, type: 3}
+  m_Script: {fileID: 11500000, guid: d4af4b083627ce342a057df49bd4642f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Damping: 3
+  virtualCamera: {fileID: 1455225513}
+  target: {fileID: 43169266}
+  baseOffset: {x: 0, y: 2.72, z: -8.8}
+--- !u!114 &1455225521
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1455225511}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f38bda98361e1de48a4ca2bd86ea3c17, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Composition:
+    ScreenPosition: {x: 0, y: 0}
+    DeadZone:
+      Enabled: 0
+      Size: {x: 0.2, y: 0.2}
+    HardLimits:
+      Enabled: 0
+      Size: {x: 0.8, y: 0.8}
+      Offset: {x: 0, y: 0}
+  CenterOnActivate: 1
+  TargetOffset: {x: 0, y: 0, z: 0}
+  Damping: {x: 0.5, y: 0.5}
+  Lookahead:
+    Enabled: 0
+    Time: 1
+    Smoothing: 20.1
+    IgnoreY: 0
 --- !u!1 &1639137163
 GameObject:
   m_ObjectHideFlags: 0
@@ -3364,7 +3396,7 @@ MonoBehaviour:
   currentForwardSpeed: 0
   lateralBaseSpeed: 11
   lateralMaxSpeed: 11
-  lateralAccelTime: 0.3
+  lateralAccelTime: 0.1
   lateralAccelCurve:
     serializedVersion: 2
     m_Curve:
@@ -3413,13 +3445,22 @@ MonoBehaviour:
       inWeight: 0
       outWeight: 0
     - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 0
-      outSlope: 0
+      time: 0.03043276
+      value: 0.9071344
+      inSlope: 1.2660816
+      outSlope: 1.2660816
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.98219836
+      value: 0.99999917
+      inSlope: 0.1308861
+      outSlope: 0.1308861
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.12301326
       outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
@@ -3561,7 +3602,7 @@ MonoBehaviour:
   vcam: {fileID: 1455225513}
   maxDutchAngle: 10
   dutchLerpSpeed: 8
-  squashFOV: 70
+  squashFOV: 60
   fovRecoverTime: 2
   cameraTurnAngle: 90
   cameraTurnLerpSpeed: 5
@@ -3572,6 +3613,7 @@ MonoBehaviour:
   crouchHeight: 0
   normalHeight: 2
   dmScript: {fileID: 1639137170}
+  cameraRotationScript: {fileID: 1455225520}
   SpeedThreshold: 16
   baseSpeedIncrease: 2
   groundLayer:

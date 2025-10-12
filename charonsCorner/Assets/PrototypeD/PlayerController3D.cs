@@ -171,7 +171,7 @@ public class PlayerController3D : MonoBehaviour
 
 
     public DashManagerScript dmScript;
-
+    public CameraFollowRotation cameraRotationScript;
 
     void Awake()
     {
@@ -279,6 +279,7 @@ public class PlayerController3D : MonoBehaviour
 
     void UpdateCameraYaw(float dt)
     {
+
         // Decide target yaw based on input
         if (Input.GetKey(KeyCode.A))
             targetYaw = -cameraYawAmount;
@@ -344,6 +345,7 @@ public class PlayerController3D : MonoBehaviour
 
         if (isBraking)
         {
+           cameraRotationScript.enabled = true;
             // Adjust turn responsiveness based on speed level
             brakeAngleAdjustSpeed = Mathf.Lerp(brakeAngleAdjustSpeedMin, brakeAngleAdjustSpeedMax, (float)numSpeedIncreases / 4f);
 
@@ -377,6 +379,14 @@ public class PlayerController3D : MonoBehaviour
             {
                 brakePreview.localRotation = Quaternion.Euler(90f, currentBrakeAngle, 0f);
             }
+        }
+        else
+        {
+            cameraRotationScript.enabled = false;
+            //cameraRotationScript.baseOffset = new Vector3(0f, 0f, 0f);
+            brakePreview.localRotation = Quaternion.Euler(90f, currentBrakeAngle, 0f);
+
+
         }
 
         // ---- SQUASH (Right Mouse) ----
