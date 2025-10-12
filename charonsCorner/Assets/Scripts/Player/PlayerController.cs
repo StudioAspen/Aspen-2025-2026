@@ -15,7 +15,7 @@ public struct CharacterInput
     public Vector2 Move;
     public bool Jump;
     public bool JumpSustain;
-    public CrouchInput Crouch;
+    public CrouchInput Sneak;
 }
 
 public enum CrouchInput
@@ -25,7 +25,7 @@ public enum CrouchInput
 
 public enum Stance
 {
-    Stand, Crouch, Slide
+    Move, Sneak, Slide
 }
 
 
@@ -41,8 +41,8 @@ public class PlayerController : MonoBehaviour, ICharacterController
     [SerializeField] private float walkSpeed = 20f;
     [SerializeField] private float walkAcceleration = 25f;
     [Space]
-    [SerializeField] private float crouchSpeed = 7f;
-    [SerializeField] private float crouchAcceleration = 20f;
+    [SerializeField] private float sneakSpeed = 7f;
+    [SerializeField] private float sneakAcceleration = 20f;
     [Space]
     [SerializeField] private float slideStartSpeed = 25f;
     [SerializeField] private float slideEndSpeed = 15f;
@@ -81,8 +81,8 @@ public class PlayerController : MonoBehaviour, ICharacterController
     private float _timeSinceJumpRequested;
     private bool _ungroundedDueToJump;
 
-    private bool _requestedCrouch;
-    private bool _requestedCrouchInAir;
+    private bool _requestedSneak;
+    private bool _requestedSneakInAir;
 
 
     public CharacterState _state;
@@ -94,7 +94,7 @@ public class PlayerController : MonoBehaviour, ICharacterController
 
     public void Initialize()
     {
-        _state.Stance = Stance.Stand;
+        _state.Stance = Stance.Move;
         _lastState = _state;
 
         motor.CharacterController = this;
@@ -121,21 +121,21 @@ public class PlayerController : MonoBehaviour, ICharacterController
         _requestedSustainedJump = input.JumpSustain;
 
 
-        var wasRequestingCrouch = _requestedCrouch;
-        _requestedCrouch = input.Crouch switch
+        var wasRequestingSneak = _requestedSneak;
+        _requestedSneak = input.Sneak switch
         {
-            CrouchInput.Toggle => !_requestedCrouch,
-            CrouchInput.None => _requestedCrouch,
-            _ => _requestedCrouch
+            CrouchInput.Toggle => !_requestedSneak,
+            CrouchInput.None => _requestedSneak,
+            _ => _requestedSneak
         };
 
-        if (_requestedCrouch && !wasRequestingCrouch)
+        if (_requestedSneak && !wasRequestingSneak)
         {
-            _requestedCrouchInAir = !_state.Grounded;
+            _requestedSneakInAir = !_state.Grounded;
         }
-        else if (!_requestedCrouch && wasRequestingCrouch)
+        else if (!_requestedSneak && wasRequestingSneak)
         {
-            _requestedCrouch = false;
+            _requestedSneak = false;
         }
     }
 
@@ -200,12 +200,13 @@ public class PlayerController : MonoBehaviour, ICharacterController
             //Sloped Movement:
             {
                 var moving = groundedMovement.sqrMagnitude > 0f;
-                var crouching = _state.Stance is Stance.Crouch;
-                var wasStanding = _lastState.Stance is Stance.Stand;
+                var sneaking = _state.Stance is Stance.Sneak;
+                var wasMoveing = _lastState.Stance is Stance.Move;
                 var wasInAir = !_lastState.Grounded;
 
-                if (moving && crouching && (wasStanding || wasInAir))
+                if (moving && (wasMoveing || wasInAir) && currentVelocity.y < 0f)
                 {
+                    _requestedSneak = true;
                     _state.Stance = Stance.Slide;
 
                     if (wasInAir)
@@ -218,10 +219,10 @@ public class PlayerController : MonoBehaviour, ICharacterController
                     }
 
                     var effectiveSlideStartSpeed = slideStartSpeed;
-                    if (!_state.Grounded && !_requestedCrouchInAir)
+                    if (!_state.Grounded && !_requestedSneakInAir)
                     {
                         effectiveSlideStartSpeed = 0f;
-                        _requestedCrouchInAir = false;
+                        _requestedSneakInAir = false;
                     }
                     var slideSpeed = Mathf.Max(slideStartSpeed, currentVelocity.magnitude);
 
@@ -238,10 +239,10 @@ public class PlayerController : MonoBehaviour, ICharacterController
             }
 
             //General Movement:
-            if (_state.Stance is Stance.Stand or Stance.Crouch)
+            if (_state.Stance is Stance.Move or Stance.Sneak)
             {
-                var speed = _state.Stance is Stance.Stand ? walkSpeed : crouchSpeed;
-                var acceleration = _state.Stance is Stance.Stand ? walkAcceleration : crouchAcceleration;
+                var speed = _state.Stance is Stance.Move ? walkSpeed : sneakSpeed;
+                var acceleration = _state.Stance is Stance.Move ? walkAcceleration : sneakAcceleration;
 
                 var targetVelocity = groundedMovement * speed;
                 var moveVelocity = Vector3.Lerp
@@ -288,7 +289,7 @@ public class PlayerController : MonoBehaviour, ICharacterController
                 }
 
                 //End Sloped Movement When below Speed threshold:
-                if (currentVelocity.magnitude < slideEndSpeed) _state.Stance = Stance.Crouch;
+                if (currentVelocity.magnitude < slideEndSpeed) _state.Stance = Stance.Sneak;
 
             }
             
@@ -297,6 +298,15 @@ public class PlayerController : MonoBehaviour, ICharacterController
         else
         {
             _timeSinceUngrounded += deltaTime;
+
+            //Keep the Sliding State While in the air:
+            if (_state.Stance == Stance.Slide)
+            {
+                if (currentVelocity.magnitude < slideEndSpeed)
+                {
+                    _state.Stance = Stance.Sneak;
+                }
+            }
 
             //Aerial Movement:
             if (_requestedMovement.sqrMagnitude > 0f)
@@ -385,8 +395,13 @@ public class PlayerController : MonoBehaviour, ICharacterController
             if (grounded || canCoyoteJump)
             {
                 _requestedJump = false;
-                _requestedCrouch = false;
-                _requestedCrouchInAir = false;
+
+                if (_state.Stance != Stance.Slide)
+                {
+                    _requestedSneak = false;
+                    _requestedSneakInAir = false;
+                }
+            
                 //Unstick the Character Motor From the Ground:
                 motor.ForceUnground(time: 0f);
                 _ungroundedDueToJump = true;
@@ -426,9 +441,9 @@ public class PlayerController : MonoBehaviour, ICharacterController
         _tempState = _state;
 
         //Crouching Logic:
-        if (_requestedCrouch && _state.Stance is Stance.Stand)
+        if (_requestedSneak && _state.Stance is Stance.Move)
         {
-            _state.Stance = Stance.Crouch;
+            _state.Stance = Stance.Sneak;
         }
     }
 
@@ -440,9 +455,9 @@ public class PlayerController : MonoBehaviour, ICharacterController
     public void AfterCharacterUpdate(float deltaTime)
     {
         //Uncrouching Logic:
-        if(!_requestedCrouch && _state.Stance is not Stance.Stand)
+        if(!_requestedSneak && _state.Stance is not Stance.Move)
         {
-            _state.Stance = Stance.Stand;
+            _state.Stance = Stance.Move;
         }
 
         _state.Grounded = motor.GroundingStatus.IsStableOnGround;
