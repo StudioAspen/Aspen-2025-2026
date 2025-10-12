@@ -61,15 +61,19 @@ namespace CharonsCorner.Runtime
 
         public void CheckGrounded()
         {
-            // Calculate ground check distance and radius based on current scale
+            // Get current scale
             float scaleY = context.transform.localScale.y;
             float scaleX = context.transform.localScale.x;
 
+            // Dynamically calculate ground check distance and radius
             float groundCheckDistance = BaseGroundCheckDistance * scaleY;
             float groundCheckRadius = BaseGroundCheckRadius * Mathf.Max(scaleX, scaleY);
 
+            // Position the check sphere at the correct distance below the center
+            Vector3 checkPosition = context.transform.position + groundCheckDistance * Vector3.down;
+
             IsGrounded = Physics.CheckSphere(
-                context.transform.position + groundCheckDistance * Vector3.down,
+                checkPosition,
                 groundCheckRadius,
                 GroundLayerMask
             );
