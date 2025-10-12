@@ -390,7 +390,7 @@ public class PlayerController3D : MonoBehaviour
         }
 
         // ---- SQUASH (Right Mouse) ----
-        if (Input.GetMouseButtonDown(1))
+        if (Input.GetKeyDown(KeyCode.Space))
         {
             if (!isJumping && !isBraking)
             {
@@ -398,7 +398,7 @@ public class PlayerController3D : MonoBehaviour
             }
         }
 
-        if (Input.GetMouseButtonUp(1))
+        if (Input.GetKeyUp(KeyCode.Space))
         {
             if (isSquashing && !isJumping)
             {
