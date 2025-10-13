@@ -64,12 +64,15 @@ namespace CharonsCorner.Runtime
                 context.RigidBody.AddForce(brakeForce, ForceMode.Acceleration);
 
                 //reduce snapFactor
-                flatVelocity = Vector3.Lerp(flatVelocity, Vector3.zero, 0.20f);
+                flatVelocity = Vector3.Lerp(flatVelocity, Vector3.zero, 0.1f);
             }
             else
             {
-                
-                float snapFactor = alignmentDirection < 0f ? 0.1f : 0.5f; //slow snap when turning around
+
+                float angle = Vector3.Angle(currentDirection, desiredDirection);
+                float snapFactor = Mathf.Lerp(0.02f, 0.12f, Mathf.InverseLerp(0f, 60f, angle));
+                snapFactor *= Mathf.Lerp(0.7f, 0.3f, speed / MaxSpeed);
+
                 Vector3 targetVelocity = desiredDirection.normalized * speed;
                 flatVelocity = Vector3.Lerp(flatVelocity, targetVelocity, snapFactor);
 

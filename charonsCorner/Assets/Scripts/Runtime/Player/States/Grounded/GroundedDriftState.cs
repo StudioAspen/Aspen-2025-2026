@@ -7,14 +7,14 @@ namespace CharonsCorner.Runtime
     public class GroundedDriftState : State<PlayerController>
     {
         [field: SerializeField] public float AngleOffset { get; private set; } = 1f;
-        [field: SerializeField] public float TurnResponsiveness { get; private set; } = 10f;
+        [field: SerializeField] public float TurnResponsiveness { get; private set; } = 1f;
         [field: SerializeField] public float Acceleration { get; private set; } = 1f;
-        [field: SerializeField] public float Friction { get; private set; } = 0.9f;
+        [field: SerializeField] public float Friction { get; private set; } = 0.95f;
 
         [field: SerializeField] public float MaxDriftSpeed { get; private set; } = 10f;
-        [field: SerializeField] public float DriftDrag { get; private set; } = 0.97f;
-        [field: SerializeField] public float DriftAccelerationMultiplier { get; private set; } = 0.75f;
-        [field: SerializeField] public float DriftExitAcceleration { get; private set; } = 10f;
+        [field: SerializeField] public float DriftDrag { get; private set; } = 0.995f;
+        [field: SerializeField] public float DriftDeaccelerationMultiplier { get; private set; } = 0.25f;
+        [field: SerializeField] public float DriftExitAcceleration { get; private set; } = 15f;
 
 
         private Vector3 driftDirection;
@@ -38,7 +38,7 @@ namespace CharonsCorner.Runtime
 
             float angle = AngleOffset * (context.Input.MoveDirection.x > 0 ? 1 : -1);
             driftDirection = Quaternion.AngleAxis(angle, Vector3.up) * driftDirection;
-            lockedDriftDirection = context.RigidBody.linearVelocity.normalized;
+            //lockedDriftDirection = context.RigidBody.linearVelocity.normalized;
             /*Debug.DrawRay(context.transform.position, 100f * context.RigidBody.linearVelocity.normalized, Color.green, 10f);
             Debug.DrawRay(context.transform.position, 100f * driftDirection, Color.red, 10f);
             Debug.Break();*/
@@ -50,9 +50,7 @@ namespace CharonsCorner.Runtime
 
             driftTimer = 0f;
 
-            // Snap instantly to camera direction and apply a small boost
-            //driftDirection = desiredDirection;
-            context.RigidBody.AddForce(driftDirection * DriftExitAcceleration, ForceMode.VelocityChange);
+             context.RigidBody.AddForce(driftDirection * DriftExitAcceleration, ForceMode.VelocityChange); //apply boost
         }
 
         private protected override void OnUpdate()
@@ -63,38 +61,41 @@ namespace CharonsCorner.Runtime
         private protected override void OnFixedUpdate()
         {
             Vector3 desiredDirection = Utilities.GetCameraBasedMoveInput(
-                CameraManager.Instance.CurrentCamera.transform, 
-                context.Input.MoveDirection
-            );
+          CameraManager.Instance.CurrentCamera.transform,
+          context.Input.MoveDirection
+      );
 
-            //Debug
+            // ensure vectors are horizontal
+            Vector3 flatVel = context.RigidBody.linearVelocity;
+            flatVel.y = 0f;
+            float speed = flatVel.magnitude;
+            Vector3 currentVelDir = speed > 0.001f ? flatVel.normalized : desiredDirection.normalized;
+
+           
+            driftDirection = Vector3.Slerp(driftDirection, desiredDirection.normalized, TurnResponsiveness * Time.fixedDeltaTime);
+
+           
+            Vector3 desiredVelDir = Vector3.Slerp(currentVelDir, driftDirection.normalized, TurnResponsiveness * Time.fixedDeltaTime);
+            Vector3 targetVelocity = desiredVelDir * speed; // keep current speed, only change direction for the arc
+
+           
+            Vector3 steering = (targetVelocity - flatVel) * DriftDeaccelerationMultiplier;
+            context.RigidBody.AddForce(steering, ForceMode.VelocityChange);
+
+            
+            context.RigidBody.AddForce(driftDirection.normalized * Acceleration * 0.5f, ForceMode.Acceleration);
+
+            
+            context.RigidBody.linearVelocity = new Vector3(
+                context.RigidBody.linearVelocity.x * DriftDrag,
+                context.RigidBody.linearVelocity.y,
+                context.RigidBody.linearVelocity.z * DriftDrag
+            ); 
+
+            // Debugging visual
             Debug.DrawRay(context.transform.position, driftDirection.normalized * 2f, Color.cyan);
-
-
-            // Adjust drift direction slowly toward input
-            //driftDirection = Vector3.Slerp(driftDirection, desiredDirection, TurnResponsiveness * Time.fixedDeltaTime);
-
-            // Lock drift direction forward until shift is released
-
-            driftDirection = lockedDriftDirection;
-
-
-            Vector3 turnTorque = Vector3.Cross(Vector3.up, driftDirection) * TurnResponsiveness;
-            context.RigidBody.AddTorque(turnTorque, ForceMode.VelocityChange);
-
-           // context.RigidBody.AddForce(driftDirection * Acceleration, ForceMode.Acceleration);
-            context.RigidBody.AddForce(driftDirection * Acceleration * DriftAccelerationMultiplier, ForceMode.Acceleration);
-
-            Vector3 velocity = context.RigidBody.linearVelocity;
-            Vector3 lateral = Vector3.ProjectOnPlane(velocity, driftDirection);
-            context.RigidBody.linearVelocity = (velocity - lateral) + lateral * Friction;
-
-            //apply drag
-            context.RigidBody.linearVelocity *= DriftDrag;
-
-            //cap max speed
-            if (context.RigidBody.linearVelocity.magnitude > MaxDriftSpeed)
-                context.RigidBody.linearVelocity = Vector3.ClampMagnitude(context.RigidBody.linearVelocity, MaxDriftSpeed);
+            Debug.DrawRay(context.transform.position, context.RigidBody.linearVelocity.normalized * 2f, Color.green);
+        
         } 
 
         private protected override State<PlayerController> GetTransition()
