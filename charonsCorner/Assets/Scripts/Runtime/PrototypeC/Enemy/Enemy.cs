@@ -13,7 +13,7 @@ namespace CharonsCorner.Runtime
         [SerializeField] private float moveSpeed;
         [SerializeField] private float maxHealthPoint;
         [SerializeField] private float scorePoints;
-        private float healthPointCurr;
+        public float healthPointCurr;
 
         private void Start()
         {
@@ -33,9 +33,17 @@ namespace CharonsCorner.Runtime
 
         private void Introduction()
         {
+            healthPointCurr = maxHealthPoint;
             Debug.Log("I'm " + enemyName + ", HP: " + maxHealthPoint + ", Speed: " + moveSpeed);
         }
 
-
+        public void takeDamage(int damage)
+        {
+            healthPointCurr -= damage;
+            if (healthPointCurr <= 0)
+            {
+                Destroy(gameObject);
+            }
+        }
     }
 }
