@@ -1,3 +1,4 @@
+using CharonsCorner.ItemPowers;
 using System;
 using System.Collections.Specialized;
 using UnityEngine;
@@ -11,9 +12,9 @@ namespace CharonsCorner.Runtime
     public class ItemManager : MonoBehaviour
     {
         public static ItemManager Instance { get; private set; } // Singleton
-        public static event Action<string> OnItemChanged;
+        public static event Action<ItemPower> OnItemChanged;
 
-        public string ItemName { get; private set; }
+        public ItemPower currentItem { get; private set; }
 
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
@@ -42,9 +43,9 @@ namespace CharonsCorner.Runtime
         /// Changes the player's held item name.
         /// </summary>
         /// <param name="itemName"></param>
-        public void ChangeItem(string newItemName)
+        public void ChangeItem(ItemPower item)
         {
-            ItemName = newItemName;
+            currentItem = item;
             Notify();
         }
 
@@ -54,12 +55,12 @@ namespace CharonsCorner.Runtime
         /// <param name="itemName"></param>
         public void RemoveItem()
         {
-            ItemName = "None";
+            currentItem = null;
             Notify();
         }
 
 
         // Invoke the action when the item is changed
-        private void Notify() => OnItemChanged?.Invoke(ItemName);
+        private void Notify() => OnItemChanged?.Invoke(currentItem);
     }
 }

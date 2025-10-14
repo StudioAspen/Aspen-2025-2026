@@ -22,7 +22,7 @@ namespace CharonsCorner.Runtime
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
         {
-            itemName = "Shoot";
+            //itemName = "Shoot";
         }
 
         // Update is called once per frame
@@ -38,10 +38,10 @@ namespace CharonsCorner.Runtime
                 newBullet.GetComponent<Rigidbody>().AddForce(-newBullet.transform.forward * bulletForce, ForceMode.Impulse);
                 //timer = shootCoolDown;
                 playerAbility.currentUses--;
-                /*if (playerAbility.currentUses == 0)
+                if (playerAbility.currentUses == 0)
                 {
                     gameObject.SetActive(false);
-                }*/
+                }
             }
 
             /*if (timer > 0)
