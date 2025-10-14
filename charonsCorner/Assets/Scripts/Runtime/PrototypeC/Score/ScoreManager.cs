@@ -47,6 +47,7 @@ namespace CharonsCorner.Runtime
         {
             if (amount == 0) return;
             Score += amount;
+            numPinsKnocked++;
             Notify();
         }
 
