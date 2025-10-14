@@ -43,7 +43,8 @@ namespace CharonsCorner.Runtime
         /// <param name="newItemName"></param>
         private void HandleItemChanged(ItemPower newItem)
         {
-            if (_heldItemNameText != null) _heldItemNameText.text = _preText + newItem.itemName;
+            if (newItem != null) _heldItemNameText.text = _preText + newItem.itemName;
+            else _heldItemNameText.text = _noItemText;
         }
 
 

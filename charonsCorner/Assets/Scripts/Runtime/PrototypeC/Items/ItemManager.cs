@@ -13,7 +13,6 @@ namespace CharonsCorner.Runtime
     {
         public static ItemManager Instance { get; private set; } // Singleton
         public static event Action<ItemPower> OnItemChanged;
-
         public ItemPower currentItem { get; private set; }
 
         // Start is called once before the first execution of Update after the MonoBehaviour is created

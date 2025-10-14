@@ -7,6 +7,7 @@ public class PlayerAbility : MonoBehaviour
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     public ItemPowerSO itemPowerSO;
+    public string abilityName;
     public int currentItemIndex = -1;
     public int currentUses;
     public Rigidbody playerRb;
@@ -27,13 +28,16 @@ public class PlayerAbility : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && currentItemIndex > -1 && currentUses > 0) 
-        {
-            itemPowerSO.itemList[currentItemIndex].GetComponent<ItemPower>().itemPower(playerRb);
-        }
-        else if (currentItemIndex > -1 && currentUses <= 0)
+        if (currentItemIndex > -1 && currentUses == 0)
         {
             ItemManager.Instance.RemoveItem();
+            currentItemIndex = -1;
+        }
+        if (Input.GetKeyDown(KeyCode.Space) && currentItemIndex > -1 && currentUses > 0) 
+        {
+            ItemPower item = itemPowerSO.itemList[currentItemIndex].GetComponent<ItemPower>();
+            item.itemPower(playerRb);
+            abilityName = item.itemName;
         }
     }
 

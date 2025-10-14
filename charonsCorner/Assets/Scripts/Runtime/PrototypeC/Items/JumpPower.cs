@@ -21,10 +21,10 @@ using CharonsCorner.Runtime;
         public override void itemPower(Rigidbody Rb)
         {
             GameObject go = Rb.gameObject;
-             //Vector3 myUp = go.transform.TransformDirection(Vector3.up);
+            //Vector3 myUp = go.transform.TransformDirection(Vector3.up);
             //Rb.AddForce(myUp * jumpForce, ForceMode.Impulse);
             Rb.AddForce(go.GetComponent<PrototypePlayerController>().Orientation.up * jumpForce, ForceMode.Impulse);
-        go.GetComponent<PlayerAbility>().currentUses--;
+            go.GetComponent<PlayerAbility>().currentUses--;
         }
     }
 

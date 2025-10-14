@@ -10,20 +10,21 @@ namespace CharonsCorner.Runtime
 
         private string _preText = "Uses: ";
         private string _noItemText = "No Item";
+        private GameObject player;
 
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
         {
-
+            player = GameObject.FindGameObjectWithTag("Player");
         }
 
         // Update is called once per frame
         void Update()
         {
-
+            _numOfUsesText.text = _preText + player.GetComponent<PlayerAbility>().currentUses;
         }
 
-        private void OnEnable()
+        /*private void OnEnable()
         {
             ItemManager.OnItemChanged += HandleItemChanged; // subscribe to event
             //HandleItemChanged(ItemManager.Instance != null ? ItemManager.Instance.currentItem : _numOfUsesText);
@@ -40,7 +41,7 @@ namespace CharonsCorner.Runtime
         /// <param name="newItemName"></param>
         private void HandleItemChanged(ItemPower newPower)
         {
-            if (_numOfUsesText != null) _numOfUsesText.text = _preText + newPower.itemUses;
-        }
+            if (newPower != null) _numOfUsesText.text = _preText + newPower.itemUses;
+        }*/
     }
 }
