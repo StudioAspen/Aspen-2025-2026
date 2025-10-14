@@ -14,16 +14,16 @@ public class PlayerController3D : MonoBehaviour
     [Tooltip("Current runtime forward speed (internal).")]
     [SerializeField] private float currentForwardSpeed;
 
-    [Header("Lateral movement (A/D or Left/Right)")]
-    public float lateralBaseSpeed = 2.5f;     // immediate base left/right movement when key pressed
-    public float lateralMaxSpeed = 6f;        // max lateral speed after holding
-    public float lateralAccelTime = 0.5f;     // how long until lateral reaches max
-    public AnimationCurve lateralAccelCurve = AnimationCurve.Linear(0, 0, 1, 1);
+    [Header("Turn movement (A/D or Left/Right)")]
+    public float turnBaseSpeed = 2.5f;     // immediate base left/right movement when key pressed
+    public float turnMaxSpeed = 6f;        // max turn speed after holding
+    public float turnAccelTime = 0.5f;     // how long until turn reaches max
+    public AnimationCurve turnAccelCurve = AnimationCurve.Linear(0, 0, 1, 1); 
 
     // internal
-    private float lateralHoldTime = 0f;
-    private int lateralDir = 0; // -1 left, 0 none, 1 right
-    private float currentLateralSpeed = 0f;
+    private float turnHoldTime = 0f;
+    private int turnDir = 0; // -1 left, 0 none, 1 right
+    [SerializeField] private float currentTurnSpeed = 0f;
 
     [Header("Brake Dash (Hold Left Mouse Button)")]
     [Tooltip("How fast forward speed should be reduced while braking")]
@@ -109,11 +109,11 @@ public class PlayerController3D : MonoBehaviour
     [Tooltip("Max seconds to fully charge jump while squashed")]
     public float maxJumpChargeTime = 2f;
     [Header("Misc")]
-    [Tooltip("How quickly lateral input decays when the player releases the key (makes it less twitchy)")]
-    public float lateralReleaseDamping = 20f;
+    [Tooltip("How quickly turn input decays when the player releases the key (makes it less twitchy)")]
+    public float turnReleaseDamping = 20f;
 
     [Tooltip("Key/axis for left/right movement (uses Unity's Horizontal by default). You can also use A/D or arrows.")]
-    public string lateralAxis = "Horizontal";
+    public string turnAxis = "Horizontal";
 
     [Header("Jump/Gravity Settings")]
     public float gravity = -20f;     // downward acceleration
@@ -128,7 +128,7 @@ public class PlayerController3D : MonoBehaviour
     // movement direction separate from transform.forward so brake-queued turns don't change movement immediately
     private Vector3 moveDirectionForward;
     private float pendingBrakeTurn = 0f; // -90, +90, or 0
-    private int pendingLateralDir = 0; // -1 for left, +1 for right, 0 for none
+    private int pendingturnDir = 0; // -1 for left, +1 for right, 0 for none
 
     // jump bookkeeping
     private bool isJumping = false;
@@ -299,36 +299,29 @@ public class PlayerController3D : MonoBehaviour
     }
     private void HandleInputs(float dt)
     {
-        // --- LATERAL INPUT (read axis only when NOT braking and NOT squashing and NOT jumping) ---
+        // --- turn INPUT (read axis only when NOT braking and NOT squashing and NOT jumping) ---
         if (!isBraking && !isSquashing && !isJumping)
         {
-            float h = Input.GetAxisRaw(lateralAxis);
-            int newDir = 0;
-            if (h > 0.1f) newDir = 1;
-            else if (h < -0.1f) newDir = -1;
-
-            if (newDir != 0)
+            if (Input.GetKey(KeyCode.A))
             {
-                if (newDir == lateralDir)
-                {
-                    lateralHoldTime += dt;
-                }
-                else
-                {
-                    lateralDir = newDir;
-                    lateralHoldTime = 0f;
-                }
+                turnDir = -1;
+                turnHoldTime += dt; // start hold time
+            }
+            else if (Input.GetKey(KeyCode.D))
+            {
+                turnDir = 1;
+                turnHoldTime += dt; // start hold time
             }
             else
             {
-                lateralDir = 0;
-                lateralHoldTime = 0f;
+                turnDir = 0;
+                turnHoldTime = 0f; // reset hold time
             }
         }
         else
         {
-            // while braking/squashing, don't read axis-driven lateral input
-            lateralHoldTime = 0f;
+                // while braking/squashing, don't read axis-driven turn input
+                turnHoldTime = 0f;
         }
 
         // ---- BRAKE (Left Shift) ----
@@ -451,12 +444,12 @@ public class PlayerController3D : MonoBehaviour
         isBoostRecovering = false;
 
         pendingBrakeTurn = 0f;
-        pendingLateralDir = 0;
+        pendingturnDir = 0;
 
         moveDirectionForward = transform.forward.normalized;
-        lateralDir = 0;
-        currentLateralSpeed = 0f;
-        lateralHoldTime = 0f;
+        turnDir = 0;
+        currentTurnSpeed = 0f;
+        turnHoldTime = 0f;
     }
 
     // 2) Replace EndBrakeAndStartBoost()
@@ -485,11 +478,11 @@ public class PlayerController3D : MonoBehaviour
         // After rotating, update movement-forward to follow the transform's forward
         moveDirectionForward = transform.forward.normalized;
 
-        // Commit lateral movement choice (if you still want lateral dash effect)
+        // Commit turn movement choice (if you still want turn dash effect)
         // With incremental angles you might not need this, but I kept it
-        lateralDir = pendingLateralDir;
-        lateralHoldTime = lateralAccelTime;  // makes UpdateLateralSpeed evaluate to max
-        pendingLateralDir = 0;
+        turnDir = pendingturnDir;
+        turnHoldTime = turnAccelTime;  // makes UpdateTurnSpeed evaluate to max
+        pendingturnDir = 0;
 
         // Clear rotation flags
         hasRotatedDuringBrake = false;
@@ -619,8 +612,8 @@ public class PlayerController3D : MonoBehaviour
                 verticalVelocity = -0.1f; // small downward to keep grounded
                 knockoverMode = false;  //  landed, turn off knockover
             }
-            // Still update lateral while in air
-            UpdateLateralSpeed(dt);
+            // Still update turn while in air
+            UpdateTurnSpeed(dt);
             return;
         }
 
@@ -745,27 +738,27 @@ public class PlayerController3D : MonoBehaviour
         if (isBraking)
         {
             // No sideways sliding while braking
-            currentLateralSpeed = 0f;
+            currentTurnSpeed = 0f;
         }
 
 
-        // Lateral acceleration (works in all non-jump states too, and while jumping)
-        UpdateLateralSpeed(dt);
+        // turn acceleration (works in all non-jump states too, and while jumping)
+        UpdateTurnSpeed(dt);
         // ApplyMovement();
     }
    
-    private void UpdateLateralSpeed(float dt)
+    private void UpdateTurnSpeed(float dt)
     {
-        if (lateralDir != 0)
+        if (turnDir != 0)
         {
-            float t = Mathf.Clamp01(lateralHoldTime / Mathf.Max(0.0001f, lateralAccelTime));
-            float eval = lateralAccelCurve.Evaluate(t);
-            currentLateralSpeed = Mathf.Lerp(lateralBaseSpeed, lateralMaxSpeed, eval);
+            float t = Mathf.Clamp01(turnHoldTime / Mathf.Max(0.0001f, turnAccelTime));
+            float eval = turnAccelCurve.Evaluate(t);
+            currentTurnSpeed = Mathf.Lerp(turnBaseSpeed, turnMaxSpeed, eval);
         }
         else
         {
-            // decay lateral speed to zero for a smooth stop
-            currentLateralSpeed = Mathf.MoveTowards(currentLateralSpeed, 0f, lateralReleaseDamping * dt);
+            // decay turn speed to zero for a smooth stop
+            currentTurnSpeed = 0f;
         }
     }
 
@@ -774,11 +767,10 @@ public class PlayerController3D : MonoBehaviour
         // Use the stored movement-forward vector for forward motion (so it's unaffected while braking)
         Vector3 forward = moveDirectionForward * currentForwardSpeed;
 
-        // Compute a right vector based on moveDirectionForward so lateral stays consistent with the movement direction.
-        Vector3 right = Vector3.Cross(Vector3.up, moveDirectionForward).normalized;
-        Vector3 lateral = right * (lateralDir * currentLateralSpeed);
+        //Fonz - rotate left/right based on a and d keys while in normal movement
+        transform.Rotate(0, turnDir * currentTurnSpeed * dt, 0); // rotate the player based on turn input
 
-        Vector3 movement = (forward + lateral) * dt;
+        Vector3 movement = (forward) * dt;
 
         cc.Move(movement);
     }
@@ -852,6 +844,18 @@ public class PlayerController3D : MonoBehaviour
     public float GetBrakeHoldElapsed()
     {
         return brakeHoldElapsed;
+    }
+
+    // Fonz - added for my TestUI
+    public float GetCurrentTurnSpeed()
+    {
+        return currentTurnSpeed;
+    }
+
+    // Fonz - added for my TestUI
+    public float GetTurnHoldTime()
+    {
+        return turnHoldTime;
     }
 
     // Fonz - reset speed function, called on hitting an obstacle, used to reset speed to base value
