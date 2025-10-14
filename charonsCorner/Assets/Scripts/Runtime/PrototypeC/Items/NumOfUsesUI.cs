@@ -4,32 +4,29 @@ using UnityEngine;
 
 namespace CharonsCorner.Runtime
 {
-    /// <summary>
-    /// Handles changing the UI of what item the player is holding.
-    /// </summary>
-    public class HeldItemUI : MonoBehaviour
+    public class NumOfUsesUI : MonoBehaviour
     {
-        [SerializeField] private TextMeshProUGUI _heldItemNameText;
+        [SerializeField] private TextMeshProUGUI _numOfUsesText;
 
-        private string _preText = "Held Item: ";
-        private string _noItemText = "None";
+        private string _preText = "Uses: ";
+        private string _noItemText = "No Item";
 
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
         {
-        
+
         }
 
         // Update is called once per frame
         void Update()
         {
-        
+
         }
 
         private void OnEnable()
         {
             ItemManager.OnItemChanged += HandleItemChanged; // subscribe to event
-            //HandleItemChanged(ItemManager.Instance != null ? ItemManager.Instance.currentItem : _noItemText);
+            //HandleItemChanged(ItemManager.Instance != null ? ItemManager.Instance.currentItem : _numOfUsesText);
         }
 
         private void OnDisable()
@@ -41,11 +38,9 @@ namespace CharonsCorner.Runtime
         /// Updates the item UI to match the player's item.
         /// </summary>
         /// <param name="newItemName"></param>
-        private void HandleItemChanged(ItemPower newItem)
+        private void HandleItemChanged(ItemPower newPower)
         {
-            if (_heldItemNameText != null) _heldItemNameText.text = _preText + newItem.itemName;
+            if (_numOfUsesText != null) _numOfUsesText.text = _preText + newPower.itemUses;
         }
-
-
     }
 }

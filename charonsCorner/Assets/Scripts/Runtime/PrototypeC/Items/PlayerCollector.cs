@@ -32,7 +32,7 @@ public class PlayerCollector : MonoBehaviour
                 playerAbility.enableBulletShooter();
             }
 
-            ItemManager.Instance.ChangeItem(other.GetComponent<ItemPower>().itemName);
+            ItemManager.Instance.ChangeItem(other.GetComponent<ItemPower>());
             Destroy(other.gameObject);
         }
     }
