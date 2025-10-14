@@ -12,6 +12,7 @@ namespace CharonsCorner.Runtime
     {
         public static ScoreManager Instance { get; private set; } // Singleton
         public static event Action<int> OnScoreChanged;
+        public int numPinsKnocked;
 
         public int Score { get; private set; }
 
