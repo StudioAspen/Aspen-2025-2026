@@ -75,12 +75,16 @@ namespace CharonsCorner.Runtime
             }
         }
 
-        private void Respawn()
+        public void Respawn()
         {
             Rb.linearVelocity = Vector3.zero;
             Rb.angularVelocity = Vector3.zero;
             Rb.MovePosition(RespawnPoint);
-            
+        }
+
+        public void SetRespawnPoint(Vector3 respawnPoint)
+        {
+            RespawnPoint = respawnPoint;            
         }
         
         private void CheckGrounded()
