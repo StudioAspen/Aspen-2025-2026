@@ -15,9 +15,9 @@ public class PlayerAbility : MonoBehaviour
 
     private IEnumerator changeGravity(float gravity, float duration)
     {
-        GetComponent<PrototypePlayerController>().setGravity(gravity);
+        GetComponent<PrototypePlayerController>().SetGravity(gravity);
         yield return new WaitForSeconds(duration);
-        GetComponent<PrototypePlayerController>().setGravity(30);
+        GetComponent<PrototypePlayerController>().SetGravity(30);
     }
 
     void Start()

@@ -10,11 +10,12 @@ namespace CharonsCorner.Runtime
     {
         [field: SerializeField] public float GravityAmount {get; private set;}
 
+        [field: SerializeField] public Vector3 RespawnPoint { get; private set; }
+        
         [Header("Ground Check")]
         [field: SerializeField]
         public float GroundCheckLength { get; private set; } = 1.1f;
         [field: SerializeField] public LayerMask GroundLayer {get; private set;}
-        
         
         [field:SerializeField] public Transform Orientation { get; private set; }
 
@@ -45,7 +46,7 @@ namespace CharonsCorner.Runtime
             StateMachine.Update();
             if (Input.GetKeyDown(KeyCode.R))
             {
-                SceneManager.LoadScene(2);
+                Respawn();
             }
             
         }
@@ -74,13 +75,20 @@ namespace CharonsCorner.Runtime
             }
         }
 
-
+        private void Respawn()
+        {
+            Rb.linearVelocity = Vector3.zero;
+            Rb.angularVelocity = Vector3.zero;
+            Rb.MovePosition(RespawnPoint);
+            
+        }
+        
         private void CheckGrounded()
         {
             Grounded = Physics.CheckSphere(transform.position + Vector3.down * GroundCheckLength, Collider.radius * 0.9f, GroundLayer);
         }
 
-        public void setGravity(float value)
+        public void SetGravity(float value)
         {
             GravityAmount  = value;            
         }
