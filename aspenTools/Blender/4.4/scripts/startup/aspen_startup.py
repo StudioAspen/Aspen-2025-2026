@@ -17,6 +17,7 @@ def register():
         sys.path.append(PYTHON_PATH)
         sys.path.append(VENV_PATH)
 
+    """
     from aspen.core.telemetry import init as telemetry
     from aspen.core.excepthook import blender_excepthook
 
@@ -25,7 +26,7 @@ def register():
 
     from aspen.core.telemetry.trace import get_blender_tracer
     _tracer = get_blender_tracer()
-
+    
     # Trace Blender Init
     with _tracer.start_as_current_span('blender-init'):
         # Trace BQT init
@@ -38,6 +39,14 @@ def register():
             from aspen import blender_autoload as autoload
             autoload.init()
             autoload.register()
+    """
+
+    import bqt
+    bqt.register()
+
+    from aspen import blender_autoload as autoload
+    autoload.init()
+    autoload.register()
 
 
 def unregister():
