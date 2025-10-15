@@ -12,7 +12,7 @@ namespace CharonsCorner.Runtime
         [SerializeField] private string enemyName;
         [SerializeField] private float moveSpeed;
         [SerializeField] private float maxHealthPoint;
-        [SerializeField] private float scorePoints;
+        [SerializeField] private int scorePoints;
         public float healthPointCurr;
 
         private void Start()
@@ -42,6 +42,7 @@ namespace CharonsCorner.Runtime
             healthPointCurr -= damage;
             if (healthPointCurr <= 0)
             {
+                ScoreManager.Instance.AddScore(scorePoints);
                 Destroy(gameObject);
             }
         }
