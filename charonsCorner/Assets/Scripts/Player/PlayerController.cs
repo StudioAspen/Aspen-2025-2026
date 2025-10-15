@@ -170,7 +170,7 @@ public class PlayerController : MonoBehaviour, ICharacterController
 
             Quaternion rollRotation = Quaternion.AngleAxis(angularDistance * rotationSpeedMultiplier, rollAxis);
 
-           //Apply Rotation:
+            //Apply Rotation:
             root.rotation = rollRotation * root.rotation;
         }
 
@@ -181,6 +181,11 @@ public class PlayerController : MonoBehaviour, ICharacterController
     public void UpdateVelocity(ref Vector3 currentVelocity, float deltaTime)
     {
         _state.Acceleration = Vector3.zero;
+
+        {
+            ApplyBoostPanel(ref currentVelocity, deltaTime);
+
+        }
 
         //If Grounded:
         if (motor.GroundingStatus.IsStableOnGround)
@@ -289,10 +294,13 @@ public class PlayerController : MonoBehaviour, ICharacterController
                 }
 
                 //End Sloped Movement When below Speed threshold:
-                if (currentVelocity.magnitude < slideEndSpeed) _state.Stance = Stance.Sneak;
-
+                if (currentVelocity.magnitude < slideEndSpeed)
+                {
+                    _state.Stance = Stance.Move;
+                    _requestedSneak = false;
+                }
             }
-            
+
         }
         //Not Grounded:
         else
@@ -338,7 +346,7 @@ public class PlayerController : MonoBehaviour, ICharacterController
 
                     movementForce = targetPlanarVelocity - currentPlanarVelocity;
                 }
-                else if(Vector3.Dot(currentPlanarVelocity, movementForce) > 0f)
+                else if (Vector3.Dot(currentPlanarVelocity, movementForce) > 0f)
                 {
                     var constrainedMovementForce = Vector3.ProjectOnPlane
                     (
@@ -353,7 +361,7 @@ public class PlayerController : MonoBehaviour, ICharacterController
                 {
                     //Note: if Dot > 0 --> Moving in Direction you are already moving.              [Bad]
                     //Note: if Dot == 0 or Dot < 0, --> Player is trying to steer in new direction. [Good]
-                    if(Vector3.Dot(movementForce, currentVelocity + movementForce) > 0f)
+                    if (Vector3.Dot(movementForce, currentVelocity + movementForce) > 0f)
                     {
                         //Allows all movement directions besides forward:
                         var obstructionNormal = Vector3.Cross
@@ -386,7 +394,7 @@ public class PlayerController : MonoBehaviour, ICharacterController
         }
 
         //If Jumping:
-        if(_requestedJump)
+        if (_requestedJump)
         {
 
             var grounded = motor.GroundingStatus.IsStableOnGround;
@@ -401,7 +409,7 @@ public class PlayerController : MonoBehaviour, ICharacterController
                     _requestedSneak = false;
                     _requestedSneakInAir = false;
                 }
-            
+
                 //Unstick the Character Motor From the Ground:
                 motor.ForceUnground(time: 0f);
                 _ungroundedDueToJump = true;
@@ -420,7 +428,7 @@ public class PlayerController : MonoBehaviour, ICharacterController
                 var canJumpLater = _timeSinceJumpRequested < coyoteTime;
                 _requestedJump = canJumpLater;
             }
-            
+
         }
     }
 
@@ -455,7 +463,7 @@ public class PlayerController : MonoBehaviour, ICharacterController
     public void AfterCharacterUpdate(float deltaTime)
     {
         //Uncrouching Logic:
-        if(!_requestedSneak && _state.Stance is not Stance.Move)
+        if (!_requestedSneak && _state.Stance is not Stance.Move)
         {
             _state.Stance = Stance.Move;
         }
@@ -485,7 +493,7 @@ public class PlayerController : MonoBehaviour, ICharacterController
     public void ProcessHitStabilityReport(Collider hitCollider, Vector3 hitNormal, Vector3 hitPoint, Vector3 atCharacterPosition, Quaternion atCharacterRotation, ref HitStabilityReport hitStabilityReport)
     {
 
-    }   
+    }
 
 
     public Transform getCameraTarget() => cameraTarget;
@@ -493,7 +501,40 @@ public class PlayerController : MonoBehaviour, ICharacterController
     public CharacterState GetState() => _state;
     public CharacterState GetLastState() => _lastState;
 
+    //-----------------------------------------------------------------------------------------------------------------------------------
 
+    //Visualization Of Player Hit Box:
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(root.position, 1);
+    }
 
+    public void ApplyBoostPanel(ref Vector3 currentVelocity, float deltaTime)
+    {
+        Collider[] hitColliders = Physics.OverlapSphere(root.position, 1);
+        foreach (var hitCollider in hitColliders)
+        {
+            if (hitCollider.CompareTag("Boost Panel"))
+            {
+                BoostPanel boostPanel = hitCollider.GetComponent<BoostPanel>();
+                if (boostPanel != null)
+                {
+                    Vector3 direction = boostPanel.transform.forward.normalized;
+                    float force = walkSpeed * boostPanel.SpeedMultiplier;
 
+                    currentVelocity += direction * force;
+
+                    Debug.Log(_state.Stance);
+
+                    if (_state.Stance is Stance.Move or Stance.Sneak)
+                        _requestedSneak = true;
+                    _state.Stance = Stance.Slide;
+
+                    Debug.Log(_state.Stance);
+
+                }
+            }
+        }
+    }
 }
