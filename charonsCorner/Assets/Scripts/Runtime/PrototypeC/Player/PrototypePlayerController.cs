@@ -100,6 +100,7 @@ namespace CharonsCorner.Runtime
 
         private void OnDrawGizmos()
         {
+        #if UNITY_EDITOR
             if (Application.isPlaying)
             {
                 Gizmos.color = Grounded ? Color.green : Color.red;
@@ -112,6 +113,8 @@ namespace CharonsCorner.Runtime
                 Handles.Label(transform.position + Vector3.up, 
                     StateMachine.CurrentState.GetType().Name + ">" + CurrentSubState, style);
             }
+        #endif
+            
         }
     }
 }
