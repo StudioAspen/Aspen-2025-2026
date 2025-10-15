@@ -11,6 +11,7 @@ namespace CharonsCorner.Runtime
         [field:SerializeField] public float Acceleration {get; private set;} = 30f;
         [field:SerializeField] public float Deceleration {get; private set;} = 10f;
         [field:SerializeField] public float SlopeBoost {get; private set;} = 10f; // optional slope influence
+        [field:SerializeField] public float GroundStickForce {get; private set;} = 10f;
         private protected override void OnEnter()
         {
             
@@ -49,6 +50,10 @@ namespace CharonsCorner.Runtime
                 // Add additional force down a slope.
                 float slopeFactor = Mathf.Clamp01(context.SlopeSensor.CurrentSlopeAngle / context.SlopeSensor.MaxSlopeAngle);
                 bonusForce += Vector3.ProjectOnPlane(Vector3.down, context.SlopeSensor.Hit.normal) * (SlopeBoost * slopeFactor);
+                
+                // Ensure that the player is stuck on the slope
+                context.Rb.AddForce(-context.SlopeSensor.Hit.normal * GroundStickForce, ForceMode.Acceleration);
+                
             }
             else
             {
@@ -58,6 +63,8 @@ namespace CharonsCorner.Runtime
 
             Vector3 inputForce = forwardOriented * (input.y * Acceleration) + rightOriented * (input.x * Acceleration);
             context.Rb.AddForce(inputForce + bonusForce, ForceMode.Acceleration);
+            
+
             
             // Clamp max velocity manually
             if (context.Rb.linearVelocity.magnitude > MaxSpeed)
