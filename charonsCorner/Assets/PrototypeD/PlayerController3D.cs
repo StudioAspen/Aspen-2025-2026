@@ -401,6 +401,7 @@ public class PlayerController3D : MonoBehaviour
                 EndBrakeAndStartBoost();
                 targetDutch = 0f;
                 targetCameraYaw = 0f;
+
                 dmScript.resumeNormalTime();
             }
 
@@ -526,6 +527,7 @@ public class PlayerController3D : MonoBehaviour
         currentForwardSpeed = dmScript.DashSpeed;
         isBoostRecovering = true;
         boostRecoverElapsed = 0f;
+        // dmScript.IncreaseSpeed();
     }
     private IEnumerator BoostFOVSequence()
     {
@@ -688,8 +690,12 @@ public class PlayerController3D : MonoBehaviour
             float eval = boostRecoverCurve.Evaluate(t);
             // Lerp from boostSpeed -> forwardCruiseSpeed using curve (curve should go 0->1 mapping)
             currentForwardSpeed = Mathf.Lerp(boostSpeed, forwardCruiseSpeed, eval);
+            // increase speed based off of current cruise speed
+            // dmScript.IncreaseSpeed();
+            Debug.Log($"Final Speed {currentForwardSpeed}");
             if (boostRecoverElapsed >= boostRecoverTime)
             {
+                // dmScript.lowerSpeed
                 Debug.Log("perma boost");
                 isBoostRecovering = false;
                 if (numSpeedIncreases < 4) // Fonz - limit number of speed increases to 4

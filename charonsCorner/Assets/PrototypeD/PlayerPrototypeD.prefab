@@ -149,6 +149,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1ae857305c29f24b8737c20c3311875, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  showSpeed: 1
+  showSpeedIncreases: 1
+  showBrakeTurnSpeed: 1
+  showBrakeHoldElapsed: 0
+  showBrakeHoldTime: 1
+  showCurrentTurnSpeed: 0
+  showTurnHoldTime: 0
+  showControlScheme: 1
 --- !u!1 &3282024274679803650
 GameObject:
   m_ObjectHideFlags: 0
@@ -411,7 +419,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2349430810994338754
 Transform:
   m_ObjectHideFlags: 0
@@ -611,42 +619,34 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   forwardCruiseSpeed: 12
   currentForwardSpeed: 0
-  lateralBaseSpeed: 11
-  lateralMaxSpeed: 11
-  lateralAccelTime: 0.1
-  lateralAccelCurve:
+  turnBaseSpeed: 35
+  turnMaxSpeed: 80
+  turnAccelTime: 0.3
+  turnAccelCurve:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 1
-      inSlope: 1.0388833
-      outSlope: 1.0388833
-      tangentMode: 34
+      value: 0
+      inSlope: 0
+      outSlope: 1
+      tangentMode: 0
       weightedMode: 0
       inWeight: 0
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 0.47592956
-      value: 1.4944353
-      inSlope: 0.047715664
-      outSlope: 0.047715664
-      tangentMode: 34
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
+      outWeight: 0
     - serializedVersion: 3
       time: 1
       value: 1
-      inSlope: -0.943452
-      outSlope: -0.943452
-      tangentMode: 34
+      inSlope: 1
+      outSlope: 0
+      tangentMode: 0
       weightedMode: 0
-      inWeight: 0.33333334
+      inWeight: 0
       outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  currentTurnSpeed: 0
   brakeTargetSpeed: 9
   brakeTime: 0.15
   brakeCurve:
@@ -708,13 +708,13 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  brakeHoldMaxTime: 1
-  brakeHoldMinTime: 0.25
+  brakeHoldMaxTime: 1.5
+  brakeHoldMinTime: 0.5
   brakeHoldTime: 1
   speedPercentageIncrease: 1.2
   numSpeedIncreases: 0
   brakeAngleAdjustSpeed: 135
-  brakeAngleAdjustSpeedMin: 50
+  brakeAngleAdjustSpeedMin: 120
   brakeAngleAdjustSpeedMax: 175
   brakeTurnAngle: 90
   boostFOV: 120
@@ -812,8 +812,8 @@ MonoBehaviour:
     m_RotationOrder: 4
   squashRecoverTime: 0.15
   maxJumpChargeTime: 1.8
-  lateralReleaseDamping: 20
-  lateralAxis: Horizontal
+  turnReleaseDamping: 20
+  turnAxis: Horizontal
   gravity: -40
   squashedRadius: 0.35
   vcam: {fileID: 0}
@@ -829,6 +829,7 @@ MonoBehaviour:
   brakePreview: {fileID: 2349430810994338754}
   crouchHeight: 0
   normalHeight: 2
+  brakeControlMode: 1
   dmScript: {fileID: 6067058827834237516}
   cameraRotationScript: {fileID: 0}
   SpeedThreshold: 16
@@ -854,10 +855,14 @@ MonoBehaviour:
   ActiveChargeRate: 1
   minSlowTime: 0.2
   timeResumeSpeed: 0.5
+  SpeedCap: 0
+  MaxSpeed: 0
+  BaseSpeed: 30
+  multiplier: 0.5
+  PullBackSpeed: 0
   chargeCounter: 2
   maxPlayerSpeed: 20
   DashSpeed: 0
-  PullBackSpeed: 0
   reachedMaxSpeed: 0
   slider1: {fileID: 0}
   PC3DScript: {fileID: 2555085743096003555}

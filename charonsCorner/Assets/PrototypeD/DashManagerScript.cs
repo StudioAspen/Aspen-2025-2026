@@ -1,10 +1,14 @@
+using JetBrains.Annotations;
 using Unity.Mathematics;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class DashManagerScript : MonoBehaviour
 {
 
+
+    [Header("UI variables")]
     [SerializeField] private float DashBarTotal = 200f;
     [SerializeField] private float DashCost = 100f;
     [SerializeField] private float PassiveChargeRate = 10f;
@@ -15,12 +19,28 @@ public class DashManagerScript : MonoBehaviour
     [Tooltip("rate at which time speeds back to normal")]
     [SerializeField] private float timeResumeSpeed;
 
+
+    [Header("Re Worked Player Dash Veriables")]
+
+    // speed cap tier ranges from 0-4 increases every succesful dash
+    [SerializeField] private int SpeedCap = 0;
+    // player max speed goes up every speed cap tier
+    [SerializeField] private float MaxSpeed = 0f;
+    // Default speed for player never changes in game
+    [SerializeField] private float BaseSpeed = 30f;
+    // base speed mult increases every speed capt tier
+    [SerializeField] private float multiplier = 0.5f;
+    // the rate at which the player slows down to new max speed
+    [SerializeField] private float PullBackSpeed = 1f;
+
+
+
+
     // CHANGE THIS LATER NOT NEEDED ONCE ORGANIZED
     [Header(" values referenced in PlayerController ")]
     public int chargeCounter = 2;
     public float maxPlayerSpeed = 0f;
     public float DashSpeed = 0f;
-    public float PullBackSpeed = 0f;
 
     public bool reachedMaxSpeed = false;
 
@@ -46,15 +66,18 @@ public class DashManagerScript : MonoBehaviour
     void Update()
     {
 
-        // if (PC3DScript.forwardCruiseSpeed > maxPlayerSpeed && PC3DScript.isBoostRecovering == true)
-        // {
-        //     PC3DScript.forwardCruiseSpeed -= PullBackSpeed;
+        if (PullBackSpeed >= 0 && Input.GetKey(KeyCode.Space) )
+        {
+            float SpeedOverTime = Mathf.Lerp(MaxSpeed, PC3DScript.forwardCruiseSpeed, PullBackSpeed);
             
-        // }
-        // if (PC3DScript.forwardCruiseSpeed <= maxPlayerSpeed &&  PC3DScript.boostRecoverElapsed >= PC3DScript.boostRecoverTime)
-        // {
-        //     reachedMaxSpeed = true;
-        // }
+            PC3DScript.forwardCruiseSpeed -= SpeedOverTime;
+            Debug.Log(PC3DScript.forwardCruiseSpeed); ;
+            PullBackSpeed -= Time.deltaTime;
+            
+        }else
+        {
+            PullBackSpeed = 1;
+        }
 
         if (isTracking == true)
         {
@@ -125,7 +148,7 @@ public class DashManagerScript : MonoBehaviour
             Time.timeScale += timeResumeSpeed;
         }
     }
-    
+
 
     /// <summary>
     /// after 1 meter passed resets to track a new meter
@@ -137,6 +160,40 @@ public class DashManagerScript : MonoBehaviour
         lastPosition = transform.position;
 
         Debug.Log("Distance tracking reset");
+    }
+
+
+
+    /// <summary>
+    /// Increases speed based off of current speed cap and 
+    /// current forward cruise speed
+    /// </summary>
+    public void IncreaseSpeed()
+    {
+        if (SpeedCap <= 5)
+        {
+            float newMult = multiplier * SpeedCap;
+            float finalMult = 1f + newMult;
+            Debug.Log(finalMult);
+            MaxSpeed = PC3DScript.forwardCruiseSpeed * finalMult;
+            PC3DScript.forwardCruiseSpeed = MaxSpeed;
+            SpeedCap++;
+
+        }
+    }
+
+    public void lowerSpeed()
+    {
+        SpeedCap--;
+
+        if (SpeedCap <= 5)
+        {
+            float newMult = multiplier * SpeedCap;
+            float finalMult = multiplier + 1f;
+            MaxSpeed = PC3DScript.forwardCruiseSpeed * finalMult;
+
+            PC3DScript.forwardCruiseSpeed = Mathf.Lerp(PC3DScript.forwardCruiseSpeed, MaxSpeed, PullBackSpeed);
+        }
     }
 
 }
