@@ -10,6 +10,7 @@ public class TestUI : MonoBehaviour
     public bool showBrakeHoldTime = true;
     public bool showCurrentTurnSpeed = true;
     public bool showTurnHoldTime = true;
+    public bool showControlScheme = true;
 
     GameObject Player;
     PlayerController3D playerController3D;
@@ -56,6 +57,8 @@ public class TestUI : MonoBehaviour
                     sb.AppendLine("currentTurnSpeed: " + playerController3D.GetCurrentTurnSpeed());
                 if (showTurnHoldTime)
                     sb.AppendLine("turnHoldTime: " + playerController3D.GetTurnHoldTime().ToString());
+                if (showControlScheme)
+                    sb.AppendLine("Control Scheme: " + playerController3D.GetControlScheme().ToString());
                 textMesh.text = sb.ToString();
             }
         }

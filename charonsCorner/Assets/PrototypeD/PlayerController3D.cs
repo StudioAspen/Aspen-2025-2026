@@ -4,6 +4,14 @@ using Unity.Cinemachine;
 using UnityEngine.SceneManagement;
 using MoreMountains.Tools;
 
+
+// Fonz - Brake Control Mode
+enum BrakeControlMode
+{
+    MOUSE,
+    A_D_KEYS
+}
+
 [RequireComponent(typeof(CharacterController))]
 public class PlayerController3D : MonoBehaviour
 {
@@ -169,6 +177,8 @@ public class PlayerController3D : MonoBehaviour
     public float crouchHeight = 1f;
     public float normalHeight = 2f;
 
+    // Fonz - Brake Control Mode
+    [SerializeField] private BrakeControlMode brakeControlMode = BrakeControlMode.MOUSE;
 
     public DashManagerScript dmScript;
     public CameraFollowRotation cameraRotationScript;
@@ -317,6 +327,15 @@ public class PlayerController3D : MonoBehaviour
                 turnDir = 0;
                 turnHoldTime = 0f; // reset hold time
             }
+
+            // Fonz - Have a toggle for Mouse Control during Brake Dashing
+            if (Input.GetKeyDown(KeyCode.L))
+            {
+                if (brakeControlMode == BrakeControlMode.MOUSE)
+                    brakeControlMode = BrakeControlMode.A_D_KEYS;
+                else
+                    brakeControlMode = BrakeControlMode.MOUSE;
+            }
         }
         else
         {
@@ -342,17 +361,35 @@ public class PlayerController3D : MonoBehaviour
             // Adjust turn responsiveness based on speed level
             brakeAngleAdjustSpeed = Mathf.Lerp(brakeAngleAdjustSpeedMin, brakeAngleAdjustSpeedMax, (float)numSpeedIncreases / 4f);
 
-            // --- Mouse control ---
-            // Get mouse delta X each frame (movement since last frame)
-            float mouseX = Input.GetAxisRaw("Mouse X");
+            if (brakeControlMode == BrakeControlMode.MOUSE)
+            {
+                // --- Mouse control ---
+                // Get mouse delta X each frame (movement since last frame)
+                float mouseX = Input.GetAxisRaw("Mouse X");
 
-            // Scale mouse sensitivity relative to brakeAngleAdjustSpeed
-            // This controls how far the mouse can rotate the angle each frame.
-            float sensitivity = brakeAngleAdjustSpeed * 0.02f; // tweak this multiplier for feel
+                // Scale mouse sensitivity relative to brakeAngleAdjustSpeed
+                // This controls how far the mouse can rotate the angle each frame.
+                float sensitivity = brakeAngleAdjustSpeed * 0.02f; // tweak this multiplier for feel
 
-            // Increment angle based on mouse delta
-            currentBrakeAngle += mouseX * sensitivity;
-            currentBrakeAngle = Mathf.Clamp(currentBrakeAngle, -brakeTurnAngle, brakeTurnAngle);
+                // Increment angle based on mouse delta
+                currentBrakeAngle += mouseX * sensitivity;
+                currentBrakeAngle = Mathf.Clamp(currentBrakeAngle, -brakeTurnAngle, brakeTurnAngle);
+            }
+            else if (brakeControlMode == BrakeControlMode.A_D_KEYS)
+            {
+                // --- Angle control ---
+                float h = Input.GetAxisRaw("Horizontal"); // -1,0,1
+                if (Mathf.Abs(h) > 0.01f)
+                {
+                    currentBrakeAngle += h * brakeAngleAdjustSpeed * dt;
+                    currentBrakeAngle = Mathf.Clamp(currentBrakeAngle, -brakeTurnAngle, brakeTurnAngle);
+                }
+            }
+            else
+            {
+                // enum error'
+                Debug.LogError("BrakeControlMode enum error");
+            }
 
             // --- Camera dutch + yaw feedback ---
             targetDutch = (currentBrakeAngle / brakeTurnAngle) * maxDutchAngle;
@@ -378,8 +415,6 @@ public class PlayerController3D : MonoBehaviour
             cameraRotationScript.enabled = false;
             //cameraRotationScript.baseOffset = new Vector3(0f, 0f, 0f);
             brakePreview.localRotation = Quaternion.Euler(90f, currentBrakeAngle, 0f);
-
-
         }
 
         // ---- SQUASH (Right Mouse) ----
@@ -850,6 +885,15 @@ public class PlayerController3D : MonoBehaviour
     public float GetCurrentTurnSpeed()
     {
         return currentTurnSpeed;
+    }
+
+    // Fonz - added for my TestUI
+    public string GetControlScheme()
+    {
+        if (brakeControlMode == BrakeControlMode.MOUSE)
+            return "Mouse";
+        else
+            return "A/D Keys";
     }
 
     // Fonz - added for my TestUI
