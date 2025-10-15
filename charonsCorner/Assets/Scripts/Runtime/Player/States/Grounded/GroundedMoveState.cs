@@ -8,8 +8,9 @@ namespace CharonsCorner.Runtime
         [field: SerializeField] public float Acceleration { get; private set; } = 15f;
         [field: SerializeField] public float TurnResponsiveness { get; private set; } = 1f;
         [field: SerializeField] public float MaxSpeed { get; private set; } = 25f;
+ 
 
-    
+
 
         private protected override void OnEnter()
         {
@@ -36,27 +37,39 @@ namespace CharonsCorner.Runtime
             Vector3 velocity = context.RigidBody.linearVelocity; 
             Vector3 flatVelocity = velocity;
             flatVelocity.y = 0f;
-
             float speed = flatVelocity.magnitude;
 
        
             Vector3 currentDirection = speed > 0.01f ? flatVelocity.normalized : desiredDirection; //establish if you are moving forward
             float alignmentDirection = Vector3.Dot(currentDirection, desiredDirection); //is object's direction in alignment with player input?
 
-   
-            float directionChangeFactor = Mathf.InverseLerp(0f, 180f, Vector3.Angle(currentDirection, desiredDirection)); //torque responsiveness factor
+            float directionChangeFactor = Mathf.InverseLerp(0f, 180f, Vector3.Angle(currentDirection, desiredDirection)); //angle between current and desired direction
 
-     
+            Vector3 slopeProjection = Vector3.ProjectOnPlane(Physics.gravity, Vector3.up).normalized;
+            float slopeDirection = Vector3.Dot(desiredDirection.normalized, -slopeProjection); //Are you on a slope?
+
+
+          
             Vector3 turnTorque = TurnResponsiveness * directionChangeFactor * Vector3.Cross(Vector3.up, desiredDirection); //torque responsiveness
-
-
             float speedFactor = Mathf.Clamp01(speed / MaxSpeed);
             Vector3 pushTorque = Acceleration * Vector3.Cross(Vector3.up, desiredDirection) * (1f - speedFactor); //not effective on high speeds
-
             Vector3 totalTorque = turnTorque + pushTorque;
 
-            
-            if (alignmentDirection < -0.1f && speed > 0.1f) //Are you breaking/reversing?
+            //booleans
+            bool isReversing = alignmentDirection < -0.1f && speed > 0.1f; //Are you reversing
+            bool onSlope = slopeDirection > 0.1f;
+            bool hillBoost = speed < 0.5f && onSlope; //assist for hills
+
+
+            if (hillBoost)
+            {
+                bool onHill = true;
+                Vector3 assistTorque = Vector3.Cross(Vector3.up, desiredDirection.normalized) * Acceleration;
+                totalTorque += assistTorque;
+                context.RigidBody.AddForce(desiredDirection.normalized * Acceleration * 0.3f, ForceMode.Acceleration);
+            }
+
+            if (isReversing) //Are you breaking/reversing?
             {
                 //apply deceleration
                 float brakeStrength = Acceleration * 1.0f;
@@ -66,18 +79,16 @@ namespace CharonsCorner.Runtime
                 //reduce snapFactor
                 flatVelocity = Vector3.Lerp(flatVelocity, Vector3.zero, 0.1f);
             }
-            else
-            {
+            
+            float angle = Vector3.Angle(currentDirection, desiredDirection);
+            float snapFactor = Mathf.Lerp(0.02f, 0.12f, Mathf.InverseLerp(0f, 60f, angle));
+            snapFactor *= Mathf.Lerp(0.7f, 0.3f, speed / MaxSpeed);
 
-                float angle = Vector3.Angle(currentDirection, desiredDirection);
-                float snapFactor = Mathf.Lerp(0.02f, 0.12f, Mathf.InverseLerp(0f, 60f, angle));
-                snapFactor *= Mathf.Lerp(0.7f, 0.3f, speed / MaxSpeed);
+            Vector3 targetVelocity = desiredDirection.normalized * speed;
+            flatVelocity = Vector3.Lerp(flatVelocity, targetVelocity, snapFactor);
 
-                Vector3 targetVelocity = desiredDirection.normalized * speed;
-                flatVelocity = Vector3.Lerp(flatVelocity, targetVelocity, snapFactor);
-
-                context.RigidBody.AddTorque(totalTorque, ForceMode.VelocityChange);
-            }
+            context.RigidBody.AddTorque(totalTorque, ForceMode.VelocityChange);
+            
 
             //reapply velocity
             context.RigidBody.linearVelocity = new Vector3(flatVelocity.x, velocity.y, flatVelocity.z);
