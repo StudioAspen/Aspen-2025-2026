@@ -257,7 +257,7 @@ Transform:
   m_GameObject: {fileID: 1908398185359762518}
   serializedVersion: 2
   m_LocalRotation: {x: 0.18033099, y: 0.00000000414151, z: -7.592899e-10, w: 0.98360604}
-  m_LocalPosition: {x: 0, y: 7.14, z: -5.93}
+  m_LocalPosition: {x: 0, y: 7.31, z: -5.93}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -322,7 +322,7 @@ MonoBehaviour:
   TargetOffset: {x: 0, y: 0, z: 0}
   TrackerSettings:
     BindingMode: 4
-    PositionDamping: {x: 1, y: 1, z: 1}
+    PositionDamping: {x: 0.5, y: 0.5, z: 0.1}
     AngularDampingMode: 0
     RotationDamping: {x: 1, y: 1, z: 1}
     QuaternionDamping: 1
@@ -781,7 +781,7 @@ Transform:
   m_GameObject: {fileID: 7899314738565538664}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 4.89, z: 0}
+  m_LocalPosition: {x: 0, y: 5.06, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -851,24 +851,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <GravityAmount>k__BackingField: 30
+  <RespawnPoint>k__BackingField: {x: 0, y: 5.06, z: 0}
   <GroundCheckLength>k__BackingField: 0.5
   <GroundLayer>k__BackingField:
     serializedVersion: 2
     m_Bits: 8
   <Orientation>k__BackingField: {fileID: 4359243323156565108}
   <StateMachine>k__BackingField:
-    currentStateName: AirSuperState
+    currentStateName: GroundSuperState
   <GroundState>k__BackingField:
     <SubStateMachine>k__BackingField:
-      currentStateName: None
+      currentStateName: GroundMoveState
     <MoveState>k__BackingField:
       <MaxSpeed>k__BackingField: 35
-      <Acceleration>k__BackingField: 50
-      <Deceleration>k__BackingField: 15
-      <SlopeBoost>k__BackingField: 150
+      <Acceleration>k__BackingField: 60
+      <Deceleration>k__BackingField: 30
+      <SlopeBoost>k__BackingField: 100
   <AirState>k__BackingField:
     <SubStateMachine>k__BackingField:
-      currentStateName: AirMoveState
+      currentStateName: None
     <MoveState>k__BackingField:
       <MaxFlatSpeed>k__BackingField: 40
       <MaxVerticalSpeed>k__BackingField: 20
