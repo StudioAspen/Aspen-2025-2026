@@ -24,7 +24,7 @@ namespace CharonsCorner.Runtime
             GameObject go = Rb.gameObject;
             //Vector3 myUp = go.transform.TransformDirection(Vector3.up);
             //Rb.AddForce(myUp * jumpForce, ForceMode.Impulse);
-            Rb.AddForce(go.GetComponent<PrototypePlayerController>().Orientation.forward * dashForce, ForceMode.Impulse);
+            Rb.AddForce(go.GetComponent<PrototypePlayerController>().Orientation.forward * dashForce, ForceMode.VelocityChange);
             go.GetComponent<PlayerAbility>().currentUses--;
         }
     }
