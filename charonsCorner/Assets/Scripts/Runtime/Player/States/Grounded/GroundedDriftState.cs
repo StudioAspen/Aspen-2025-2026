@@ -15,6 +15,7 @@ namespace CharonsCorner.Runtime
         [field: SerializeField] public float DriftDrag { get; private set; } = 0.995f;
         [field: SerializeField] public float DriftDeaccelerationMultiplier { get; private set; } = 0.25f;
         [field: SerializeField] public float DriftExitAcceleration { get; private set; } = 15f;
+        [field: SerializeField] public float MagnetizeStrength { get; private set; } = 30f; // Adjust as needed
 
 
         private Vector3 driftDirection;
@@ -61,36 +62,36 @@ namespace CharonsCorner.Runtime
         private protected override void OnFixedUpdate()
         {
             Vector3 desiredDirection = Utilities.GetCameraBasedMoveInput(
-          CameraManager.Instance.CurrentCamera.transform,
-          context.Input.MoveDirection
-      );
+                CameraManager.Instance.CurrentCamera.transform,
+                context.Input.MoveDirection
+            );
+            driftDirection = Vector3.Slerp(driftDirection, desiredDirection.normalized, TurnResponsiveness * Time.fixedDeltaTime);
 
-            // ensure vectors are horizontal
             Vector3 flatVel = context.RigidBody.linearVelocity;
             flatVel.y = 0f;
             float speed = flatVel.magnitude;
             Vector3 currentVelDir = speed > 0.001f ? flatVel.normalized : desiredDirection.normalized;
 
-           
-            driftDirection = Vector3.Slerp(driftDirection, desiredDirection.normalized, TurnResponsiveness * Time.fixedDeltaTime);
-
-           
             Vector3 desiredVelDir = Vector3.Slerp(currentVelDir, driftDirection.normalized, TurnResponsiveness * Time.fixedDeltaTime);
-            Vector3 targetVelocity = desiredVelDir * speed; // keep current speed, only change direction for the arc
+            Vector3 targetVelocity = desiredVelDir * speed;
 
-           
             Vector3 steering = (targetVelocity - flatVel) * DriftDeaccelerationMultiplier;
             context.RigidBody.AddForce(steering, ForceMode.VelocityChange);
-
-            
             context.RigidBody.AddForce(driftDirection.normalized * Acceleration * 0.5f, ForceMode.Acceleration);
 
-            
+            // Magnetize stick: apply downward force to keep player grounded
+            context.RigidBody.AddForce(Vector3.down * MagnetizeStrength, ForceMode.Acceleration);
+
             context.RigidBody.linearVelocity = new Vector3(
                 context.RigidBody.linearVelocity.x * DriftDrag,
                 context.RigidBody.linearVelocity.y,
                 context.RigidBody.linearVelocity.z * DriftDrag
-            ); 
+            );
+
+            // Cap max speed
+            if (context.RigidBody.linearVelocity.magnitude > MaxDriftSpeed)
+                context.RigidBody.linearVelocity = Vector3.ClampMagnitude(context.RigidBody.linearVelocity, MaxDriftSpeed);
+
 
             // Debugging visual
             Debug.DrawRay(context.transform.position, driftDirection.normalized * 2f, Color.cyan);
