@@ -23,7 +23,7 @@ public class DashManagerScript : MonoBehaviour
     [Header("Re Worked Player Dash Veriables")]
 
     // speed cap tier ranges from 0-4 increases every succesful dash
-    [SerializeField] private int SpeedCap = 0;
+    [SerializeField] public int SpeedCap = 1;
     // player max speed goes up every speed cap tier
     [SerializeField] private float MaxSpeed = 0f;
     // Default speed for player never changes in game
@@ -33,6 +33,8 @@ public class DashManagerScript : MonoBehaviour
     // the rate at which the player slows down to new max speed
     [SerializeField] private float PullBackSpeed = 1f;
 
+
+    private bool canBoost = true;
 
 
 
@@ -168,31 +170,42 @@ public class DashManagerScript : MonoBehaviour
     /// Increases speed based off of current speed cap and 
     /// current forward cruise speed
     /// </summary>
-    public void IncreaseSpeed()
+    public float IncreaseSpeed()
     {
-        if (SpeedCap <= 5)
+        if (SpeedCap <= 5 && canBoost == true)
         {
+            canBoost = false;
             float newMult = multiplier * SpeedCap;
             float finalMult = 1f + newMult;
             Debug.Log(finalMult);
             MaxSpeed = PC3DScript.forwardCruiseSpeed * finalMult;
-            PC3DScript.forwardCruiseSpeed = MaxSpeed;
-            SpeedCap++;
+            SpeedCap += 2;
+            Debug.Log("speedcap before loweing " + SpeedCap);
+            lowerSpeed();
+            return MaxSpeed;
+
 
         }
+        return PC3DScript.forwardCruiseSpeed;
     }
 
     public void lowerSpeed()
     {
-        SpeedCap--;
-
+        SpeedCap -= 1;
+        Debug.Log("speedcap after lowering: " + SpeedCap);
         if (SpeedCap <= 5)
         {
+            canBoost = true;
+            Debug.Log("less than 5");
             float newMult = multiplier * SpeedCap;
             float finalMult = multiplier + 1f;
             MaxSpeed = PC3DScript.forwardCruiseSpeed * finalMult;
 
             PC3DScript.forwardCruiseSpeed = Mathf.Lerp(PC3DScript.forwardCruiseSpeed, MaxSpeed, PullBackSpeed);
+        }
+        else
+        {
+            SpeedCap = 5;
         }
     }
 

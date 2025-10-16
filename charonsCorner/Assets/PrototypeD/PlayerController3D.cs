@@ -177,6 +177,8 @@ public class PlayerController3D : MonoBehaviour
     public float crouchHeight = 1f;
     public float normalHeight = 2f;
 
+    private bool hasIncreasedSpeedThisBrake = false;
+
     // Fonz - Brake Control Mode
     [SerializeField] private BrakeControlMode brakeControlMode = BrakeControlMode.MOUSE;
 
@@ -486,6 +488,8 @@ public class PlayerController3D : MonoBehaviour
         turnDir = 0;
         currentTurnSpeed = 0f;
         turnHoldTime = 0f;
+        hasIncreasedSpeedThisBrake = false;
+
     }
 
     // 2) Replace EndBrakeAndStartBoost()
@@ -667,6 +671,14 @@ public class PlayerController3D : MonoBehaviour
             float t = Mathf.Clamp01(brakeElapsed / Mathf.Max(0.0001f, brakeTime));
             float eval = brakeCurve.Evaluate(t);
             currentForwardSpeed = Mathf.Lerp(preBrakeSpeed, brakeTargetSpeed, eval);
+
+            // if (!hasIncreasedSpeedThisBrake)
+            // {
+            //     currentForwardSpeed = dmScript.IncreaseSpeed();
+            //     dmScript.SpeedCap++;
+            //     hasIncreasedSpeedThisBrake = true;
+            // }
+
             if (vcam != null)
             {
                 float holdPercent = Mathf.Clamp01(brakeHoldElapsed / brakeHoldMaxTime);
@@ -676,6 +688,7 @@ public class PlayerController3D : MonoBehaviour
             if (brakeHoldElapsed >= brakeHoldTime)
             {
                 EndBrakeAndStartBoost();
+                if (!isBraking) hasIncreasedSpeedThisBrake = false;
                 targetDutch = 0f;
 
                 if (vcam != null)
@@ -685,26 +698,37 @@ public class PlayerController3D : MonoBehaviour
 
         else if (isBoostRecovering)
         {
-            boostRecoverElapsed += dt;
-            float t = Mathf.Clamp01(boostRecoverElapsed / Mathf.Max(0.0001f, boostRecoverTime));
-            float eval = boostRecoverCurve.Evaluate(t);
+            // boostRecoverElapsed += dt;
+            // float t = Mathf.Clamp01(boostRecoverElapsed / Mathf.Max(0.0001f, boostRecoverTime));
+            // float eval = boostRecoverCurve.Evaluate(t);
             // Lerp from boostSpeed -> forwardCruiseSpeed using curve (curve should go 0->1 mapping)
-            currentForwardSpeed = Mathf.Lerp(boostSpeed, forwardCruiseSpeed, eval);
+            // currentForwardSpeed = Mathf.Lerp(currentForwardSpeed, forwardCruiseSpeed, eval);
             // increase speed based off of current cruise speed
             // dmScript.IncreaseSpeed();
-            Debug.Log($"Final Speed {currentForwardSpeed}");
-            if (boostRecoverElapsed >= boostRecoverTime)
+
+            
+            if (!hasIncreasedSpeedThisBrake)
             {
-                // dmScript.lowerSpeed
-                Debug.Log("perma boost");
-                isBoostRecovering = false;
-                if (numSpeedIncreases < 4) // Fonz - limit number of speed increases to 4
-                {
-                    forwardCruiseSpeed = forwardCruiseSpeed * speedPercentageIncrease; //Fonz - increase speed after each boost
-                    numSpeedIncreases += 1; // Fonz - count number of speed increases
-                }
+                forwardCruiseSpeed = dmScript.IncreaseSpeed();
                 currentForwardSpeed = forwardCruiseSpeed;
+                hasIncreasedSpeedThisBrake = true;
+                isBoostRecovering = false;
             }
+
+            // Debug.Log($"Final Speed {forwardCruiseSpeed}");
+            // if (boostRecoverElapsed >= boostRecoverTime)
+            // {
+            //     // dmScript.lowerSpeed
+            //     // Debug.Log("perma boost");
+            //     isBoostRecovering = false;
+            //     if (numSpeedIncreases < 5) // Fonz - limit number of speed increases to 4
+            //     {
+            //         // forwardCruiseSpeed = forwardCruiseSpeed * speedPercentageIncrease; //Fonz - increase speed after each boost
+                    
+            //         numSpeedIncreases += 1; // Fonz - count number of speed increases
+            //     }
+            //     currentForwardSpeed = forwardCruiseSpeed;
+            // }
         }
         // ----- SQUASH logic ----- //
         else if (isSquashing)
@@ -774,6 +798,7 @@ public class PlayerController3D : MonoBehaviour
         if (!isBraking && !isJumping)
         {
             // ensure movement aligns with the transform normally
+            
             moveDirectionForward = transform.forward.normalized;
         }
         if (isBraking)
@@ -912,6 +937,7 @@ public class PlayerController3D : MonoBehaviour
     public void resetSpeed()
     {
         forwardCruiseSpeed = dmScript.maxPlayerSpeed;
+        dmScript.SpeedCap = 1;
         numSpeedIncreases = 0; // reset speed increases
     }
 
