@@ -19,7 +19,7 @@ namespace CharonsCorner.Runtime
         // Update is called once per frame
         void Update()
         {
-            if (ScoreManager.Instance.numPinsKnocked != 10)
+            if (ScoreManager.Instance.numPinsKnocked < 10)
             {
                 meshRenderer.material.color = Color.red;
                 capsuleCollider.enabled = false;

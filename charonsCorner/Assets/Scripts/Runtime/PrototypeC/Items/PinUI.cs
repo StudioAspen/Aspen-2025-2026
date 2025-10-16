@@ -18,7 +18,7 @@ namespace CharonsCorner.Runtime
         // Update is called once per frame
         void Update()
         {
-            uiText.text = preText + ScoreManager.Instance.numPinsKnocked + postText;
+            uiText.text = preText + ScoreManager.Instance.numPinsKnocked;
         }
     }
 }
