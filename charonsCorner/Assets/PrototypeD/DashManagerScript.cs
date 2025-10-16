@@ -23,7 +23,10 @@ public class DashManagerScript : MonoBehaviour
     [Header("Re Worked Player Dash Veriables")]
 
     // speed cap tier ranges from 0-4 increases every succesful dash
-    [SerializeField] public int SpeedCap = 1;
+    public int SpeedCap = 1;
+
+    [Tooltip(" LIMIT THE SPEED CAP HERE")] 
+    [SerializeField] private int SpeedCapLimit = 5;
     // player max speed goes up every speed cap tier
     [SerializeField] private float MaxSpeed = 0f;
     // Default speed for player never changes in game
@@ -172,15 +175,15 @@ public class DashManagerScript : MonoBehaviour
     /// </summary>
     public float IncreaseSpeed()
     {
-        if (SpeedCap <= 5 && canBoost == true)
+        if (SpeedCap <= SpeedCapLimit && canBoost == true)
         {
+            float newMult = 0;
             canBoost = false;
-            float newMult = multiplier * SpeedCap;
+            newMult = multiplier * SpeedCap;
             float finalMult = 1f + newMult;
-            Debug.Log(finalMult);
-            MaxSpeed = PC3DScript.forwardCruiseSpeed * finalMult;
+            MaxSpeed = BaseSpeed * finalMult;
+            Debug.Log("Current Max speed: " + MaxSpeed + "Current Mult: " + finalMult);
             SpeedCap += 2;
-            Debug.Log("speedcap before loweing " + SpeedCap);
             lowerSpeed();
             return MaxSpeed;
 
@@ -195,12 +198,13 @@ public class DashManagerScript : MonoBehaviour
         Debug.Log("speedcap after lowering: " + SpeedCap);
         if (SpeedCap <= 5)
         {
+            float newMult = 0;
             canBoost = true;
-            Debug.Log("less than 5");
-            float newMult = multiplier * SpeedCap;
+            newMult = multiplier * SpeedCap;
             float finalMult = multiplier + 1f;
-            MaxSpeed = PC3DScript.forwardCruiseSpeed * finalMult;
-
+            MaxSpeed = BaseSpeed * finalMult;
+            
+            Debug.Log("Current Max speed: " + MaxSpeed + "Current Mult: " + finalMult);
             PC3DScript.forwardCruiseSpeed = Mathf.Lerp(PC3DScript.forwardCruiseSpeed, MaxSpeed, PullBackSpeed);
         }
         else
