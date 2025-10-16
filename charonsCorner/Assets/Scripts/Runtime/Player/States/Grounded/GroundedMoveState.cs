@@ -29,71 +29,71 @@ namespace CharonsCorner.Runtime
                 context.Input.MoveDirection
             );
 
-            Vector3 velocity = context.RigidBody.linearVelocity;
-            Vector3 flatVelocity = velocity;
-            flatVelocity.y = 0f;
-            float speed = flatVelocity.magnitude;
+            // Get ground normal via raycast
+            Vector3 groundNormal = Vector3.up;
+            RaycastHit hit;
+            if (Physics.Raycast(context.transform.position, Vector3.down, out hit, 2f, context.GroundedSuperState.GroundLayerMask))
+            {
+                groundNormal = hit.normal;
 
-            Vector3 currentDirection = speed > 0.01f ? flatVelocity.normalized : desiredDirection;
+                // Only apply ground stick if NOT in water
+                if (context.IsGrounded && !context.IsInWater)
+                {
+                    Vector3 velocity = context.RigidBody.linearVelocity;
+                    float velocityAway = Vector3.Dot(velocity, groundNormal);
 
-            // --- Turn Responsiveness Integration ---
-            float angleToDesired = Vector3.SignedAngle(currentDirection, desiredDirection, Vector3.up);
-            float turnAmount = Mathf.Clamp(angleToDesired * TurnResponsiveness * 0.01f, -1f, 1f); // scale and clamp for stability
+                    if (velocityAway > 0f)
+                    {
+                        float stickStrength = stickToGroundForce * Mathf.Clamp01(velocityAway);
+                        context.RigidBody.AddForce(-groundNormal * stickStrength, ForceMode.VelocityChange);
+                    }
+                }
+            }
 
-            // Apply torque to rotate toward desired direction
-            Vector3 turnTorque = Vector3.up * turnAmount * Acceleration;
+            // Project movement and velocity onto ground plane
+            Vector3 projectedDesiredDirection = Vector3.ProjectOnPlane(desiredDirection, groundNormal).normalized;
+            Vector3 velocityProj = context.RigidBody.linearVelocity;
+            Vector3 projectedVelocity = Vector3.ProjectOnPlane(velocityProj, groundNormal);
+
+            float speed = projectedVelocity.magnitude;
+            Vector3 currentDirection = speed > 0.01f ? projectedVelocity.normalized : projectedDesiredDirection;
+
+            // Turn Responsiveness
+            float angleToDesired = Vector3.SignedAngle(currentDirection, projectedDesiredDirection, groundNormal);
+            float turnAmount = Mathf.Clamp(angleToDesired * TurnResponsiveness * 0.01f, -1f, 1f);
+            Vector3 turnTorque = groundNormal * turnAmount * Acceleration;
             context.RigidBody.AddTorque(turnTorque, ForceMode.VelocityChange);
 
-            // --- Existing movement logic ---
-            float alignmentDirection = Vector3.Dot(currentDirection, desiredDirection);
-            float directionChangeFactor = Mathf.InverseLerp(0f, 180f, Mathf.Abs(angleToDesired));
-
-            Vector3 slopeProjection = Vector3.ProjectOnPlane(Physics.gravity, Vector3.up).normalized;
-            float slopeDirection = Vector3.Dot(desiredDirection.normalized, -slopeProjection);
-
+            // Movement logic (projected)
+            float alignmentDirection = Vector3.Dot(currentDirection, projectedDesiredDirection);
             float speedFactor = Mathf.Clamp01(speed / MaxSpeed);
-            Vector3 pushTorque = Acceleration * Vector3.Cross(Vector3.up, desiredDirection) * (1f - speedFactor);
+            Vector3 pushTorque = Acceleration * Vector3.Cross(groundNormal, projectedDesiredDirection) * (1f - speedFactor);
             Vector3 totalTorque = pushTorque; // turnTorque already applied above
 
             bool isReversing = alignmentDirection < -0.1f && speed > 0.1f;
-            bool onSlope = slopeDirection > 0.1f;
-            bool hillBoost = speed < 0.5f && onSlope;
-
-            if (hillBoost)
-            {
-                Vector3 assistTorque = Vector3.Cross(Vector3.up, desiredDirection.normalized) * Acceleration;
-                totalTorque += assistTorque;
-                context.RigidBody.AddForce(desiredDirection.normalized * Acceleration * 0.3f, ForceMode.Acceleration);
-            }
 
             if (isReversing)
             {
-                // Apply a gentle brake force proportional to current speed
-                float brakeStrength = Acceleration * 0.5f; // Lower value for smoothness
-                Vector3 brakeForce = -flatVelocity * brakeStrength * Time.fixedDeltaTime;
+                float brakeStrength = Acceleration * 0.5f;
+                Vector3 brakeForce = -projectedVelocity * brakeStrength * Time.fixedDeltaTime;
                 context.RigidBody.AddForce(brakeForce, ForceMode.VelocityChange);
-
-                // Gradually dampen velocity
-                flatVelocity = Vector3.Lerp(flatVelocity, Vector3.zero, 0.04f); // Lower lerp factor for smoothness
+                projectedVelocity = Vector3.Lerp(projectedVelocity, Vector3.zero, 0.04f);
             }
 
-            float angle = Vector3.Angle(currentDirection, desiredDirection);
+            float angle = Vector3.Angle(currentDirection, projectedDesiredDirection);
             float snapFactor = Mathf.Lerp(0.02f, 0.12f, Mathf.InverseLerp(0f, 60f, angle));
             snapFactor *= Mathf.Lerp(0.7f, 0.3f, speed / MaxSpeed);
 
-            Vector3 targetVelocity = desiredDirection.normalized * speed;
-            flatVelocity = Vector3.Lerp(flatVelocity, targetVelocity, snapFactor);
+            Vector3 targetVelocity = projectedDesiredDirection * speed;
+            projectedVelocity = Vector3.Lerp(projectedVelocity, targetVelocity, snapFactor);
 
             context.RigidBody.AddTorque(totalTorque, ForceMode.VelocityChange);
 
-            // Stick to ground on slopes (only if grounded)
-            if (context.IsGrounded)
-            {
-                context.RigidBody.AddForce(Vector3.down * stickToGroundForce, ForceMode.Acceleration);
-            }
+            // Apply the projected velocity, but preserve any vertical velocity
+            float verticalVelocity = Vector3.Dot(velocityProj, groundNormal);
+            context.RigidBody.linearVelocity = projectedVelocity + groundNormal * verticalVelocity;
 
-            context.RigidBody.linearVelocity = new Vector3(flatVelocity.x, velocity.y, flatVelocity.z);
-            context.RigidBody.angularVelocity = Vector3.ProjectOnPlane(context.RigidBody.angularVelocity, Vector3.up);
+            context.RigidBody.angularVelocity = Vector3.ProjectOnPlane(context.RigidBody.angularVelocity, groundNormal);
 
             if (context.RigidBody.linearVelocity.magnitude > MaxSpeed)
                 context.RigidBody.linearVelocity = Vector3.ClampMagnitude(context.RigidBody.linearVelocity, MaxSpeed);
