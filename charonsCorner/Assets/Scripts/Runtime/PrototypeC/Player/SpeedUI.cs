@@ -16,7 +16,21 @@ namespace CharonsCorner.Runtime
         // Update is called once per frame
         void Update()
         {
-            SpeedText.text = "Speed: " + _playerRb.linearVelocity.magnitude.ToString("0.00");
+            Color color;
+            if (_playerRb.linearVelocity.magnitude > 30f)
+            {
+                color = Color.red;
+            }
+            else if (_playerRb.linearVelocity.magnitude > 10f)
+            {
+                color = Color.yellow;
+            }
+            else
+            {
+                color = Color.green;
+            }
+            SpeedText.color = color;
+            SpeedText.text = "Speed: " + _playerRb.linearVelocity.magnitude.ToString("0");
         }
     }
 }
