@@ -19,6 +19,7 @@ namespace CharonsCorner.Runtime
         public bool IsGrounded => GroundedSuperState.IsGrounded;
         public float CurrentSpeed => RigidBody.linearVelocity.magnitude;
         public bool IsInWater { get; set; }
+        public bool IsBig => isBig;
 
         // --- Size Toggle Fields ---
         [Header("Size Settings")]
@@ -28,7 +29,7 @@ namespace CharonsCorner.Runtime
         public float bigMass = 4f;
         public float normalGravity = -9.81f;
         public float bigGravity = -19.62f; // Example: double gravity when big
-        private bool isBig = false;
+        public bool isBig = false;
 
         private void Awake()
         {

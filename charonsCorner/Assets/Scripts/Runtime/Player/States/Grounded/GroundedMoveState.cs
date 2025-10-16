@@ -35,17 +35,25 @@ namespace CharonsCorner.Runtime
             float speed = flatVelocity.magnitude;
 
             Vector3 currentDirection = speed > 0.01f ? flatVelocity.normalized : desiredDirection;
-            float alignmentDirection = Vector3.Dot(currentDirection, desiredDirection);
 
-            float directionChangeFactor = Mathf.InverseLerp(0f, 180f, Vector3.Angle(currentDirection, desiredDirection));
+            // --- Turn Responsiveness Integration ---
+            float angleToDesired = Vector3.SignedAngle(currentDirection, desiredDirection, Vector3.up);
+            float turnAmount = Mathf.Clamp(angleToDesired * TurnResponsiveness * 0.01f, -1f, 1f); // scale and clamp for stability
+
+            // Apply torque to rotate toward desired direction
+            Vector3 turnTorque = Vector3.up * turnAmount * Acceleration;
+            context.RigidBody.AddTorque(turnTorque, ForceMode.VelocityChange);
+
+            // --- Existing movement logic ---
+            float alignmentDirection = Vector3.Dot(currentDirection, desiredDirection);
+            float directionChangeFactor = Mathf.InverseLerp(0f, 180f, Mathf.Abs(angleToDesired));
 
             Vector3 slopeProjection = Vector3.ProjectOnPlane(Physics.gravity, Vector3.up).normalized;
             float slopeDirection = Vector3.Dot(desiredDirection.normalized, -slopeProjection);
 
-            Vector3 turnTorque = TurnResponsiveness * directionChangeFactor * Vector3.Cross(Vector3.up, desiredDirection);
             float speedFactor = Mathf.Clamp01(speed / MaxSpeed);
             Vector3 pushTorque = Acceleration * Vector3.Cross(Vector3.up, desiredDirection) * (1f - speedFactor);
-            Vector3 totalTorque = turnTorque + pushTorque;
+            Vector3 totalTorque = pushTorque; // turnTorque already applied above
 
             bool isReversing = alignmentDirection < -0.1f && speed > 0.1f;
             bool onSlope = slopeDirection > 0.1f;
@@ -60,10 +68,13 @@ namespace CharonsCorner.Runtime
 
             if (isReversing)
             {
-                float brakeStrength = Acceleration * 1.0f;
-                Vector3 brakeForce = -flatVelocity.normalized * brakeStrength;
-                context.RigidBody.AddForce(brakeForce, ForceMode.Acceleration);
-                flatVelocity = Vector3.Lerp(flatVelocity, Vector3.zero, 0.1f);
+                // Apply a gentle brake force proportional to current speed
+                float brakeStrength = Acceleration * 0.5f; // Lower value for smoothness
+                Vector3 brakeForce = -flatVelocity * brakeStrength * Time.fixedDeltaTime;
+                context.RigidBody.AddForce(brakeForce, ForceMode.VelocityChange);
+
+                // Gradually dampen velocity
+                flatVelocity = Vector3.Lerp(flatVelocity, Vector3.zero, 0.04f); // Lower lerp factor for smoothness
             }
 
             float angle = Vector3.Angle(currentDirection, desiredDirection);

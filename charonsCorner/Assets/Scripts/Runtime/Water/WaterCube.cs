@@ -63,6 +63,13 @@ namespace CharonsCorner.Runtime
         {
             if (playerInside && playerRb != null)
             {
+                var playerController = playerRb.GetComponent<PlayerController>();
+                if (playerController != null && playerController.isBig)
+                {
+                    // Skip buoyancy if player is big
+                    return;
+                }
+
                 // Apply upward force to simulate buoyancy
                 Vector3 velocity = playerRb.linearVelocity;
                 velocity.y = Mathf.Lerp(velocity.y, liftForce, Time.fixedDeltaTime * liftSmooth);
