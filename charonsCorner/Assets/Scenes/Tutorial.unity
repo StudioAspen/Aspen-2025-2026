@@ -206,8 +206,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 11957237}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.089084975, y: 0.000000029683854, z: -0.0000000026549412, w: 0.9960241}
-  m_LocalPosition: {x: 34.28, y: 46.2, z: -84.62}
+  m_LocalRotation: {x: 0.08907982, y: -1.0352296e-11, z: 9.258615e-13, w: 0.9960245}
+  m_LocalPosition: {x: -41.43, y: 114.85, z: 71.2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2560,7 +2560,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e475bdef396f3b4681115096fe4e5d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  liftForce: 4
+  liftForce: 8
   liftSmooth: 5
   playerLayerMask:
     serializedVersion: 2
@@ -6090,31 +6090,31 @@ PrefabInstance:
       objectReference: {fileID: 5359847556210223880}
     - target: {fileID: 4769553812181494271, guid: fe195e5f19e31904988d84b793e7ab7e, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 34.28
+      value: -41.43
       objectReference: {fileID: 0}
     - target: {fileID: 4769553812181494271, guid: fe195e5f19e31904988d84b793e7ab7e, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 46.2
+      value: 114.85
       objectReference: {fileID: 0}
     - target: {fileID: 4769553812181494271, guid: fe195e5f19e31904988d84b793e7ab7e, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -84.62
+      value: 71.2
       objectReference: {fileID: 0}
     - target: {fileID: 4769553812181494271, guid: fe195e5f19e31904988d84b793e7ab7e, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.99602413
+      value: 0.99602437
       objectReference: {fileID: 0}
     - target: {fileID: 4769553812181494271, guid: fe195e5f19e31904988d84b793e7ab7e, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.0890841
+      value: 0.08908154
       objectReference: {fileID: 0}
     - target: {fileID: 4769553812181494271, guid: fe195e5f19e31904988d84b793e7ab7e, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 2.8070013e-11
+      value: -1.0373895e-11
       objectReference: {fileID: 0}
     - target: {fileID: 4769553812181494271, guid: fe195e5f19e31904988d84b793e7ab7e, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -2.8489832e-12
+      value: 1.1673991e-12
       objectReference: {fileID: 0}
     - target: {fileID: 4769553812181494271, guid: fe195e5f19e31904988d84b793e7ab7e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -6190,7 +6190,7 @@ Transform:
   m_GameObject: {fileID: 1648358924795513500}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 34.28, y: 44.7, z: -80.12}
+  m_LocalPosition: {x: -41.43, y: 113.35, z: 75.7}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -6229,17 +6229,18 @@ MonoBehaviour:
     <SubStateMachine>k__BackingField:
       currentStateName: 
     <MoveState>k__BackingField:
-      <Acceleration>k__BackingField: 1
+      <Acceleration>k__BackingField: 2
       <TurnResponsiveness>k__BackingField: 1
-      <MaxSpeed>k__BackingField: 25
+      <MaxSpeed>k__BackingField: 28
+      <stickToGroundForce>k__BackingField: 20
     <DriftState>k__BackingField:
       <AngleOffset>k__BackingField: 1
       <TurnResponsiveness>k__BackingField: 10
       <Acceleration>k__BackingField: 2
       <Friction>k__BackingField: 0.9
-      <MaxDriftSpeed>k__BackingField: 20
+      <MaxDriftSpeed>k__BackingField: 35
       <DriftDrag>k__BackingField: 0.97
-      <DriftAccelerationMultiplier>k__BackingField: 0.75
+      <DriftDeaccelerationMultiplier>k__BackingField: 0.25
       <DriftExitAcceleration>k__BackingField: 10
       driftTimer: 0
     <BaseGroundCheckDistance>k__BackingField: 0.2
@@ -6256,6 +6257,9 @@ MonoBehaviour:
       <Damp>k__BackingField: 0.1
     <MoveState>k__BackingField:
       <Damp>k__BackingField: 0.1
+      <airMoveForce>k__BackingField: 3
+      <airControlMultiplier>k__BackingField: 0.6
+      <waterMoveMultiplier>k__BackingField: 0.5
     <DriftState>k__BackingField:
       <Damp>k__BackingField: 0.1
   normalScale: {x: 2, y: 2, z: 2}

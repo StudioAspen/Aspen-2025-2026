@@ -45,6 +45,7 @@ namespace CharonsCorner.Runtime
             {
                 playerInside = true;
                 playerRb = other.GetComponent<Rigidbody>();
+                other.GetComponent<PlayerController>().IsInWater = true; // Notify player controller
             }
         }
 
@@ -54,6 +55,7 @@ namespace CharonsCorner.Runtime
             {
                 playerInside = false;
                 playerRb = null;
+                other.GetComponent<PlayerController>().IsInWater = false; // Notify player controller
             }
         }
 

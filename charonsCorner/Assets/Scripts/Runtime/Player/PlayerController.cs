@@ -18,6 +18,7 @@ namespace CharonsCorner.Runtime
 
         public bool IsGrounded => GroundedSuperState.IsGrounded;
         public float CurrentSpeed => RigidBody.linearVelocity.magnitude;
+        public bool IsInWater { get; set; }
 
         // --- Size Toggle Fields ---
         [Header("Size Settings")]
