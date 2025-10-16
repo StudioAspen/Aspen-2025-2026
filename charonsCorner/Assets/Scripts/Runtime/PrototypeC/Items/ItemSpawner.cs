@@ -12,6 +12,7 @@ namespace CharonsCorner.Runtime
         private GameObject spawnPoint;
         private float timer;
         private GameObject itemSpawned;
+        private bool itemTaken = false;
 
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
@@ -22,14 +23,16 @@ namespace CharonsCorner.Runtime
         // Update is called once per frame
         void Update()
         {
-            if (itemSpawned != null && Time.time > timer + coolDown)
+            if (itemTaken && Time.time > timer + coolDown)
             {
+                itemTaken = false;
                 itemSpawned = Instantiate(item, spawnPoint.transform.position, Quaternion.identity);
             }
 
-            if (itemSpawned == null)
+            if (itemSpawned == null && !itemTaken)
             {
                 timer = Time.time;
+                itemTaken = true;
             }
         }
     }
