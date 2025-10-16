@@ -17,6 +17,7 @@ namespace CharonsCorner.Runtime
         private Vector3 originalScale;
         private bool playerInside = false;
         private Rigidbody playerRb;
+        private WaterScreenOverlay waterOverlay;
 
         private void Awake()
         {
@@ -26,6 +27,11 @@ namespace CharonsCorner.Runtime
             // Make sure the collider is a trigger
             var box = GetComponent<BoxCollider>();
             box.isTrigger = true;
+        }
+
+        private void Start()
+        {
+            waterOverlay = Object.FindFirstObjectByType<WaterScreenOverlay>();
         }
 
         private void Update()
@@ -45,7 +51,8 @@ namespace CharonsCorner.Runtime
             {
                 playerInside = true;
                 playerRb = other.GetComponent<Rigidbody>();
-                other.GetComponent<PlayerController>().IsInWater = true; // Notify player controller
+                other.GetComponent<PlayerController>().IsInWater = true;
+                if (waterOverlay != null) waterOverlay.SetOverlayActive(true);
             }
         }
 
@@ -55,7 +62,8 @@ namespace CharonsCorner.Runtime
             {
                 playerInside = false;
                 playerRb = null;
-                other.GetComponent<PlayerController>().IsInWater = false; // Notify player controller
+                other.GetComponent<PlayerController>().IsInWater = false;
+                if (waterOverlay != null) waterOverlay.SetOverlayActive(false);
             }
         }
 

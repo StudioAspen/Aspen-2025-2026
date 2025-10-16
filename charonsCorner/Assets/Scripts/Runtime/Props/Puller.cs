@@ -1,5 +1,6 @@
 using UnityEngine;
 using CharonsCorner.Runtime;
+using DG.Tweening;
 
 [RequireComponent(typeof(SphereCollider))]
 public class Puller : MonoBehaviour
@@ -12,6 +13,12 @@ public class Puller : MonoBehaviour
     [SerializeField] private float minSlingshotSpeed = 8f;
     [SerializeField] private float maxPullTime = 2.5f;
     [SerializeField] private LayerMask playerLayer;
+    [Header("Visual Pulse")]
+    [SerializeField] private MeshRenderer meshRenderer;
+    [SerializeField] private float minPulseScale = 0.8f;
+    [SerializeField] private float maxPulseScale = 1.3f;
+    [SerializeField] private float minPulseDuration = 0.08f;
+    [SerializeField] private float maxPulseDuration = 0.18f;
     [Header("Debug")]
     [SerializeField] private bool debug = false;
 
@@ -23,6 +30,26 @@ public class Puller : MonoBehaviour
         sphereCollider = GetComponent<SphereCollider>();
         sphereCollider.isTrigger = true;
         sphereCollider.radius = radius;
+
+        if (meshRenderer == null)
+            meshRenderer = GetComponent<MeshRenderer>();
+
+        StartCoroutine(PulseCore());
+    }
+
+    private System.Collections.IEnumerator PulseCore()
+    {
+        while (true)
+        {
+            float targetScale = Random.Range(minPulseScale, maxPulseScale);
+            float duration = Random.Range(minPulseDuration, maxPulseDuration);
+
+            // Tween the local scale of the mesh's transform
+            meshRenderer.transform.DOScale(Vector3.one * targetScale, duration)
+                .SetEase(Ease.InOutFlash);
+
+            yield return new WaitForSeconds(duration);
+        }
     }
 
     private void OnTriggerStay(Collider other)
@@ -33,12 +60,10 @@ public class Puller : MonoBehaviour
         Rigidbody rb = other.attachedRigidbody;
         if (rb == null) return;
 
-        // Track time spent in puller
         if (!pullTimers.ContainsKey(other))
             pullTimers[other] = 0f;
         pullTimers[other] += Time.deltaTime;
 
-        // Only apply forces if under maxPullTime
         if (pullTimers[other] <= maxPullTime)
         {
             Vector3 toCenter = (transform.position - rb.position);
@@ -73,20 +98,17 @@ public class Puller : MonoBehaviour
             var playerController = other.GetComponent<PlayerController>();
             if (playerController != null && playerController.GroundedSuperState.DriftState.IsDrifting)
             {
-                // Apply slingshot boost directly to velocity while drifting
                 Vector3 boostDir = flatVelocity.sqrMagnitude > 0.01f ? flatVelocity.normalized : playerController.transform.forward;
                 float pullerBoost = flatVelocity.magnitude * (slingshotMultiplier - 1f);
                 rb.AddForce(boostDir * pullerBoost, ForceMode.VelocityChange);
             }
             else if (playerController != null)
             {
-                // If not drifting, multiply velocity directly
                 flatVelocity *= slingshotMultiplier;
                 rb.linearVelocity = new Vector3(flatVelocity.x, rb.linearVelocity.y, flatVelocity.z);
             }
         }
 
-        // Remove timer entry
         pullTimers.Remove(other);
     }
 

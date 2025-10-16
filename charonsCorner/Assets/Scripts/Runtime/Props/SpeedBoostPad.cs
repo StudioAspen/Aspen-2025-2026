@@ -29,6 +29,9 @@ namespace CharonsCorner.Runtime
                 var player = other.GetComponent<PlayerController>();
                 if (player != null && player.RigidBody != null)
                 {
+                    if (player.IsBig)
+                        return;
+
                     Vector3 worldBoostDir = transform.TransformDirection(boostDirection.normalized);
 
                     if (setVelocity)

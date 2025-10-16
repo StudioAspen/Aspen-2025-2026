@@ -36,13 +36,14 @@ namespace CharonsCorner.Runtime
             {
                 groundNormal = hit.normal;
 
-                // Only apply ground stick if NOT in water
+                // Only apply ground stick if NOT in water and NOT jumping
                 if (context.IsGrounded && !context.IsInWater)
                 {
                     Vector3 velocity = context.RigidBody.linearVelocity;
                     float velocityAway = Vector3.Dot(velocity, groundNormal);
 
-                    if (velocityAway > 0f)
+                    // Only apply if not jumping (vertical velocity is not strongly upward)
+                    if (velocityAway > 0f && velocity.y < 1f)
                     {
                         float stickStrength = stickToGroundForce * Mathf.Clamp01(velocityAway);
                         context.RigidBody.AddForce(-groundNormal * stickStrength, ForceMode.VelocityChange);

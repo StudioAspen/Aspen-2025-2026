@@ -21,7 +21,9 @@ namespace CharonsCorner.Runtime
         public bool IsInWater { get; set; }
         public bool IsBig => isBig;
 
-        // --- Size Toggle Fields ---
+        public event System.Action<bool> OnBigStateChanged;
+
+        // Size Toggle Fields
         [Header("Size Settings")]
         public Vector3 normalScale = Vector3.one;
         public Vector3 bigScale = new Vector3(2f, 2f, 2f);
@@ -74,7 +76,7 @@ namespace CharonsCorner.Runtime
         {
             StateMachine.Update();
 
-            // --- Size Toggle Logic ---
+            // Size Toggle Logic
             if (UnityEngine.Input.GetMouseButtonDown(1))
             {
                 isBig = !isBig;
@@ -102,19 +104,20 @@ namespace CharonsCorner.Runtime
             StateMachine.ChangeState(GroundedSuperState, true);
         }
 
-        // --- Helper to Set Size ---
+        // Helper to Set Size
         private void SetSize(bool big)
         {
             Vector3 targetScale = big ? bigScale : normalScale;
             float targetMass = big ? bigMass : normalMass;
             float targetGravity = big ? bigGravity : normalGravity;
-            float duration = 0.3f; // If using DOTween
+            float duration = 0.3f;
 
             // Smoothly animate the scale change
             transform.DOScale(targetScale, duration).SetEase(Ease.OutBack);
 
             // Set Rigidbody mass
             RigidBody.mass = targetMass;
+            OnBigStateChanged?.Invoke(big);
         }
     }
 }
