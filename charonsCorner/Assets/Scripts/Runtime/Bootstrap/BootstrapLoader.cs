@@ -12,6 +12,11 @@ using UnityEngine.ResourceManagement.ResourceProviders;
 
 namespace CharonsCorner.Runtime
 {
+    /// <summary>
+    /// Controls the Bootstrap scene, serving as the Single Entry Point manager.
+    /// Loads into the Menu scene after the scene is finished initializing in builds.
+    /// Handles the initial game state to a target scene inside the editor through the BootstrapConfigSO.
+    /// </summary>
     public class BootstrapLoader : MonoBehaviour
     {
         [SerializeField] private SceneReference titleScene;
