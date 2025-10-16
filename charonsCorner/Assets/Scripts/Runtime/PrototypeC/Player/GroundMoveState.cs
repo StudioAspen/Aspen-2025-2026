@@ -30,7 +30,8 @@ namespace CharonsCorner.Runtime
         private protected override void OnFixedUpdate()
         {
             Vector2 input = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
-        
+            Vector3 inputDirection = context.Orientation.right * input.x + context.Orientation.forward * input.y;
+            
             // Perform deceleration if we aren't pressing an input direction
             if (input == Vector2.zero)
             {
@@ -40,6 +41,8 @@ namespace CharonsCorner.Runtime
             Vector3 forwardOriented;
             Vector3 rightOriented;
             Vector3 bonusForce = Vector3.zero;
+            float dot;
+            Vector3 moveDir;
             // Apply movement along slope if we are on a slope
             if (context.SlopeSensor.IsOnSlope)
             {
@@ -53,14 +56,28 @@ namespace CharonsCorner.Runtime
                 
                 // Ensure that the player is stuck on the slope
                 context.Rb.AddForce(-context.SlopeSensor.Hit.normal * GroundStickForce, ForceMode.Acceleration);
-                
+
+                moveDir = Vector3.ProjectOnPlane(context.Rb.linearVelocity, hit.normal).normalized;
+                dot = Vector3.Dot(inputDirection, moveDir);
             }
             else
             {
                 forwardOriented = context.Orientation.forward;
                 rightOriented = context.Orientation.right;
+                moveDir = context.Rb.linearVelocity.normalized;
+                dot = Vector3.Dot(inputDirection, moveDir);
             }
 
+            
+            // Deceleration force if the player is trying to move while on a slope
+            if (dot < 0f)
+            {
+                Vector3 decelerationForce = -moveDir * (Deceleration * Mathf.Abs(dot));
+                context.Rb.AddForce(decelerationForce, ForceMode.Acceleration);
+            }
+
+            
+            
             Vector3 inputForce = forwardOriented * (input.y * Acceleration) + rightOriented * (input.x * Acceleration);
             context.Rb.AddForce(inputForce + bonusForce, ForceMode.Acceleration);
             

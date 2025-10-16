@@ -28,6 +28,7 @@ namespace CharonsCorner.Runtime
         private protected override void OnFixedUpdate()
         {
             Vector2 input = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+            Vector3 inputDirection = context.Orientation.right * input.x + context.Orientation.forward * input.y;
             
             // Perform deceleration if we aren't pressing an input direction
             if (input == Vector2.zero)
@@ -37,9 +38,23 @@ namespace CharonsCorner.Runtime
             
             context.Rb.AddForce(context.Orientation.forward * (input.y * Acceleration) + context.Orientation.right * (input.x * Acceleration), ForceMode.Acceleration);
 
-            // Clamp max velocity manually
+            
+            
+            
+            
+            
             Vector3 flatVel = new Vector3(context.Rb.linearVelocity.x, 0, context.Rb.linearVelocity.z);
             
+            float dot = Vector3.Dot(inputDirection, flatVel.normalized);
+
+            if (dot < 0f)
+            {
+                Vector3 decelerationForce = -flatVel.normalized * (Deceleration * Mathf.Abs(dot));
+                context.Rb.AddForce(decelerationForce, ForceMode.Acceleration);
+            }
+            
+            
+            // Clamp max velocity manually
             if (flatVel.magnitude > MaxFlatSpeed)
             {
                 context.Rb.linearVelocity = new Vector3(flatVel.normalized.x * MaxFlatSpeed, context.Rb.linearVelocity.y, flatVel.normalized.z * MaxFlatSpeed);
