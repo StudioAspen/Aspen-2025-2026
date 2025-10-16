@@ -12,17 +12,21 @@ public class PlayerAbility : MonoBehaviour
     public int currentUses;
     public Rigidbody playerRb;
     public GameObject bulletShooter;
+    public PrototypePlayerController player;
 
     private IEnumerator changeGravity(float gravity, float duration)
     {
-        GetComponent<PrototypePlayerController>().SetGravity(gravity);
+        player.SetGravity(gravity);
+        player.IsGliding = true;
         yield return new WaitForSeconds(duration);
-        GetComponent<PrototypePlayerController>().SetGravity(30);
+        player.IsGliding = false;
+        player.SetGravity(30);
     }
 
     void Start()
     {
         playerRb = GetComponent<Rigidbody>();
+        player = GetComponent<PrototypePlayerController>();
     }
 
     // Update is called once per frame

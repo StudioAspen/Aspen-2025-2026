@@ -50,12 +50,19 @@ namespace CharonsCorner.Runtime
                 forwardOriented = Vector3.Cross(context.Orientation.right, hit.normal).normalized;
                 rightOriented = Vector3.Cross(hit.normal, forwardOriented).normalized;
                 
-                // Add additional force down a slope.
-                float slopeFactor = Mathf.Clamp01(context.SlopeSensor.CurrentSlopeAngle / context.SlopeSensor.MaxSlopeAngle);
-                bonusForce += Vector3.ProjectOnPlane(Vector3.down, context.SlopeSensor.Hit.normal) * (SlopeBoost * slopeFactor);
                 
-                // Ensure that the player is stuck on the slope
-                context.Rb.AddForce(-context.SlopeSensor.Hit.normal * GroundStickForce, ForceMode.Acceleration);
+                if (!context.IsGliding)
+                {
+                    // Add additional force down a slope.
+                    float slopeFactor = Mathf.Clamp01(context.SlopeSensor.CurrentSlopeAngle / context.SlopeSensor.MaxSlopeAngle);
+                    bonusForce += Vector3.ProjectOnPlane(Vector3.down, context.SlopeSensor.Hit.normal) * (SlopeBoost * slopeFactor);
+                    
+                    // Ensure that the player is stuck on the slope
+                    context.Rb.AddForce(-context.SlopeSensor.Hit.normal * GroundStickForce, ForceMode.Acceleration);
+                }
+
+                
+
 
                 moveDir = Vector3.ProjectOnPlane(context.Rb.linearVelocity, hit.normal).normalized;
                 dot = Vector3.Dot(inputDirection, moveDir);

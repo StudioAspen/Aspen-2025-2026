@@ -256,8 +256,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1908398185359762518}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.12386888, y: 0.7148401, z: -0.13105638, w: 0.67563623}
-  m_LocalPosition: {x: -5.920579, y: 7.31, z: 67.93412}
+  m_LocalRotation: {x: 0.036116056, y: -0.04160116, z: 0.01792264, w: -0.9983205}
+  m_LocalPosition: {x: -0.5350355, y: -0.44790545, z: -6.3040075}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -781,7 +781,7 @@ Transform:
   m_GameObject: {fileID: 7899314738565538664}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 5.06, z: 67.6}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -821,7 +821,7 @@ Rigidbody:
   serializedVersion: 4
   m_Mass: 25
   m_Drag: 0
-  m_AngularDrag: 0.05
+  m_AngularDrag: 1
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -837,7 +837,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 1
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
 --- !u!114 &1432432017151033768
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -851,6 +851,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <GravityAmount>k__BackingField: 30
+  IsGliding: 0
   <RespawnPoint>k__BackingField: {x: 0, y: 5.06, z: 0}
   <GroundCheckLength>k__BackingField: 0.5
   <GroundLayer>k__BackingField:
@@ -926,3 +927,4 @@ MonoBehaviour:
   currentUses: 0
   playerRb: {fileID: 3033495566973822909}
   bulletShooter: {fileID: 734525746180687941}
+  player: {fileID: 0}

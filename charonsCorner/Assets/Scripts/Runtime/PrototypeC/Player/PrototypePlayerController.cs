@@ -9,7 +9,7 @@ namespace CharonsCorner.Runtime
     public class PrototypePlayerController : MonoBehaviour
     {
         [field: SerializeField] public float GravityAmount {get; private set;}
-
+        public bool IsGliding = false;
         [field: SerializeField] public Vector3 RespawnPoint { get; private set; }
         
         [Header("Ground Check")]
@@ -28,8 +28,7 @@ namespace CharonsCorner.Runtime
         [field: SerializeField] public StateMachine<PrototypePlayerController> StateMachine { get; private set; }
         [field: SerializeField] public GroundSuperState GroundState { get; private set; } = new();
         [field: SerializeField] public AirSuperState AirState { get; private set; } = new();
-
-
+        
         [NonSerialized] public String CurrentSubState;
 
         private void Awake()
