@@ -1,5 +1,7 @@
 using UnityEngine;
 using KinematicCharacterController;
+using UnityEngine.WSA;
+using CharonsCorner.Runtime;
 
 public struct CharacterState
 {
@@ -92,12 +94,26 @@ public class PlayerController : MonoBehaviour, ICharacterController
 
     private Stance _stance;
 
+    //Cannon Parameters:
+    private CannonBall _currentCannon;
+    private bool _inCannon;
+    private bool _isLaunching;
+    private float _launchTimer;
+    private bool _controlsLocked;
+    private Vector3 _rootLocalOffset;
+    private bool _isRealigningMotor;
+    private Vector3 _motorTargetPosition;
+    private float _motorRealignElapsed;
+
+
     public void Initialize()
     {
         _state.Stance = Stance.Move;
         _lastState = _state;
 
         motor.CharacterController = this;
+
+        _rootLocalOffset = root.localPosition;
     }
 
     //Called Every Frame From Main Loop:
@@ -184,6 +200,7 @@ public class PlayerController : MonoBehaviour, ICharacterController
 
         {
             ApplyBoostPanel(ref currentVelocity, deltaTime);
+            ApplyCannonBall(ref currentVelocity, deltaTime);
 
         }
 
@@ -301,6 +318,27 @@ public class PlayerController : MonoBehaviour, ICharacterController
                 }
             }
 
+            //Re-Allign Player From Any Offsets After CannonBall Launching:
+            if (_isRealigningMotor)
+            {
+                _motorRealignElapsed += deltaTime;
+                float t = Mathf.Clamp01(_motorRealignElapsed / 0.2f); 
+
+                motor.transform.position = Vector3.Lerp(
+                    motor.transform.position,
+                    _motorTargetPosition,
+                    t
+                );
+
+                root.localPosition = _rootLocalOffset;
+
+                if (t >= 1f)
+                {
+                    _isRealigningMotor = false;
+                    _motorRealignElapsed = 0f;
+                    motor.transform.position = _motorTargetPosition; 
+                }
+            }
         }
         //Not Grounded:
         else
@@ -525,16 +563,126 @@ public class PlayerController : MonoBehaviour, ICharacterController
 
                     currentVelocity += direction * force;
 
-                    Debug.Log(_state.Stance);
-
                     if (_state.Stance is Stance.Move or Stance.Sneak)
                         _requestedSneak = true;
                     _state.Stance = Stance.Slide;
-
-                    Debug.Log(_state.Stance);
-
                 }
             }
         }
+    }
+
+    public void ApplyCannonBall(ref Vector3 currentVelocity, float deltaTime)
+    {
+        Collider[] hitColliders = Physics.OverlapSphere(root.position, 1);
+        foreach (var hitCollider in hitColliders)
+        {
+            if (hitCollider.CompareTag("Cannon"))
+            {
+                CannonBall cannonBall = hitCollider.GetComponent<CannonBall>();
+                if (cannonBall != null && !_inCannon && !_isLaunching)
+                {
+                    _inCannon = true;
+                    _controlsLocked = true;
+                    _currentCannon = cannonBall;
+
+                    //Lerp The Player Position To The CannonBall Base Transform:
+                    currentVelocity = Vector3.zero;
+                    motor.enabled = false;
+                    StartCoroutine(LerpToCannonBase(cannonBall));
+                    motor.enabled = true;
+                }
+            }
+        }
+
+        if (_isLaunching && _currentCannon != null)
+        {
+            //Time it Takes to Complete The Projectile Motions, Speed Scaled By shotPower:
+            _launchTimer += deltaTime * _currentCannon.shotPower;
+            float time = _launchTimer;
+
+            //Initial Position & Direction Parameters:
+            Vector3 startPos = _currentCannon.cannonBase.position;
+            Vector3 forward = _currentCannon.launchDirection.forward;
+
+            //Convert Value into Angle:
+            Quaternion angleRot = Quaternion.AngleAxis(_currentCannon.shotAngle, _currentCannon.cannonBase.right);
+            Vector3 launchDir = angleRot * forward;
+
+            //Initial velocity:
+            Vector3 initialVelocity = launchDir.normalized * -_currentCannon.launchVelocity;
+
+            //Projectile Motion Equation:
+            Vector3 displacement = (initialVelocity * time);
+            displacement.y += (0.5f * _currentCannon.acceleration * (time * time)) + _currentCannon.currentHeight;
+
+            //World Position Along The Arc:
+            Vector3 worldPosition = startPos + displacement;
+
+            //Compute velocity for KinematicCharacterController:
+            Vector3 newVelocity = (worldPosition - motor.transform.position) / deltaTime;
+            currentVelocity = newVelocity;
+
+            //Re-Align Root For Any Offsets:
+            //root.position = motor.transform.position;
+
+            //Stop Launcing Once Past Peak AND Touches The Ground:
+            float verticalVelocity = initialVelocity.y + _currentCannon.acceleration * time;
+            if (verticalVelocity <= 0f && motor.GroundingStatus.IsStableOnGround)
+            {
+                _isLaunching = false;
+                _controlsLocked = false;
+                _inCannon = false;
+                _currentCannon = null;
+
+                //Start Motor Re-Allignment In UpdateVelocity In The Case It Offsets:
+                _isRealigningMotor = true;
+                _motorTargetPosition = worldPosition;
+            }
+        }
+    }
+
+    private System.Collections.IEnumerator LerpToCannonBase(CannonBall cannonBall)
+    {
+        //Get Initial Positions:
+        float time = 0f;
+        Vector3 startPos = root.position;
+        Quaternion startRot = root.rotation;
+
+        //Get CannonBase Positions:
+        Vector3 targetPos = cannonBall.cannonBase.position;
+        Quaternion targetRot = Quaternion.LookRotation(cannonBall.launchDirection.forward, Vector3.up);
+
+        //Lerp The Player Into CannonBase:
+        float loadDuration = _currentCannon.shotLoadTime;
+        while (time < 1f)
+        {
+            time += Time.deltaTime / loadDuration;
+            root.position = Vector3.Lerp(startPos, targetPos, time);
+            root.rotation = Quaternion.Slerp(startRot, targetRot, time);
+
+            //Rotate The CannonPillar X-Axis based off shotAngle:
+            if (cannonBall.cannonPillar != null)
+            {
+                Vector3 forward = cannonBall.launchDirection.forward;
+
+                //Convert Value into Angle:
+                Vector3 launchDir = Quaternion.AngleAxis(-cannonBall.shotAngle, cannonBall.cannonBase.right) * forward;
+
+                //Lerp The CannonPillar -> TargetPillarRotation:
+                Quaternion targetPillarRot = Quaternion.LookRotation(launchDir, cannonBall.cannonBase.up);
+                cannonBall.cannonPillar.rotation = Quaternion.Slerp(cannonBall.cannonPillar.rotation, targetPillarRot, time);
+            }
+            yield return null;
+        }
+
+        //Launch Phase Begins Once Positioned:
+        _inCannon = false;
+        _isLaunching = true;
+        _launchTimer = 0f;
+
+        //Enter Sliding State When Beging Launch:
+        if (_state.Stance is Stance.Move or Stance.Sneak)
+            _requestedSneak = true;
+        _state.Stance = Stance.Slide;
     }
 }
