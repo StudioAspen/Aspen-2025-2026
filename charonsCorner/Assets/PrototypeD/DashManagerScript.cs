@@ -3,6 +3,7 @@ using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
 
 public class DashManagerScript : MonoBehaviour
 {
@@ -155,6 +156,11 @@ public class DashManagerScript : MonoBehaviour
 
 
 
+    
+    private Coroutine speedReductionCoroutine;
+    private int temporarySpeedBoost = 0; // Track temporary boost separately
+
+
     /// <summary>
     /// Increases speed based off of current speed cap and 
     /// current forward cruise speed
@@ -163,51 +169,114 @@ public class DashManagerScript : MonoBehaviour
     {
         if (SpeedCap <= SpeedCapLimit && canBoost == true)
         {
-            float newMult = 0;
             canBoost = false;
-            newMult = multiplier * SpeedCap;
+            
+            // Apply temporary boost (increase speed cap temporarily)
+            temporarySpeedBoost = 2; // This is the temporary increase
+            SpeedCap += temporarySpeedBoost;
+            
+            // Calculate boosted speed
+            float newMult = multiplier * SpeedCap;
             float finalMult = 1f + newMult;
-            MaxSpeed = BaseSpeed * finalMult;
-            Debug.Log("Current Max speed: " + MaxSpeed + "Current Mult: " + finalMult);
-            SpeedCap += 2;
-            lowerSpeed();
-            // increment PlayerController3D counter if available
+            float boostedSpeed = BaseSpeed * finalMult;
+            
+            Debug.Log($"Temporary Boost - Current Max speed: {boostedSpeed} Current Mult: {finalMult}");
+            
+            // Apply the boosted speed immediately
             if (PC3DScript != null)
             {
-                PC3DScript.numSpeedIncreases += 1; // Fonz - count number of speed increases
+                PC3DScript.forwardCruiseSpeed = boostedSpeed;
+                PC3DScript.numSpeedIncreases += 1;
             }
-            return MaxSpeed;
+            
+            lowerSpeed();
+            return boostedSpeed;
         }
         return PC3DScript.forwardCruiseSpeed;
     }
 
     public void lowerSpeed()
     {
-        SpeedCap -= 1;
-        Debug.Log("speedcap after lowering: " + SpeedCap);
+        // Stop any existing speed reduction coroutine
+        if (speedReductionCoroutine != null)
+        {
+            StopCoroutine(speedReductionCoroutine);
+        }
+        speedReductionCoroutine = StartCoroutine(PauseThenReduceSpeed());
+    }
+
+    private IEnumerator PauseThenReduceSpeed()
+    {
+        Debug.Log("Waiting before removing temporary speed boost...");
+        
+        // Wait for the initial delay
+        yield return new WaitForSeconds(3f);
+        
+        // Remove the temporary boost
+        SpeedCap -= temporarySpeedBoost;
+        temporarySpeedBoost = 0;
+        
+        Debug.Log($"SpeedCap after removing boost: {SpeedCap}");
+        
+        // Update to the permanent max speed (without the boost)
+        UpdateMaxSpeed();
+        
         if (SpeedCap <= SpeedCapLimit)
         {
-            canBoost = true;
-            float newMult = multiplier * SpeedCap;
-            float finalMult = 1f + newMult; // <-- fixed: use 1 + newMult
-            MaxSpeed = BaseSpeed * finalMult;
-
-            Debug.Log("Current Max speed: " + MaxSpeed + " Current Mult: " + finalMult);
-
-            // Gradually move forwardCruiseSpeed toward MaxSpeed.
-            // Treat PullBackSpeed as units/second; multiply by Time.deltaTime.
+            // Gradually reduce speed from current to the new max speed
             if (PC3DScript != null)
             {
-                PC3DScript.forwardCruiseSpeed = Mathf.MoveTowards(
-                    PC3DScript.forwardCruiseSpeed,
-                    MaxSpeed,
-                    PullBackSpeed * Time.deltaTime
-                );
+                float startSpeed = PC3DScript.forwardCruiseSpeed;
+                float elapsedTime = 0f;
+                float reductionDuration = PullBackSpeed;
+                
+                Debug.Log($"Reducing speed from {startSpeed} to {MaxSpeed} over {reductionDuration} seconds");
+                
+                while (elapsedTime < reductionDuration && PC3DScript != null)
+                {
+                    elapsedTime += Time.deltaTime;
+                    float t = elapsedTime / reductionDuration;
+                    PC3DScript.forwardCruiseSpeed = Mathf.Lerp(startSpeed, MaxSpeed, t);
+                    yield return null;
+                }
+                
+                // Ensure we reach the exact target speed
+                if (PC3DScript != null)
+                {
+                    PC3DScript.forwardCruiseSpeed = MaxSpeed;
+                }
             }
+            
+            canBoost = true;
         }
         else
         {
-            SpeedCap = 5;
+            SpeedCap = SpeedCapLimit;
+            UpdateMaxSpeed();
+            canBoost = true;
+        }
+        
+        Debug.Log($"Speed reduction complete. Final SpeedCap: {SpeedCap}, Final MaxSpeed: {MaxSpeed}");
+    }
+
+    /// <summary>
+    /// Updates the MaxSpeed based on current SpeedCap
+    /// </summary>
+    private void UpdateMaxSpeed()
+    {
+        SpeedCap++;
+        float newMult = multiplier * SpeedCap;
+        float finalMult = 1f + newMult;
+        MaxSpeed = BaseSpeed * finalMult;
+        Debug.Log($"Updated Max Speed: {MaxSpeed} (SpeedCap: {SpeedCap}, Multiplier: {finalMult})");
+    }
+
+    // Clean up coroutines when the object is destroyed
+    void OnDestroy()
+    {
+        if (speedReductionCoroutine != null)
+        {
+            StopCoroutine(speedReductionCoroutine);
         }
     }
 
