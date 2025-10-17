@@ -70,20 +70,6 @@ public class DashManagerScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
-        if (PullBackSpeed >= 0 && Input.GetKey(KeyCode.Space) )
-        {
-            float SpeedOverTime = Mathf.Lerp(MaxSpeed, PC3DScript.forwardCruiseSpeed, PullBackSpeed);
-            
-            PC3DScript.forwardCruiseSpeed -= SpeedOverTime;
-            Debug.Log(PC3DScript.forwardCruiseSpeed); ;
-            PullBackSpeed -= Time.deltaTime;
-            
-        }else
-        {
-            PullBackSpeed = 1;
-        }
-
         if (isTracking == true)
         {
             float distanceThisFrame = Vector3.Distance(transform.position, lastPosition);

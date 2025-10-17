@@ -659,8 +659,10 @@ public class PlayerController3D : MonoBehaviour
                 verticalVelocity = -0.1f; // small downward to keep grounded
                 knockoverMode = false;  //  landed, turn off knockover
             }
+
             // Still update turn while in air
             UpdateTurnSpeed(dt);
+
             return;
         }
 
