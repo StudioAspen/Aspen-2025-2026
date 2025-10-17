@@ -22,8 +22,7 @@ namespace CharonsCorner.Runtime
         public override void itemPower(Rigidbody Rb)
         {
             GameObject go = Rb.gameObject;
-            //Vector3 myUp = go.transform.TransformDirection(Vector3.up);
-            //Rb.AddForce(myUp * jumpForce, ForceMode.Impulse);
+            Rb.linearVelocity = new Vector3(0, 0, 0);
             Rb.AddForce(go.GetComponent<PrototypePlayerController>().Orientation.forward * dashForce, ForceMode.VelocityChange);
             go.GetComponent<PlayerAbility>().currentUses--;
         }
