@@ -25,7 +25,16 @@ public class PlayerController3D : MonoBehaviour
     [Header("Turn movement (A/D or Left/Right)")]
     public float turnBaseSpeed = 2.5f;     // immediate base left/right movement when key pressed
     public float turnMaxSpeed = 6f;        // max turn speed after holding
-    public float turnAccelTime = 0.5f;     // how long until turn reaches max
+    [Tooltip("Time to reach max turn speed when holding key (seconds)")]
+    public float turnAccelTime = 0.5f;     
+    [Tooltip("How quickly turn input decays when the player releases the key (makes it less twitchy)")]
+    public float turnReleaseDamping = 20f;
+    [Tooltip("Minimum accel time used at highest speeds (seconds)")]
+    public float minTurnAccelTime = 0.1f;
+
+    [Tooltip("How strongly forward speed reduces turn accel time (0 = no effect, 1 = full effect)")]
+    [Range(0f, 1f)]
+    public float turnAccelSpeedInfluence = 1f;
     public AnimationCurve turnAccelCurve = AnimationCurve.Linear(0, 0, 1, 1); 
 
     // internal
@@ -116,10 +125,8 @@ public class PlayerController3D : MonoBehaviour
     private float jumpCharge = 0f;
     [Tooltip("Max seconds to fully charge jump while squashed")]
     public float maxJumpChargeTime = 2f;
+    
     [Header("Misc")]
-    [Tooltip("How quickly turn input decays when the player releases the key (makes it less twitchy)")]
-    public float turnReleaseDamping = 20f;
-
     [Tooltip("Key/axis for left/right movement (uses Unity's Horizontal by default). You can also use A/D or arrows.")]
     public string turnAxis = "Horizontal";
 
@@ -521,7 +528,6 @@ public class PlayerController3D : MonoBehaviour
         // Commit turn movement choice (if you still want turn dash effect)
         // With incremental angles you might not need this, but I kept it
         turnDir = pendingturnDir;
-        turnHoldTime = turnAccelTime;  // makes UpdateTurnSpeed evaluate to max
         pendingturnDir = 0;
 
         // Clear rotation flags
@@ -665,7 +671,7 @@ public class PlayerController3D : MonoBehaviour
             brakeHoldElapsed += dt;
 
             // Fonz - determine brake hold time based on current speed
-            float tempBrakeVal = (float)numSpeedIncreases / 4f; // 0 to 1 based on number of increases
+            float tempBrakeVal = (float)numSpeedIncreases / dmScript.SpeedCapLimit; // 0 to 1 based on number of increases
             brakeHoldTime = Mathf.Lerp(brakeHoldMaxTime, brakeHoldMinTime, tempBrakeVal);
 
             float t = Mathf.Clamp01(brakeElapsed / Mathf.Max(0.0001f, brakeTime));
@@ -817,14 +823,25 @@ public class PlayerController3D : MonoBehaviour
     {
         if (turnDir != 0)
         {
-            float t = Mathf.Clamp01(turnHoldTime / Mathf.Max(0.0001f, turnAccelTime));
+            // Compute an effective accel time that shortens as forward speed increases.
+            // We normalize currentForwardSpeed against a reference top speed (prefer dmScript.maxPlayerSpeed if available).
+            float speedRef = (dmScript != null && dmScript.maxPlayerSpeed > 0f) ? dmScript.maxPlayerSpeed : Mathf.Max(1f, forwardCruiseSpeed);
+            float speedNorm = Mathf.Clamp01(currentForwardSpeed / speedRef); // 0..1
+
+            // interpolate from turnAccelTime down to minTurnAccelTime based on normalized speed and influence.
+            float effectiveAccelTime = Mathf.Lerp(turnAccelTime, minTurnAccelTime, turnAccelSpeedInfluence * speedNorm);
+
+            // fallback guard (avoid zero division)
+            effectiveAccelTime = Mathf.Max(0.0001f, effectiveAccelTime);
+
+            // logic now using the adjusted accel time
+            float t = Mathf.Clamp01(turnHoldTime / effectiveAccelTime);
             float eval = turnAccelCurve.Evaluate(t);
             currentTurnSpeed = Mathf.Lerp(turnBaseSpeed, turnMaxSpeed, eval);
         }
         else
         {
-            // decay turn speed to zero for a smooth stop
-            currentTurnSpeed = 0f;
+            currentTurnSpeed = 0f; // decay turn speed to zero for a smooth stop
         }
     }
 

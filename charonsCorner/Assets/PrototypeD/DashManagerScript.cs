@@ -25,15 +25,15 @@ public class DashManagerScript : MonoBehaviour
     // speed cap tier ranges from 0-4 increases every succesful dash
     public int SpeedCap = 1;
 
-    [Tooltip(" LIMIT THE SPEED CAP HERE")] 
-    [SerializeField] private int SpeedCapLimit = 5;
-    // player max speed goes up every speed cap tier
+    [Tooltip("Speed Cap Limit: How many stages of speedIncreases there are")] 
+    [SerializeField] public int SpeedCapLimit = 5;
+    [Tooltip("Max speed the player can reach based off of speed cap")]
     [SerializeField] private float MaxSpeed = 0f;
-    // Default speed for player never changes in game
+    [Tooltip("Default speed for player never changes in game]")]
     [SerializeField] private float BaseSpeed = 30f;
-    // base speed mult increases every speed capt tier
+    [Tooltip("multiplier for how much speed increases per speed stage")]
     [SerializeField] private float multiplier = 0.5f;
-    // the rate at which the player slows down to new max speed
+    [Tooltip("how fast the player returns to max speed after a dash")]
     [SerializeField] private float PullBackSpeed = 1f;
 
 
@@ -185,9 +185,12 @@ public class DashManagerScript : MonoBehaviour
             Debug.Log("Current Max speed: " + MaxSpeed + "Current Mult: " + finalMult);
             SpeedCap += 2;
             lowerSpeed();
+            // increment PlayerController3D counter if available
+            if (PC3DScript != null)
+            {
+                PC3DScript.numSpeedIncreases += 1; // Fonz - count number of speed increases
+            }
             return MaxSpeed;
-
-
         }
         return PC3DScript.forwardCruiseSpeed;
     }
@@ -196,16 +199,25 @@ public class DashManagerScript : MonoBehaviour
     {
         SpeedCap -= 1;
         Debug.Log("speedcap after lowering: " + SpeedCap);
-        if (SpeedCap <= 5)
+        if (SpeedCap <= SpeedCapLimit)
         {
-            float newMult = 0;
             canBoost = true;
-            newMult = multiplier * SpeedCap;
-            float finalMult = multiplier + 1f;
+            float newMult = multiplier * SpeedCap;
+            float finalMult = 1f + newMult; // <-- fixed: use 1 + newMult
             MaxSpeed = BaseSpeed * finalMult;
-            
-            Debug.Log("Current Max speed: " + MaxSpeed + "Current Mult: " + finalMult);
-            PC3DScript.forwardCruiseSpeed = Mathf.Lerp(PC3DScript.forwardCruiseSpeed, MaxSpeed, PullBackSpeed);
+
+            Debug.Log("Current Max speed: " + MaxSpeed + " Current Mult: " + finalMult);
+
+            // Gradually move forwardCruiseSpeed toward MaxSpeed.
+            // Treat PullBackSpeed as units/second; multiply by Time.deltaTime.
+            if (PC3DScript != null)
+            {
+                PC3DScript.forwardCruiseSpeed = Mathf.MoveTowards(
+                    PC3DScript.forwardCruiseSpeed,
+                    MaxSpeed,
+                    PullBackSpeed * Time.deltaTime
+                );
+            }
         }
         else
         {
