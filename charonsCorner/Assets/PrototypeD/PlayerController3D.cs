@@ -3,6 +3,7 @@ using UnityEngine;
 using Unity.Cinemachine;
 using UnityEngine.SceneManagement;
 using MoreMountains.Tools;
+using MoreMountains.Feedbacks;
 
 
 // Fonz - Brake Control Mode
@@ -191,6 +192,8 @@ public class PlayerController3D : MonoBehaviour
 
     public DashManagerScript dmScript;
     public CameraFollowRotation cameraRotationScript;
+    public MMF_Player dashFeedback;
+    public MMF_Player jumpFeedback;
 
     void Awake()
     {
@@ -507,6 +510,7 @@ public class PlayerController3D : MonoBehaviour
         if (!isBraking) return;
 
         isBraking = false;
+        dashFeedback?.PlayFeedbacks(); // play all feedbacks
 
         // Apply stored brake angle (incremental) to the transform
         if (Mathf.Abs(currentBrakeAngle) > 0.01f)
@@ -537,6 +541,7 @@ public class PlayerController3D : MonoBehaviour
         currentForwardSpeed = dmScript.DashSpeed;
         isBoostRecovering = true;
         boostRecoverElapsed = 0f;
+
         // dmScript.IncreaseSpeed();
     }
     private IEnumerator BoostFOVSequence()
@@ -549,7 +554,6 @@ public class PlayerController3D : MonoBehaviour
 
         // Target offset = same X/Y, but Z pulled in by boostZOffsetDelta
         Vector3 targetOffset = defaultFollowOffset + new Vector3(0f, 0f, boostZOffsetDelta);
-
         // --- Step 1: zoom out and pull offset ---
         float elapsed = 0f;
         while (elapsed < boostFOVTime)
@@ -868,6 +872,7 @@ public class PlayerController3D : MonoBehaviour
 
         isJumping = true;
         jumpCharge = 0f;
+        jumpFeedback?.PlayFeedbacks(); // play all feedbacks
 
         // Convert charge into a jump velocity. 
         verticalVelocity = Mathf.Sqrt(2f * -gravity * chargeAmount);
