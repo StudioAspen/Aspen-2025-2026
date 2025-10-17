@@ -201,6 +201,7 @@ public class PlayerController : MonoBehaviour, ICharacterController
         {
             ApplyBoostPanel(ref currentVelocity, deltaTime);
             ApplyCannonBall(ref currentVelocity, deltaTime);
+            ApplyRailForce(ref currentVelocity, deltaTime);
 
         }
 
@@ -563,6 +564,65 @@ public class PlayerController : MonoBehaviour, ICharacterController
 
                     currentVelocity += direction * force;
 
+                    if (_state.Stance is Stance.Move or Stance.Sneak)
+                        _requestedSneak = true;
+                    _state.Stance = Stance.Slide;
+                }
+            }
+        }
+    }
+
+    public void ApplyRailForce(ref Vector3 currentVelocity, float deltaTime)
+    {
+        Collider[] hitColliders = Physics.OverlapSphere(root.position, 1);
+        foreach (var hitCollider in hitColliders)
+        {
+            if (hitCollider.CompareTag("Rail"))
+            {
+                RailSystem railNode = hitCollider.GetComponentInParent<RailSystem>();
+                if (railNode != null && railNode.nextNode != null)
+                {
+                    //Rail Direction To Next Node:
+                    Vector3 railStart = railNode.transform.position;
+                    Vector3 railEnd = railNode.nextNode.transform.position;
+                    Vector3 railDirection = (railEnd - railStart).normalized;
+
+                    //Push Player Along The Rail Direction:
+                    float playerSpeed = currentVelocity.magnitude * railNode.repelForceMultiplier;
+                    currentVelocity += railDirection * playerSpeed * deltaTime;
+
+                    //Find Out The Player Position Relative To The Entire railDir:
+                    Vector3 railStartToPlayer = root.position - railStart;
+                    Vector3 closestPoint = railStart + Vector3.Project(railStartToPlayer, railDirection);
+
+                    //Perpendicular (90 Degree) Offset Direction To Bounce The Player Back:
+                    Vector3 fromRailToPlayer = root.position - closestPoint;
+
+                    //Set A Repel Force:
+                    Vector3 repel = Vector3.zero;
+
+                    if (railNode.isAutoBounce)
+                    {
+                        //Apply The Calculated Bounce Angle -> Repel Force:
+                        if (fromRailToPlayer.sqrMagnitude > 0.001f)
+                            repel = fromRailToPlayer.normalized * playerSpeed;
+                    }
+                    else
+                    {
+                        //Manually Set Vector3 Values For Set Bounces:
+                        repel.x = railNode.manualRepel.x != 0 ? railNode.manualRepel.x : fromRailToPlayer.x;
+                        repel.y = railNode.manualRepel.y != 0 ? railNode.manualRepel.y : fromRailToPlayer.y;
+                        repel.z = railNode.manualRepel.z != 0 ? railNode.manualRepel.z : fromRailToPlayer.z;
+
+                        //Apply The Calculated Bounce Angle + Manual Values -> Repel Force:
+                        if (repel.sqrMagnitude > 0.001f)
+                            repel = repel.normalized * playerSpeed;
+                    }
+
+                    //Apply Repel Force To Player:
+                    currentVelocity += repel;
+
+                    //Set Into Sliding Stance:
                     if (_state.Stance is Stance.Move or Stance.Sneak)
                         _requestedSneak = true;
                     _state.Stance = Stance.Slide;
