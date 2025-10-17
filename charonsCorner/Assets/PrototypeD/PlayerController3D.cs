@@ -284,9 +284,9 @@ public class PlayerController3D : MonoBehaviour
 
         if (hit.gameObject.tag == "HevPin")
         {
-            if (currentForwardSpeed >= SpeedThreshold)
+            if (numSpeedIncreases >= 2)
             {
-                forwardCruiseSpeed += baseSpeedIncrease;
+                forwardCruiseSpeed += 3;
                 Destroy(hit.gameObject);
             }
 
