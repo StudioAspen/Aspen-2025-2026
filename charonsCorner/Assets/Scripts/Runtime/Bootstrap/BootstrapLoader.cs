@@ -12,6 +12,11 @@ using UnityEngine.ResourceManagement.ResourceProviders;
 
 namespace CharonsCorner.Runtime
 {
+    /// <summary>
+    /// Controls the Bootstrap scene, serving as the Single Entry Point manager.
+    /// Loads into the Menu scene after the scene is finished initializing in builds.
+    /// Handles the initial game state to a target scene inside the editor through the BootstrapConfigSO.
+    /// </summary>
     public class BootstrapLoader : MonoBehaviour
     {
         [SerializeField] private SceneReference _titleScene;
@@ -42,7 +47,7 @@ namespace CharonsCorner.Runtime
             Debug.Log($"Bootstrapped scene, {targetScene.Name}, successfully.");
             GameManager.Instance.ChangeGameState(_bootstrapConfig.GetSceneInitialState(targetScene), true);
 #else
-            await SceneManager.LoadSceneAsync(titleScene.Name);
+            await SceneManager.LoadSceneAsync(_titleScene.Name);
             GameManager.Instance.ChangeGameState(GameState.Title, true);
 #endif
             Destroy(gameObject);

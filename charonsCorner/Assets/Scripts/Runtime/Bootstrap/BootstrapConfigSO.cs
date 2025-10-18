@@ -7,6 +7,12 @@ using UnityEngine;
 
 namespace CharonsCorner.Runtime
 {
+    /// <summary>
+    /// This class houses the configuration for the BootstrapLoader to load a target scene with the correct game state in the editor.
+    /// Builds do not use this script. Required because force loading into a specific scene needs game state context to work properly.
+    /// For example, when you load into a test level, you want to be in the Gameplay state instead of the Title state. Scenes not added to this config
+    /// will default to Gameplay state.
+    /// </summary>
     [CreateAssetMenu(fileName = "BootstrapConfig", menuName = "CharonsCorner/Bootstrap/Config")]
     public class BootstrapConfigSO : ScriptableObject
     {
@@ -20,8 +26,9 @@ namespace CharonsCorner.Runtime
         private Dictionary<string, GameState> _sceneNameInitialStatesMap = new();
 
         /// <summary>
-        /// Initializes the dictionary that maps scene names to their initial game states.
-        /// Called in Bootstrap awake.
+        /// Initializes a helper dictionary that maps scene names to their initial game states.
+        /// We need to do this because SceneReference types are not hashable while strings are.
+        /// Called once in BootstrapLoader's Awake method.
         /// </summary>
         public void Initialize()
         {
@@ -33,8 +40,9 @@ namespace CharonsCorner.Runtime
 
         /// <summary>
         /// Gets the initial game state for a given scene from the dictionary.
-        /// Returns Gameplay state if the scene is not found in the dictionary.
         /// </summary>
+        /// <param name="scene">The scene used to look up the matching game state.</param>
+        /// <returns>The game state that maps to the scene, or Gameplay state if the scene is not found.</returns>
         public GameState GetSceneInitialState(SceneReference scene)
         {
             if (!_sceneNameInitialStatesMap.ContainsKey(scene.Name))
