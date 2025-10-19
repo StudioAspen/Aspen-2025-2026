@@ -5,8 +5,16 @@ import bpy
 from aspen.core.qt.singleton_main_window import SingletonMainWindow
 from aspen.core.qt import ui_loader
 
-from . import EXPORT_TYPE_ENUM_ITEMS, ASSET_TYPE_ENUM_ITEMS
+import aspen.sitecustomize as sitecustomize
 
+from aspen.blender.common.export_manager import api
+from . import (ASSET_TYPE_ENUM_ITEMS, EXPORT_TYPE_ENUM_ITEMS,
+               EXPORT_TYPE_ENUM_MODEL, EXPORT_TYPE_ENUM_RIG, EXPORT_TYPE_ENUM_ANIMATION)
+
+from aspen.core.telemetry.loggers import get_blender_logger
+from aspen.core.telemetry import trace as aspen_trace
+from opentelemetry import trace
+_logger = get_blender_logger()
 
 class ExportManagerMainWindow(SingletonMainWindow):
 
@@ -65,6 +73,7 @@ class ExportManagerMainWindow(SingletonMainWindow):
         """
         bpy.context.scene.export_manager.asset_type = self.asset_types[index]
 
+    @aspen_trace.trace_blender_function()
     def _on_export_selection_button_clicked(self):
         """ Call the export operator.
 
@@ -84,4 +93,44 @@ class ExportManagerMainWindow(SingletonMainWindow):
 
         if found_area:
             with bpy.context.temp_override(window=found_window, area=found_area):
-                bpy.ops.export_manager.export()
+                # Check if the current .blend file is saved
+                if not bpy.data.filepath:
+                    raise Exception('File must be saved in order to export a model.')
+
+                context = bpy.context
+                # Check if valid export name
+                if not context.scene.export_manager.asset_name:
+                    _logger.warning('Asset name is not valid.')
+
+                # Get export settings
+                export_manager = context.scene.export_manager
+                asset_name = export_manager.asset_name.strip()
+                export_type = export_manager.export_type
+                asset_type = f'{export_manager.asset_type.lower()}s'
+
+                # Set the export directory based on export and asset type
+                if export_type == EXPORT_TYPE_ENUM_MODEL or export_type == EXPORT_TYPE_ENUM_RIG:
+                    export_dir = os.path.join(sitecustomize.UNITY_PROJECT_ASSETS_DIR, 'Art', 'models', asset_type,
+                                              asset_name)
+                elif export_type == EXPORT_TYPE_ENUM_ANIMATION:
+                    blend_dir = os.path.basename(os.path.dirname(bpy.data.filepath))
+                    export_dir = os.path.join(sitecustomize.UNITY_PROJECT_ASSETS_DIR, 'Art', 'animations',
+                                              asset_type, blend_dir)
+                else:
+                    # Cancel if unknown export type
+                    raise Exception(f'Unknown export type: {export_type}')
+
+                os.makedirs(export_dir, exist_ok=True)
+                export_path = os.path.join(export_dir, f'{asset_name}.fbx')
+
+                # Export at export path
+                if export_type == EXPORT_TYPE_ENUM_MODEL or export_type == EXPORT_TYPE_ENUM_RIG:
+                    api.export_model_fbx(export_path)
+                elif export_type == EXPORT_TYPE_ENUM_ANIMATION:
+                    api.export_animation_fbx(export_path)
+                else:
+                    # Cancel if unknown export type
+                    raise Exception(f'Unknown export type: {export_type}')
+
+                _logger.info(f'Export Success: {export_path}')
+                trace.get_current_span().set_attribute("export_path", str(export_path))
