@@ -97,13 +97,18 @@ aspenTools/python/.idea/*
 charonsCorner/Assets/AddressableAssetsData/
 charonsCorner/Assets/AddressableAssetsData.meta
 
-# site files
+# DocFX documentation site files
 charonsCorner/Documentation/api/
 charonsCorner/Documentation/_site/
 
-# --- Wwise (generated) ---
-**/GeneratedSoundBanks/
-Assets/StreamingAssets/Audio/GeneratedSoundBanks/
-
-# Wwise integration cache (do not version)
-Assets/Wwise/Editor/ProjectData/AkWwiseProjectData.asset
+# Wwise
+**/Wwise/.cache/
+**/GeneratedSoundBanks/**/Temp/
+**/GeneratedSoundBanks/**/Cache/
+**/GeneratedSoundBanks/**/Localized/
+**/SoundbanksInfo.xml
+# Keep Windows & Mac soundbanks (they’ll be tracked by Git LFS)
+!charonsCorner/Assets/StreamingAssets/Audio/GeneratedSoundBanks/Windows/**
+!charonsCorner/Assets/StreamingAssets/Audio/GeneratedSoundBanks/Mac/**
+# Ignore other platforms
+charonsCorner/Assets/StreamingAssets/Audio/GeneratedSoundBanks/**
