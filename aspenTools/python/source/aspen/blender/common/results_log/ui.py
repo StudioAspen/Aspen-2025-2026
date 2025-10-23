@@ -1,22 +1,10 @@
-import os
 import bpy
+from .api import ResultLogMainWindow
 
-from aspen.core.qt.singleton_main_window import SingletonMainWindow
-from aspen.core.qt import ui_loader
-from aspen.blender.core import flags
+g_ResultLogMainWindow = ResultLogMainWindow()
 
-from .api import ConsoleArea
+def show_result_log_window():
+    g_ResultLogMainWindow.show()
 
-
-class ResultLogMainWindow(SingletonMainWindow):
-    def __init__(self, parent=None):
-        super().__init__(parent=parent)
-
-        ui_loader.load_ui(
-            os.path.join(os.path.dirname(__file__), 'results_log_window.ui'),
-            self,
-            ConsoleArea
-        )
-
-        # Example usage
-        self.consoleList.add_log("Welcome to the Aspen result log! Find the result of any tool operations in here.", "info")
+def test_result_log_window():
+    g_ResultLogMainWindow.test_print()

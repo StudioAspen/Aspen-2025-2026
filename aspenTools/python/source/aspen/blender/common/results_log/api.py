@@ -1,7 +1,12 @@
 # api.py
+import os
+
 from PySide6.QtWidgets import QListWidget, QListWidgetItem, QWidget, QLabel, QHBoxLayout, QFrame
+from aspen.core.qt.singleton_main_window import SingletonMainWindow
+from aspen.core.qt import ui_loader
 from aspen.blender.core import flags
 
+MAX_LOGS = 100
 class ConsoleArea(QListWidget):
     color_map = {
         "info" : "#3a82f7",
@@ -18,21 +23,17 @@ class ConsoleArea(QListWidget):
 
         color = self.color_map.get(flag)
 
-        widget = LogEntry(text, color)
+        log = LogEntry(text, color)
 
-        item = QListWidgetItem()
-        item.setSizeHint(widget.sizeHint())
+        list_item = QListWidgetItem(self)
+        list_item.setSizeHint(log.sizeHint())
+        self.setItemWidget(list_item, log)
 
-        self.addItem(item)
-        self.setItemWidget(item, widget)
+        if self.count() > MAX_LOGS:
+            self.takeItem(0)
+
         self.scrollToBottom()
 
-
-    def display_test_logs(self):
-        self.add_log("Welcome! Any output from Aspen tools will be displayed here.", flags.INFO_REPORT_FLAG)
-        self.add_log("Run successful.", flags.FINISHED_REPORT_FLAG)
-        self.add_log("Cancelled operation.", flags.CANCELLED_REPORT_FLAG)
-        self.add_log("Error from a tool has occurred.", flags.ERROR_REPORT_FLAG)
 
 class LogEntry(QWidget):
     def __init__(self, text, color):
@@ -50,3 +51,26 @@ class LogEntry(QWidget):
 
         layout.addWidget(box)
         layout.addWidget(label)
+
+
+class ResultLogMainWindow(SingletonMainWindow):
+    def __init__(self, parent=None):
+        super().__init__(parent=parent)
+
+        ui_loader.load_ui(
+            os.path.join(os.path.dirname(__file__), 'results_log_window.ui'),
+            self,
+            ConsoleArea
+        )
+
+        self.consoleList.add_log("Welcome to the Aspen result log! Find the result of any tool operations in here.", "info")
+
+    def test_print(self):
+        self.consoleList.add_log("Welcome! Any output from Aspen tools will be displayed here.", "info")
+        self.consoleList.add_log("Run successful.", "finished")
+        self.consoleList.add_log("Cancelled operation.", "cancelled")
+        self.consoleList.add_log("Error from a tool has occurred.", "error")
+
+    def test_mass_print(self):
+        for i in range(105):
+            self.consoleList.add_log(f"Log {i}")

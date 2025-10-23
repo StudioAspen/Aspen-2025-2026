@@ -1,7 +1,7 @@
 
 import bpy
-from aspen.blender.common.results_log.ui import ResultLogMainWindow
 from aspen.blender.common.export_manager.ui import ExportManagerMainWindow
+from aspen.blender.common.results_log import ui
 from aspen.blender.core import flags
 
 from . import EXPORT_MANAGER_BL_IDNAME
@@ -33,6 +33,6 @@ class COMMONPIPELINE_OT_resultlog(bpy.types.Operator):
 
     @trace.trace_blender_operator()
     def execute(self, context):
-        ResultLogMainWindow().show()
+        ui.show_result_log_window()
 
         return flags.FINISHED_REPORT_FLAG
