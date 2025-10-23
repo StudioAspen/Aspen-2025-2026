@@ -62,7 +62,7 @@ class ResultLogMainWindow(SingletonMainWindow):
             self,
             ConsoleArea
         )
-
+        self.move(0, 0)
         self.consoleList.add_log("Welcome to the Aspen result log! Find the result of any tool operations in here.", "info")
 
     def test_print(self):
