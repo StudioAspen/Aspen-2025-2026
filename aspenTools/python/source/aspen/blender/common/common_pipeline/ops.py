@@ -1,9 +1,11 @@
 
 import bpy
+from aspen.blender.common.results_log.ui import ResultLogMainWindow
 from aspen.blender.common.export_manager.ui import ExportManagerMainWindow
 from aspen.blender.core import flags
 
 from . import EXPORT_MANAGER_BL_IDNAME
+from . import RESULT_LOG_BL_IDNAME
 
 from aspen.core.telemetry import trace
 
@@ -20,5 +22,17 @@ class COMMONPIPELINE_OT_exportmanager(bpy.types.Operator):
         """Launch the Export Manager"""
 
         ExportManagerMainWindow().show()
+
+        return flags.FINISHED_REPORT_FLAG
+
+class COMMONPIPELINE_OT_resultlog(bpy.types.Operator):
+    bl_idname = RESULT_LOG_BL_IDNAME
+    bl_label = 'Show Result Log'
+    bl_description = 'Open the Result Log to display results from Aspen Tools.'
+    bl_options = {'REGISTER'}
+
+    @trace.trace_blender_operator()
+    def execute(self, context):
+        ResultLogMainWindow().show()
 
         return flags.FINISHED_REPORT_FLAG
