@@ -16,7 +16,6 @@ def register():
         sys.path.append(PYTHON_PATH)
         sys.path.append(VENV_PATH)
 
-    """
     from aspen.core.telemetry import init as telemetry
     from aspen.core.excepthook import blender_excepthook
 
@@ -38,7 +37,6 @@ def register():
             from aspen import blender_autoload as autoload
             autoload.init()
             autoload.register()
-    """
 
     import bqt
     bqt.register()
