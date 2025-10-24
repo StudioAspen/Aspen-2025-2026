@@ -4,6 +4,10 @@ using UnityEngine;
 
 namespace CharonsCorner.Runtime
 {
+    /// <summary>
+    /// Handles all camera shaking for Cinemachine cameras.
+    /// Shake still persists even when switching cameras.
+    /// </summary>
     public class CameraShaker
     {
         private CameraManager _cameraManager;
@@ -97,6 +101,10 @@ namespace CharonsCorner.Runtime
             }
         }
 
+        /// <summary>
+        /// Properly handles the destroy lifecycle of this class.
+        /// Unsub listeners from any actions here.
+        /// </summary>
         public void Dispose()
         {
             _cameraManager.OnActiveCameraChanged -= CameraManager_OnActiveCameraChanged;

@@ -4,6 +4,10 @@ using UnityEngine;
 
 namespace CharonsCorner.Runtime
 {
+    /// <summary>
+    /// Custom input controller for Cinemachine.
+    /// InputManager and SensitivitySetting values are used here.
+    /// </summary>
     public class CameraInputController : InputAxisControllerBase<CameraInputController.Reader>
     {
         void Update()
