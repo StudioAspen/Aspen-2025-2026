@@ -24,7 +24,7 @@ namespace CharonsCorner.Runtime
         /// </summary>
         [field: SerializeField, ReadOnly] public CinemachineCamera CurrentCamera { get; private set; }
         /// <summary>
-        /// Action that is when the current camera changes.
+        /// Action that is invoked when the current camera changes.
         /// </summary>
         /// <remarks>
         /// <list type="bullet">
