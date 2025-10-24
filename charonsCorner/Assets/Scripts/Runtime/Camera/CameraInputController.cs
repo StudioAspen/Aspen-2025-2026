@@ -11,7 +11,7 @@ namespace CharonsCorner.Runtime
     public class CameraInputController : InputAxisControllerBase<CameraInputController.Reader>
     {
         void Update()
-        {
+        { 
             if (!Application.isPlaying) 
                 return;
             UpdateControllers();
