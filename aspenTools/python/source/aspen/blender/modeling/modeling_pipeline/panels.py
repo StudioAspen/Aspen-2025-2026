@@ -11,3 +11,7 @@ class ASPENMODELING_PT_panel(bpy.types.Panel):
 
     def draw(self, context):
         layout = self.layout
+
+        row = layout.row()
+        layout.operator("modeling_pipeline.asset_validation_start")
+        layout.operator("modeling_pipeline.asset_validation_help")
