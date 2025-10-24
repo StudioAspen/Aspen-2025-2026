@@ -95,7 +95,7 @@ namespace CharonsCorner.Runtime
         }
 
         private void Update()
-        {
+        { 
             CameraShaker.Update();
         }
         

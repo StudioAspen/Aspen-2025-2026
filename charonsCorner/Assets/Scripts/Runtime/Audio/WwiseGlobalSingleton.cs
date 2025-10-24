@@ -8,8 +8,5 @@ namespace CharonsCorner.Runtime
     /// The WwiseGlobal object should not be in any other scene besides the Bootstrap scene.
     /// To call Wwise events, please serialize an AK.Wwise.Event type and call that instance's Post(gameObject) method.
     /// </summary>
-    public class WwiseGlobalSingleton : Singleton<WwiseGlobalSingleton>
-    {
-        
-    }
+    public class WwiseGlobalSingleton : Singleton<WwiseGlobalSingleton> { }
 }

@@ -34,14 +34,14 @@ namespace CharonsCorner.Runtime
         /// <param name="duration">How long will the camera be shaking.</param>
         public void ShakeCamera(float amplitude, float frequency, float duration)
         {
-            if(_cameraManager.CurrentCamera == null)
+            if (_cameraManager.CurrentCamera == null)
             {
                 Debug.LogWarning("Current camera is not set. Cannot shake camera.");
                 return;
             }
 
             _cinemachineBasicMultiChannelPerlin = _cameraManager.CurrentCamera.GetComponent<CinemachineBasicMultiChannelPerlin>();
-            if(_cinemachineBasicMultiChannelPerlin == null )
+            if (_cinemachineBasicMultiChannelPerlin == null)
             {
                 Debug.LogWarning("CinemachineBasicMultiChannelPerlin component not found on the current camera. Cannot shake camera.");
                 return;
