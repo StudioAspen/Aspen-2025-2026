@@ -16,6 +16,7 @@ namespace CharonsCorner.Runtime
         [field:SerializeField] public LayerMask GroundLayer { get; private set; }
         [field:SerializeField] public bool IsOnSlope { get; private set; }
         [field:SerializeField] public RaycastHit Hit { get; private set; }
+        
         private void FixedUpdate()
         {
             CheckSlope();
@@ -26,7 +27,7 @@ namespace CharonsCorner.Runtime
             bool raycast = Physics.SphereCast(new Ray(transform.position, Vector3.down), PlayerSphereCollider.radius * 0.9f, out RaycastHit tempHit, RayLength, GroundLayer);
             Hit = tempHit;
             CurrentSlopeAngle = Vector3.Angle(Hit.normal, Vector3.up);
-            Debug.Log("SLOPE: " + raycast + ", " + (CurrentSlopeAngle < MaxSlopeAngle) + ", " + (CurrentSlopeAngle > MinSlopeAngle));
+            // Debug.Log("SLOPE: " + raycast + ", " + (CurrentSlopeAngle < MaxSlopeAngle) + ", " + (CurrentSlopeAngle > MinSlopeAngle));
             IsOnSlope = raycast && CurrentSlopeAngle < MaxSlopeAngle && CurrentSlopeAngle > MinSlopeAngle;
         }
     

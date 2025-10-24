@@ -7,6 +7,7 @@ namespace CharonsCorner.Runtime
     {
         [field: SerializeField] public TextMeshProUGUI SpeedText { get; private set; }
         private Rigidbody _playerRb;
+        
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
         {

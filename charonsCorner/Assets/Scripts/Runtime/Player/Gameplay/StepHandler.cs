@@ -14,14 +14,12 @@ namespace CharonsCorner.Runtime
         private Rigidbody _playerRb;
         private SphereCollider _playerCollider;
         
-        // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Awake()
         {
             _playerRb = GetComponent<Rigidbody>();
             _playerCollider = GetComponent<SphereCollider>();
         }
-
-        // Update is called once per frame
+        
         void Update()
         {
             
@@ -56,7 +54,7 @@ namespace CharonsCorner.Runtime
                     {
                         // Check slope angle (avoid walls)
                         if (Vector3.Dot(stepHit.normal, Vector3.up) < 0.99f) return;
-                        Debug.Log("STEPPING UP");
+                        // Debug.Log("STEPPING UP");
                         // Smoothly lift player instead of teleporting
                         Vector3 targetPos = new Vector3(_playerRb.position.x, stepHit.point.y + _playerCollider.radius, _playerRb.position.z);
                         _playerRb.MovePosition(Vector3.Lerp(_playerRb.position, targetPos, 0.3f));

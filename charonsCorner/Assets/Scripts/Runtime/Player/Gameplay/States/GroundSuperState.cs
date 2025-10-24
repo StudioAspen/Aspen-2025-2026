@@ -3,10 +3,10 @@ using UnityEngine;
 namespace CharonsCorner.Runtime
 {
     [System.Serializable]
-    public class AirSuperState : SuperState<PrototypePlayerController>
+    public class GroundSuperState : SuperState<GameplayPlayerController>
     {
-        public override State<PrototypePlayerController> InitialSubState => MoveState;
-        [field: SerializeField] public AirMoveState MoveState { get; private set; } = new();
+        public override State<GameplayPlayerController> InitialSubState => MoveState;
+        [field: SerializeField] public GroundMoveState MoveState { get; private set; } = new();
 
         private protected override void InitializeSubStates()
         {
@@ -15,17 +15,16 @@ namespace CharonsCorner.Runtime
 
         private protected override void OnEnter()
         {
-            _context.Rb.linearDamping = 0;
+            
         }
 
         private protected override void OnExit()
         {
-            
+           
         }
 
         private protected override void OnUpdate()
         {
-            _context.CurrentSubState = MoveState.GetType().Name;
         }
 
         private protected override void OnFixedUpdate()
@@ -33,8 +32,13 @@ namespace CharonsCorner.Runtime
 
         }
 
-        private protected override State<PrototypePlayerController> GetTransition()
+        private protected override State<GameplayPlayerController> GetTransition()
         {
+            if (!_context.IsGrounded)
+            {
+                return _context.AirState;
+            }
+            
             return null;
         }
     }
