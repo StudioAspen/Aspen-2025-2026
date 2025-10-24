@@ -3,6 +3,7 @@ import bpy
 
 from . import EXPORT_TYPE_ENUM_ITEMS, ASSET_TYPE_ENUM_ITEMS
 
+
 class ExportManagerSettings(bpy.types.PropertyGroup):
     asset_name: bpy.props.StringProperty(name='Export Name')
     export_type: bpy.props.EnumProperty(
