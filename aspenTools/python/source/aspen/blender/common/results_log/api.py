@@ -20,7 +20,12 @@ class ConsoleArea(QListWidget):
         self.setSpacing(2)
 
     def add_log(self, text, flag="info"):
+        """ This adds a single LogEntry widget to this object. Will delete old entries if max_logs is reached.
 
+        Args:
+            text (str): Text to display
+            flag (str, optional): Determines the color of a box displayed with the message.
+        """
         color = self.color_map.get(flag)
 
         log = LogEntry(text, color)
@@ -40,12 +45,12 @@ class LogEntry(QWidget):
         super().__init__()
         layout = QHBoxLayout(self)
 
-        # Colored indicator box
+        # This is a box that matches the flag passed in to a color.
         box = QFrame()
         box.setFixedSize(10, 10)
         box.setStyleSheet(f"background-color: {color}; border-radius: 2px;")
 
-        # Message text
+        # This is the text to be displayed.
         label = QLabel(text)
         label.setWordWrap(True)
 
@@ -62,15 +67,28 @@ class ResultLogMainWindow(SingletonMainWindow):
             self,
             ConsoleArea
         )
+
         self.move(0, 0)
         self.consoleList.add_log("Welcome to the Aspen result log! Find the result of any tool operations in here.", "info")
 
-    def test_print(self):
+    def print_log(self, text, flag="info"):
+        """ This adds and prints a single log to the window.
+
+        Args:
+            text (str): Text to display
+            flag (str, optional): Determines the color of a box displayed with the message.
+        """
+        self.consoleList.add_log(text, flag)
+
+    def test_print_flags(self):
+        """ This function tests calling each of the flags to ensure the colors display correctly. """
+
         self.consoleList.add_log("Welcome! Any output from Aspen tools will be displayed here.", "info")
         self.consoleList.add_log("Run successful.", "finished")
         self.consoleList.add_log("Cancelled operation.", "cancelled")
         self.consoleList.add_log("Error from a tool has occurred.", "error")
 
     def test_mass_print(self):
+        """ This functions tests whether the Window will handle deleting old logs when capacity is reached. """
         for i in range(105):
             self.consoleList.add_log(f"Log {i}")
