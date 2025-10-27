@@ -17,21 +17,14 @@ namespace CharonsCorner.Runtime
         private Vector3 originalScale;
         private bool playerInside = false;
         private Rigidbody playerRb;
-        private WaterScreenOverlay waterOverlay;
 
         private void Awake()
         {
-           // meshRenderer = GetComponent<MeshRenderer>();
             originalScale = transform.localScale;
 
             // Make sure the collider is a trigger
             var box = GetComponent<BoxCollider>();
             box.isTrigger = true;
-        }
-
-        private void Start()
-        {
-            waterOverlay = Object.FindFirstObjectByType<WaterScreenOverlay>();
         }
 
         private void Update()
@@ -51,8 +44,7 @@ namespace CharonsCorner.Runtime
             {
                 playerInside = true;
                 playerRb = other.GetComponent<Rigidbody>();
-                other.GetComponent<PlayerController>().IsInWater = true;
-                if (waterOverlay != null) waterOverlay.SetOverlayActive(true);
+                other.GetComponent<PlayerController>().IsInWater = true; // Notify player controller
             }
         }
 
@@ -62,8 +54,7 @@ namespace CharonsCorner.Runtime
             {
                 playerInside = false;
                 playerRb = null;
-                other.GetComponent<PlayerController>().IsInWater = false;
-                if (waterOverlay != null) waterOverlay.SetOverlayActive(false);
+                other.GetComponent<PlayerController>().IsInWater = false; // Notify player controller
             }
         }
 
@@ -71,13 +62,6 @@ namespace CharonsCorner.Runtime
         {
             if (playerInside && playerRb != null)
             {
-                var playerController = playerRb.GetComponent<PlayerController>();
-                if (playerController != null && playerController.isBig)
-                {
-                    // Skip buoyancy if player is big
-                    return;
-                }
-
                 // Apply upward force to simulate buoyancy
                 Vector3 velocity = playerRb.linearVelocity;
                 velocity.y = Mathf.Lerp(velocity.y, liftForce, Time.fixedDeltaTime * liftSmooth);
