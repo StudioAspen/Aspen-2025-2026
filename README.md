@@ -20,3 +20,4 @@ Unity Version 6000.0.58f2
 7. [Steamworks.NET](https://github.com/rlabrecque/Steamworks.NET)
 8. [Unity-SerializeReferenceExtensions](https://github.com/mackysoft/Unity-SerializeReferenceExtensions)
 9. [Animancer Pro v8](https://assetstore.unity.com/packages/tools/animation/animancer-pro-v8-293522)
+10. [Wwise 2024.1.8.8898.3638](https://www.audiokinetic.com/en/public-library/2024.1.8_8898/?source=Unity&id=index.html)

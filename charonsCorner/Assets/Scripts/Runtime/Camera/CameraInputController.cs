@@ -4,12 +4,17 @@ using UnityEngine;
 
 namespace CharonsCorner.Runtime
 {
+    /// <summary>
+    /// Custom input controller for Cinemachine.
+    /// InputManager and SensitivitySetting values are used here.
+    /// </summary>
     public class CameraInputController : InputAxisControllerBase<CameraInputController.Reader>
     {
         void Update()
-        {
-            if (!Application.isPlaying) return;
-                UpdateControllers();
+        { 
+            if (!Application.isPlaying) 
+                return;
+            UpdateControllers();
         }
 
         [Serializable]
@@ -17,10 +22,10 @@ namespace CharonsCorner.Runtime
         {
             public float GetValue(UnityEngine.Object context, IInputAxisOwner.AxisDescriptor.Hints hint)
             {
-                if(hint == IInputAxisOwner.AxisDescriptor.Hints.X)
+                if (hint == IInputAxisOwner.AxisDescriptor.Hints.X)
                     return InputManager.Instance.LookDirection.x * SensitivitySetting.CurrentValue;
 
-                if(hint == IInputAxisOwner.AxisDescriptor.Hints.Y)
+                if (hint == IInputAxisOwner.AxisDescriptor.Hints.Y)
                     return -InputManager.Instance.LookDirection.y * SensitivitySetting.CurrentValue;
 
                 return 0f;
