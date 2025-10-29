@@ -194,8 +194,10 @@ namespace CharonsCorner.LevelEditor
                     Vector3 l4 = l2 + Vector3.down * height;
 
                     // Top face
-                    vertices.AddRange(new[] { r1, l1, r2, l2 });
+                    vertices.AddRange(new[] { r1, l1, r2, l2 }); 
                     uvs.AddRange(new[] { Vector2.zero, Vector2.zero, Vector2.zero, Vector2.zero });
+
+                    
                     triangles.AddRange(new[] {
                         offset + 0, offset + 2, offset + 3,
                         offset + 3, offset + 1, offset + 0
@@ -212,6 +214,7 @@ namespace CharonsCorner.LevelEditor
                     // Right side
                     vertices.AddRange(new[] { r1, r3, r4, r2 });
                     uvs.AddRange(new[] {Vector2.zero, Vector2.zero, Vector2.zero, Vector2.zero });
+
                     triangles.AddRange(new[] {
                         offset + 8, offset + 9, offset + 10,
                         offset + 10, offset + 11, offset + 8
