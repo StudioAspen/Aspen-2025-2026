@@ -1,29 +1,25 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
 public class SentientPin : MonoBehaviour
 {
 
-    [Tooltip("Range where the pin detects player")]
     [SerializeField] private float DetectionRange = 10f;
-
-    [Tooltip("max jumps before death/end")]
     [SerializeField] private float TotalJumps = 5f;
     private float currentJumps = 0f;
-
-
-    [Tooltip("amount of time before the pin jumps off the map")]
     [SerializeField] private float DurationTillJump = 8f;
-
-    [Tooltip("the distance the pin can jump")]
     [SerializeField] private float JumpDistance = 5f;
-    [Tooltip("Range where the pin detects player")]
     [SerializeField] private float JumpHeight = 5f;
-    [Tooltip("speed the player will move")]
-    [SerializeField] private float speed = 4f;
+    [SerializeField] private float Jumpspeed = 4f;
 
     private SphereCollider sphereCollider;
 
+    [SerializeField] private Transform player;
+    private bool isJumping = false;
+    private Vector3 jumpDirection;
+    private Vector3 JumpStartPosition;
+    private float JumpProgress = 0f;
 
 
 
@@ -31,7 +27,16 @@ public class SentientPin : MonoBehaviour
     void Start()
     {
         sphereCollider = GetComponent<SphereCollider>();
-        sphereCollider.radius = DetectionRange;
+        // sphereCollider.radius = DetectionRange;
+
+        
+
+    }
+
+    void Update()
+    {
+
+
     }
 
 
@@ -39,9 +44,60 @@ public class SentientPin : MonoBehaviour
     {
         if (other.gameObject.layer == 0)
         {
-            StartCoroutine(Jump());
+            initiateJump();
         }
     }
+
+
+    void initiateJump()
+    {
+        if (currentJumps >= TotalJumps)
+        {
+            // tell the pin to jump off 
+            Debug.Log("max jumps reached");
+            return;
+        }
+        isJumping = true;
+        currentJumps++;
+        JumpProgress = 0f;
+        JumpStartPosition = transform.position;
+
+        // calc 
+        Vector3 directionFromPlayer = (transform.position - player.position).normalized;
+
+        directionFromPlayer.y = 0f;
+        directionFromPlayer.Normalize();
+
+        jumpDirection = directionFromPlayer * JumpDistance;
+
+        ExecuteJump();
+    }
+
+
+    void ExecuteJump()
+    {
+        JumpProgress += Time.deltaTime * Jumpspeed;
+
+
+        if (JumpProgress <= 1f)
+        {
+            float horizontalProgress = JumpProgress;
+            float verticalProgress = Mathf.Sin(JumpProgress * Mathf.PI);
+
+            Vector3 horizontalMovement = jumpDirection * horizontalProgress;
+            float verticalMovement = JumpHeight * verticalProgress;
+
+
+            transform.position = JumpStartPosition + horizontalMovement + Vector3.up * verticalMovement;
+        }
+        else
+        {
+            isJumping = false;
+            JumpProgress = 0f;
+        }
+    }
+
+
 
     private IEnumerator Jump()
     {
