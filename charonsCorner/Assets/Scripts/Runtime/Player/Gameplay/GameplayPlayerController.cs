@@ -8,7 +8,6 @@ namespace CharonsCorner.Runtime
     public class GameplayPlayerController : MonoBehaviour
     {
         [SerializeField] private float _gravityAmount = 30f;
-        [SerializeField] private float _jumpForce = 10f;
 
         [Header("Ground Check")]
         [SerializeField] private float _groundCheckLength = 0.5f;
@@ -43,10 +42,6 @@ namespace CharonsCorner.Runtime
         private void Update()
         {
             StateMachine.Update();
-            if (Input.GetKeyDown(KeyCode.Space)) 
-            {
-                Rb.AddForce(Orientation.up * _jumpForce, ForceMode.VelocityChange);
-            }
         }
         
         private void FixedUpdate()
