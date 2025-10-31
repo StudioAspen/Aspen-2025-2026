@@ -19,19 +19,6 @@ namespace CharonsCorner.Runtime
         public bool IsGrounded => GroundedSuperState.IsGrounded;
         public float CurrentSpeed => RigidBody.linearVelocity.magnitude;
         public bool IsInWater { get; set; }
-        public bool IsBig => isBig;
-
-        public event System.Action<bool> OnBigStateChanged;
-
-        // Size Toggle Fields
-        [Header("Size Settings")]
-        public Vector3 normalScale = Vector3.one;
-        public Vector3 bigScale = new Vector3(2f, 2f, 2f);
-        public float normalMass = 1f;
-        public float bigMass = 4f;
-        public float normalGravity = -9.81f;
-        public float bigGravity = -19.62f; // Example: double gravity when big
-        public bool isBig = false;
 
         private void Awake()
         {
@@ -40,9 +27,6 @@ namespace CharonsCorner.Runtime
             SphereCollider = GetComponent<SphereCollider>();
 
             SetupStateMachine();
-
-            // Ensure starting size is normal
-            SetSize(false);
         }
 
         private void OnDestroy()
@@ -75,23 +59,12 @@ namespace CharonsCorner.Runtime
         private void Update()
         {
             StateMachine.Update();
-
-            // Size Toggle Logic
-            if (UnityEngine.Input.GetMouseButtonDown(1))
-            {
-                isBig = !isBig;
-                SetSize(isBig);
-            }
         }
 
         private void FixedUpdate()
         {
             GroundedSuperState.CheckGrounded();
             StateMachine.FixedUpdate();
-
-            // Apply custom gravity
-            float gravity = isBig ? bigGravity : normalGravity;
-            RigidBody.AddForce(Vector3.up * gravity * RigidBody.mass, ForceMode.Force);
         }
 
         private void SetupStateMachine()
@@ -102,22 +75,6 @@ namespace CharonsCorner.Runtime
             AirborneSuperState.Init(StateMachine, this);
 
             StateMachine.ChangeState(GroundedSuperState, true);
-        }
-
-        // Helper to Set Size
-        private void SetSize(bool big)
-        {
-            Vector3 targetScale = big ? bigScale : normalScale;
-            float targetMass = big ? bigMass : normalMass;
-            float targetGravity = big ? bigGravity : normalGravity;
-            float duration = 0.3f;
-
-            // Smoothly animate the scale change
-            transform.DOScale(targetScale, duration).SetEase(Ease.OutBack);
-
-            // Set Rigidbody mass
-            RigidBody.mass = targetMass;
-            OnBigStateChanged?.Invoke(big);
         }
     }
 }
