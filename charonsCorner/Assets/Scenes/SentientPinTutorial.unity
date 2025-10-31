@@ -1608,7 +1608,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1204811984}
   - component: {fileID: 1204811985}
-  - component: {fileID: 1204811986}
   m_Layer: 0
   m_Name: SentientPin
   m_TagString: Untagged
@@ -1625,7 +1624,7 @@ Transform:
   m_GameObject: {fileID: 1204811983}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.12, y: 2.85, z: 7.75}
+  m_LocalPosition: {x: -8.12, y: 1.54, z: 7.75}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1644,34 +1643,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 17ec21c175665d24fb744941d2536b12, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DetectionRange: 10
+  DetectionRange: 3
   TotalJumps: 5
-  DurationTillJump: 8
   JumpDistance: 5
   JumpHeight: 5
-  Jumpspeed: 4
-  player: {fileID: 1981247927}
---- !u!135 &1204811986
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1204811983}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
+  JumpDuration: 1.5
+  TimeBetweenJumps: 10
+  groundLayerMask:
     serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 1.5
-  m_Center: {x: 0, y: 0, z: 0}
+    m_Bits: 8
+  groundOffset: 1
+  raycastStartHeight: 10
+  reuseInsteadOfDestroy: 0
+  finalJumpHeight: 15
+  finalJumpDuration: 1
 --- !u!1 &1313710394
 GameObject:
   m_ObjectHideFlags: 0
@@ -4139,7 +4124,7 @@ CapsuleCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.5
   m_Height: 2
@@ -4255,11 +4240,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 383ccfd0ba8258e459f97dff7371efec, type: 3}
---- !u!4 &1981247927 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 1812858393626519745, guid: 383ccfd0ba8258e459f97dff7371efec, type: 3}
-  m_PrefabInstance: {fileID: 1981247926}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

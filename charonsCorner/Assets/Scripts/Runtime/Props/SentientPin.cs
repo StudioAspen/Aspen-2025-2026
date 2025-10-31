@@ -1,124 +1,217 @@
-using System;
 using System.Collections;
 using UnityEngine;
 
 public class SentientPin : MonoBehaviour
 {
-
+    [Header("Detection Settings")]
     [SerializeField] private float DetectionRange = 10f;
-    [SerializeField] private float TotalJumps = 5f;
-    private float currentJumps = 0f;
-    [SerializeField] private float DurationTillJump = 8f;
+
+
+    [Header("Jump Settings")]
+    [SerializeField] private int TotalJumps = 5;
+    private int currentJumps = 0;
     [SerializeField] private float JumpDistance = 5f;
     [SerializeField] private float JumpHeight = 5f;
-    [SerializeField] private float Jumpspeed = 4f;
+    [SerializeField] private float JumpDuration = 1.2f;
+    [SerializeField] private float TimeBetweenJumps = 1.5f;
 
-    private SphereCollider sphereCollider;
+    [Header("Layer Mask")]
+    [SerializeField] private LayerMask groundLayerMask;
 
-    [SerializeField] private Transform player;
+    [Header("Offset Settings")]
+    [SerializeField] private float groundOffset = 0.5f;
+    [SerializeField] private float raycastStartHeight = 10f;
+
+    [Header("End Behavior")]
+    [SerializeField] private bool reuseInsteadOfDestroy = false; // disable instead of destroy
+    [SerializeField] private float finalJumpHeight = 15f;
+    [SerializeField] private float finalJumpDuration = 2f;
+
+    private Transform player;
+    private bool isPlayerInRange = false;
     private bool isJumping = false;
-    private Vector3 jumpDirection;
-    private Vector3 JumpStartPosition;
-    private float JumpProgress = 0f;
 
+    private Coroutine jumpCoroutine;
+    private Coroutine idleCoroutine;
 
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        sphereCollider = GetComponent<SphereCollider>();
-        // sphereCollider.radius = DetectionRange;
-
-        
-
+        player = GameObject.FindGameObjectWithTag("Player")?.transform;
+        if (player == null)
+            Debug.LogError("Player not found! Make sure your player has the 'Player' tag.");
     }
 
     void Update()
     {
+        if (player == null) return;
 
+        float distanceToPlayer = Vector3.Distance(transform.position, player.position);
 
+        if (distanceToPlayer <= DetectionRange && !isPlayerInRange)
+            PlayerDetected();
+        else if (distanceToPlayer > DetectionRange && isPlayerInRange)
+            PlayerLeftRange();
+    }
+
+    void PlayerDetected()
+    {
+        isPlayerInRange = true;
+        if (idleCoroutine != null)
+        {
+            StopCoroutine(idleCoroutine);
+            idleCoroutine = null;
+        }
+
+        if (!isJumping && jumpCoroutine == null)
+            jumpCoroutine = StartCoroutine(JumpSequence());
+    }
+
+    void PlayerLeftRange()
+    {
+        isPlayerInRange = false;
+        if (jumpCoroutine != null)
+        {
+            StopCoroutine(jumpCoroutine);
+            jumpCoroutine = null;
+        }
+
+        isJumping = false;
+        idleCoroutine = StartCoroutine(IdleCountdown());
     }
 
 
-    public void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.layer == 0)
-        {
-            initiateJump();
-        }
-    }
 
-
-    void initiateJump()
+    /// <summary>
+    /// starts jump sequence for pin 
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator JumpSequence()
     {
-        if (currentJumps >= TotalJumps)
-        {
-            // tell the pin to jump off 
-            Debug.Log("max jumps reached");
-            return;
-        }
         isJumping = true;
-        currentJumps++;
-        JumpProgress = 0f;
-        JumpStartPosition = transform.position;
 
-        // calc 
-        Vector3 directionFromPlayer = (transform.position - player.position).normalized;
-
-        directionFromPlayer.y = 0f;
-        directionFromPlayer.Normalize();
-
-        jumpDirection = directionFromPlayer * JumpDistance;
-
-        ExecuteJump();
-    }
-
-
-    void ExecuteJump()
-    {
-        JumpProgress += Time.deltaTime * Jumpspeed;
-
-
-        if (JumpProgress <= 1f)
+        while (isPlayerInRange && currentJumps < TotalJumps)
         {
-            float horizontalProgress = JumpProgress;
-            float verticalProgress = Mathf.Sin(JumpProgress * Mathf.PI);
+            Vector3 jumpDirection = (transform.position - player.position).normalized;
+            jumpDirection.y = 0;
+            jumpDirection.Normalize();
 
-            Vector3 horizontalMovement = jumpDirection * horizontalProgress;
-            float verticalMovement = JumpHeight * verticalProgress;
+            Vector3 proposedTarget = transform.position + jumpDirection * JumpDistance;
 
+            if (FindValidJumpPosition(proposedTarget, out Vector3 targetPosition))
+            {
+                currentJumps++;
 
-            transform.position = JumpStartPosition + horizontalMovement + Vector3.up * verticalMovement;
+                transform.LookAt(targetPosition);
+
+                // Perform the jump
+                yield return StartCoroutine(JumpToTarget(transform.position, targetPosition));
+
+                // Pause between jumps
+                yield return new WaitForSeconds(TimeBetweenJumps);
+            }
+            else
+            {
+                // Retry after short delay if no valid ground found
+                yield return new WaitForSeconds(0.5f);
+            }
         }
-        else
-        {
-            isJumping = false;
-            JumpProgress = 0f;
-        }
-    }
 
-
-
-    private IEnumerator Jump()
-    {
-        yield return new WaitForSeconds(15f);
-        currentJumps++;
-
-        // math and calc here 
+        isJumping = false;
+        jumpCoroutine = null;
 
         if (currentJumps >= TotalJumps)
-        {
-            yield return StartCoroutine(startDeath());
-        }
-
+            StartCoroutine(FinalJumpAndExit());
     }
 
 
-    private IEnumerator startDeath()
+    /// <summary>
+    /// Math for Jumping to target using StartPos and EndPos
+    /// </summary>
+    /// <param name="startPos">starting position of pin</param>
+    /// <param name="endPos">target Position</param>
+    /// <returns></returns>
+    IEnumerator JumpToTarget(Vector3 startPos, Vector3 endPos)
     {
-        
+        float elapsed = 0f;
+        while (elapsed < JumpDuration)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / JumpDuration);
 
+            float height = Mathf.Sin(t * Mathf.PI) * JumpHeight;
+            Vector3 pos = Vector3.Lerp(startPos, endPos, t);
+            pos.y += height;
+
+            transform.position = pos;
+            yield return null;
+        }
+
+        transform.position = endPos;
+    }
+
+    /// <summary>
+    /// using a raycast is it even able to jump there
+    /// </summary>
+    /// <param name="proposedPosition">potential jump position</param>
+    /// <param name="validPosition">returns valid position</param>
+    /// <returns></returns>
+    bool FindValidJumpPosition(Vector3 proposedPosition, out Vector3 validPosition)
+    {
+        validPosition = proposedPosition;
+        Vector3 rayStart = proposedPosition + Vector3.up * raycastStartHeight;
+
+        if (Physics.Raycast(rayStart, Vector3.down, out RaycastHit hit, raycastStartHeight + 10f, groundLayerMask))
+        {
+            validPosition = hit.point + Vector3.up * groundOffset;
+            return true;
+        }
+
+        return false;
+    }
+
+
+    /// <summary>
+    /// end sequence for pin
+    /// not entirely necessary might delete later
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator IdleCountdown()
+    {
         yield return new WaitForSeconds(15f);
-        
+        StartCoroutine(FinalJumpAndExit());
+    }
+
+
+
+    IEnumerator FinalJumpAndExit()
+    {
+        isJumping = true;
+
+        Vector3 startPos = transform.position;
+        Vector3 endPos = startPos + Vector3.up * finalJumpHeight;
+
+        float elapsed = 0f;
+        while (elapsed < finalJumpDuration)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / finalJumpDuration);
+            Vector3 pos = Vector3.Lerp(startPos, endPos, t);
+            transform.position = pos;
+            yield return null;
+        }
+
+        // End of jump: disable or destroy
+        if (reuseInsteadOfDestroy)
+            gameObject.SetActive(false);
+        else
+            Destroy(gameObject);
+
+        isJumping = false;
+    }
+
+    void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, DetectionRange);
     }
 }
