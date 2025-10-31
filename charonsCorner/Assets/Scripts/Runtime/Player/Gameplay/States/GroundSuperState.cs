@@ -36,8 +36,11 @@ namespace CharonsCorner.Runtime
         {
             if (!_context.IsGrounded)
             {
-                return _context.AirState;
+                return _context.AirSuperState;
             }
+            
+            if(Input.GetKey(KeyCode.LeftShift))
+                return _context.DriftSuperState;
             
             return null;
         }

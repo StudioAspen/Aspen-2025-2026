@@ -25,7 +25,7 @@ namespace CharonsCorner.Runtime
         private void OnJump()
         {
             
-            if (player.StateMachine.CurrentState == player.GroundState)
+            if (player.StateMachine.CurrentState == player.GroundSuperState)
             {
                 
                 Jump();

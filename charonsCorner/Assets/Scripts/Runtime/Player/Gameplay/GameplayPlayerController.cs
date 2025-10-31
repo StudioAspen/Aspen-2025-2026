@@ -1,4 +1,5 @@
 using System;
+using Unity.Cinemachine;
 using UnityEditor;
 using UnityEngine;
 
@@ -15,6 +16,9 @@ namespace CharonsCorner.Runtime
         [SerializeField] private LayerMask _groundLayer;
         
         [field: SerializeField] public Transform Orientation { get; private set; }
+        
+        [field: SerializeField] public CinemachineCamera PlayerCamera { get; private set; }
+
 
         public Rigidbody Rb { get; private set; }
         public SphereCollider Collider { get; private set; }
@@ -25,10 +29,13 @@ namespace CharonsCorner.Runtime
         public StateMachine<GameplayPlayerController> StateMachine { get; private set; }
         
         [field: Header("State Machine")]
-        [field: SerializeField] public GroundSuperState GroundState { get; private set; } = new();
-        [field: SerializeField] public AirSuperState AirState { get; private set; } = new();
+        [field: SerializeField] public GroundSuperState GroundSuperState { get; private set; } = new();
+        [field: SerializeField] public AirSuperState AirSuperState { get; private set; } = new();
         
-        [NonSerialized] public String CurrentSubState;
+        [field: SerializeField] public DriftSuperState DriftSuperState { get; private set; } = new();
+
+        
+        [HideInInspector] public String CurrentSubState;
         #endregion
 
         private void Awake()
@@ -68,10 +75,11 @@ namespace CharonsCorner.Runtime
         {
             StateMachine = new StateMachine<GameplayPlayerController>(this);
 
-            GroundState.Init(StateMachine, this);
-            AirState.Init(StateMachine, this);
+            GroundSuperState.Init(StateMachine, this);
+            AirSuperState.Init(StateMachine, this);
+            DriftSuperState.Init(StateMachine, this);
             
-            StateMachine.ChangeState(GroundState, true);
+            StateMachine.ChangeState(GroundSuperState, true);
         }
 
         private void OnDrawGizmos()
