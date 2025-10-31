@@ -1,39 +1,38 @@
-using log4net.Core;
 using UnityEngine;
 
 namespace CharonsCorner.Runtime
 {
+    /// <summary>
+    /// A class to calculate the player's score and rank based on parameters achieved in the level.
+    /// </summary>
     public class ScoringSystem : MonoBehaviour
     {
-        [Header("Parameters Needed to Achieve Each Rank")]
-        [SerializeField] private float _sCompletionTimeInSeconds;
-        [SerializeField] private int _sNumPinsHit;
-        [SerializeField] private int _sCollectiblesCollected;
-        [Space(15)]
-        [SerializeField] private float _aCompletionTimeInSeconds;
-        [SerializeField] private int _aNumPinsHit;
-        [SerializeField] private int _aCollectiblesCollected;
-        [Space(15)]
-        [SerializeField] private float _bCompletionTimeInSeconds;
-        [SerializeField] private int _bNumPinsHit;
-        [SerializeField] private int _bCollectiblesCollected;
-        [Space(15)]
-        [SerializeField] private float _cCompletionTimeInSeconds;
-        [SerializeField] private int _cNumPinsHit;
-        [SerializeField] private int _cCollectiblesCollected;
-        [Space(15)]
-        [SerializeField] private float _dCompletionTimeInSeconds;
-        [SerializeField] private int _dNumPinsHit;
-        [SerializeField] private int _dCollectiblesCollected;
-        [Space(15)]
-        [SerializeField] private float _fCompletionTimeInSeconds;
-        [SerializeField] private int _fNumPinsHit;
-        [SerializeField] private int _fCollectiblesCollected;
+        public enum Rank
+        {
+            S, A, B, C, D, F
+        }
+
+        [System.Serializable]
+        public struct RankCriteria
+        {
+            public Rank rank;
+
+            [Tooltip("Complete in <= this many seconds")]
+            public float maxTimeSeconds;
+            
+            [Tooltip("Hit at least this many pins")]
+            public float minPins;
+
+            [Tooltip("Collect at least this many collectibles")]
+            public float minCollectibles;
+        }
+
+        [Header("Order Ranks from Best to Worst")]
+        [SerializeField] private RankCriteria[] _rankCriteria; 
 
         private float _levelTimer;
-        private int _timeInSeconds;
-        private int _numPinsHit;
-        private int _numCollectibles;
+        private int _pinsHit;
+        private int _collectibles;
 
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
@@ -45,7 +44,39 @@ namespace CharonsCorner.Runtime
         void Update()
         {
             _levelTimer += Time.deltaTime;
-            _timeInSeconds = (int) _levelTimer % 60;
+        }
+
+        /// <summary>
+        /// Counts an amount of pins as hit. Defaults at 1.
+        /// </summary>
+        /// <param name="amount"></param>
+        public void AddPin(int amount = 1) => _pinsHit += amount;
+
+        /// <summary>
+        /// Counts an amount of collectibles as collected. Defaults at 1.
+        /// </summary>
+        /// <param name="amount"></param>
+        public void AddCollective(int amount = 1) => _collectibles += amount;
+
+        /// <summary>
+        /// Calculates the Rank the player receives based on scoring criteria.
+        /// </summary>
+        /// <returns></returns>
+        public Rank CalculateRank()
+        {
+            for (int i = 0; i < _rankCriteria.Length; i++)
+            {
+                RankCriteria criteria = _rankCriteria[i];
+
+                if (_levelTimer <= criteria.maxTimeSeconds &&
+                    _pinsHit >= criteria.minPins &&
+                    _collectibles >= criteria.minCollectibles)
+                {
+                    return criteria.rank;
+                }
+            }
+
+            return Rank.F;
         }
     }
 }
