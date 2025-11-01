@@ -16,7 +16,7 @@ public class Soul : MonoBehaviour
         Rigidbody rb = GetComponent<Rigidbody>();
         rb.isKinematic = true;
     }
-
+     
     private void OnTriggerEnter(Collider other)
     {
         // Check if the entering collider belongs to a specific layer
