@@ -2,35 +2,27 @@
 setlocal
 
 set "APPS_DIR=%~dp0"
-set "APPS_DIR=%APPS_DIR:~0,-1%"  REM remove trailing backslash
-
+set "APPS_DIR=%APPS_DIR:~0,-1%"
 for %%I in ("%APPS_DIR%\..") do set "PROJECT_ROOT=%%~fI"
-for %%I in ("%APPS_DIR%\..") do set "PROJECT_ROOT=%%~fI"
-
-echo Project Root: %PROJECT_ROOT%
 
 set "UV_DIR=%PROJECT_ROOT%\aspenTools\python\uv\"
 set "UV_PATH=%UV_DIR%uv.exe"
-set "VENV_DIR=%UV_DIR%..\venv"
+set "PY_DIR=%PROJECT_ROOT%\aspenTools\python\"
+set "VENV_DIR=%PY_DIR%aspenVenv"
 set "REQS_TXT=%UV_DIR%requirements.txt"
+set "VENV_PY=%VENV_DIR%\Scripts\python.exe"
 
-echo Venv: %VENV_DIR%
+rem hard kill any old default venv folder
+if exist "%PY_DIR%venv" rmdir /s /q "%PY_DIR%venv"
 
 if not exist "%VENV_DIR%" (
-    echo Creating virtual environment...
-    "%UV_PATH%" venv "%VENV_DIR%"
+  "%UV_PATH%" venv "%VENV_DIR%" --python 3.11
 )
+
+rem Force installs into aspenVenv regardless of activation
+"%UV_PATH%" pip install --python "%VENV_PY%" -r "%REQS_TXT%"
 
 call "%VENV_DIR%\Scripts\activate.bat"
 
-"%UV_PATH%" pip install -r "%REQS_TXT%"
-
-REM Set paths relative to project root
 set "BLENDER_PATH=%PROJECT_ROOT%\aspenTools\Blender\blender.exe"
-
-REM Optional: Print for verification
-echo Project Root: %PROJECT_ROOT%
-echo BLENDER_PATH: %BLENDER_PATH%
-
-REM Launch Blender
 "%BLENDER_PATH%"
