@@ -13,6 +13,8 @@ namespace CharonsCorner.Runtime
         private float _levelTimer;
         private int _score;
 
+        public float LevelTimeSeconds => _levelTimer;
+
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
         {
