@@ -66,26 +66,26 @@ namespace CharonsCorner.LevelEditor.Editor
             Debug.Log(splineHit.Position);
         }
 
-        private static Vector3 GetMousePositionInWorld()
+        /// <summary>
+        /// Recreate the mesh used for the spline, useful to break duplicated mesh references.
+        /// </summary>
+        [MenuItem("CONTEXT/SplineToolContext/Recreate Spline Mesh")]
+        private static void RecreateSplineMesh(MenuCommand cmd)
         {
-            // Create a ray from the camera through the mouse position
-            Ray mouseRay = HandleUtility.GUIPointToWorldRay(Event.current.mousePosition);
-            Vector3 result = Vector3.zero;
+            // Get selected spline elements
+            SplineContainer splineContainer = (SplineContainer)cmd.context; // <- the component you clicked
 
-            // Perform the raycast
-            if (Physics.Raycast(mouseRay, out RaycastHit hit))
+            if (splineContainer != null)
             {
-                // If the ray hits an object, 'hit.point' contains the world-space position
-                result = hit.point;
+                // Create new mesh filter
+                MeshFilter meshFilter = splineContainer.gameObject.GetComponent<MeshFilter>();
+                meshFilter.sharedMesh = new Mesh();
+                
+                // Recook spline path
+                SplinePath splinePath = splineContainer.gameObject.GetComponent<SplinePath>();
+                splinePath.CookSplinePath();
             }
-            else
-            {
-                new Plane(Vector3.up, Vector3.zero).Raycast(mouseRay, out float enter);
-                result = mouseRay.GetPoint(enter);
-            }
-
-            return result;
-        }
+        } 
     }
 }
 
