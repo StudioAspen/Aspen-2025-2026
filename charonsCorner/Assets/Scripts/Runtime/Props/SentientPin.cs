@@ -24,7 +24,7 @@ public class SentientPin : MonoBehaviour
     [SerializeField] private LayerMask groundLayerMask;
 
 
-    private Rigidbody rigidbody;
+    private Rigidbody PinRigidBody;
     private Transform player;
     private bool isPlayerInRange = false;
     private bool isJumping = false;
@@ -34,7 +34,7 @@ public class SentientPin : MonoBehaviour
     void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player").transform;
-        rigidbody = GetComponent<Rigidbody>();
+        PinRigidBody = GetComponent<Rigidbody>();
     }
 
     void Update()
@@ -43,7 +43,6 @@ public class SentientPin : MonoBehaviour
 
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
 
-        Debug.Log(distanceToPlayer);
         if (distanceToPlayer <= DetectionRange && !isPlayerInRange)
             PlayerDetected();
 
@@ -66,7 +65,7 @@ public class SentientPin : MonoBehaviour
     
     IEnumerator CollisionSequence()
     {
-        rigidbody.isKinematic = false;
+        PinRigidBody.isKinematic = false;
         yield return new WaitForSeconds(2f);
         gameObject.SetActive(false);
 
