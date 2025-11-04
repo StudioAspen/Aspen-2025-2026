@@ -15,12 +15,12 @@ namespace CharonsCorner.Runtime
 
         private protected override void OnEnter()
         {
-            
+            InputManager.Instance.Drift += Drift;
         }
 
         private protected override void OnExit()
         {
-           
+            InputManager.Instance.Drift -= Drift;
         }
 
         private protected override void OnUpdate()
@@ -39,10 +39,13 @@ namespace CharonsCorner.Runtime
                 return _context.AirSuperState;
             }
             
-            if(Input.GetKey(KeyCode.LeftShift))
-                return _context.DriftSuperState;
-            
             return null;
+        }
+
+        private void Drift(bool drift)
+        {
+            if(drift)
+                _context.StateMachine.ChangeState(_context.DriftSuperState);
         }
     }
 }
