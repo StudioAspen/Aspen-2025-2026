@@ -12,8 +12,9 @@ namespace CharonsCorner.Runtime
 
         [Header("Tile Light Settings")]
         [SerializeField] private List<TileLogic> tiles; // List of tiles to control
-        [SerializeField] private float lightOnDelay = 0.5f; // Delay between turning on each light
-        [SerializeField] private float lightOffDelay = 0.5f; // Delay between turning off each light
+        [SerializeField] private float lightOnDelay = 0.5f; // Base delay between turning on each light
+        [SerializeField] private float lightOffDelay = 0.5f; // Base delay between turning off each light
+        [SerializeField, Range(0.1f, 5f)] private float speedMultiplier = 1f; // Multiplier to control the speed of the light sequence
 
         private Coroutine lightLoopCoroutine;
 
@@ -62,37 +63,27 @@ namespace CharonsCorner.Runtime
 
         private IEnumerator LightSequenceLoop()
         {
-            int activeLights = 0;
-
             while (true)
             {
-                // Turn on lights in sequence and start turning them off after a delay
+                // Turn on lights in sequence
                 for (int i = 0; i < tiles.Count; i++)
                 {
                     if (tiles[i] != null) // Ensure the tile is not null
                     {
                         tiles[i].SetLightState(true); // Turn on the light
-                        activeLights++;
-
-                        // Start turning off the light after a delay
-                        StartCoroutine(TurnOffLightAfterDelay(tiles[i], lightOffDelay * activeLights));
-
-                        yield return new WaitForSeconds(lightOnDelay);
+                        yield return new WaitForSeconds(lightOnDelay / speedMultiplier);
                     }
                 }
 
-                // Wait for all lights to finish turning off before restarting the loop
-                yield return new WaitForSeconds(lightOffDelay * tiles.Count);
-            }
-        }
-
-        private IEnumerator TurnOffLightAfterDelay(TileLogic tile, float delay)
-        {
-            yield return new WaitForSeconds(delay);
-
-            if (tile != null) // Ensure the tile is not null
-            {
-                tile.SetLightState(false); // Turn off the light
+                // Turn off lights in sequence
+                for (int i = 0; i < tiles.Count; i++)
+                {
+                    if (tiles[i] != null) // Ensure the tile is not null
+                    {
+                        tiles[i].SetLightState(false); // Turn off the light
+                        yield return new WaitForSeconds(lightOffDelay / speedMultiplier);
+                    }
+                }
             }
         }
     }
