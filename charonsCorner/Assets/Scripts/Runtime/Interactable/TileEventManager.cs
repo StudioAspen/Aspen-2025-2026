@@ -39,8 +39,25 @@ namespace CharonsCorner.Runtime
             Debug.Log("Player sent back to the start!");
             if (playerTransform != null && startPosition != null)
             {
+                // Reset the player's position to the start
                 playerTransform.position = startPosition.position;
             }
+
+            // Reset the tile lights to start from the beginning
+            if (lightLoopCoroutine != null)
+                StopCoroutine(lightLoopCoroutine);
+
+            // Turn off all lights immediately
+            foreach (var tile in tiles)
+            {
+                if (tile != null)
+                {
+                    tile.SetLightState(false);
+                }
+            }
+
+            // Restart the light sequence
+            lightLoopCoroutine = StartCoroutine(LightSequenceLoop());
         }
 
         private IEnumerator LightSequenceLoop()
