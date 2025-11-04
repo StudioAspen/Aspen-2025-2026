@@ -6,39 +6,35 @@ public class SentientPin : MonoBehaviour
     [Header("Detection Settings")]
     [SerializeField] private float DetectionRange = 10f;
 
-
     [Header("Jump Settings")]
     [SerializeField] private int TotalJumps = 5;
-    private int currentJumps = 0;
     [SerializeField] private float JumpDistance = 5f;
     [SerializeField] private float JumpHeight = 5f;
     [SerializeField] private float JumpDuration = 1.2f;
     [SerializeField] private float TimeBetweenJumps = 1.5f;
 
-    [Header("Layer Mask")]
-    [SerializeField] private LayerMask groundLayerMask;
-
     [Header("Offset Settings")]
     [SerializeField] private float groundOffset = 0.5f;
     [SerializeField] private float raycastStartHeight = 10f;
-
     [Header("End Behavior")]
-    [SerializeField] private bool reuseInsteadOfDestroy = false; // disable instead of destroy
-    [SerializeField] private float finalJumpHeight = 15f;
-    [SerializeField] private float finalJumpDuration = 2f;
+    [SerializeField] private float collisionRange = 2f;
+    [SerializeField] private float finalJumpDistance = 30f;
 
+    [Header("Layer Mask")]
+    [SerializeField] private LayerMask groundLayerMask;
+
+
+    private Rigidbody rigidbody;
     private Transform player;
     private bool isPlayerInRange = false;
     private bool isJumping = false;
-
     private Coroutine jumpCoroutine;
     private Coroutine idleCoroutine;
 
     void Start()
     {
-        player = GameObject.FindGameObjectWithTag("Player")?.transform;
-        if (player == null)
-            Debug.LogError("Player not found! Make sure your player has the 'Player' tag.");
+        player = GameObject.FindGameObjectWithTag("Player").transform;
+        rigidbody = GetComponent<Rigidbody>();
     }
 
     void Update()
@@ -47,46 +43,41 @@ public class SentientPin : MonoBehaviour
 
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
 
+        Debug.Log(distanceToPlayer);
         if (distanceToPlayer <= DetectionRange && !isPlayerInRange)
             PlayerDetected();
-        else if (distanceToPlayer > DetectionRange && isPlayerInRange)
-            PlayerLeftRange();
+
+        if (distanceToPlayer <= collisionRange)
+        {
+            StopAllCoroutines();
+            StartCoroutine(CollisionSequence());
+        }
+
     }
 
     void PlayerDetected()
     {
         isPlayerInRange = true;
-        if (idleCoroutine != null)
-        {
-            StopCoroutine(idleCoroutine);
-            idleCoroutine = null;
-        }
 
         if (!isJumping && jumpCoroutine == null)
             jumpCoroutine = StartCoroutine(JumpSequence());
     }
 
-    void PlayerLeftRange()
+    
+    IEnumerator CollisionSequence()
     {
-        isPlayerInRange = false;
-        if (jumpCoroutine != null)
-        {
-            StopCoroutine(jumpCoroutine);
-            jumpCoroutine = null;
-        }
+        rigidbody.isKinematic = false;
+        yield return new WaitForSeconds(2f);
+        gameObject.SetActive(false);
 
-        isJumping = false;
-        idleCoroutine = StartCoroutine(IdleCountdown());
     }
-
-
-
+    
     /// <summary>
     /// starts jump sequence for pin 
     /// </summary>
-    /// <returns></returns>
     IEnumerator JumpSequence()
     {
+        float currentJumps = 0f;
         isJumping = true;
 
         while (isPlayerInRange && currentJumps < TotalJumps)
@@ -122,7 +113,6 @@ public class SentientPin : MonoBehaviour
         if (currentJumps >= TotalJumps)
             StartCoroutine(FinalJumpAndExit());
     }
-
 
     /// <summary>
     /// Math for Jumping to target using StartPos and EndPos
@@ -169,49 +159,41 @@ public class SentientPin : MonoBehaviour
         return false;
     }
 
-
     /// <summary>
-    /// end sequence for pin
-    /// not entirely necessary might delete later
+    /// Final Jump needed for the pin to "die" but just disables for re use
     /// </summary>
     /// <returns></returns>
-    IEnumerator IdleCountdown()
-    {
-        yield return new WaitForSeconds(15f);
-        StartCoroutine(FinalJumpAndExit());
-    }
-
-
-
     IEnumerator FinalJumpAndExit()
     {
         isJumping = true;
 
         Vector3 startPos = transform.position;
-        Vector3 endPos = startPos + Vector3.up * finalJumpHeight;
+        Vector3 randomDirection = new Vector3
+        (
+            Random.Range(-1f, 1f),
+            0,
+            Random.Range(1f, -1f)
+        ).normalized;
 
-        float elapsed = 0f;
-        while (elapsed < finalJumpDuration)
-        {
-            elapsed += Time.deltaTime;
-            float t = Mathf.Clamp01(elapsed / finalJumpDuration);
-            Vector3 pos = Vector3.Lerp(startPos, endPos, t);
-            transform.position = pos;
-            yield return null;
-        }
+        Vector3 endPos = startPos + randomDirection * finalJumpDistance;
 
-        // End of jump: disable or destroy
-        if (reuseInsteadOfDestroy)
-            gameObject.SetActive(false);
-        else
-            Destroy(gameObject);
-
+        yield return StartCoroutine(JumpToTarget(startPos, endPos));
         isJumping = false;
+        gameObject.SetActive(false);
+        
     }
+    // void OnCollisionEnter(Collision collision)
+    // {
+    //     if (collision.gameObject.layer == 0)
+    //     {
+    //         gameObject.AddComponent<Rigidbody>();
+    //     }
+    // }
 
     void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, DetectionRange);
     }
+
 }

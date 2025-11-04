@@ -1608,6 +1608,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1204811984}
   - component: {fileID: 1204811985}
+  - component: {fileID: 1204811986}
   m_Layer: 0
   m_Name: SentientPin
   m_TagString: Untagged
@@ -1624,7 +1625,7 @@ Transform:
   m_GameObject: {fileID: 1204811983}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -8.12, y: 1.54, z: 7.75}
+  m_LocalPosition: {x: -8.12, y: 1.684, z: 7.75}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1643,20 +1644,46 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 17ec21c175665d24fb744941d2536b12, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DetectionRange: 3
-  TotalJumps: 5
+  DetectionRange: 10
+  TotalJumps: 8
   JumpDistance: 5
   JumpHeight: 5
   JumpDuration: 1.5
-  TimeBetweenJumps: 10
+  TimeBetweenJumps: 5
+  groundOffset: 1
+  raycastStartHeight: 10
+  collisionRange: 2
+  finalJumpDistance: 30
   groundLayerMask:
     serializedVersion: 2
     m_Bits: 8
-  groundOffset: 1
-  raycastStartHeight: 10
-  reuseInsteadOfDestroy: 0
-  finalJumpHeight: 15
-  finalJumpDuration: 1
+--- !u!54 &1204811986
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1204811983}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &1313710394
 GameObject:
   m_ObjectHideFlags: 0
