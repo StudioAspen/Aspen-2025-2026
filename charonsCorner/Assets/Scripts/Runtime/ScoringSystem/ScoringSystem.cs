@@ -7,32 +7,13 @@ namespace CharonsCorner.Runtime
     /// </summary>
     public class ScoringSystem : MonoBehaviour
     {
-        public enum Rank
-        {
-            S, A, B, C, D, F
-        }
-
-        [System.Serializable]
-        public struct RankCriteria
-        {
-            public Rank rank;
-
-            [Tooltip("Complete in <= this many seconds")]
-            public float maxTimeSeconds;
-            
-            [Tooltip("Hit at least this many pins")]
-            public float minPins;
-
-            [Tooltip("Collect at least this many collectibles")]
-            public float minCollectibles;
-        }
-
-        [Header("Order Ranks from Best to Worst")]
-        [SerializeField] private RankCriteria[] _rankCriteria; 
+        [Header("Data")]
+        [SerializeField] private RankCriteriaSO _rankData;
 
         private float _levelTimer;
-        private int _pinsHit;
-        private int _collectibles;
+        private int _score;
+
+        public float LevelTimeSeconds => _levelTimer;
 
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
@@ -43,40 +24,39 @@ namespace CharonsCorner.Runtime
         // Update is called once per frame
         void Update()
         {
-            _levelTimer += Time.deltaTime;
+            _levelTimer += Time.deltaTime; // will probably need to be adjusted in the future
         }
 
         /// <summary>
-        /// Counts an amount of pins as hit. Defaults at 1.
+        /// Adds a certain amount of points to the player's score. 
+        /// To be used when player accomplishes something, and receives points for it.
         /// </summary>
         /// <param name="amount"></param>
-        public void AddPin(int amount = 1) => _pinsHit += amount;
-
-        /// <summary>
-        /// Counts an amount of collectibles as collected. Defaults at 1.
-        /// </summary>
-        /// <param name="amount"></param>
-        public void AddCollective(int amount = 1) => _collectibles += amount;
+        public void AddPoints(int amount) => _score += amount;
 
         /// <summary>
         /// Calculates the Rank the player receives based on scoring criteria.
         /// </summary>
         /// <returns></returns>
-        public Rank CalculateRank()
+        public RankCriteriaSO.Rank CalculateRank()
         {
-            for (int i = 0; i < _rankCriteria.Length; i++)
+            for (int i = 0; i < _rankData.Criteria.Count; i++)
             {
-                RankCriteria criteria = _rankCriteria[i];
+                var criteria = _rankData.Criteria[i];
+                int playerScore = _score;
 
-                if (_levelTimer <= criteria.maxTimeSeconds &&
-                    _pinsHit >= criteria.minPins &&
-                    _collectibles >= criteria.minCollectibles)
+                if (_levelTimer <= criteria.maxTimeSeconds)
+                {
+                    playerScore += criteria.timeBonusPoints;
+                }
+
+                if (_score >= criteria.requiredPoints)
                 {
                     return criteria.rank;
                 }
             }
 
-            return Rank.F;
+            return RankCriteriaSO.Rank.F;
         }
     }
 }
