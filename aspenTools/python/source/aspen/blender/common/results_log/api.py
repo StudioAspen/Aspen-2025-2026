@@ -12,7 +12,8 @@ class ConsoleArea(QListWidget):
         "info" : "#3a82f7",
         "finished" : "#4caf50",
         "cancelled" : "#ffb300",
-        "error" : "#e53935"
+        "error" : "#e53935",
+        "warning" : "#ff9900"
     }
 
     def __init__(self, parent=None):
