@@ -13,10 +13,15 @@ public class SentientPin : MonoBehaviour
     [SerializeField] private float JumpDuration = 1.2f;
     [SerializeField] private float TimeBetweenJumps = 1.5f;
 
+    [Header("Rotation Settings")]
+    [SerializeField] private int maxRotationAttempts = 4;
+    [SerializeField] private float rotationStepDegrees = 30f;
+
     [Header("Offset Settings")]
     [SerializeField] private float groundOffset = 0.5f;
     [SerializeField] private float raycastStartHeight = 10f;
     [Header("End Behavior")]
+    [SerializeField] private float delayBeforeFinalJump = 2f;
     [SerializeField] private float collisionRange = 2f;
     [SerializeField] private float finalJumpDistance = 30f;
 
@@ -37,13 +42,13 @@ public class SentientPin : MonoBehaviour
         PinRigidBody = GetComponent<Rigidbody>();
     }
 
-    void Update()
+    void FixedUpdate()
     {
         if (player == null) return;
 
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
 
-        if (distanceToPlayer <= DetectionRange && !isPlayerInRange)
+        if (distanceToPlayer <= DetectionRange || isPlayerInRange)
             PlayerDetected();
 
         if (distanceToPlayer <= collisionRange)
@@ -85,24 +90,35 @@ public class SentientPin : MonoBehaviour
             jumpDirection.y = 0;
             jumpDirection.Normalize();
 
-            Vector3 proposedTarget = transform.position + jumpDirection * JumpDistance;
+            bool foundValidTarget = false;
 
-            if (FindValidJumpPosition(proposedTarget, out Vector3 targetPosition))
+            for (int i = 0; i < maxRotationAttempts; i++)
             {
-                currentJumps++;
+                Vector3 proposedTarget = transform.position + jumpDirection * JumpDistance;
 
-                transform.LookAt(targetPosition);
+                if (FindValidJumpPosition(proposedTarget, out Vector3 targetPosition))
+                {
+                    foundValidTarget = true;
+                    currentJumps++;
 
-                // Perform the jump
-                yield return StartCoroutine(JumpToTarget(transform.position, targetPosition));
+                    transform.LookAt(targetPosition);
 
-                // Pause between jumps
-                yield return new WaitForSeconds(TimeBetweenJumps);
-            }
-            else
-            {
-                // Retry after short delay if no valid ground found
-                yield return new WaitForSeconds(0.5f);
+                    // Perform the jump
+                    yield return StartCoroutine(JumpToTarget(transform.position, targetPosition));
+
+                    // Pause between jumps
+                    yield return new WaitForSeconds(TimeBetweenJumps);
+                    break;
+                }
+
+                jumpDirection = Quaternion.Euler(0, rotationStepDegrees, 0) * jumpDirection;
+                
+
+                if (!foundValidTarget)
+                {
+                    Debug.LogWarning("SentientPin: No valid jump target found after rotating. Retrying...");
+                    yield return new WaitForSeconds(0.5f);
+                }
             }
         }
 
@@ -164,6 +180,7 @@ public class SentientPin : MonoBehaviour
     /// <returns></returns>
     IEnumerator FinalJumpAndExit()
     {
+        yield return new WaitForSeconds(delayBeforeFinalJump);
         isJumping = true;
 
         Vector3 startPos = transform.position;
