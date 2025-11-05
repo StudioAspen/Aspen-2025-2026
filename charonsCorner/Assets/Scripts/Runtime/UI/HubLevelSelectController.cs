@@ -27,6 +27,7 @@ public class HubLevelSelectController : MonoBehaviour
     {
         if (_isOpen) return;
 
+        _currentLevelData = data;
         _isOpen = true;
         OnLevelSelectOpen?.Invoke();
 
