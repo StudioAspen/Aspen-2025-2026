@@ -8,23 +8,30 @@ namespace CharonsCorner.Runtime
         [SerializeField] private Transform revealField; // The object that reveals the target
         [SerializeField] private float revealRadius = 1.0f; // Radius of the reveal effect
         [SerializeField] private float fadeWidth = 0.5f; // Width of the fade transition
+        [SerializeField] private bool proximityEnabled = true; // Toggle proximity effect
 
         private void Update()
         {
-            if (revealMaterial != null && revealField != null)
+            if (revealMaterial != null)
             {
-                // Update the reveal position
-                revealMaterial.SetVector("_RevealPosition", revealField.position);
+                // Update the proximity toggle
+                revealMaterial.SetFloat("_ProximityEnabled", proximityEnabled ? 1.0f : 0.0f);
 
-                // Update the reveal radius and fade width
-                revealMaterial.SetFloat("_RevealRadius", revealRadius);
-                revealMaterial.SetFloat("_FadeWidth", fadeWidth);
+                if (proximityEnabled && revealField != null)
+                {
+                    // Update the reveal position
+                    revealMaterial.SetVector("_RevealPosition", revealField.position);
+
+                    // Update the reveal radius and fade width
+                    revealMaterial.SetFloat("_RevealRadius", revealRadius);
+                    revealMaterial.SetFloat("_FadeWidth", fadeWidth);
+                }
             }
         }
 
         private void OnDrawGizmos()
         {
-            if (revealField != null)
+            if (proximityEnabled && revealField != null)
             {
                 // Draw the reveal radius in the Scene view for debugging
                 Gizmos.color = Color.cyan;
