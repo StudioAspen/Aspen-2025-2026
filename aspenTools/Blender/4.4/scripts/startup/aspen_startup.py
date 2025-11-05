@@ -7,7 +7,7 @@ import bpy
 ASPEN_TOOLS_ROOT = os.path.dirname(os.path.dirname(
     os.path.dirname(os.path.dirname(os.path.dirname(__file__)))))
 PYTHON_PATH = os.path.join(ASPEN_TOOLS_ROOT, 'python', 'source')
-VENV_PATH = os.path.join(ASPEN_TOOLS_ROOT, 'python', 'venv', 'Lib', 'site-packages')
+VENV_PATH = os.path.join(ASPEN_TOOLS_ROOT, 'python', 'aspenVenv', 'Lib', 'site-packages')
 BLENDER_PATH = os.path.join(PYTHON_PATH, 'aspen', 'blender')
 
 def register():

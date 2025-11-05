@@ -337,7 +337,7 @@ namespace CharonsCorner.LevelEditor
         public void RebuildMeshCollider()
         {
             Mesh pathMesh = pathMeshFilter.sharedMesh;
-            Debug.Log(pathMesh.vertices.Length);
+            
             if (pathMesh != null && pathMesh.vertices.Length == 0)
             {
                 return;
