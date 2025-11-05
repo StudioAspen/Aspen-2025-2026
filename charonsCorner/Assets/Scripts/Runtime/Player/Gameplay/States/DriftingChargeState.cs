@@ -26,11 +26,14 @@ namespace CharonsCorner.Runtime
             driftDirection.gameObject.SetActive(true);
             timer = 0;
             _context.CurrentSubState = GetType().Name;
+            InputManager.Instance.Drift += Drift;
         }
+
 
         private protected override void OnExit()
         {
             Time.timeScale = desiredTimeScale;
+            InputManager.Instance.Drift -= Drift;
         }
 
         private protected override void OnUpdate()
@@ -47,10 +50,18 @@ namespace CharonsCorner.Runtime
         {
             
         }
+        
+        private void Drift(bool drift)
+        {
+            if (!drift)
+            {
+                _context.DriftSuperState.SubStateMachine.ChangeState(_context.DriftSuperState.DriftingBoostState);
+            }
+        }
 
         private protected override State<GameplayPlayerController> GetTransition()
         {
-            if (!Input.GetKey(KeyCode.LeftShift) || timer >= stateDuration)
+            if (timer >= stateDuration)
                 return _context.DriftSuperState.DriftingBoostState;
             return null;
         }
