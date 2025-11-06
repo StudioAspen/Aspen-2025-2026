@@ -11,7 +11,7 @@ public class SentientPin : MonoBehaviour
     [SerializeField] private float JumpDistance = 5f;
     [SerializeField] private float JumpHeight = 5f;
     [SerializeField] private float JumpDuration = 1.2f;
-    [SerializeField] private float TimeBetweenJumps = 1.5f;
+    // [SerializeField] private float TimeBetweenJumps = 1.5f;
     [SerializeField] private float rangeOfRaycast = 30f;
 
     [Header("Rotation Settings")]
@@ -85,7 +85,7 @@ public class SentientPin : MonoBehaviour
                 TryJumpInRotation(jumpDirection, rotationStepDegrees, ref currentJumps) ||
                 TryJumpInRotation(jumpDirection, -rotationStepDegrees, ref currentJumps))
             {
-                yield return new WaitForSeconds(TimeBetweenJumps);
+                yield return new WaitForSeconds(JumpDuration);
             }
             else
             {
