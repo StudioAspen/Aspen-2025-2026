@@ -93,7 +93,7 @@ def prompt_register_user() -> bool:
                 app.quit()
                 sys.exit(0)
     except Exception as e:
-        return false
+        return False
 
 
 def register_telemetry() -> bool:
