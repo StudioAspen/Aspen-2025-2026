@@ -12,6 +12,7 @@ public class SentientPin : MonoBehaviour
     [SerializeField] private float JumpHeight = 5f;
     [SerializeField] private float JumpDuration = 1.2f;
     [SerializeField] private float TimeBetweenJumps = 1.5f;
+    [SerializeField] private float rangeOfRaycast = 30f;
 
     [Header("Rotation Settings")]
     [SerializeField] private int maxRotationAttempts = 4;
@@ -20,6 +21,7 @@ public class SentientPin : MonoBehaviour
     [Header("Offset Settings")]
     [SerializeField] private float groundOffset = 0.5f;
     [SerializeField] private float raycastStartHeight = 10f;
+
     [Header("End Behavior")]
     [SerializeField] private float delayBeforeFinalJump = 2f;
     [SerializeField] private float collisionRange = 2f;
@@ -28,106 +30,122 @@ public class SentientPin : MonoBehaviour
     [Header("Layer Mask")]
     [SerializeField] private LayerMask groundLayerMask;
 
-
     private Rigidbody PinRigidBody;
     private Transform player;
-    private bool isPlayerInRange = false;
     private bool isJumping = false;
     private Coroutine jumpCoroutine;
-    private Coroutine idleCoroutine;
 
-    void Start()
+    private void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player").transform;
         PinRigidBody = GetComponent<Rigidbody>();
+        PinRigidBody.useGravity = false;
     }
 
-    void FixedUpdate()
+    private void FixedUpdate()
     {
         if (player == null) return;
 
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
 
-        if (distanceToPlayer <= DetectionRange || isPlayerInRange)
-            PlayerDetected();
+        if (distanceToPlayer <= DetectionRange && !isJumping)
+        {
+            jumpCoroutine = StartCoroutine(JumpSequence());
+        }
 
         if (distanceToPlayer <= collisionRange)
         {
             StopAllCoroutines();
             StartCoroutine(CollisionSequence());
         }
-
     }
 
-    void PlayerDetected()
-    {
-        isPlayerInRange = true;
-
-        if (!isJumping && jumpCoroutine == null)
-            jumpCoroutine = StartCoroutine(JumpSequence());
-    }
-
-    
-    IEnumerator CollisionSequence()
+    private IEnumerator CollisionSequence()
     {
         PinRigidBody.isKinematic = false;
         yield return new WaitForSeconds(2f);
         gameObject.SetActive(false);
-
     }
-    
+
+
     /// <summary>
     /// starts jump sequence for pin 
     /// </summary>
-    IEnumerator JumpSequence()
+    private IEnumerator JumpSequence()
     {
-        float currentJumps = 0f;
         isJumping = true;
+        int currentJumps = 0;
 
-        while (isPlayerInRange && currentJumps < TotalJumps)
+        while (currentJumps < TotalJumps)
         {
             Vector3 jumpDirection = (transform.position - player.position).normalized;
             jumpDirection.y = 0;
-            jumpDirection.Normalize();
 
-            bool foundValidTarget = false;
-
-            for (int i = 0; i < maxRotationAttempts; i++)
+            if (TryDirectJump(jumpDirection, ref currentJumps) ||
+                TryJumpInRotation(jumpDirection, rotationStepDegrees, ref currentJumps) ||
+                TryJumpInRotation(jumpDirection, -rotationStepDegrees, ref currentJumps))
             {
-                Vector3 proposedTarget = transform.position + jumpDirection * JumpDistance;
-
-                if (FindValidJumpPosition(proposedTarget, out Vector3 targetPosition))
-                {
-                    foundValidTarget = true;
-                    currentJumps++;
-
-                    transform.LookAt(targetPosition);
-
-                    // Perform the jump
-                    yield return StartCoroutine(JumpToTarget(transform.position, targetPosition));
-
-                    // Pause between jumps
-                    yield return new WaitForSeconds(TimeBetweenJumps);
-                    break;
-                }
-
-                jumpDirection = Quaternion.Euler(0, rotationStepDegrees, 0) * jumpDirection;
-                
-
-                if (!foundValidTarget)
-                {
-                    Debug.LogWarning("SentientPin: No valid jump target found after rotating. Retrying...");
-                    yield return new WaitForSeconds(0.5f);
-                }
+                yield return new WaitForSeconds(TimeBetweenJumps);
+            }
+            else
+            {
+                Debug.LogWarning("SentientPin: No valid jump target found after all attempts. Retrying...");
+                yield return new WaitForSeconds(0.75f);
             }
         }
 
         isJumping = false;
         jumpCoroutine = null;
-
-        if (currentJumps >= TotalJumps)
-            StartCoroutine(FinalJumpAndExit());
+        StartCoroutine(FinalJumpAndExit());
     }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="direction"></param>
+    /// <param name="currentJumps"></param>
+    /// <returns></returns>
+    private bool TryDirectJump(Vector3 direction, ref int currentJumps)
+    {
+        Vector3 directTarget = transform.position + direction * JumpDistance;
+        if (FindValidJumpPosition(directTarget, out Vector3 validTarget))
+        {
+            currentJumps++;
+            transform.LookAt(validTarget);
+            StartCoroutine(JumpToTarget(transform.position, validTarget));
+            return true;
+        }
+        return false;
+    }
+
+
+    /// <summary>
+    /// attempts a jump using a different direction apart from the default
+    /// </summary>
+    /// <param name="initialDirection"> default direction</param>
+    /// <param name="rotationStep">how much the direction changes by degrees</param>
+    /// <param name="currentJumps">how many jumps are still available</param>
+    /// <returns></returns>
+    private bool TryJumpInRotation(Vector3 initialDirection, float rotationStep, ref int currentJumps)
+    {
+        Vector3 jumpDirection = initialDirection;
+
+        for (int i = 0; i < maxRotationAttempts; i++)
+        {
+            jumpDirection = Quaternion.Euler(0, rotationStep * i, 0) * initialDirection;
+            Vector3 proposedTarget = transform.position + jumpDirection.normalized * JumpDistance;
+
+            if (FindValidJumpPosition(proposedTarget, out Vector3 validTarget))
+            {
+                currentJumps++;
+                transform.LookAt(validTarget);
+                StartCoroutine(JumpToTarget(transform.position, validTarget));
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     /// <summary>
     /// Math for Jumping to target using StartPos and EndPos
@@ -135,7 +153,7 @@ public class SentientPin : MonoBehaviour
     /// <param name="startPos">starting position of pin</param>
     /// <param name="endPos">target Position</param>
     /// <returns></returns>
-    IEnumerator JumpToTarget(Vector3 startPos, Vector3 endPos)
+    private IEnumerator JumpToTarget(Vector3 startPos, Vector3 endPos)
     {
         float elapsed = 0f;
         while (elapsed < JumpDuration)
@@ -154,18 +172,19 @@ public class SentientPin : MonoBehaviour
         transform.position = endPos;
     }
 
+
     /// <summary>
     /// using a raycast is it even able to jump there
     /// </summary>
     /// <param name="proposedPosition">potential jump position</param>
     /// <param name="validPosition">returns valid position</param>
     /// <returns></returns>
-    bool FindValidJumpPosition(Vector3 proposedPosition, out Vector3 validPosition)
+    private bool FindValidJumpPosition(Vector3 proposedPosition, out Vector3 validPosition)
     {
         validPosition = proposedPosition;
         Vector3 rayStart = proposedPosition + Vector3.up * raycastStartHeight;
 
-        if (Physics.Raycast(rayStart, Vector3.down, out RaycastHit hit, raycastStartHeight + 10f, groundLayerMask))
+        if (Physics.Raycast(rayStart, Vector3.down, out RaycastHit hit, raycastStartHeight + 30f, groundLayerMask))
         {
             validPosition = hit.point + Vector3.up * groundOffset;
             return true;
@@ -177,39 +196,26 @@ public class SentientPin : MonoBehaviour
     /// <summary>
     /// Final Jump needed for the pin to "die" but just disables for re use
     /// </summary>
-    /// <returns></returns>
-    IEnumerator FinalJumpAndExit()
+    /// <returns></returns>       
+    private IEnumerator FinalJumpAndExit()
     {
         yield return new WaitForSeconds(delayBeforeFinalJump);
+
+        PinRigidBody.useGravity = true;
         isJumping = true;
 
         Vector3 startPos = transform.position;
-        Vector3 randomDirection = new Vector3
-        (
-            Random.Range(-1f, 1f),
-            0,
-            Random.Range(1f, -1f)
-        ).normalized;
-
+        Vector3 randomDirection = new Vector3(Random.Range(-1f, 1f), 0, Random.Range(-1f, 1f)).normalized;
         Vector3 endPos = startPos + randomDirection * finalJumpDistance;
 
         yield return StartCoroutine(JumpToTarget(startPos, endPos));
         isJumping = false;
         gameObject.SetActive(false);
-        
     }
-    // void OnCollisionEnter(Collision collision)
-    // {
-    //     if (collision.gameObject.layer == 0)
-    //     {
-    //         gameObject.AddComponent<Rigidbody>();
-    //     }
-    // }
 
-    void OnDrawGizmosSelected()
+    private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, DetectionRange);
     }
-
 }
