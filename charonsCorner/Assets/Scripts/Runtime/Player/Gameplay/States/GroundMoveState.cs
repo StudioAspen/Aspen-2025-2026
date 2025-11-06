@@ -12,10 +12,16 @@ namespace CharonsCorner.Runtime
         [field:SerializeField] public float Deceleration {get; private set;} = 10f;
         [field:SerializeField] public float SlopeBoost {get; private set;} = 10f; // optional slope influence
         [field:SerializeField] public float GroundStickForce {get; private set;} = 10f;
-        
+
         private protected override void OnEnter()
         {
-            
+            if (_context.CannonAir)
+            {
+                Vector3 forwardDirection = _context.Orientation.forward.normalized;
+                _context.Rb.linearVelocity = forwardDirection * MaxSpeed;
+
+                _context.CannonAir = false;
+            }
         }
 
         private protected override void OnExit()

@@ -21,13 +21,16 @@ namespace CharonsCorner.Runtime
         public SlopeSensor SlopeSensor { get; private set; }
         public bool IsGrounded { get; private set; }
 
+        public bool CannonAir { get; set; } = false;
+
         #region StateMachine Vars
         public StateMachine<GameplayPlayerController> StateMachine { get; private set; }
         
         [field: Header("State Machine")]
         [field: SerializeField] public GroundSuperState GroundState { get; private set; } = new();
         [field: SerializeField] public AirSuperState AirState { get; private set; } = new();
-        
+        [field: SerializeField] public CannonBallSuperState CannonState { get; private set; } = new();
+
         [NonSerialized] public String CurrentSubState;
         #endregion
 
@@ -46,7 +49,9 @@ namespace CharonsCorner.Runtime
         
         private void FixedUpdate()
         {
-            ApplyGravity();
+            if (!CannonState.CannonBallState.IsLaunching)
+                ApplyGravity();
+
             CheckGrounded();
             StateMachine.FixedUpdate();
         }
@@ -70,7 +75,8 @@ namespace CharonsCorner.Runtime
 
             GroundState.Init(StateMachine, this);
             AirState.Init(StateMachine, this);
-            
+            CannonState.Init(StateMachine, this);
+
             StateMachine.ChangeState(GroundState, true);
         }
 
