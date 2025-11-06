@@ -1,6 +1,14 @@
 using UnityEngine;
 
 namespace CharonsCorner.Runtime
+
+/// <summary>
+/// This script is referenced in the LightSphere object. This script is attached to the 'ToggleTransparencyLightPath' shader material and needs to be added on a empty gameobject that  is child of the light shphere and parents the sphere/cube that toggles the material's visibility. 
+/// 
+///  Note: The Light_movement script should be moved to Asset>Scripts>Runtime>Interactable. Right now the Spline package doesn't register in the subfolders, so it is here under Assets until resolved.
+///  Additional note. On the LightSphere object, we have two child objects. One is a global volume bloom, providing the glowing effect, the other is RevelController which parents the sphere radius of material affect. 
+/// </summary>
+
 {
     public class RevealController : MonoBehaviour
     {
