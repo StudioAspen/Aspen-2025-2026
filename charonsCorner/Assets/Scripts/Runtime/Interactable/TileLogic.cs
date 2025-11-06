@@ -3,6 +3,13 @@ using System;
 
 namespace CharonsCorner.Runtime
 {
+    /// <summary>
+    /// The tile logic script is attached to the prefabs IncorrectTile/CorrectTile
+    /// It will set the light on and any scripting that uses turning the light on/off can change the fade duration in/out and the light intensity itself
+    /// </summary>
+
+
+
     public class TileLogic : MonoBehaviour
     {
         [Header("Tile Settings")]
