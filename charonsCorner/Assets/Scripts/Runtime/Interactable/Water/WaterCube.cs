@@ -1,4 +1,4 @@
-using UnityEngine;
+/*using UnityEngine;
 
 namespace CharonsCorner.Runtime
 {
@@ -44,7 +44,7 @@ namespace CharonsCorner.Runtime
             {
                 playerInside = true;
                 playerRb = other.GetComponent<Rigidbody>();
-                other.GetComponent<PlayerController>().IsInWater = true; // Notify player controller
+                other.GetComponent<GameplayPlayerController>().IsInWater = true; // Notify player controller
             }
         }
 
@@ -69,4 +69,4 @@ namespace CharonsCorner.Runtime
             }
         }
     }
-} 
+} */
