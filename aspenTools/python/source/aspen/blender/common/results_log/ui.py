@@ -8,6 +8,7 @@ g_ResultLogMainWindow = ResultLogMainWindow()
 # in the window defined in this file, but I'm not sure if there's a better practice.
 aspenLogger = logging.getLogger("aspen")
 
+# TODO: I'd like to create a handler/formatter for DEBUG that would also print filename and other helpful information.
 handler = ResultLogHandler(g_ResultLogMainWindow)
 handler.setLevel(logging.INFO)
 handler.set_name("ResultLogHandler")
@@ -23,4 +24,4 @@ def show_result_log_window():
 
 def test_result_log_window():
     """ Test function to see if the flags are working. """
-    g_ResultLogMainWindow.test_print_flags()
+    g_ResultLogMainWindow.test_print_log_levels()
