@@ -20,6 +20,8 @@ namespace CharonsCorner.Runtime
             if (_player == null || _cannonBall == null) return;
             if (_player.CannonState.CannonBallState.LaunchCompleted == false && (_player.CannonState.CannonBallState.IsInCannon || _player.CannonState.CannonBallState.IsLaunching)) return;
 
+            if (_cannonBall._useCamera) CameraManager.Instance.ChangeActiveCamera(_cannonBall._cinemachineCamera);
+
             ActivateCannon();
         }
 

@@ -1,4 +1,6 @@
 using UnityEngine;
+using Unity.Cinemachine;
+using NaughtyAttributes;
 
 namespace CharonsCorner.Runtime
 {
@@ -39,9 +41,16 @@ namespace CharonsCorner.Runtime
         public CannonActivationMode activationMode = CannonActivationMode.InteractButton;
 
         [Header("Gizmos")]
-        public int numPoints = 100;
+        public int numPointsGizmos = 100;
+        public float timeStepGizmos = 0.1f;
+
+        [Header("Play Mode")]
+        public int numPoints = 10;
         public float timeStep = 0.1f;
 
+        [Header("Camera Target")]
+        [SerializeField] public bool _useCamera = true;
+        [SerializeField, ShowIf("_useCamera")] public CinemachineCamera _cinemachineCamera;
 
         private void OnDrawGizmos()
         {
@@ -55,9 +64,9 @@ namespace CharonsCorner.Runtime
             Vector3 previousPosition = startPosition;
 
             Gizmos.color = Color.yellow;
-            for (int i = 1; i <= numPoints; i++)
+            for (int i = 1; i <= numPointsGizmos; i++)
             {
-                float t = i * timeStep;
+                float t = i * timeStepGizmos;
                 Vector3 calculatedPosition = startPosition + (velocity * t);
                 calculatedPosition.y += (0.5f * acceleration * (t * t));
                 Gizmos.DrawLine(previousPosition, calculatedPosition);

@@ -31,6 +31,9 @@ namespace CharonsCorner.Runtime
 
         private Vector3 _targetVelocity;
 
+        private LineRenderer _trajectoryRenderer;
+
+
         private protected override void OnEnter()
         {
             _launchTimer = 0f;
@@ -58,6 +61,16 @@ namespace CharonsCorner.Runtime
             if (_isLaunching && _currentCannon != null)
             {
                 ApplyCannonLaunch(Time.deltaTime);
+            }
+
+
+            if (_isAdjustingPillar && _currentCannon != null)
+            {
+                DrawTrajectoryRuntime(_currentCannon);
+            }
+            else if (_trajectoryRenderer != null)
+            {
+                _trajectoryRenderer.positionCount = 0;
             }
         }
 
@@ -133,6 +146,7 @@ namespace CharonsCorner.Runtime
                 _inCannon = false;
 
                 //Makes ApplyCannonLaunch() Ready To Be Called:
+                if (cannonBall._useCamera) CameraManager.Instance.ResetActiveCamera();
                 _isLaunching = true;
 
                 _launchTimer = 0f;
@@ -181,6 +195,7 @@ namespace CharonsCorner.Runtime
                     _isAdjustingPillar = false;
 
                     //Makes ApplyCannonLaunch() Ready To Be Called:
+                    if (cannonBall._useCamera) CameraManager.Instance.ResetActiveCamera();
                     _isLaunching = true;
 
                     _launchTimer = 0f;
@@ -239,6 +254,52 @@ namespace CharonsCorner.Runtime
         private protected override State<GameplayPlayerController> GetTransition()
         {
             return null;
+        }
+
+        //Setting Up Line Render Component For Visibility While In Cannon Axis Aiming:
+        private void SetupTrajectoryRenderer()
+        {
+            if (_trajectoryRenderer != null) return;
+
+            GameObject lineObj = new GameObject("TrajectoryRenderer");
+            _trajectoryRenderer = lineObj.AddComponent<LineRenderer>();
+            _trajectoryRenderer.material = new Material(Shader.Find("Sprites/Default"));
+            _trajectoryRenderer.startColor = Color.red;
+            _trajectoryRenderer.endColor = Color.red;
+            _trajectoryRenderer.startWidth = 0.05f;
+            _trajectoryRenderer.endWidth = 0.05f;
+            _trajectoryRenderer.positionCount = 0;
+        }
+
+        //Calculate the Arc Similar to "CannonBall.cs" and ApplyCannonLaunch() Versions:
+        private void DrawTrajectoryRuntime(CannonBall cannonBall)
+        {
+            if (cannonBall == null || !IsAdjustingPillar) return;
+            SetupTrajectoryRenderer();
+
+            Vector3 startPosition = cannonBall.cannonBase.position;
+            Vector3 forward = cannonBall.launchDirection ? cannonBall.launchDirection.forward : _context.transform.forward;
+
+            Quaternion angleRotation = Quaternion.AngleAxis(cannonBall.shotAngle, cannonBall.cannonBase.right);
+            Vector3 direction = angleRotation * forward;
+            Vector3 velocity = direction.normalized * -cannonBall.launchVelocity;
+
+            float timeStep = cannonBall.timeStep;
+            int numPoints = cannonBall.numPoints;
+
+            Vector3[] points = new Vector3[numPoints];
+            Vector3 previousPosition = startPosition;
+
+            for (int i = 0; i < numPoints; i++)
+            {
+                float t = i * timeStep;
+                Vector3 calculatedPosition = startPosition + (velocity * t);
+                calculatedPosition.y += (0.5f * cannonBall.acceleration * (t * t));
+                points[i] = calculatedPosition;
+            }
+
+            _trajectoryRenderer.positionCount = numPoints;
+            _trajectoryRenderer.SetPositions(points);
         }
     }
 }
