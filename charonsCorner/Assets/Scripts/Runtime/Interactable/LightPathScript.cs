@@ -1,7 +1,7 @@
 using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.Splines;
-using static ak.wwise.core;
+//using static ak.wwise.core;
 
 public class Light_Movement_Script : MonoBehaviour
 {
@@ -14,7 +14,7 @@ public class Light_Movement_Script : MonoBehaviour
     ///  Then you need to duplicate that spline, and offset it so it sits above the original spline.
     ///  This second duplicative spline path is what the light ball will follow.
     ///  Make sure to select the duplicated spline path as the spline container in the inspector under this script. 
-    ///  Note: This script should be moved to Asset>Scripts>Runtime>Interactable. Right now the Spline package doesn't register in the subfolders, so it is here under Assets until resolved.
+    ///  
     ///  Additional note. On the LightSphere object, we have two child objects. One is a global volume bloom, providing the glowing effect.
     /// </summary>
 
@@ -29,26 +29,26 @@ public class Light_Movement_Script : MonoBehaviour
     void Update()
     {
 
-            float distance = Vector3.Distance(transform.position, player.position);
+        float distance = Vector3.Distance(transform.position, player.position);
 
-            if (distance <= MoveDistance) //The light ball will only move if the player is near it. We can adjust how close the player needs to be with the MoveDistance variable. 
-            {
-                progress += speed * Time.deltaTime / SplinePath.CalculateLength();
-                progress %= 1f; 
+        if (distance <= MoveDistance) //The light ball will only move if the player is near it. We can adjust how close the player needs to be with the MoveDistance variable. 
+        {
+            progress += speed * Time.deltaTime / SplinePath.CalculateLength();
+            progress %= 1f;
 
-                // Get position and tangent from the spline
-                Vector3 position = SplinePath.EvaluatePosition(progress);
-                Vector3 tangent = SplinePath.EvaluateTangent(progress);
+            // Get position and tangent from the spline
+            Vector3 position = SplinePath.EvaluatePosition(progress);
+            Vector3 tangent = SplinePath.EvaluateTangent(progress);
 
-                // Update object's position and rotation
-                transform.position = position;
-                transform.rotation = Quaternion.LookRotation(tangent);
-                //transform.position = Vector3.MoveTowards(transform.position, Target_Position, speed * Time.deltaTime);
-            }
-
-
-
+            // Update object's position and rotation
+            transform.position = position;
+            transform.rotation = Quaternion.LookRotation(tangent);
+            //transform.position = Vector3.MoveTowards(transform.position, Target_Position, speed * Time.deltaTime);
         }
-       
-    
+
+
+
+    }
+
+
 }
