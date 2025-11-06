@@ -9,6 +9,8 @@ from . import RESULT_LOG_BL_IDNAME
 
 from aspen.core.telemetry import trace
 
+import logging
+
 
 class COMMONPIPELINE_OT_exportmanager(bpy.types.Operator):
     """An operator used to export directly into the unity project."""
@@ -34,5 +36,18 @@ class COMMONPIPELINE_OT_resultlog(bpy.types.Operator):
     @trace.trace_blender_operator()
     def execute(self, context):
         ui.show_result_log_window()
+
+        return flags.FINISHED_REPORT_FLAG
+
+class COMMONPIPELINE_OT_testprint(bpy.types.Operator):
+    bl_idname = 'common_pipeline.testprint'
+    bl_label = 'Print a log'
+    bl_description = 'Test printing a log using the python logging module'
+    bl_options = {'REGISTER'}
+
+    @trace.trace_blender_operator()
+    def execute(self, context):
+        logger = logging.getLogger("aspen")
+        logger.info('Testing op')
 
         return flags.FINISHED_REPORT_FLAG

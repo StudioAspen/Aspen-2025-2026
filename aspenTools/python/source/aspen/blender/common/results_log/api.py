@@ -4,7 +4,7 @@ import os
 from PySide6.QtWidgets import QListWidget, QListWidgetItem, QWidget, QLabel, QHBoxLayout, QFrame
 from aspen.core.qt.singleton_main_window import SingletonMainWindow
 from aspen.core.qt import ui_loader
-from aspen.blender.core import flags
+import logging
 
 MAX_LOGS = 100
 class ConsoleArea(QListWidget):
@@ -57,7 +57,6 @@ class LogEntry(QWidget):
         layout.addWidget(box)
         layout.addWidget(label)
 
-
 class ResultLogMainWindow(SingletonMainWindow):
     def __init__(self, parent=None):
         super().__init__(parent=parent)
@@ -92,3 +91,15 @@ class ResultLogMainWindow(SingletonMainWindow):
         """ This functions tests whether the Window will handle deleting old logs when capacity is reached. """
         for i in range(105):
             self.consoleList.add_log(f"Log {i}")
+
+class ResultLogHandler(logging.Handler):
+    def __init__(self, window: ResultLogMainWindow, level=logging.NOTSET):
+        logging.Handler.__init__(self, level)
+        self.window = window
+
+    def emit(self, record):
+        msg = self.format(record)
+        print(f"Trying to print message: {msg}")
+        self.window.print_log(msg)
+
+

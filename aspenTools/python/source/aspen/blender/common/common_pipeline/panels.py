@@ -19,3 +19,4 @@ class ASPENCOMMON_PT_panel(bpy.types.Panel):
 
         layout.operator(EXPORT_MANAGER_BL_IDNAME, icon='EXPORT')
         layout.operator(RESULT_LOG_BL_IDNAME)
+        layout.operator('common_pipeline.testprint')
