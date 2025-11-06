@@ -6,12 +6,12 @@ namespace CharonsCorner.Runtime
 {
     public class TargetSceneSwitcher : MonoBehaviour
     {
-        [SerializeField] private SceneReference _targetScene;
-        [SerializeField] private GameState _stateAfterSwitch;
+        [SerializeField] private SceneReference targetScene;
+        [SerializeField] private GameState stateAfterSwitch;
 
         public void SwitchScene()
         {
-            GameManager.Instance.SwitchScenes(_targetScene, _stateAfterSwitch).Forget();
+            GameManager.Instance.SwitchScenes(targetScene, stateAfterSwitch).Forget();
         }
     }
 }

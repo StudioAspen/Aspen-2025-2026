@@ -6,14 +6,14 @@ namespace CharonsCorner.Runtime
     public class ObjectPoolerManager : Singleton<ObjectPoolerManager>
     {
         [Header("Settings")]
-        [SerializeField] private int _defaultCapacity = 100;
-        [SerializeField] private int _defaultMaxSize = 150;
+        [SerializeField] private int defaultCapacity = 100;
+        [SerializeField] private int defaultMaxSize = 150;
 
         /// <summary>
         /// Key: Poolable Prefab
         /// Value: Associated ObjectPooler
         /// </summary>
-        private Dictionary<PoolableObject, ObjectPooler> _objectPoolerDictionary = new();
+        private Dictionary<PoolableObject, ObjectPooler> objectPoolerDictionary = new();
 
         private protected override void Awake()
         {
@@ -25,17 +25,17 @@ namespace CharonsCorner.Runtime
         /// </summary>
         public T SpawnPooledObject<T>(PoolableObject newPrefab, Vector3? position = null, Transform parent = null) where T : MonoBehaviour
         {
-            if (_objectPoolerDictionary.ContainsKey(newPrefab))
+            if (objectPoolerDictionary.ContainsKey(newPrefab))
             {
-                ObjectPooler pooler = _objectPoolerDictionary[newPrefab];
+                ObjectPooler pooler = objectPoolerDictionary[newPrefab];
                 return pooler.SpawnObject<T>(position, parent);
             }
 
             GameObject newPoolerGameObject = new GameObject($"{newPrefab.name}Pooler");
             newPoolerGameObject.transform.SetParent(transform);
             ObjectPooler newPooler = newPoolerGameObject.AddComponent<ObjectPooler>();
-            newPooler.Init(newPrefab, _defaultCapacity, _defaultMaxSize);
-            _objectPoolerDictionary.Add(newPrefab, newPooler);
+            newPooler.Init(newPrefab, defaultCapacity, defaultMaxSize);
+            objectPoolerDictionary.Add(newPrefab, newPooler);
 
             return newPooler.SpawnObject<T>(position, parent);
         }

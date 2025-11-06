@@ -12,37 +12,37 @@ namespace CharonsCorner.Runtime
     public class DialogueUI : UIPanel
     {
         [Header("References")]
-        [SerializeField] private DialogueManager _dialogueManager;
-        [SerializeField] private GameObject _optionButtonPrefab;
+        [SerializeField] private DialogueManager dialogueManager;
+        [SerializeField] private GameObject optionButtonPrefab;
 
         [Header("UI Elements")]
-        [SerializeField] private TMP_Text _nameText;
-        [SerializeField] private TMP_Text _dialogueText;
-        [SerializeField] private Transform _optionsContainer;
+        [SerializeField] private TMP_Text nameText;
+        [SerializeField] private TMP_Text dialogueText;
+        [SerializeField] private Transform optionsContainer;
 
         [Header("Typing Config")]
-        [SerializeField] private float _typingSpeed = 0.01f;
-        private Coroutine _typingCoroutine;
-        private string _typedOutFullText;
+        [SerializeField] private float typingSpeed = 0.01f;
+        private Coroutine typingCoroutine;
+        private string typedOutFullText;
 
         private protected override void Initialize()
         {
-            _dialogueManager.OnDialogueOpenerStarted += DialogueManager_OnDialogueOpenerStarted;
-            _dialogueManager.OnDialogueSequenceStarted += DialogueManager_OnDialogueSequenceStarted;
-            _dialogueManager.OnDialogueStarted += DialogueManager_OnDialogueStarted;
+            dialogueManager.OnDialogueOpenerStarted += DialogueManager_OnDialogueOpenerStarted;
+            dialogueManager.OnDialogueSequenceStarted += DialogueManager_OnDialogueSequenceStarted;
+            dialogueManager.OnDialogueStarted += DialogueManager_OnDialogueStarted;
 
-            _dialogueManager.OnDialogueSequenceEndReached += DialogueManager_OnDialogueSequenceEndReached;
+            dialogueManager.OnDialogueSequenceEndReached += DialogueManager_OnDialogueSequenceEndReached;
         }
 
         private void OnDestroy()
         {
-            if (_dialogueManager != null)
+            if (dialogueManager != null)
             {
-                _dialogueManager.OnDialogueOpenerStarted -= DialogueManager_OnDialogueOpenerStarted;
-                _dialogueManager.OnDialogueSequenceStarted -= DialogueManager_OnDialogueSequenceStarted;
-                _dialogueManager.OnDialogueStarted -= DialogueManager_OnDialogueStarted;
+                dialogueManager.OnDialogueOpenerStarted -= DialogueManager_OnDialogueOpenerStarted;
+                dialogueManager.OnDialogueSequenceStarted -= DialogueManager_OnDialogueSequenceStarted;
+                dialogueManager.OnDialogueStarted -= DialogueManager_OnDialogueStarted;
 
-                _dialogueManager.OnDialogueSequenceEndReached -= DialogueManager_OnDialogueSequenceEndReached;
+                dialogueManager.OnDialogueSequenceEndReached -= DialogueManager_OnDialogueSequenceEndReached;
             }
         }
 
@@ -50,7 +50,7 @@ namespace CharonsCorner.Runtime
         {
             ClearUI();
 
-            _nameText.text = opener.SpeakerName;
+            nameText.text = opener.SpeakerName;
             TypeOutText(opener.Text);
 
             ShowOptions(opener.SequenceOptions);
@@ -65,7 +65,7 @@ namespace CharonsCorner.Runtime
         {
             ClearUI();
 
-            _nameText.text = dialogue.SpeakerName;
+            nameText.text = dialogue.SpeakerName;
             TypeOutText(dialogue.Text);
 
             ShowNextButton();
@@ -78,10 +78,10 @@ namespace CharonsCorner.Runtime
 
         private void TypeOutText(string text)
         {
-            if (_typingCoroutine != null)
-                StopCoroutine(_typingCoroutine);
-            _typedOutFullText = text;
-            _typingCoroutine = StartCoroutine(TypeOutTextCoroutine(text));
+            if (typingCoroutine != null)
+                StopCoroutine(typingCoroutine);
+            typedOutFullText = text;
+            typingCoroutine = StartCoroutine(TypeOutTextCoroutine(text));
         }
 
         /// <summary>
@@ -89,15 +89,15 @@ namespace CharonsCorner.Runtime
         /// </summary>
         private IEnumerator TypeOutTextCoroutine(string text)
         {
-            _dialogueText.text = "";
+            dialogueText.text = "";
 
             foreach (char letter in text)
             {
-                _dialogueText.text += letter;
-                yield return new WaitForSecondsRealtime(_typingSpeed);
+                dialogueText.text += letter;
+                yield return new WaitForSecondsRealtime(typingSpeed);
             }
 
-            _typingCoroutine = null;
+            typingCoroutine = null;
         }
 
         /// <summary>
@@ -105,12 +105,12 @@ namespace CharonsCorner.Runtime
         /// </summary>
         public void SkipTyping()
         {
-            if (_typingCoroutine != null)
+            if (typingCoroutine != null)
             {
-                StopCoroutine(_typingCoroutine);
-                _typingCoroutine = null;
+                StopCoroutine(typingCoroutine);
+                typingCoroutine = null;
 
-                _dialogueText.text = _typedOutFullText;
+                dialogueText.text = typedOutFullText;
             }
         }
 
@@ -120,40 +120,40 @@ namespace CharonsCorner.Runtime
 
             foreach (DialogueSequenceSO sequence in sequenceOptions)
             {
-                GameObject buttonObject = Instantiate(_optionButtonPrefab, _optionsContainer);
+                GameObject buttonObject = Instantiate(optionButtonPrefab, optionsContainer);
                 buttonObject.name = $"({sequence.SequenceName})Button";
                 TMP_Text buttonText = buttonObject.GetComponentInChildren<TMP_Text>();
                 buttonText.text = sequence.SequenceName;
                 Button button = buttonObject.GetComponent<Button>();
-                button.onClick.AddListener(() => _dialogueManager.StartDialogueSequence(sequence));
+                button.onClick.AddListener(() => dialogueManager.StartDialogueSequence(sequence));
             }
 
-            GameObject closeButtonObject = Instantiate(_optionButtonPrefab, _optionsContainer);
+            GameObject closeButtonObject = Instantiate(optionButtonPrefab, optionsContainer);
             closeButtonObject.name = "CloseButton";
             TMP_Text closeButtonText = closeButtonObject.GetComponentInChildren<TMP_Text>();
             closeButtonText.text = "Close";
             Button closeButton = closeButtonObject.GetComponent<Button>();
             closeButton.onClick.AddListener(() => {
                 CloseUI();
-                _dialogueManager.EndDialogue();
+                dialogueManager.EndDialogue();
             });
 
-            _uiManager.ChangeCurrentSelectedObject(_optionsContainer.GetChild(0).gameObject); // Set the first button as selected
+            uiManager.ChangeCurrentSelectedObject(optionsContainer.GetChild(0).gameObject); // Set the first button as selected
         }
 
         private void ShowNextButton()
         {
             ClearButtons();
 
-            GameObject nextButtonObject = Instantiate(_optionButtonPrefab, _optionsContainer);
+            GameObject nextButtonObject = Instantiate(optionButtonPrefab, optionsContainer);
             nextButtonObject.name = "NextButton";
             TMP_Text nextButtonText = nextButtonObject.GetComponentInChildren<TMP_Text>();
             nextButtonText.text = "Next";
 
             Button nextButton = nextButtonObject.GetComponent<Button>();
-            nextButton.onClick.AddListener(() => _dialogueManager.StartNextDialogueInSequence());
+            nextButton.onClick.AddListener(() => dialogueManager.StartNextDialogueInSequence());
 
-            _uiManager.ChangeCurrentSelectedObject(nextButtonObject);
+            uiManager.ChangeCurrentSelectedObject(nextButtonObject);
         }
 
         /// <summary>
@@ -162,8 +162,8 @@ namespace CharonsCorner.Runtime
         /// </summary>
         private void ClearUI()
         {
-            _nameText.text = "";
-            _dialogueText.text = "";
+            nameText.text = "";
+            dialogueText.text = "";
 
             ClearButtons();
         }
@@ -172,9 +172,9 @@ namespace CharonsCorner.Runtime
         {
             // We need to detach first because destroyed gameObjects take a frame
             // We are looping backwards to avoid issues with child count changing during iteration
-            for (int i = _optionsContainer.childCount - 1; i >= 0; i--)
+            for (int i = optionsContainer.childCount - 1; i >= 0; i--)
             {
-                Transform child = _optionsContainer.GetChild(i);
+                Transform child = optionsContainer.GetChild(i);
                 child.SetParent(null, false); // Detach so container's childCount updates immediately
                 Destroy(child.gameObject);
             }

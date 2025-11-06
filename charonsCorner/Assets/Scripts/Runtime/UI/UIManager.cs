@@ -22,7 +22,7 @@ namespace CharonsCorner.Runtime
 
         [Header("Panels")]
         [SerializeField, SerializedDictionary("Panel Name", "Panel")]
-        private SerializedDictionary<PanelName, UIPanel> _panels = new SerializedDictionary<PanelName, UIPanel>();
+        private SerializedDictionary<PanelName, UIPanel> panels = new SerializedDictionary<PanelName, UIPanel>();
         [field: SerializeField, ReadOnly] public UIPanel CurrentPanel { get; private set; }
 
         [field: Header("Loading")]
@@ -62,7 +62,7 @@ namespace CharonsCorner.Runtime
 
         private void InitializePanels()
         {
-            foreach (UIPanel panel in _panels.Values)
+            foreach (UIPanel panel in panels.Values)
                 panel.Init(this);
         }
 
@@ -72,7 +72,7 @@ namespace CharonsCorner.Runtime
         /// <param name="panelName"></param>
         public void ShowPanel(PanelName panelName)
         {
-            UIPanel panel = _panels[panelName];
+            UIPanel panel = panels[panelName];
 
             if (CurrentPanel == panel)
                 return;
@@ -94,7 +94,7 @@ namespace CharonsCorner.Runtime
         /// </summary>
         public void HideAllPanels()
         {
-            foreach (UIPanel panel in _panels.Values)
+            foreach (UIPanel panel in panels.Values)
                 panel.Hide();
 
             CurrentPanel = null;
@@ -134,7 +134,7 @@ namespace CharonsCorner.Runtime
         /// </summary>
         public void ChangeConfirmPanelContents(string warningContent, string yesContent, UnityEngine.Events.UnityAction yesButtonAction)
         {
-            GameplayConfirmPanel confirmPanel = _panels[PanelName.Confirm] as GameplayConfirmPanel;
+            GameplayConfirmPanel confirmPanel = panels[PanelName.Confirm] as GameplayConfirmPanel;
             if(confirmPanel == null)
             {
                 Debug.LogError("Confirm panel is not of type GameplayConfirmPanel or is not set up correctly.");
@@ -147,6 +147,9 @@ namespace CharonsCorner.Runtime
         /// Utility method to check if a UI object is interactable by raycasting against it to see if any other UI elements block it.
         /// Needed for gamepad interactions.
         /// </summary>
+        /// <param name="eventSystem"></param>
+        /// <param name="target"></param>
+        /// <returns></returns>
         public static bool IsUIObjectInteractable(EventSystem eventSystem, GameObject target)
         {
             if (target == null || !target.activeInHierarchy)

@@ -318,7 +318,7 @@ namespace CharonsCorner.Runtime
                 {
                     ""name"": """",
                     ""id"": ""085de50d-70d7-4edf-ae47-67ea76d4ee7c"",
-                    ""path"": ""<Gamepad>/rightTrigger"",
+                    ""path"": ""<Gamepad>/buttonEast"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Gamepad"",

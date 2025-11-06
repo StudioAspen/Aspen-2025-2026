@@ -6,9 +6,9 @@ namespace CharonsCorner.Runtime
 {
     public class SubSettingsUI : MonoBehaviour
     {
-        private List<Setting> _settings = new List<Setting>();
+        private List<Setting> settings = new List<Setting>();
 
-        public bool IsDirty => _settings.Exists(setting => setting != null && setting.IsDirty());
+        public bool IsDirty => settings.Exists(setting => setting != null && setting.IsDirty());
 
         /// <summary>
         /// Disabled objects dont get awake called, so we need to initialize manually
@@ -16,7 +16,7 @@ namespace CharonsCorner.Runtime
         public void Initialize()
         {
             // Find all Setting components in children and add them to the list
-            _settings.AddRange(GetComponentsInChildren<Setting>());
+            settings.AddRange(GetComponentsInChildren<Setting>());
 
             Load();
         }
@@ -26,7 +26,7 @@ namespace CharonsCorner.Runtime
         /// </summary>
         public void Apply()
         {
-            foreach (Setting setting in _settings)
+            foreach (Setting setting in settings)
             {
                 if (setting == null)
                     continue;
@@ -39,7 +39,7 @@ namespace CharonsCorner.Runtime
         /// </summary>
         private void Load()
         {
-            foreach (Setting setting in _settings)
+            foreach (Setting setting in settings)
             {
                 if (setting == null)
                     continue;
@@ -52,7 +52,7 @@ namespace CharonsCorner.Runtime
         /// </summary>
         public void Discard()
         {
-            foreach (Setting setting in _settings)
+            foreach (Setting setting in settings)
             {
                 if (setting == null)
                     continue;

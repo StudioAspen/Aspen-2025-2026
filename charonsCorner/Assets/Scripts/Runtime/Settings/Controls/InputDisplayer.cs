@@ -8,23 +8,23 @@ namespace CharonsCorner.Runtime
     public class InputDisplayer : MonoBehaviour
     {
         [Header("References")]
-        [SerializeField] private InputActionReference _inputAction;
-        [SerializeField] private TMP_Text _inputDisplayText;
+        [SerializeField] private InputActionReference inputAction;
+        [SerializeField] private TMP_Text inputDisplayText;
 
         [Header("Config")]
-        [SerializeField] private bool _autoDetectControlScheme = false;
-        private bool ShowManualControlScheme => !_autoDetectControlScheme;
-        [SerializeField, ShowIf(nameof(ShowManualControlScheme))] private InputManager.ControlScheme _controlScheme;
+        [SerializeField] private bool autoDetectControlScheme = false;
+        private bool ShowManualControlScheme => !autoDetectControlScheme;
+        [SerializeField, ShowIf(nameof(ShowManualControlScheme))] private InputManager.ControlScheme controlScheme;
 
         private void Start()
         {
-            if (_autoDetectControlScheme)
+            if (autoDetectControlScheme)
             {
-                _controlScheme = InputManager.Instance.CurrentControlScheme;
+                controlScheme = InputManager.Instance.CurrentControlScheme;
                 InputManager.Instance.OnControlSchemeChanged += InputManager_OnControlSchemeChanged;
             }
 
-            _inputDisplayText.text = GetInputDisplayString(_inputAction, _controlScheme);
+            inputDisplayText.text = GetInputDisplayString(inputAction, controlScheme);
         }
 
         private void OnDestroy()
@@ -35,8 +35,8 @@ namespace CharonsCorner.Runtime
 
         private void InputManager_OnControlSchemeChanged(InputManager.ControlScheme newScheme)
         {
-            _controlScheme = newScheme;
-            _inputDisplayText.text = GetInputDisplayString(_inputAction, _controlScheme);
+            controlScheme = newScheme;
+            inputDisplayText.text = GetInputDisplayString(inputAction, controlScheme);
         }
 
         /// <summary>

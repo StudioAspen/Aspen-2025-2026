@@ -5,15 +5,15 @@ namespace CharonsCorner.Runtime
     [System.Serializable]
     public abstract class State<TContext> where TContext : MonoBehaviour
     {
-        private protected StateMachine<TContext> _stateMachine;
-        private protected TContext _context;
+        private protected StateMachine<TContext> stateMachine;
+        private protected TContext context;
 
-        private static readonly bool EnableDebug = false; // Set to true to enable debug logs for state transitions
+        private static readonly bool debug = true; // Set to true to enable debug logs for state transitions
 
         public virtual void Init(StateMachine<TContext> stateMachine, TContext context)
         {
-            this._stateMachine = stateMachine;
-            this._context = context;
+            this.stateMachine = stateMachine;
+            this.context = context;
             OnInit();
         }
 
@@ -21,21 +21,21 @@ namespace CharonsCorner.Runtime
         
         public virtual void Destroy()
         {
-            if(EnableDebug)
+            if(debug)
                 Debug.Log($"Destroying state {GetType().Name}");
             Exit();
         }
 
         public virtual void Enter()
         {
-            if(EnableDebug)
+            if(debug)
                 Debug.Log($"Entering state {GetType().Name}");
             OnEnter();
         }
 
         public virtual void Exit()
         {
-            if(EnableDebug)
+            if(debug)
                 Debug.Log($"Exiting state {GetType().Name}");
             OnExit();
         }
@@ -43,9 +43,9 @@ namespace CharonsCorner.Runtime
         public virtual void Update()
         {
             State<TContext> transitionState = GetTransition();
-            if (transitionState != null && !_stateMachine.HasTransitionedThisFrame)
+            if (transitionState != null && !stateMachine.HasTransitionedThisFrame)
             {
-                _stateMachine.ChangeState(transitionState);
+                stateMachine.ChangeState(transitionState);
                 return;
             }
 

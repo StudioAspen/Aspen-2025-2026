@@ -4,25 +4,25 @@ using UnityEngine;
 
 public class SteamOverlayListener : MonoBehaviour
 {
-    private GameManager _gameManager;
-    private Callback<GameOverlayActivated_t> _overlayActivatedCallback;
+    private GameManager gameManager;
+    private Callback<GameOverlayActivated_t> overlayActivatedCallback;
 
     public static bool IsOverlayOpen { get; private set; }
 
     private void Start()
     {
-        _gameManager = GameManager.Instance;
+        gameManager = GameManager.Instance;
     }
 
     private void OnEnable()
     {
         if (SteamManager.Initialized)
-            _overlayActivatedCallback = Callback<GameOverlayActivated_t>.Create(OnOverlayActivated);
+            overlayActivatedCallback = Callback<GameOverlayActivated_t>.Create(OnOverlayActivated);
     }
 
     private void OnDisable()
     {
-        _overlayActivatedCallback?.Unregister();
+        overlayActivatedCallback?.Unregister();
     }
 
     private void OnOverlayActivated(GameOverlayActivated_t callback)
@@ -32,7 +32,7 @@ public class SteamOverlayListener : MonoBehaviour
             return;
 
         // If open, pause the game if it's currently in gameplay state
-        if (_gameManager.CurrentGameState == GameState.Gameplay)
-            _gameManager.ChangeGameState(GameState.Paused);
+        if (gameManager.CurrentGameState == GameState.Gameplay)
+            gameManager.ChangeGameState(GameState.Paused);
     }
 }

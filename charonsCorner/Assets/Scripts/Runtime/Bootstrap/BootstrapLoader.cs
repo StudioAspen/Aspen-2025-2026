@@ -19,16 +19,16 @@ namespace CharonsCorner.Runtime
     /// </summary>
     public class BootstrapLoader : MonoBehaviour
     {
-        [SerializeField] private SceneReference _titleScene;
+        [SerializeField] private SceneReference titleScene;
 
 #if UNITY_EDITOR
-        [SerializeField, Required] private BootstrapConfigSO _bootstrapConfig;
+        [SerializeField, Required] private BootstrapConfigSO bootstrapConfig;
 #endif
 
         private void Awake()
         {
 #if UNITY_EDITOR
-            _bootstrapConfig.Initialize();
+            bootstrapConfig.Initialize();
 #endif
             DontDestroyOnLoad(gameObject);
         }
@@ -38,16 +38,16 @@ namespace CharonsCorner.Runtime
         {
 #if UNITY_EDITOR
             string targetScenePath = EditorPrefs.GetString("Bootstrap_OriginalScene", null);
-            SceneReference targetScene = string.IsNullOrEmpty(targetScenePath) ? _titleScene : SceneReference.FromScenePath(targetScenePath);
+            SceneReference targetScene = string.IsNullOrEmpty(targetScenePath) ? titleScene : SceneReference.FromScenePath(targetScenePath);
 
             Debug.Log($"Bootstrapping into target scene: {targetScene.Name} (Path: {targetScene.Path})");
 
             // Use addressables to load the scene instead of SceneManager because the scene may not be in the build settings
             await Addressables.LoadSceneAsync(targetScene.Path, LoadSceneMode.Single).ToUniTask(this);
             Debug.Log($"Bootstrapped scene, {targetScene.Name}, successfully.");
-            GameManager.Instance.ChangeGameState(_bootstrapConfig.GetSceneInitialState(targetScene), true);
+            GameManager.Instance.ChangeGameState(bootstrapConfig.GetSceneInitialState(targetScene), true);
 #else
-            await SceneManager.LoadSceneAsync(_titleScene.Name);
+            await SceneManager.LoadSceneAsync(titleScene.Name);
             GameManager.Instance.ChangeGameState(GameState.Title, true);
 #endif
             Destroy(gameObject);
