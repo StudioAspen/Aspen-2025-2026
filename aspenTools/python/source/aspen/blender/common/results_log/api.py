@@ -7,6 +7,7 @@ from aspen.core.qt import ui_loader
 import logging
 
 MAX_LOGS = 100
+
 class ConsoleArea(QListWidget):
     color_map = {
         "info" : "#3a82f7",
@@ -68,7 +69,7 @@ class ResultLogMainWindow(SingletonMainWindow):
         )
 
         self.move(0, 0)
-        self.consoleList.add_log("Welcome to the Aspen result log! Find the result of any tool operations in here.", "info")
+        self.consoleList.add_log("Welcome to the Aspen result log! Results of any tool operations will be printed here.", "info")
 
     def print_log(self, text, flag="info"):
         """ This adds and prints a single log to the window.
@@ -92,14 +93,15 @@ class ResultLogMainWindow(SingletonMainWindow):
         for i in range(105):
             self.consoleList.add_log(f"Log {i}")
 
+# Derived class of logging module's handler so that we can override emit() and connect it to our functions.
 class ResultLogHandler(logging.Handler):
     def __init__(self, window: ResultLogMainWindow, level=logging.NOTSET):
         logging.Handler.__init__(self, level)
         self.window = window
 
+    #TODO Match the log level in the LogRecord to a flag.
     def emit(self, record):
         msg = self.format(record)
-        print(f"Trying to print message: {msg}")
         self.window.print_log(msg)
 
 
