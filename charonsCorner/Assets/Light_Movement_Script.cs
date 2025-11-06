@@ -22,8 +22,8 @@ public class Light_Movement_Script : MonoBehaviour
 
     //public Vector3 Target_Position; No longer need. 
     public Transform player;
-    private float MoveDistance = 5f;
-    private float speed = 3f;
+    private float MoveDistance = 20f;
+   [SerializeField] private float speed = 3f;
     //private Vector3 Start_Position; No longer need. 
     public SplineContainer SplinePath;
     private float progress = 0f;
