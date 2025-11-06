@@ -57,7 +57,7 @@ namespace CharonsCorner.Runtime
 
         private void OnCollisionEnter(Collision collision)
         {
-            if (collision.gameObject.TryGetComponent(out PlayerController player))
+            if (collision.gameObject.TryGetComponent(out GameplayPlayerController player))
             {
                 if (isCorrectTile)
                 {

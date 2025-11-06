@@ -1,4 +1,4 @@
-using NaughtyAttributes;
+/*using NaughtyAttributes;
 using UnityEngine;
 
 namespace CharonsCorner.Runtime
@@ -26,3 +26,4 @@ namespace CharonsCorner.Runtime
         }
     }
 }
+*/

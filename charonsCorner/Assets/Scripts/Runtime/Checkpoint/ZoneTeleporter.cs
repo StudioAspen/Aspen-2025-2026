@@ -17,14 +17,13 @@ namespace CharonsCorner.Runtime
         {
             if (((1 << other.gameObject.layer) & playerLayerMask.value) != 0)
             {
-                var player = other.GetComponent<PlayerController>();
+                var player = other.GetComponent<GameplayPlayerController>();
                 var checkpoint = CheckpointManager.Instance.CurrentCheckpoint;
                 if (player != null && checkpoint != null)
                 {
                     player.transform.position = checkpoint.transform.position;
                     // Optionally reset velocity, etc.
-                    if (player.RigidBody != null)
-                        player.RigidBody.linearVelocity = Vector3.zero;
+                    
                 }
             }
         }

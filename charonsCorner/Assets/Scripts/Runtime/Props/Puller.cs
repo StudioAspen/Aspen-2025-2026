@@ -95,8 +95,8 @@ public class Puller : MonoBehaviour
         flatVelocity.y = 0;
         if (flatVelocity.magnitude >= minSlingshotSpeed)
         {
-            var playerController = other.GetComponent<PlayerController>();
-            if (playerController != null && playerController.GroundedSuperState.DriftState.IsDrifting)
+            var playerController = other.GetComponent<GameplayPlayerController>();
+            /*if (playerController != null && playerController.GroundedSuperState.DriftState.IsDrifting)
             {
                 Vector3 boostDir = flatVelocity.sqrMagnitude > 0.01f ? flatVelocity.normalized : playerController.transform.forward;
                 float pullerBoost = flatVelocity.magnitude * (slingshotMultiplier - 1f);
@@ -106,7 +106,7 @@ public class Puller : MonoBehaviour
             {
                 flatVelocity *= slingshotMultiplier;
                 rb.linearVelocity = new Vector3(flatVelocity.x, rb.linearVelocity.y, flatVelocity.z);
-            }
+            }*/
         }
 
         pullTimers.Remove(other);

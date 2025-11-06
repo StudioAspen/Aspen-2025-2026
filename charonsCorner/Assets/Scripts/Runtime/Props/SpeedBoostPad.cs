@@ -26,8 +26,8 @@ namespace CharonsCorner.Runtime
         {
             if (((1 << other.gameObject.layer) & playerLayerMask.value) != 0)
             {
-                var player = other.GetComponent<PlayerController>();
-                if (player != null && player.RigidBody != null)
+                var player = other.GetComponent<GameplayPlayerController>();
+                if (player != null && player.Rb != null)
                 {
 
                     Vector3 worldBoostDir = transform.TransformDirection(boostDirection.normalized);
@@ -35,12 +35,12 @@ namespace CharonsCorner.Runtime
                     if (setVelocity)
                     {
                         // Set velocity directly
-                        player.RigidBody.linearVelocity = worldBoostDir * boostStrength;
+                        player.Rb.linearVelocity = worldBoostDir * boostStrength;
                     }
                     else
                     {
                         // Add force for boost
-                        player.RigidBody.AddForce(worldBoostDir * boostStrength, ForceMode.VelocityChange);
+                        player.Rb.AddForce(worldBoostDir * boostStrength, ForceMode.VelocityChange);
                     }
                 }
             }

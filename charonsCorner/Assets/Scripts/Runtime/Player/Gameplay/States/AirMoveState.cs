@@ -1,4 +1,5 @@
 using UnityEngine;
+using static Codice.CM.WorkspaceServer.WorkspaceTreeDataStore;
 
 namespace CharonsCorner.Runtime
 {
@@ -12,7 +13,7 @@ namespace CharonsCorner.Runtime
 
         private protected override void OnEnter()
         {
-            
+
         }
 
         private protected override void OnExit()
@@ -29,17 +30,17 @@ namespace CharonsCorner.Runtime
         {
             Vector2 input = InputManager.Instance.MoveDirection;
             Vector3 inputDirection = _context.Orientation.right * input.x + _context.Orientation.forward * input.y;
-            
+
             // Perform deceleration if we aren't pressing an input direction
             if (input == Vector2.zero)
             {
                 _context.Rb.AddForce(-_context.Rb.linearVelocity.normalized * _deceleration, ForceMode.Acceleration);
             }
-            
+
             _context.Rb.AddForce(_context.Orientation.forward * (input.y * _acceleration) + _context.Orientation.right * (input.x * _acceleration), ForceMode.Acceleration);
-            
+
             Vector3 flatVel = new Vector3(_context.Rb.linearVelocity.x, 0, _context.Rb.linearVelocity.z);
-            
+
             float dot = Vector3.Dot(inputDirection, flatVel.normalized);
 
             if (dot < 0f)
@@ -47,7 +48,7 @@ namespace CharonsCorner.Runtime
                 Vector3 decelerationForce = -flatVel.normalized * (_deceleration * Mathf.Abs(dot));
                 _context.Rb.AddForce(decelerationForce, ForceMode.Acceleration);
             }
-            
+
             // Clamp max velocity manually
             if (flatVel.magnitude > _maxFlatSpeed)
             {
