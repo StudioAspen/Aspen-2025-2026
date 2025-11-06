@@ -1,18 +1,18 @@
-/*using NaughtyAttributes;
+using NaughtyAttributes;
 using UnityEngine;
 
 namespace CharonsCorner.Runtime
 {
     public class PlayerPinCollector : MonoBehaviour
     {
-        private PlayerController playerController;
+        private GameplayPlayerController playerController;
 
         [field: SerializeField, ReadOnly] public int PinCount { get; private set; }
         [SerializeField] private float pinCollectSpeedMultiplier = 1.05f;
 
         private void Awake()
         {
-            playerController = GetComponent<PlayerController>();
+            playerController = GetComponent<GameplayPlayerController>();
         }
         
         /// <summary>
@@ -26,4 +26,3 @@ namespace CharonsCorner.Runtime
         }
     }
 }
-*/
