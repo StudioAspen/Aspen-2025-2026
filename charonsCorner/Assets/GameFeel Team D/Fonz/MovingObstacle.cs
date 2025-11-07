@@ -4,6 +4,13 @@ using AYellowpaper.SerializedCollections.Editor.Data;
 
 public class MovingObstacle : MonoBehaviour
 {
+    public enum MovementType
+    {
+        Lerping,
+        MovingTowards,
+        SmoothDamp
+    }
+
     [Tooltip("Path Points for the Moving Obstacle")]
     public List<Transform> pathPoints;
     private List<Vector3> pathPositions = new List<Vector3>();
@@ -12,6 +19,7 @@ public class MovingObstacle : MonoBehaviour
 
     [Header("Movement Settings")]
     public float speed = 2.0f;
+    public MovementType movementType = MovementType.Lerping;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -34,9 +42,10 @@ public class MovingObstacle : MonoBehaviour
             return;
         }
 
-        // Move towards the next point
-        transform.position = Vector3.MoveTowards(transform.position, pathPositions[currentPointIndex], speed*Time.deltaTime);
+        // Move towards the current point
+        DetermineMoveType();
 
+        // Move towards the next point
         if (Vector3.Distance(transform.position, pathPositions[currentPointIndex]) < 0.01f)
         {
             Debug.Log("Reached point " + currentPointIndex);
@@ -57,6 +66,35 @@ public class MovingObstacle : MonoBehaviour
             {
                 rubberBanding = false;
             }
+        }
+        FaceTowards();
+    }
+
+    private void DetermineMoveType()
+    {
+        if (movementType == MovementType.Lerping)
+        {
+            transform.position = Vector3.Lerp(transform.position, pathPositions[currentPointIndex], speed * Time.deltaTime);
+        }
+        else if (movementType == MovementType.MovingTowards)
+        {
+            transform.position = Vector3.MoveTowards(transform.position, pathPositions[currentPointIndex], speed * Time.deltaTime);
+        }
+        else if (movementType == MovementType.SmoothDamp)
+        {
+            Vector3 velocity = Vector3.zero;
+            transform.position = Vector3.SmoothDamp(transform.position, pathPositions[currentPointIndex], ref velocity, speed * Time.deltaTime);
+        }
+    }
+
+    // Make the obstacle face towards the next point it is moving to
+    private void FaceTowards()
+    {
+        Vector3 direction = pathPositions[currentPointIndex] - transform.position;
+        if (direction != Vector3.zero)
+        {
+            Quaternion targetRotation = Quaternion.LookRotation(direction);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * speed);
         }
     }
 
