@@ -2,8 +2,8 @@ import bpy
 
 from aspen.blender.common.results_log import ui as result_log_ui
 from ..asset_validation import ui
-from aspen.core.telemetry import trace
 from ..asset_validation.ui import AssetValidationHelpWindow
+from aspen.core.telemetry import trace
 
 
 class MODELINGPIPELINE_OT_asset_validation_start(bpy.types.Operator):
@@ -15,6 +15,9 @@ class MODELINGPIPELINE_OT_asset_validation_start(bpy.types.Operator):
     @trace.trace_blender_operator()
     def execute(self, context):
         ui.test_objects_in_collection(context)
+        ui.test_asset_vertex_count(context)
+        ui.test_object_default_names()
+
         result_log_ui.show_result_log_window()
         return {"FINISHED"}
 
