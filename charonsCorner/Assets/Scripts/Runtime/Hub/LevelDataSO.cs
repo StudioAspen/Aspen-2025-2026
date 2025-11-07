@@ -1,7 +1,9 @@
 using Eflatun.SceneReference;
 using UnityEngine;
 
-//Handle opening of assets in editor
+/// <summary>
+/// Stores all level related data to be displayed in the hub level selector
+/// </summary>
 [CreateAssetMenu(fileName = "LevelData", menuName = "CharonsCorner/LevelData")]
 public class LevelDataSO : ScriptableObject
 {

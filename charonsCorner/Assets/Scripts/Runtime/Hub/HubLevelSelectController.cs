@@ -5,6 +5,9 @@ using NaughtyAttributes;
 using CharonsCorner.Runtime;
 using Cysharp.Threading.Tasks;
 
+/// <summary>
+/// Controls the level select process to be used by the UI.
+/// </summary>
 public class HubLevelSelectController : MonoBehaviour
 {
     public event Action OnLevelSelectOpen;
@@ -15,14 +18,13 @@ public class HubLevelSelectController : MonoBehaviour
     [Header("References")]
     [SerializeField, ReadOnly] private LevelDataSO _currentLevelData;
 
-    private bool _isOpen;
+    [SerializeField, ReadOnly] private bool _isOpen;
 
     public bool IsOpen => _isOpen;
 
     /// <summary>
     /// Called by the trigger when the player approaches a level entrance.
     /// </summary>
-    [Button("Open")]
     public void OpenLevelSelect(LevelDataSO data)
     {
         if (_isOpen) return;
@@ -41,6 +43,7 @@ public class HubLevelSelectController : MonoBehaviour
     {
         if (!_isOpen) return;
 
+        _currentLevelData = null;
         _isOpen = false;
         OnLevelSelectClose?.Invoke();
         Debug.Log("[HubLevelSelectController] Closed level select.");
@@ -49,10 +52,14 @@ public class HubLevelSelectController : MonoBehaviour
     /// <summary>
     /// Starts the selected level via GameManager.
     /// </summary>
-    [Button("Start")]
+    [Button("Start Level")]
     public void StartLevel()
     {
-        if (_currentLevelData == null) return;
+        if (_currentLevelData == null)
+        {
+            Debug.LogWarning("[HubLevelSelectController] Missing level data to start");  
+            return;
+        }
 
         Debug.Log($"[HubLevelSelectController] Starting level: {_currentLevelData.LevelScene}");
         OnLevelStarted?.Invoke(_currentLevelData);

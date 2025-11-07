@@ -4,6 +4,9 @@ using UnityEngine.UI;
 
 namespace CharonsCorner.Runtime
 {
+    /// <summary>
+    /// Base class for UIManager persistent panels.
+    /// </summary>
     public abstract class UIPanel : MonoBehaviour
     {
         private protected UIManager _uiManager;
