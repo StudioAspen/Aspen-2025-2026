@@ -17,6 +17,8 @@ public class MovingObstacle : MonoBehaviour
     private int currentPointIndex = 1;
     private bool rubberBanding = false;
 
+    private GameObject startPoint;
+
     [Header("Movement Settings")]
     public float speed = 2.0f;
     public MovementType movementType = MovementType.Lerping;
@@ -24,7 +26,8 @@ public class MovingObstacle : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        pathPoints.Insert(0, new GameObject("StartPoint").transform);
+        startPoint = new GameObject("StartPoint");
+        pathPoints.Insert(0, startPoint.transform);
         pathPoints[0].position = transform.position;
 
         foreach (Transform point in pathPoints)
@@ -45,7 +48,7 @@ public class MovingObstacle : MonoBehaviour
         // Move towards the current point
         DetermineMoveType();
 
-        // Move towards the next point
+        // Check if reached current point and switch to next/previous waypoint
         if (Vector3.Distance(transform.position, pathPositions[currentPointIndex]) < 0.01f)
         {
             Debug.Log("Reached point " + currentPointIndex);
@@ -70,11 +73,19 @@ public class MovingObstacle : MonoBehaviour
         FaceTowards();
     }
 
+    private void OnDestroy()
+    {
+        if (startPoint != null)
+        {
+            Destroy(startPoint);
+        }
+    }
+
     private void DetermineMoveType()
     {
         if (movementType == MovementType.Lerping)
         {
-            transform.position = Vector3.Lerp(transform.position, pathPositions[currentPointIndex], speed * Time.deltaTime);
+            transform.position = Vector3.Lerp(transform.position, pathPositions[currentPointIndex], Mathf.Clamp01(speed * Time.deltaTime));
         }
         else if (movementType == MovementType.MovingTowards)
         {
