@@ -13,11 +13,17 @@ namespace CharonsCorner.Runtime
         [field:SerializeField] public float SlopeBoost {get; private set;} = 10f; // optional slope influence
         [field:SerializeField] public float GroundStickForce {get; private set;} = 10f;
         
+        /// <summary>
+        /// Called when this state is entered; updates the controller's current substate to this state's runtime class name.
+        /// </summary>
         private protected override void OnEnter()
         {
             _context.CurrentSubState = GetType().Name;
         }
 
+        /// <summary>
+        /// Called when the state is exited; performs no cleanup or side effects in this implementation.
+        /// </summary>
         private protected override void OnExit()
         {
             

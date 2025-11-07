@@ -12,13 +12,20 @@ namespace CharonsCorner.Runtime
         [SerializeField] private TMP_Text _timerText;
         [SerializeField] private ScoringSystem _scoringSystem;
 
-        // Start is called once before the first execution of Update after the MonoBehaviour is created
+        /// <summary>
+        /// Called by Unity before the first Update to perform component initialization.
+        /// </summary>
         void Start()
         {
 
         }
 
-        // Update is called once per frame
+        /// <summary>
+        /// Updates the on-screen timer text each frame by reading the current level time from the scoring system and formatting it as MM:SS:MMM.
+        /// </summary>
+        /// <remarks>
+        /// If the text component reference or the scoring system is missing, the method exits without changing the display.
+        /// </remarks>
         void Update()
         {
             if (!_timerText) return;

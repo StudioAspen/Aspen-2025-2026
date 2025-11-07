@@ -23,16 +23,29 @@ namespace CharonsCorner.Runtime
             
         }
 
+        /// <summary>
+        /// Per-frame update hook for this superstate; invoked each frame while the state is active.
+        /// </summary>
+        /// <remarks>
+        /// This implementation performs no per-frame actions.
+        /// </remarks>
         private protected override void OnUpdate()
         {
             
         }
 
+        /// <summary>
+        /// Called on the fixed-timestep update while this superstate is active; no behavior is performed.
+        /// </summary>
         private protected override void OnFixedUpdate()
         {
 
         }
 
+        /// <summary>
+        /// Determine a state transition when the player is grounded.
+        /// </summary>
+        /// <returns>`GroundSuperState` when the context's IsGrounded is true, `null` otherwise.</returns>
         private protected override State<GameplayPlayerController> GetTransition()
         {
             if (_context.IsGrounded)

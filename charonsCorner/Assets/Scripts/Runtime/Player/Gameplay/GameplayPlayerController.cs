@@ -38,6 +38,12 @@ namespace CharonsCorner.Runtime
         [HideInInspector] public String CurrentSubState;
         #endregion
 
+        /// <summary>
+        /// Initializes component references used by the controller and sets up the state machine.
+        /// </summary>
+        /// <remarks>
+        /// Caches the Rigidbody, SphereCollider, and child SlopeSensor components, then initializes the controller's state machine.
+        /// </remarks>
         private void Awake()
         {
             Rb = GetComponent<Rigidbody>();
@@ -70,6 +76,8 @@ namespace CharonsCorner.Runtime
 
         /// <summary>
         /// Runs in awake. Sets up the state machine and all the states for the player controller.
+        /// <summary>
+        /// Initializes the controller's state machine, configures the ground, air, and drift superstates, and activates the ground superstate as the initial state.
         /// </summary>
         private void SetupStateMachine()
         {
@@ -82,6 +90,14 @@ namespace CharonsCorner.Runtime
             StateMachine.ChangeState(GroundSuperState, true);
         }
 
+        /// <summary>
+        /// Draws editor gizmos while the game is running in the editor to visualize ground-check sphere and current state information.
+        /// </summary>
+        /// <remarks>
+        /// Renders a wire sphere beneath the object whose color indicates grounding (green when grounded, red otherwise),
+        /// and displays a label at the object's position showing the active state's type name and the current sub-state.
+        /// This method only produces output while the application is playing in the editor.
+        /// </remarks>
         private void OnDrawGizmos()
         {
         #if UNITY_EDITOR

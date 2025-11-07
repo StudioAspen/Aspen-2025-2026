@@ -10,11 +10,17 @@ namespace CharonsCorner.Runtime
         [SerializeField] private float _acceleration = 20f;
         [SerializeField] private float _deceleration = 10f;
 
+        /// <summary>
+        /// Sets the context's current substate to this state's type name when the state is entered.
+        /// </summary>
         private protected override void OnEnter()
         {
             _context.CurrentSubState = GetType().Name;
         }
 
+        /// <summary>
+        /// Invoked when the state is exited; currently performs no teardown or side effects.
+        /// </summary>
         private protected override void OnExit()
         {
 
