@@ -9,19 +9,11 @@ MAX_LOGS = 100
 
 class ConsoleArea(QListWidget):
     color_map = {
-<<<<<<< HEAD
-        "info" : "#3a82f7",
-        "finished" : "#4caf50",
-        "cancelled" : "#ffb300",
-        "error" : "#e53935",
-        "warning" : "#ff9900"
-=======
         # the enums in logging correspond to integers.
         logging.INFO: "#64bd72",  # Green
         logging.DEBUG : "#e0e0e0", # Light-Grey
         logging.WARNING : "#ffb300", # Orange
         logging.ERROR : "#e53935" # Red
->>>>>>> jonathan_results_log
     }
 
     def __init__(self, parent=None):
