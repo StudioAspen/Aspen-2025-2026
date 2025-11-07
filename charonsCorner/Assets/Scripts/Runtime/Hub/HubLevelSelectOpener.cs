@@ -18,13 +18,13 @@ public class HubLevelSelectOpener : MonoBehaviour
         //Error Handling
         if (_controller == null)
         {
-            Debug.LogError($"[HubLevelSelectTrigger] Missing controller reference on {gameObject.name}");
+            Debug.LogError($"[HubLevelSelectOpener] Missing controller reference on {gameObject.name}");
             return;
         }
 
         if (_levelData == null)
         {
-            Debug.LogError($"[HubLevelSelectTrigger] Missing LevelData reference on {gameObject.name}");
+            Debug.LogError($"[HubLevelSelectOpener] Missing LevelData reference on {gameObject.name}");
             return;
         }
 
