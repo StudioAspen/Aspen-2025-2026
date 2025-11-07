@@ -1,12 +1,9 @@
 import os
 import bpy
 
-from PySide6.QtWidgets import QListWidget, QListWidgetItem, QWidget, QLabel, QHBoxLayout, QFrame
 from aspen.core.qt.singleton_main_window import SingletonMainWindow
 from aspen.core.qt import ui_loader
-from . import api
-from aspen.blender.common.results_log import ui
-
+import logging
 
 class AssetValidationHelpWindow(SingletonMainWindow):
     def __init__(self, parent=None):
@@ -19,23 +16,29 @@ class AssetValidationHelpWindow(SingletonMainWindow):
 
         self.move(0, 0)
 
-def test_all_objects_in_collection(context):
+def test_objects_in_collection(context):
+    # Manually retrieve logger reference in each function or should each module should hold a global logger reference?
+    """ This tests whether all objects in the scene have been placed into custom collections.
+    Args:
+        context (bpy.context): The Blender context.
+    """
+    logger = logging.getLogger("aspen")
     bad_collection = False
     for obj in bpy.data.objects:
-        # scene.collection is the default collection. therefore, if obj belongs to this, it isn't in a user collection.
-        if context.scene.collection in obj.users_collection:
+        if context.scene.collection in obj.users_collection: # scene.collection is the default collection.
             bad_collection = True
-            ui.print_log(f"{obj.name} found in default collection!", "warning")
+            logger.warning(f"{obj.name} found in default collection!")
 
     if bad_collection:
-        ui.print_log("All meshes/objects should be placed in a collection.", "info")
+        logger.warning("All meshes/objects should be placed in a collection.")
     else:
-        ui.print_log("All meshes were found in collections, collection test passed.", "info")
+        logger.info("All meshes were found in collections, collection test passed.")
 
 def test_all_objects_vertex_count(context):
     # Code is from depsgraph example in python documentation.
     # To see original code + explanation, see https://docs.blender.org/api/current/bpy.types.Depsgraph.html
-    # TO-DO THIS DOESN'T WORK YET I JUST TYPED IT
+    # TODO: THIS DOESN'T WORK YET I JUST TYPED IT
+    logger = logging.getLogger("aspen")
     for obj in bpy.data.objects:
         if obj is None or obj.type != 'MESH':
             continue

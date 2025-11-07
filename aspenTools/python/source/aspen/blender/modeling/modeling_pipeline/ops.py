@@ -14,7 +14,7 @@ class MODELINGPIPELINE_OT_asset_validation_start(bpy.types.Operator):
 
     @trace.trace_blender_operator()
     def execute(self, context):
-        ui.test_all_objects_in_collection(context)
+        ui.test_objects_in_collection(context)
         result_log_ui.show_result_log_window()
         return {"FINISHED"}
 
