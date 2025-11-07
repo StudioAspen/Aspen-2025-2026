@@ -9,7 +9,6 @@ from . import RESULT_LOG_BL_IDNAME
 
 from aspen.core.telemetry import trace
 
-
 class COMMONPIPELINE_OT_exportmanager(bpy.types.Operator):
     """An operator used to export directly into the unity project."""
     bl_idname = EXPORT_MANAGER_BL_IDNAME

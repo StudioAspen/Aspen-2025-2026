@@ -1,8 +1,22 @@
-import bpy
-from .api import ResultLogMainWindow
+import logging
+from .api import ResultLogMainWindow, ResultLogHandler
 
 # Declared it here so that we could have a persistent window in a Blender session.
 g_ResultLogMainWindow = ResultLogMainWindow()
+
+# Creating a handler & formatter for the aspen logger. I declared it here b/c I wanted to pass
+# in the window defined in this file, but I'm not sure if there's a better practice.
+aspenLogger = logging.getLogger("aspen")
+
+# TODO: I'd like to create a handler/formatter for DEBUG that would also print filename and other helpful information.
+handler = ResultLogHandler(g_ResultLogMainWindow)
+handler.setLevel(logging.INFO)
+handler.set_name("ResultLogHandler")
+
+formatter = logging.Formatter('%(asctime)s - %(message)s')
+handler.setFormatter(formatter)
+
+aspenLogger.addHandler(handler)
 
 def show_result_log_window():
     """ This makes the window show itself. """
@@ -10,13 +24,4 @@ def show_result_log_window():
 
 def test_result_log_window():
     """ Test function to see if the flags are working. """
-    g_ResultLogMainWindow.test_print_flags()
-
-def print_log(text, flag="info"):
-    """ Prints a log to the window. This is the main function any modules will be calling to display results on the window.
-
-    Args:
-        text (str): The text to display.
-        flag (str, optional): Will determine the color of a box displayed in the log.
-    """
-    g_ResultLogMainWindow.print_log(text, flag)
+    g_ResultLogMainWindow.test_print_log_levels()
