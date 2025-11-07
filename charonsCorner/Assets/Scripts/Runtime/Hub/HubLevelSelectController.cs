@@ -10,9 +10,9 @@ using Cysharp.Threading.Tasks;
 /// </summary>
 public class HubLevelSelectController : MonoBehaviour
 {
-    public event Action OnLevelSelectOpen;
+    public event Action<LevelDataSO> OnLevelSelectOpen;
     public event Action OnLevelSelectClose;
-    public event Action<LevelDataSO> OnLevelStarted;
+    public event Action OnLevelStarted;
 
     //Editor references
     [Header("References")]
@@ -31,7 +31,7 @@ public class HubLevelSelectController : MonoBehaviour
 
         _currentLevelData = data;
         _isOpen = true;
-        OnLevelSelectOpen?.Invoke();
+        OnLevelSelectOpen?.Invoke(_currentLevelData);
 
     }
 
@@ -62,7 +62,7 @@ public class HubLevelSelectController : MonoBehaviour
         }
 
         Debug.Log($"[HubLevelSelectController] Starting level: {_currentLevelData.LevelScene}");
-        OnLevelStarted?.Invoke(_currentLevelData);
+        OnLevelStarted?.Invoke();
 
         //Open level scene
         GameManager.Instance.SwitchScenes(_currentLevelData.LevelScene, GameState.Gameplay).Forget();
