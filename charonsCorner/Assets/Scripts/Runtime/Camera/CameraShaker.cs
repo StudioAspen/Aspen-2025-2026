@@ -4,6 +4,10 @@ using UnityEngine;
 
 namespace CharonsCorner.Runtime
 {
+    /// <summary>
+    /// Handles all camera shaking for Cinemachine cameras.
+    /// Shake still persists even when switching cameras.
+    /// </summary>
     public class CameraShaker
     {
         private CameraManager _cameraManager;
@@ -30,14 +34,14 @@ namespace CharonsCorner.Runtime
         /// <param name="duration">How long will the camera be shaking.</param>
         public void ShakeCamera(float amplitude, float frequency, float duration)
         {
-            if(_cameraManager.CurrentCamera == null)
+            if (_cameraManager.CurrentCamera == null)
             {
                 Debug.LogWarning("Current camera is not set. Cannot shake camera.");
                 return;
             }
 
             _cinemachineBasicMultiChannelPerlin = _cameraManager.CurrentCamera.GetComponent<CinemachineBasicMultiChannelPerlin>();
-            if(_cinemachineBasicMultiChannelPerlin == null )
+            if (_cinemachineBasicMultiChannelPerlin == null)
             {
                 Debug.LogWarning("CinemachineBasicMultiChannelPerlin component not found on the current camera. Cannot shake camera.");
                 return;
@@ -97,6 +101,10 @@ namespace CharonsCorner.Runtime
             }
         }
 
+        /// <summary>
+        /// Properly handles the destroy lifecycle of this class.
+        /// Unsub listeners from any actions here.
+        /// </summary>
         public void Dispose()
         {
             _cameraManager.OnActiveCameraChanged -= CameraManager_OnActiveCameraChanged;
