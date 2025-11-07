@@ -14,10 +14,10 @@ namespace CharonsCorner.Runtime
         [SerializeField] private SphereCollider _sphereCollider;
 
         [Header("Movement Attributes")]
-        [SerializeField] private float _turnResponsiveness = 1f;
-        [SerializeField] private float _maxSpeed = 25f;
-        [SerializeField] private float _acceleration = 1f;
-        [SerializeField] private float _dampening = 1f;
+        [SerializeField] private float _turnResponsiveness = 2f;
+        [SerializeField] private float _maxSpeed = 10f;
+        [SerializeField] private float _acceleration = 2f;
+        [SerializeField] private float _dampening = 0.25f;
 
         private void Awake()
         {
