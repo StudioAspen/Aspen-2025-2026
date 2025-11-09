@@ -15,12 +15,12 @@ namespace CharonsCorner.Runtime
 
         private protected override void OnEnter()
         {
-            
+            InputManager.Instance.Drift += Drift;
         }
 
         private protected override void OnExit()
         {
-           
+            InputManager.Instance.Drift -= Drift;
         }
 
         private protected override void OnUpdate()
@@ -36,10 +36,16 @@ namespace CharonsCorner.Runtime
         {
             if (!_context.IsGrounded)
             {
-                return _context.AirState;
+                return _context.AirSuperState;
             }
             
             return null;
+        }
+
+        private void Drift(bool drift)
+        {
+            if(drift)
+                _context.StateMachine.ChangeState(_context.DriftSuperState);
         }
     }
 }

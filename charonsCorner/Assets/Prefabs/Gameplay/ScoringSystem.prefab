@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &9208571362556197270
+--- !u!1 &1945948373152065499
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,22 +8,22 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 3756005345305955995}
-  - component: {fileID: 4167820225445932876}
+  - component: {fileID: 225853062369612030}
+  - component: {fileID: 8198000444298903716}
   m_Layer: 0
-  m_Name: GameManager
+  m_Name: ScoringSystem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &3756005345305955995
+--- !u!4 &225853062369612030
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9208571362556197270}
+  m_GameObject: {fileID: 1945948373152065499}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -32,25 +32,16 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4167820225445932876
+--- !u!114 &8198000444298903716
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9208571362556197270}
+  m_GameObject: {fileID: 1945948373152065499}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 63f771e987e8b434faae2607a2143231, type: 3}
+  m_Script: {fileID: 11500000, guid: 151401e88959ce1419e3799b5afaa428, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <CurrentGameState>k__BackingField: 0
-  _titleScene:
-    asset: {fileID: 102900000, guid: 22207101db9630a44a1f850b484d41e6, type: 3}
-    guid: 22207101db9630a44a1f850b484d41e6
-  _hubScene:
-    asset: {fileID: 102900000, guid: f292c9f839323664daf80894068f7cb7, type: 3}
-    guid: f292c9f839323664daf80894068f7cb7
-  _tutorialScene:
-    asset: {fileID: 102900000, guid: fbf3b8c1fc7f3425bbee3ee3f69262c0, type: 3}
-    guid: fbf3b8c1fc7f3425bbee3ee3f69262c0
+  _rankData: {fileID: 11400000, guid: d5df63606c8082449a86a4b21d639831, type: 2}
