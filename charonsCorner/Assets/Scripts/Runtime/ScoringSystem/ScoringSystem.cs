@@ -45,14 +45,14 @@ namespace CharonsCorner.Runtime
                 var criteria = _rankData.Criteria[i];
                 int playerScore = _score;
 
-                if (_levelTimer <= criteria.maxTimeSeconds)
+                if (_levelTimer <= criteria.MaxTimeSeconds)
                 {
-                    playerScore += criteria.timeBonusPoints;
+                    playerScore += criteria.TimeBonusPoints;
                 }
 
-                if (_score >= criteria.requiredPoints)
+                if (_score >= criteria.RequiredPoints)
                 {
-                    return criteria.rank;
+                    return criteria.Rank;
                 }
             }
 

@@ -7,43 +7,43 @@ namespace CharonsCorner.Runtime
     public class DriftBoostState : State<GameplayPlayerController>
     {
         [Header("Drift Direction")]
-        [SerializeField] private Transform driftDirection;
+        [SerializeField] private Transform _driftDirection;
 
-        [SerializeField] private float boostAmount;
+        [SerializeField] private float _boostAmount = 50f;
         
         [Header("Camera FOV")]
-        [SerializeField] private float baseFOV = 40;
-        [SerializeField] private float fovSpeed = 5;
+        [SerializeField] private float _baseFOV = 75f;
+        [SerializeField] private float _fovSpeed = 10f;
         
         [Header("Time Scale")]
-        [SerializeField] private float timeScaleSpeed = 20;
+        [SerializeField] private float _timeScaleSpeed = 20f;
         
-        [SerializeField] private float stateDuration = 1f;
+        [SerializeField] private float _stateDuration = 0.4f;
         public bool IsComplete { get; private set; }
-        private float timer;
+        private float _timer;
 
         private protected override void OnEnter()
         {
-            timer = 0f;
+            _timer = 0f;
             _context.CurrentSubState = GetType().Name;
-            _context.Rb.AddForce(driftDirection.forward * boostAmount, ForceMode.VelocityChange);
+            _context.Rb.AddForce(_driftDirection.forward * _boostAmount, ForceMode.VelocityChange);
         }
 
         private protected override void OnExit()
         {
-            driftDirection.localEulerAngles = Vector3.zero;
-            driftDirection.gameObject.SetActive(false);
-            _context.PlayerCamera.Lens.FieldOfView = baseFOV;
+            _driftDirection.localEulerAngles = Vector3.zero;
+            _driftDirection.gameObject.SetActive(false);
+            _context.PlayerCamera.Lens.FieldOfView = _baseFOV;
             Time.timeScale = 1;
             IsComplete = false;
         }
 
         private protected override void OnUpdate()
         {
-            _context.PlayerCamera.Lens.FieldOfView = Mathf.Lerp(_context.PlayerCamera.Lens.FieldOfView, baseFOV, fovSpeed * Time.unscaledDeltaTime);
-            Time.timeScale = Mathf.Lerp(Time.timeScale, 1, timeScaleSpeed * Time.unscaledDeltaTime);
-            timer += Time.unscaledDeltaTime;
-            IsComplete = timer >= stateDuration;
+            _context.PlayerCamera.Lens.FieldOfView = Mathf.Lerp(_context.PlayerCamera.Lens.FieldOfView, _baseFOV, _fovSpeed * Time.unscaledDeltaTime);
+            Time.timeScale = Mathf.Lerp(Time.timeScale, 1, _timeScaleSpeed * Time.unscaledDeltaTime);
+            _timer += Time.unscaledDeltaTime;
+            IsComplete = _timer >= _stateDuration;
         }
 
         private protected override void OnFixedUpdate()

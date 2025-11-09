@@ -7,43 +7,42 @@ namespace CharonsCorner.Runtime
     public class DriftingChargeState : State<GameplayPlayerController>
     {
         [Header("Drift Direction")]
-        [SerializeField] private Transform driftDirection;
-        [SerializeField] private float driftDirectionSpeed = 5;
+        [SerializeField] private Transform _driftDirection;
+        [SerializeField] private float _driftDirectionSpeed = 200;
         
         [Header("Camera FOV")]
-        [SerializeField] private float driftDesiredFOV = 40;
-        [SerializeField] private float fovSpeed = 5;
+        [SerializeField] private float _driftDesiredFOV = 40;
+        [SerializeField] private float _fovSpeed = 5;
         
         [Header("Time Scale")]
-        [SerializeField] private float desiredTimeScale = 0.1f;
-        [SerializeField] private float timeScaleSpeed = 30;
+        [SerializeField] private float _desiredTimeScale = 1f;
+        [SerializeField] private float _timeScaleSpeed = 30f;
         
-        [SerializeField] private float stateDuration = 0.25f;
-        private float timer;
+        [SerializeField] private float _stateDuration = 0.5f;
+        private float _timer;
 
         private protected override void OnEnter()
         {
-            driftDirection.gameObject.SetActive(true);
-            timer = 0;
+            _driftDirection.gameObject.SetActive(true);
+            _timer = 0;
             _context.CurrentSubState = GetType().Name;
             InputManager.Instance.Drift += Drift;
         }
 
-
         private protected override void OnExit()
         {
-            Time.timeScale = desiredTimeScale;
+            Time.timeScale = _desiredTimeScale;
             InputManager.Instance.Drift -= Drift;
         }
 
         private protected override void OnUpdate()
         {
-            _context.PlayerCamera.Lens.FieldOfView = Mathf.Lerp(_context.PlayerCamera.Lens.FieldOfView, driftDesiredFOV, fovSpeed * Time.unscaledDeltaTime);
+            _context.PlayerCamera.Lens.FieldOfView = Mathf.Lerp(_context.PlayerCamera.Lens.FieldOfView, _driftDesiredFOV, _fovSpeed * Time.unscaledDeltaTime);
             
-            driftDirection.Rotate(InputManager.Instance.MoveDirection.x * driftDirectionSpeed * Time.unscaledDeltaTime * Vector3.up);
+            _driftDirection.Rotate(InputManager.Instance.MoveDirection.x * _driftDirectionSpeed * Time.unscaledDeltaTime * Vector3.up);
             
-            timer += Time.unscaledDeltaTime;
-            Time.timeScale = Mathf.Lerp(Time.timeScale, desiredTimeScale, timeScaleSpeed * Time.unscaledDeltaTime);
+            _timer += Time.unscaledDeltaTime;
+            Time.timeScale = Mathf.Lerp(Time.timeScale, _desiredTimeScale, _timeScaleSpeed * Time.unscaledDeltaTime);
         }
 
         private protected override void OnFixedUpdate()
@@ -61,7 +60,7 @@ namespace CharonsCorner.Runtime
 
         private protected override State<GameplayPlayerController> GetTransition()
         {
-            if (timer >= stateDuration)
+            if (_timer >= _stateDuration)
                 return _context.DriftSuperState.DriftingBoostState;
             return null;
         }

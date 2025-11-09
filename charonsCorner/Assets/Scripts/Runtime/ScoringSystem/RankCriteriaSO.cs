@@ -22,16 +22,16 @@ namespace CharonsCorner.Runtime
         [System.Serializable]
         public struct RankCriteria
         {
-            public Rank rank;
+            public Rank Rank;
 
             [Tooltip("Complete in <= this many seconds")]
-            public float maxTimeSeconds;
+            public float MaxTimeSeconds;
 
             [Tooltip("Points given when completing in time")]
-            public int timeBonusPoints;
+            public int TimeBonusPoints;
 
             [Tooltip("Points required to earn this rank")]
-            public int requiredPoints;
+            public int RequiredPoints;
         }
     }
 }
