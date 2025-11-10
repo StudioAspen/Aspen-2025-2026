@@ -3188,55 +3188,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2840686889424515437, guid: ba22f151742b53c48bf0b2d9fea9aab1, type: 3}
   m_PrefabInstance: {fileID: 336615173}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &337011787
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 337011788}
-  - component: {fileID: 337011789}
-  m_Layer: 0
-  m_Name: RevealController
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &337011788
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 337011787}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 504179852}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &337011789
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 337011787}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62410d21ef956bf469379f75408fbb81, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  revealMaterial: {fileID: 2100000, guid: 710f1f9537d96584c83332da608874e8, type: 2}
-  revealField: {fileID: 504179852}
-  revealRadius: 8.01
-  fadeWidth: 4.78
-  proximityEnabled: 1
 --- !u!1001 &340127999
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4452,7 +4403,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1047138265}
-  - {fileID: 337011788}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!135 &504179853
@@ -4492,6 +4442,11 @@ MonoBehaviour:
   MoveDistance: 10
   speed: 10
   SplinePath: {fileID: 119522286}
+  revealMaterial: {fileID: 2100000, guid: 710f1f9537d96584c83332da608874e8, type: 2}
+  revealField: {fileID: 504179852}
+  revealRadius: 8
+  fadeWidth: 5
+  proximityEnabled: 1
 --- !u!1001 &510927836
 PrefabInstance:
   m_ObjectHideFlags: 0
