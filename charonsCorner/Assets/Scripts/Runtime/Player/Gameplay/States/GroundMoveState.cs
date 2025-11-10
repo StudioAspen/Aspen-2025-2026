@@ -15,7 +15,7 @@ namespace CharonsCorner.Runtime
         
         private protected override void OnEnter()
         {
-            
+            _context.CurrentSubState = GetType().Name;
         }
 
         private protected override void OnExit()
