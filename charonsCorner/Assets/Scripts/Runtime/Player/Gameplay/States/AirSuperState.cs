@@ -25,7 +25,7 @@ namespace CharonsCorner.Runtime
 
         private protected override void OnUpdate()
         {
-            _context.CurrentSubState = MoveState.GetType().Name;
+            
         }
 
         private protected override void OnFixedUpdate()
@@ -37,7 +37,7 @@ namespace CharonsCorner.Runtime
         {
             if (_context.IsGrounded)
             {
-                return _context.GroundState;
+                return _context.GroundSuperState;
             }
             
             return null;
