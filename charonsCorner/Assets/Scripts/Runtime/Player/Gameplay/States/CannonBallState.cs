@@ -213,6 +213,9 @@ namespace CharonsCorner.Runtime
         //Calculates Projectile Motion Arc:
         private void ApplyCannonLaunch(float deltaTime)
         {
+            //Enable Rb Physics:
+            if (_context.Rb.isKinematic) _context.Rb.isKinematic = false;
+            
             _launchTimer += deltaTime * _currentCannon.shotPower;
             float time = _launchTimer;
 
@@ -240,14 +243,17 @@ namespace CharonsCorner.Runtime
             _context.transform.rotation = Quaternion.LookRotation(launchDir, Vector3.up);
      
             float verticalVelocity = initialVelocity.y + _currentCannon.acceleration * time;
+
+            // Set the velocity for physics to continue the arc
+            _targetVelocity = initialVelocity;
+            _targetVelocity.y = verticalVelocity;
+            
             //If We Are Past The Peak of Ark:
             if (verticalVelocity <= 0f)
-            {
-                //Enable Rb Physics:
-                if (_context.Rb.isKinematic) _context.Rb.isKinematic = false;
-
+            { 
                 //Variable to Change State:
                 if (_context.IsGrounded) _launchCompleted = true;
+                return; // Stop manually setting position
             }
         }
 
