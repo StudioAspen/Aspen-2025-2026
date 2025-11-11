@@ -22,6 +22,7 @@ namespace CharonsCorner.Runtime
 
                 _context.CannonAir = false;
             }
+            _context.CurrentSubState = GetType().Name;
         }
 
         private protected override void OnExit()

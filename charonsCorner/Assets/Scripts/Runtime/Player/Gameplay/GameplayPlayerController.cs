@@ -1,4 +1,5 @@
 using System;
+using Unity.Cinemachine;
 using UnityEditor;
 using UnityEngine;
 
@@ -8,13 +9,16 @@ namespace CharonsCorner.Runtime
     public class GameplayPlayerController : MonoBehaviour
     {
         [SerializeField] private float _gravityAmount = 30f;
-        
+
         [Header("Ground Check")]
         [SerializeField] private float _groundCheckLength = 0.5f;
 
         [SerializeField] private LayerMask _groundLayer;
         
         [field: SerializeField] public Transform Orientation { get; private set; }
+        
+        [field: SerializeField] public CinemachineCamera PlayerCamera { get; private set; }
+
 
         public Rigidbody Rb { get; private set; }
         public SphereCollider Collider { get; private set; }
@@ -32,6 +36,13 @@ namespace CharonsCorner.Runtime
         [field: SerializeField] public CannonBallSuperState CannonState { get; private set; } = new();
 
         [NonSerialized] public String CurrentSubState;
+        [field: SerializeField] public GroundSuperState GroundSuperState { get; private set; } = new();
+        [field: SerializeField] public AirSuperState AirSuperState { get; private set; } = new();
+        
+        [field: SerializeField] public DriftSuperState DriftSuperState { get; private set; } = new();
+
+        
+        [HideInInspector] public String CurrentSubState;
         #endregion
 
         private void Awake()
@@ -78,6 +89,11 @@ namespace CharonsCorner.Runtime
             CannonState.Init(StateMachine, this);
 
             StateMachine.ChangeState(GroundState, true);
+            GroundSuperState.Init(StateMachine, this);
+            AirSuperState.Init(StateMachine, this);
+            DriftSuperState.Init(StateMachine, this);
+            
+            StateMachine.ChangeState(GroundSuperState, true);
         }
 
         private void OnDrawGizmos()
