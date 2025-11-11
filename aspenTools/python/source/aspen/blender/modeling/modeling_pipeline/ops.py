@@ -14,6 +14,7 @@ class MODELINGPIPELINE_OT_asset_validation_start(bpy.types.Operator):
 
     @trace.trace_blender_operator()
     def execute(self, context):
+        ui.print_start()
         ui.test_objects_in_collection(context)
         ui.test_asset_vertex_count(context)
         ui.test_object_default_names()

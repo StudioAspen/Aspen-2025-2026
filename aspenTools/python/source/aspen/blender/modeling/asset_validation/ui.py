@@ -20,6 +20,10 @@ class AssetValidationHelpWindow(SingletonMainWindow):
 # Manually retrieve logger reference in each function or should each module should hold a global logger reference?
 logger = logging.getLogger("aspen")
 
+def print_start():
+    """ This is intended to help distinguish between different runs of this tool."""
+    logger.info("Starting tests:")
+
 def test_objects_in_collection(context):
     """ This tests whether all objects in the scene have been placed into custom collections.
     Args:
