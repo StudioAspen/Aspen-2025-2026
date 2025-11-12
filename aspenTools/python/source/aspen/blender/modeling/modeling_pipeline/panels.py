@@ -1,5 +1,6 @@
 
 import bpy
+from . import ASSET_VALIDATION_BL_IDNAME
 
 class ASPENMODELING_PT_panel(bpy.types.Panel):
     bl_label = 'Aspen Modeling'
@@ -9,9 +10,7 @@ class ASPENMODELING_PT_panel(bpy.types.Panel):
     bl_category = 'Aspen'
     bl_options = {'DEFAULT_CLOSED'}
 
-    def draw(self, context):
+    def draw(self):
         layout = self.layout
 
-        row = layout.row()
-        layout.operator("modeling_pipeline.asset_validation_start")
-        layout.operator("modeling_pipeline.asset_validation_help")
+        layout.operator(ASSET_VALIDATION_BL_IDNAME)

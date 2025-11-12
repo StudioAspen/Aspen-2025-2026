@@ -24,7 +24,7 @@ def print_start():
     """ This is intended to help distinguish between different runs of this tool."""
     logger.info("Starting tests:")
 
-def test_objects_in_collection(context):
+def test_objects_in_collection(context: bpy.types.Context):
     """ This tests whether all objects in the scene have been placed into custom collections.
     Args:
         context (bpy.context): The Blender context.
@@ -40,7 +40,7 @@ def test_objects_in_collection(context):
     else:
         logger.info("All meshes were found in collections, collection test passed.")
 
-def test_asset_vertex_count(context):
+def test_asset_vertex_count(context: bpy.types.Context):
     """ This tests if the asset meets target vertex counts.
     Args:
         context (bpy.context): The Blender context.

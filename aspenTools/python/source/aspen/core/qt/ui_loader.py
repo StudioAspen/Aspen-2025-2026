@@ -44,7 +44,7 @@ class UIFileLoader(QtUiTools.QUiLoader):
         return widget
 
 
-def load_ui(ui_file : str, base_instance: Optional[QtWidgets.QWidget] = None, custom_widget_class = None):
+def load_ui(ui_file : str, base_instance: Optional[QtWidgets.QWidget] = None, custom_widget_class: QtWidgets.QWidget = None):
     """ Create a loader to load a UI file into a existing widget.
 
     Args:

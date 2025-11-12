@@ -2,6 +2,7 @@ import logging
 from .api import ResultLogMainWindow, ResultLogHandler
 
 # Declared it here so that we could have a persistent window in a Blender session.
+# Possible error with script reloading... see suggestion from coderabbit on PR
 g_ResultLogMainWindow = ResultLogMainWindow()
 
 # Creating a handler & formatter for the aspen logger. I declared it here b/c I wanted to pass

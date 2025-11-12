@@ -12,7 +12,7 @@ default_patterns = [
     r"^Suzanne(\.\d+)?$",
 ]
 
-def is_default_name(name):
+def is_default_name(name: str):
     """Check if a string matches a Blender default object pattern.
     Args:
         name (str): String to check.
