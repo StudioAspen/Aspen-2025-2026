@@ -11,67 +11,62 @@ namespace CharonsCorner.Runtime
     public class TileBoolean : MonoBehaviour
     {
         [Header("Tile Settings")]
-        public bool isCorrectTile; // Bool for swapping between correct and wrong tiles
+        [field: SerializeField] public bool IsCorrectTile { get; private set; }
 
         [Header("Light Settings")]
-        [SerializeField] private Light tileLight; // Light associated with this tile
-        [SerializeField] private float lightOnIntensity = 2f; // Intensity when the light is on
-        [SerializeField] private float lightOffIntensity = 0f; // Intensity when the light is off
-        [SerializeField] private float lightFadeDuration = 0.5f; // Duration for light fade in/out
+        [SerializeField] private Light _tileLight; 
+        [SerializeField] private float _lightOnIntensity = 2f; 
+        [SerializeField] private float _lightOffIntensity = 0f;
+        [SerializeField] private float _lightFadeDuration = 0.5f; 
 
-        // Event triggered when the player steps on a wrong tile
+        
         public static event Action OnWrongTileStepped;
 
         private void Awake()
         {
-            if (tileLight == null)
-                tileLight = GetComponentInChildren<Light>();
+            if (_tileLight == null)
+                _tileLight = GetComponentInChildren<Light>();
 
-            // Ensure the light starts off
-            if (tileLight != null)
-                tileLight.intensity = lightOffIntensity;
+           
+            if (_tileLight != null) // Ensure the light starts off
+                _tileLight.intensity = _lightOffIntensity;
         }
 
         public void SetLightState(bool isOn)
         {
-            if (tileLight != null)
+            if (_tileLight != null)
             {
-                float targetIntensity = isOn ? lightOnIntensity : lightOffIntensity;
+                float targetIntensity = isOn ? _lightOnIntensity : _lightOffIntensity;
                 StopAllCoroutines(); // Stop any ongoing fade coroutine
-                StartCoroutine(FadeLight(targetIntensity, lightFadeDuration));
+                StartCoroutine(FadeLightCoroutine(targetIntensity, _lightFadeDuration));
             }
         }
 
-        private System.Collections.IEnumerator FadeLight(float targetIntensity, float duration)
+        private System.Collections.IEnumerator FadeLightCoroutine(float targetIntensity, float duration)
         {
-            if (tileLight == null)
+            if (_tileLight == null)
                 yield break;
 
-            float startIntensity = tileLight.intensity;
+            float startIntensity = _tileLight.intensity;
             float elapsed = 0f;
 
             while (elapsed < duration)
             {
                 elapsed += Time.deltaTime;
-                tileLight.intensity = Mathf.Lerp(startIntensity, targetIntensity, elapsed / duration);
+                _tileLight.intensity = Mathf.Lerp(startIntensity, targetIntensity, elapsed / duration);
                 yield return null;
             }
 
-            tileLight.intensity = targetIntensity;
+            _tileLight.intensity = targetIntensity;
         }
 
         private void OnCollisionEnter(Collision collision)
         {
             if (collision.gameObject.TryGetComponent(out GameplayPlayerController player))
             {
-                if (isCorrectTile)
+                if (!IsCorrectTile)
                 {
-                    Debug.Log("Player stepped on the correct tile.");
-                }
-                else
-                {
-                    Debug.Log("Player stepped on the wrong tile!");
-                    OnWrongTileStepped?.Invoke(); // Trigger the centralized event
+                    OnWrongTileStepped?.Invoke();
                 }
             }
         }
