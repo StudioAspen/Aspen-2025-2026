@@ -81,7 +81,6 @@ namespace CharonsCorner.Runtime
             // Check if reached current point and switch to next/previous waypoint
             if (Vector3.Distance(transform.position, _pathPositions[_currentPointIndex]) < 0.01f)
             {
-                Debug.Log("Reached point " + _currentPointIndex);
                 if (_currentPointIndex + 1 < _pathPoints.Count && !_rubberBanding)
                 {
                     _currentPointIndex++; // Move to the next point   
