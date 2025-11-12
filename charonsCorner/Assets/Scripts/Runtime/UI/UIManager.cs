@@ -8,6 +8,11 @@ using static CharonsCorner.Runtime.InputManager;
 
 namespace CharonsCorner.Runtime
 {
+    /// <summary>
+    /// The UIManager is a singleton that controls persistent UI like the pause and settings menu.
+    /// Gameplay specific UI has not been developed, so this class needs some work.
+    /// Right now, gameplay specific UI can live inside scenes and have no need to be persistent.
+    /// </summary>
     public class UIManager : Singleton<UIManager>
     {
         [field: SerializeField, ReadOnly] public GameObject DesiredSelectedObject { get; private set; }
@@ -128,7 +133,7 @@ namespace CharonsCorner.Runtime
         {
             SetCurrentSelectedObject();
         }
-
+        
         /// <summary>
         /// Helper method to change the contents of the confirm panel.
         /// </summary>
