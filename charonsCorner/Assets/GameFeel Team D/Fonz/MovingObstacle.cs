@@ -40,10 +40,10 @@ namespace CharonsCorner.Runtime
         [Tooltip("Type of movement interpolation")]
         [SerializeField] private MovementType _movementType = MovementType.Lerping;
         [Tooltip("Smoothing time for SmoothDamp movement type")]
-        [SerializeField] private float smoothTime = 0.3f; // Adjust this value to control smoothing strength
+        [SerializeField] private float _smoothTime = 0.3f; // Adjust this value to control smoothing strength
         [Tooltip("Should the obstacle face towards its movement direction?")]
         [SerializeField] private bool _faceTowards = true;
-        private Vector3 smoothDampVelocity = Vector3.zero;
+        private Vector3 _smoothDampVelocity = Vector3.zero;
 
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
@@ -126,7 +126,7 @@ namespace CharonsCorner.Runtime
             }
             else if (_movementType == MovementType.SmoothDamp)
             {
-                transform.position = Vector3.SmoothDamp(transform.position, _pathPositions[_currentPointIndex], ref smoothDampVelocity, smoothTime, _speed);
+                transform.position = Vector3.SmoothDamp(transform.position, _pathPositions[_currentPointIndex], ref _smoothDampVelocity, _smoothTime, _speed);
             }
         }
 
