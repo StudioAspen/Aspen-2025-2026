@@ -14,6 +14,22 @@ LOG_LEVEL_COLOR_DICT = {
     logging.ERROR: "#e53935"  # Red
 }
 
+class LogEntry(QWidget):
+    def __init__(self, text: str, color: str):
+        super().__init__()
+
+        layout = QHBoxLayout(self)
+
+        log_level_box = QFrame()
+        log_level_box.setFixedSize(10, 10)
+        log_level_box.setStyleSheet(f"background-color: {color}; border-radius: 2px;")
+
+        log_text_label = QLabel(text)
+        log_text_label.setWordWrap(True)
+
+        layout.addWidget(log_level_box)
+        layout.addWidget(log_text_label)
+
 class ConsoleArea(QListWidget):
 
     def __init__(self, parent=None):
@@ -40,22 +56,6 @@ class ConsoleArea(QListWidget):
 
         self.scrollToBottom()
 
-
-class LogEntry(QWidget):
-    def __init__(self, text: str, color: str):
-        super().__init__()
-        layout = QHBoxLayout(self)
-
-        log_level_box = QFrame()
-        log_level_box.setFixedSize(10, 10)
-        log_level_box.setStyleSheet(f"background-color: {color}; border-radius: 2px;")
-
-        log_text_label = QLabel(text)
-        log_text_label.setWordWrap(True)
-
-        layout.addWidget(log_level_box)
-        layout.addWidget(log_text_label)
-
 class ResultLogMainWindow(SingletonMainWindow):
     def __init__(self, parent=None):
         super().__init__(parent=parent)
@@ -66,6 +66,7 @@ class ResultLogMainWindow(SingletonMainWindow):
             ConsoleArea
         )
 
+        # consoleList is the name of the ConsoleArea widget defined in the .ui file, not defined here so will have warning.
         self.move(0, 0)
         self.consoleList.add_log("Welcome to the Aspen result log! Results of any tool operations will be printed here.", logging.DEBUG)
 
@@ -91,7 +92,6 @@ class ResultLogMainWindow(SingletonMainWindow):
         for i in range(105):
             self.consoleList.add_log(f"Log {i}")
 
-# Derived class of logging module's handler so that we can override emit() and connect it to our functions.
 class ResultLogHandler(logging.Handler):
     def __init__(self, window: ResultLogMainWindow, level: int = logging.NOTSET):
         logging.Handler.__init__(self, level)

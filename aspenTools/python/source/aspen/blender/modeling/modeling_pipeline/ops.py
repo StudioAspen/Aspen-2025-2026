@@ -16,7 +16,7 @@ class MODELINGPIPELINE_OT_asset_validation(bpy.types.Operator):
 
     @trace.trace_blender_operator()
     def execute(self, context: bpy.types.Context):
-        """ Execute model review tests and display the results in Result Log. """
+        """ Execute model review tests and show the results in Result Log. """
         api.check_objects_in_collection(context)
         api.check_asset_vertex_count(context)
         api.check_object_default_names()
@@ -31,7 +31,7 @@ class MODELINGPIPELINE_OT_asset_validation_help(bpy.types.Operator):
     bl_options = {'REGISTER'}
 
     @trace.trace_blender_operator()
-    def execute(self):
+    def execute(self, context: bpy.types.Context):
         """" Show the help window """
         ui.AssetValidationHelpWindow().show()
         return flags.FINISHED_REPORT_FLAG

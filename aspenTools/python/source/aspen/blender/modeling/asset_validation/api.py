@@ -1,6 +1,7 @@
 import re
 import logging
 import bpy
+from aspen.blender.core import flags
 
 # Regex list of default mesh name patterns Blender uses. Maybe add more?
 default_mesh_name_patterns = [
@@ -25,7 +26,7 @@ def is_default_blender_mesh_name(name: str):
 
 logger = logging.getLogger("aspen")
 
-def check_objects_in_collection(context: bpy.types.Context):
+def check_objects_in_collection(context: bpy.types.Context)-> bool:
     """ This tests whether all objects in the scene have been placed into custom collections.
     Args:
         context (bpy.context): The Blender context.
@@ -40,6 +41,8 @@ def check_objects_in_collection(context: bpy.types.Context):
         logger.warning("All meshes/objects should be placed in a collection.")
     else:
         logger.info("All meshes were found in collections, collection test passed.")
+
+    return bad_collection
 
 def check_asset_vertex_count(context: bpy.types.Context):
     """ This tests if the asset meets target vertex counts.
@@ -65,6 +68,8 @@ def check_asset_vertex_count(context: bpy.types.Context):
         logger.warning("Hey I think there's nothing in the scene :P")
     else:
         logger.info(f"Vertex test passed with {vertex_count} vertices.")
+        return True
+    return False
 
 def check_object_default_names():
     """ This checks all objects to see if they have the default Blender names. """
@@ -79,7 +84,9 @@ def check_object_default_names():
         for name in default_named_objects:
             list_str += name + "\n"
         logger.warning("Objects with default names found, rename please:\n" + list_str)
+        return False
     else:
         logger.info("Object name test passed.")
+        return True
 
 
