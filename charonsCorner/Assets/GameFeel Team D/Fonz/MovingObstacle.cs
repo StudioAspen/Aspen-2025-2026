@@ -1,7 +1,7 @@
-using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine;
 
-namespace Gamefeel.TeamD.Runtime
+namespace CharonsCorner.Runtime
 {
     /// <summary>
     /// Handles movement of an obstacle along a defined set of waypoints.
@@ -39,12 +39,22 @@ namespace Gamefeel.TeamD.Runtime
         [SerializeField] private float _speed = 2f;
         [Tooltip("Type of movement interpolation")]
         [SerializeField] private MovementType _movementType = MovementType.Lerping;
+        [Tooltip("Smoothing time for SmoothDamp movement type")]
+        [SerializeField] private float smoothTime = 0.3f; // Adjust this value to control smoothing strength
         [Tooltip("Should the obstacle face towards its movement direction?")]
         [SerializeField] private bool _faceTowards = true;
+        private Vector3 smoothDampVelocity = Vector3.zero;
 
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
         {
+            if (_pathPoints == null || _pathPoints.Count == 0)
+            {
+                Debug.LogError(this.name + " requires at least one path point to be assigned!");
+                enabled = false;
+                return;
+            }
+
             _startPoint = new GameObject("StartPoint");
             _startPoint.transform.parent = this.transform;
             _pathPoints.Insert(0, _startPoint.transform);
@@ -116,8 +126,7 @@ namespace Gamefeel.TeamD.Runtime
             }
             else if (_movementType == MovementType.SmoothDamp)
             {
-                Vector3 velocity = Vector3.zero;
-                transform.position = Vector3.SmoothDamp(transform.position, _pathPositions[_currentPointIndex], ref velocity, _speed * Time.deltaTime);
+                transform.position = Vector3.SmoothDamp(transform.position, _pathPositions[_currentPointIndex], ref smoothDampVelocity, smoothTime, _speed);
             }
         }
 
