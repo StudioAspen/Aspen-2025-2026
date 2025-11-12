@@ -1,112 +1,137 @@
 using UnityEngine;
 using System.Collections.Generic;
-using AYellowpaper.SerializedCollections.Editor.Data;
 
-public class MovingObstacle : MonoBehaviour
+namespace Gamefeel.TeamD.Runtime
 {
-    public enum MovementType
+    /// <summary>
+    /// Handles movement of an obstacle along a defined set of waypoints.
+    /// 
+    /// The obstacle moves between Transform points specified in the inspector, 
+    /// starting from its initial position. The movement pattern can be changed 
+    /// between Lerp, MoveTowards, or SmoothDamp for different movement feels.
+    /// 
+    /// Once it reaches the end of its path, it reverses direction (rubberbands) 
+    /// and moves back along the same path, looping indefinitely.
+    /// 
+    /// This script supports custom speed settings and optional facing 
+    /// towards the current movement direction.
+    /// </summary>
+
+    public class MovingObstacle : MonoBehaviour
     {
-        Lerping,
-        MovingTowards,
-        SmoothDamp
-    }
-
-    [Tooltip("Path Points for the Moving Obstacle")]
-    public List<Transform> pathPoints;
-    private List<Vector3> pathPositions = new List<Vector3>();
-    private int currentPointIndex = 1;
-    private bool rubberBanding = false;
-
-    private GameObject startPoint;
-
-    [Header("Movement Settings")]
-    public float speed = 2.0f;
-    public MovementType movementType = MovementType.Lerping;
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        startPoint = new GameObject("StartPoint");
-        pathPoints.Insert(0, startPoint.transform);
-        pathPoints[0].position = transform.position;
-
-        foreach (Transform point in pathPoints)
+        public enum MovementType
         {
-            pathPositions.Add(point.position);
-        }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        if (pathPositions.Count < 2) // need to have points to go to
-        {
-            Debug.LogWarning(this.name + " does not have path points assigned! Will not move.");
-            return;
+            Lerping,
+            MovingTowards,
+            SmoothDamp
         }
 
-        // Move towards the current point
-        DetermineMoveType();
+        [Tooltip("Path Points for the Moving Obstacle")]
+        [SerializeField] private List<Transform> _pathPoints; 
+        private List<Vector3> _pathPositions = new List<Vector3>();
+        private int _currentPointIndex = 1;
+        private bool _rubberBanding = false;
 
-        // Check if reached current point and switch to next/previous waypoint
-        if (Vector3.Distance(transform.position, pathPositions[currentPointIndex]) < 0.01f)
+        private GameObject _startPoint;
+
+        [Header("Movement Settings")]
+        [Tooltip("Speed of the Moving Obstacle")]
+        [SerializeField] private float _speed = 2f;
+        [Tooltip("Type of movement interpolation")]
+        [SerializeField] private MovementType _movementType = MovementType.Lerping;
+        [Tooltip("Should the obstacle face towards its movement direction?")]
+        [SerializeField] private bool _faceTowards = true;
+
+        // Start is called once before the first execution of Update after the MonoBehaviour is created
+        void Start()
         {
-            Debug.Log("Reached point " + currentPointIndex);
-            if (currentPointIndex+1 < pathPoints.Count && !rubberBanding)
-            {
-                currentPointIndex++; // Move to the next point   
-            }
-            else
-            {
-                rubberBanding = true;
-            }
+            _startPoint = new GameObject("StartPoint");
+            _startPoint.transform.parent = this.transform;
+            _pathPoints.Insert(0, _startPoint.transform);
+            _pathPoints[0].position = transform.position;
 
-            if (currentPointIndex-1>-1 && rubberBanding)
+            foreach (Transform point in _pathPoints)
             {
-                currentPointIndex--; // Move to the previous point
-            }
-            else
-            {
-                rubberBanding = false;
+                _pathPositions.Add(point.position);
             }
         }
-        FaceTowards();
-    }
 
-    private void OnDestroy()
-    {
-        if (startPoint != null)
+        // Update is called once per frame
+        void Update()
         {
-            Destroy(startPoint);
-        }
-    }
+            if (_pathPositions.Count < 2) // need to have points to go to
+            {
+                Debug.LogWarning(this.name + " does not have path points assigned! Will not move.");
+                return;
+            }
 
-    private void DetermineMoveType()
-    {
-        if (movementType == MovementType.Lerping)
-        {
-            transform.position = Vector3.Lerp(transform.position, pathPositions[currentPointIndex], Mathf.Clamp01(speed * Time.deltaTime));
-        }
-        else if (movementType == MovementType.MovingTowards)
-        {
-            transform.position = Vector3.MoveTowards(transform.position, pathPositions[currentPointIndex], speed * Time.deltaTime);
-        }
-        else if (movementType == MovementType.SmoothDamp)
-        {
-            Vector3 velocity = Vector3.zero;
-            transform.position = Vector3.SmoothDamp(transform.position, pathPositions[currentPointIndex], ref velocity, speed * Time.deltaTime);
-        }
-    }
+            // Move towards the current point
+            DetermineMoveType();
 
-    // Make the obstacle face towards the next point it is moving to
-    private void FaceTowards()
-    {
-        Vector3 direction = pathPositions[currentPointIndex] - transform.position;
-        if (direction != Vector3.zero)
-        {
-            Quaternion targetRotation = Quaternion.LookRotation(direction);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * speed);
-        }
-    }
+            // Check if reached current point and switch to next/previous waypoint
+            if (Vector3.Distance(transform.position, _pathPositions[_currentPointIndex]) < 0.01f)
+            {
+                Debug.Log("Reached point " + _currentPointIndex);
+                if (_currentPointIndex + 1 < _pathPoints.Count && !_rubberBanding)
+                {
+                    _currentPointIndex++; // Move to the next point   
+                }
+                else
+                {
+                    _rubberBanding = true;
+                }
 
+                if (_currentPointIndex - 1 > -1 && _rubberBanding)
+                {
+                    _currentPointIndex--; // Move to the previous point
+                }
+                else
+                {
+                    _rubberBanding = false;
+                }
+            }
+            if (_faceTowards)
+            {
+                FaceTowards();
+            }
+        }
+
+        private void OnDestroy()
+        {
+            if (_startPoint != null)
+            {
+                Destroy(_startPoint);
+            }
+        }
+
+        private void DetermineMoveType()
+        {
+            if (_movementType == MovementType.Lerping)
+            {
+                transform.position = Vector3.Lerp(transform.position, _pathPositions[_currentPointIndex], Mathf.Clamp01(_speed * Time.deltaTime));
+            }
+            else if (_movementType == MovementType.MovingTowards)
+            {
+                transform.position = Vector3.MoveTowards(transform.position, _pathPositions[_currentPointIndex], _speed * Time.deltaTime);
+            }
+            else if (_movementType == MovementType.SmoothDamp)
+            {
+                Vector3 velocity = Vector3.zero;
+                transform.position = Vector3.SmoothDamp(transform.position, _pathPositions[_currentPointIndex], ref velocity, _speed * Time.deltaTime);
+            }
+        }
+
+        // Make the obstacle face towards the next point it is moving to
+        private void FaceTowards()
+        {
+            Vector3 direction = _pathPositions[_currentPointIndex] - transform.position;
+            if (direction != Vector3.zero)
+            {
+                Quaternion targetRotation = Quaternion.LookRotation(direction);
+                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * _speed);
+            }
+        }
+
+    }
 }
+
