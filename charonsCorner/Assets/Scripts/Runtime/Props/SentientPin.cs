@@ -103,8 +103,10 @@ public class SentientPin : MonoBehaviour
                 if (_consecutiveFailedJumps >= _maxFailedJumpAttempts)
                 {
                     Debug.LogWarning("SentientPin: No valid jump target found after all attempts. Retrying...");
-                    FinalJumpAndExit();
-                    yield return new WaitForSeconds(0.75f);
+                        
+                    StartCoroutine(FinalJumpAndExit());
+                    break;
+                    // yield return new WaitForSeconds(0.75f);
                 }
             }
         }
