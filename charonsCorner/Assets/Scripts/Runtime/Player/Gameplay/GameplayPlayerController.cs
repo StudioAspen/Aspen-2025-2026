@@ -9,6 +9,8 @@ namespace CharonsCorner.Runtime
     public class GameplayPlayerController : MonoBehaviour
     {
         [SerializeField] private float _gravityAmount = 30f;
+        private float _verticalVelocity = 0f;
+
 
         [Header("Ground Check")]
         [SerializeField] private float _groundCheckLength = 0.5f;
@@ -35,10 +37,11 @@ namespace CharonsCorner.Runtime
         [field: SerializeField] public AirSuperState AirState { get; private set; } = new();
         [field: SerializeField] public CannonBallSuperState CannonState { get; private set; } = new();
 
-        [NonSerialized] public String CurrentSubState;
         [field: SerializeField] public GroundSuperState GroundSuperState { get; private set; } = new();
         [field: SerializeField] public AirSuperState AirSuperState { get; private set; } = new();
-        
+        [field: SerializeField] public CannonBallSuperState CannonBallSuperState { get; private set; } = new();
+
+
         [field: SerializeField] public DriftSuperState DriftSuperState { get; private set; } = new();
 
         

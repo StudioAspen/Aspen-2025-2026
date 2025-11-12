@@ -12,63 +12,86 @@ namespace CharonsCorner.Runtime
 
     public class CannonBall : MonoBehaviour
     {
-
         [Header("Projectile Parameters")]
-        public float acceleration = -9.81f;
-        public float launchVelocity = 25f;
-        public float currentHeight = 0f;
+        [SerializeField] private float _acceleration = -9.81f;
+        [SerializeField] private float _launchVelocity = 25f;
+        [SerializeField] private float _currentHeight = 0f;
+
+        public float Acceleration => _acceleration;
+        public float LaunchVelocity => _launchVelocity;
+        public float CurrentHeight => _currentHeight;
 
         [Header("Shot Parameters")]
-        public float shotAngle = 45f;
-        public float shotPower = 1f;
-        public float shotLoadTime = 1f;
+        [SerializeField] private float _shotAngle = 45f;
+        [SerializeField] private float _shotPower = 1f;
+        [SerializeField] private float _shotLoadTime = 1f;
+
+        public float ShotAngle { get => _shotAngle; set => _shotAngle = value; }
+        public float ShotPower => _shotPower;
+        public float ShotLoadTime => _shotLoadTime;
 
         [Header("Pillar Movement")]
-        public bool movingPillar = false;
-        public float shotAngleMin = 20f;
-        public float shotAngleMax = 70f;
-        public float pillarSpeed = 0.5f;
+        [SerializeField] private bool _movingPillar = false;
+        [SerializeField] private float _shotAngleMin = 20f;
+        [SerializeField] private float _shotAngleMax = 70f;
+        [SerializeField] private float _pillarSpeed = 0.5f;
+
+        public bool MovingPillar => _movingPillar;
+        public float ShotAngleMin => _shotAngleMin;
+        public float ShotAngleMax => _shotAngleMax;
+        public float PillarSpeed => _pillarSpeed;
 
         [HideInInspector]
         public float currentShotAngle;
 
         [Header("Transforms")]
-        public Transform cannonBase;
-        public Transform cannonPillar;
-        public Transform launchDirection;
+        [SerializeField] private Transform _cannonBase;
+        [SerializeField] private Transform _cannonPillar;
+        [SerializeField] private Transform _launchDirection;
+
+        public Transform CannonBase => _cannonBase;
+        public Transform CannonPillar => _cannonPillar;
+        public Transform LaunchDirection => _launchDirection;
 
         [Header("Activation Mode")]
-        public CannonActivationMode activationMode = CannonActivationMode.InteractButton;
+        [SerializeField] private CannonActivationMode _activationMode = CannonActivationMode.InteractButton;
+        public CannonActivationMode ActivationMode => _activationMode;
 
         [Header("Gizmos")]
-        public int numPointsGizmos = 100;
-        public float timeStepGizmos = 0.1f;
+        [SerializeField] private int _numPointsGizmos = 100;
+        [SerializeField] private float _timeStepGizmos = 0.1f;
 
         [Header("Play Mode")]
-        public int numPoints = 10;
-        public float timeStep = 0.1f;
+        [SerializeField] private int _numPoints = 10;
+        [SerializeField] private float _timeStep = 0.1f;
+
+        public int NumPoints => _numPoints;
+        public float TimeStep => _timeStep;
 
         [Header("Camera Target")]
-        [SerializeField] public bool _useCamera = true;
-        [SerializeField, ShowIf("_useCamera")] public CinemachineCamera _cinemachineCamera;
+        [SerializeField] private bool _useCamera = true;
+        [SerializeField, ShowIf("_useCamera")] private CinemachineCamera _cinemachineCamera;
+
+        public bool UseCamera => _useCamera;
+        public CinemachineCamera CinemachineCamera => _cinemachineCamera;
 
         private void OnDrawGizmos()
         {
-            if (cannonBase == null) return;
-            Vector3 startPosition = cannonBase.position;
-            Vector3 forward = launchDirection ? launchDirection.forward : transform.forward;
+            if (CannonBase == null) return;
+            Vector3 startPosition = CannonBase.position;
+            Vector3 forward = LaunchDirection ? LaunchDirection.forward : transform.forward;
 
-            Quaternion angleRotation = Quaternion.AngleAxis(shotAngle, cannonBase.right);
+            Quaternion angleRotation = Quaternion.AngleAxis(ShotAngle, CannonBase.right);
             Vector3 direction = angleRotation * forward;
-            Vector3 velocity = direction.normalized * -launchVelocity;
+            Vector3 velocity = direction.normalized * -LaunchVelocity;
             Vector3 previousPosition = startPosition;
 
             Gizmos.color = Color.yellow;
-            for (int i = 1; i <= numPointsGizmos; i++)
+            for (int i = 1; i <= _numPointsGizmos; i++)
             {
-                float t = i * timeStepGizmos;
+                float t = i * _timeStepGizmos;
                 Vector3 calculatedPosition = startPosition + (velocity * t);
-                calculatedPosition.y += (0.5f * acceleration * (t * t));
+                calculatedPosition.y += (0.5f * Acceleration * (t * t));
                 Gizmos.DrawLine(previousPosition, calculatedPosition);
                 previousPosition = calculatedPosition;
             }
