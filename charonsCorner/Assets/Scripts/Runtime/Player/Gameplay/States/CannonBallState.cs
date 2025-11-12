@@ -14,6 +14,8 @@ namespace CharonsCorner.Runtime
 
         //Holds Coroutine that Lerps to CannonBase:
         private Coroutine _lerpRoutine;
+        //Holds Coroutine that Handles CannonPillar Movement:
+        private Coroutine _pillarRoutine;
 
         private bool _inCannon;
         private bool _isLaunching;
@@ -40,6 +42,7 @@ namespace CharonsCorner.Runtime
 
             _inCannon = false;
             _isLaunching = false;
+            _isAdjustingPillar = false;
 
             _launchCompleted = false;
         }
@@ -47,13 +50,18 @@ namespace CharonsCorner.Runtime
         private protected override void OnExit()
         {
             if (_lerpRoutine != null) _context.StopCoroutine(_lerpRoutine);
+            if (_pillarRoutine != null) _context.StopCoroutine(_pillarRoutine);
 
             _inCannon = false;
             _isLaunching = false;
+            _isAdjustingPillar = false;
 
             _currentCannon = null;
 
             _context.Rb.isKinematic = false;
+
+            _lerpRoutine = null;
+            _pillarRoutine = null;
         }
 
         private protected override void OnUpdate()
@@ -138,7 +146,7 @@ namespace CharonsCorner.Runtime
                 _isAdjustingPillar = true;
 
                 //Begin Cannon Axis Aiming Coroutine:
-                _context.StartCoroutine(PillarAngleOscillation(cannonBall));
+                _pillarRoutine = _context.StartCoroutine(PillarAngleOscillation(cannonBall));
             }
             //Normal Cannon Launch:
             else
