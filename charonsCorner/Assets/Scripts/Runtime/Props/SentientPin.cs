@@ -1,6 +1,9 @@
 using System.Collections;
 using UnityEngine;
 
+namespace CharonsCorner.Runtime
+{
+    
 public class SentientPin : MonoBehaviour
 {
     [Header("Detection Settings")]
@@ -11,7 +14,7 @@ public class SentientPin : MonoBehaviour
     [SerializeField] private float _jumpDistance = 5f;
     [SerializeField] private float _jumpHeight = 5f;
     [SerializeField] private float _jumpDuration = 1.2f;
-    [SerializeField] private float _jumpBufferTimer= 0.3f;
+    [SerializeField] private float _jumpBufferTimer = 0.3f;
     [SerializeField] private float _rangeOfRaycast = 30f;
 
     [Header("Rotation Settings")]
@@ -230,4 +233,5 @@ public class SentientPin : MonoBehaviour
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, _detectionRange);
     }
+}
 }
