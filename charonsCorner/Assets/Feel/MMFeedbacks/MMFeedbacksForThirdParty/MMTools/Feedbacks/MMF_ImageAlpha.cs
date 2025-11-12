@@ -1,0 +1,250 @@
+﻿#if MM_UI
+using System.Collections;
+using System.Collections.Generic;
+using MoreMountains.Tools;
+using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.Scripting.APIUpdating;
+
+namespace MoreMountains.Feedbacks
+{
+	/// <summary>
+	/// This feedback will let you change the alpha of a target sprite renderer over time.
+	/// </summary>
+	[AddComponentMenu("")]
+	[FeedbackHelp("This feedback will let you change the alpha of a target Image over time.")]
+	[MovedFrom(false, null, "MoreMountains.Feedbacks.MMTools")]
+	[FeedbackPath("UI/Image Alpha")]
+	public class MMF_ImageAlpha : MMF_Feedback
+	{
+		/// a static bool used to disable all feedbacks of this type at once
+		public static bool FeedbackTypeAuthorized = true;
+		/// sets the inspector color for this feedback
+		#if UNITY_EDITOR
+		public override Color FeedbackColor { get { return MMFeedbacksInspectorColors.UIColor; } }
+		public override bool EvaluateRequiresSetup() { return (BoundImage == null); }
+		public override string RequiredTargetText { get { return BoundImage != null ? BoundImage.name : "";  } }
+		public override string RequiresSetupText { get { return "This feedback requires that a BoundImage be set to be able to work properly. You can set one below."; } }
+		#endif
+		public override bool HasCustomInspectors => true;
+		public override bool HasAutomatedTargetAcquisition => true;
+		protected override void AutomateTargetAcquisition() => BoundImage = FindAutomatedTarget<Image>();
+
+		/// the possible modes for this feedback
+		public enum Modes { OverTime, Instant, ToDestination }
+
+		[MMFInspectorGroup("Target Image", true, 12, true)]
+        
+		/// the Image to affect when playing the feedback
+		[Tooltip("the Image to affect when playing the feedback")]
+		public Image BoundImage;
+
+		[MMFInspectorGroup("Image Alpha Animation", true, 24)]
+		/// whether the feedback should affect the Image instantly or over a period of time
+		[Tooltip("whether the feedback should affect the Image instantly or over a period of time")]
+		public Modes Mode = Modes.OverTime;
+		/// how long the Image should change over time
+		[Tooltip("how long the Image should change over time")]
+		[MMFEnumCondition("Mode", (int)Modes.OverTime, (int)Modes.ToDestination)]
+		public float Duration = 0.2f;
+		/// if this is true, calling that feedback will trigger it, even if it's in progress. If it's false, it'll prevent any new Play until the current one is over
+		[Tooltip("if this is true, calling that feedback will trigger it, even if it's in progress. If it's false, it'll prevent any new Play until the current one is over")] 
+		public bool AllowAdditivePlays = false;
+		/// the alpha to move to in instant mode
+		[Tooltip("the alpha to move to in instant mode")]
+		[MMFEnumCondition("Mode", (int)Modes.Instant)]
+		public float InstantAlpha = 1f;
+		/// the curve to use when interpolating towards the destination alpha
+		[Tooltip("the curve to use when interpolating towards the destination alpha")]
+		public MMTweenType Curve = new MMTweenType(MMTween.MMTweenCurve.EaseInCubic, "", "Mode", (int)Modes.OverTime, (int)Modes.ToDestination);
+		/// the value to which the curve's 0 should be remapped
+		[Tooltip("the value to which the curve's 0 should be remapped")]
+		[MMFEnumCondition("Mode", (int)Modes.OverTime)]
+		public float CurveRemapZero = 0f;
+		/// the value to which the curve's 1 should be remapped
+		[Tooltip("the value to which the curve's 1 should be remapped")]
+		[MMFEnumCondition("Mode", (int)Modes.OverTime)]
+		public float CurveRemapOne = 1f;
+		/// the alpha to aim towards when in ToDestination mode
+		[Tooltip("the alpha to aim towards when in ToDestination mode")]
+		[MMFEnumCondition("Mode", (int)Modes.ToDestination)]
+		public float DestinationAlpha = 1f;
+		/// if this is true, the target will be disabled when this feedbacks is stopped
+		[Tooltip("if this is true, the target will be disabled when this feedbacks is stopped")] 
+		public bool DisableOnStop = false;
+
+		/// the duration of this feedback is the duration of the Image, or 0 if instant
+		public override float FeedbackDuration { get { return (Mode == Modes.Instant) ? 0f : ApplyTimeMultiplier(Duration); } set { Duration = value; } }
+
+		protected Coroutine _coroutine;
+		protected Color _imageColor;
+		protected Color _initialColor;
+		protected float _initialAlpha;
+		protected float _initialInstantAlpha;
+		
+		protected override void CustomInitialization(MMF_Player owner)
+		{
+			base.CustomInitialization(owner);
+			
+			if (BoundImage == null)
+			{
+				Debug.LogWarning("[Image Alpha Feedback] The image alpha feedback on "+Owner.name+" doesn't have a bound image, it won't work. You need to specify an image in its inspector.");
+				return;
+			}
+
+			if (Active)
+			{
+				_initialInstantAlpha = BoundImage.color.a;
+			}
+		}
+
+		/// <summary>
+		/// On Play we turn our Image on and start an over time coroutine if needed
+		/// </summary>
+		/// <param name="position"></param>
+		/// <param name="feedbacksIntensity"></param>
+		protected override void CustomPlayFeedback(Vector3 position, float feedbacksIntensity = 1.0f)
+		{
+			if (!Active || !FeedbackTypeAuthorized || (BoundImage == null))
+			{
+				return;
+			}
+			_initialColor = BoundImage.color;
+			Turn(true);
+			switch (Mode)
+			{
+				case Modes.Instant:
+					_imageColor = BoundImage.color;
+					_imageColor.a = NormalPlayDirection ? InstantAlpha : _initialInstantAlpha;
+					BoundImage.color = _imageColor;
+					break;
+				case Modes.OverTime:
+					if (!AllowAdditivePlays && (_coroutine != null))
+					{
+						return;
+					}
+
+					if (_coroutine != null) { Owner.StopCoroutine(_coroutine); }
+					_coroutine = Owner.StartCoroutine(ImageSequence());
+					break;
+				case Modes.ToDestination:
+					if (!AllowAdditivePlays && (_coroutine != null))
+					{
+						return;
+					}
+
+					if (_coroutine != null) { Owner.StopCoroutine(_coroutine); }
+					_coroutine = Owner.StartCoroutine(ImageSequence());
+					break;
+			}
+		}
+
+		/// <summary>
+		/// This coroutine will modify the values on the Image
+		/// </summary>
+		/// <returns></returns>
+		protected virtual IEnumerator ImageSequence()
+		{
+			float journey = NormalPlayDirection ? 0f : FeedbackDuration;
+			_imageColor = BoundImage.color;
+			_initialAlpha = BoundImage.color.a;
+			IsPlaying = true;
+			while ((journey >= 0) && (journey <= FeedbackDuration) && (FeedbackDuration > 0))
+			{
+				float remappedTime = MMFeedbacksHelpers.Remap(journey, 0f, FeedbackDuration, 0f, 1f);
+
+				SetAlpha(remappedTime);
+
+				journey += NormalPlayDirection ? FeedbackDeltaTime : -FeedbackDeltaTime;
+				yield return null;
+			}
+			SetAlpha(FinalNormalizedTime);
+			_coroutine = null;
+			IsPlaying = false;
+			yield return null;
+		}
+
+		/// <summary>
+		/// Sets the various values on the sprite renderer on a specified time (between 0 and 1)
+		/// </summary>
+		/// <param name="time"></param>
+		protected virtual void SetAlpha(float time)
+		{
+			float newAlpha = 0f;
+			if (Mode == Modes.OverTime)
+			{
+				newAlpha = MMTween.Tween(time, 0f, 1f, CurveRemapZero, CurveRemapOne, Curve);    
+			}
+			else if (Mode == Modes.ToDestination)
+			{
+				newAlpha = MMTween.Tween(time, 0f, 1f, _initialAlpha, DestinationAlpha, Curve);
+			}
+
+			_imageColor.a = newAlpha;
+            
+			BoundImage.color = _imageColor;
+		}
+
+		/// <summary>
+		/// Turns the sprite renderer off on stop
+		/// </summary>
+		/// <param name="position"></param>
+		/// <param name="feedbacksIntensity"></param>
+		protected override void CustomStopFeedback(Vector3 position, float feedbacksIntensity = 1)
+		{
+			if (!Active || !FeedbackTypeAuthorized)
+			{
+				return;
+			}
+			IsPlaying = false;
+			base.CustomStopFeedback(position, feedbacksIntensity);
+			if (Active && DisableOnStop)
+			{
+				Turn(false);    
+			}
+            if (_coroutine != null)
+            {
+                Owner.StopCoroutine(_coroutine);        
+            }			
+			_coroutine = null;
+		}
+
+		/// <summary>
+		/// Turns the sprite renderer on or off
+		/// </summary>
+		/// <param name="status"></param>
+		protected virtual void Turn(bool status)
+		{
+			BoundImage.gameObject.SetActive(status);
+			BoundImage.enabled = status;
+		}
+		
+		/// <summary>
+		/// On restore, we restore our initial state
+		/// </summary>
+		protected override void CustomRestoreInitialValues()
+		{
+			if (!Active || !FeedbackTypeAuthorized)
+			{
+				return;
+			}
+			BoundImage.color = _initialColor;
+		}
+		
+		/// <summary>
+		/// On Validate, we init our curves conditions if needed
+		/// </summary>
+		public override void OnValidate()
+		{
+			base.OnValidate();
+			if (string.IsNullOrEmpty(Curve.EnumConditionPropertyName))
+			{
+				Curve.EnumConditionPropertyName = "Mode";
+				Curve.EnumConditions = new bool[32];
+				Curve.EnumConditions[(int)Modes.OverTime] = true;
+				Curve.EnumConditions[(int)Modes.ToDestination] = true;
+			}
+		}
+	}
+}
+#endif
