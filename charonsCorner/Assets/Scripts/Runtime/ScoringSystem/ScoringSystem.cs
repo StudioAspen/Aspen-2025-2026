@@ -12,6 +12,7 @@ namespace CharonsCorner.Runtime
 
         private float _levelTimer;
         private int _score;
+        private bool _bonusApplied = false;
 
         public float LevelTimeSeconds => _levelTimer;
 
@@ -43,11 +44,11 @@ namespace CharonsCorner.Runtime
             for (int i = 0; i < _rankData.Criteria.Count; i++)
             {
                 var criteria = _rankData.Criteria[i];
-                int playerScore = _score;
 
-                if (_levelTimer <= criteria.MaxTimeSeconds)
+                if (_levelTimer <= criteria.MaxTimeSeconds && !_bonusApplied)
                 {
-                    playerScore += criteria.TimeBonusPoints;
+                    _score += criteria.TimeBonusPoints;
+                    _bonusApplied = true;
                 }
 
                 if (_score >= criteria.RequiredPoints)
