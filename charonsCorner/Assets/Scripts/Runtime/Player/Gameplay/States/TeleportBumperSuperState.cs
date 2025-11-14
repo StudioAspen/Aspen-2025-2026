@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace CharonsCorner.Runtime
 {
+    [System.Serializable]
     public class TeleportBumperSuperState : SuperState<GameplayPlayerController>
     {
         public override State<GameplayPlayerController> InitialSubState => TeleportBumperState;
@@ -35,7 +36,9 @@ namespace CharonsCorner.Runtime
         {
             if(!_context.IsTeleporting)
             {
-                return _context.AirState;
+                Debug.LogError("Exiting teleport to ground state");
+                //_context.IsTeleporting = false;
+                return _context.GroundState;
             }
 
             return null;

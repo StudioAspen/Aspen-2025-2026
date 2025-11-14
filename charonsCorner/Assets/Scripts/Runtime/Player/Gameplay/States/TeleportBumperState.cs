@@ -12,16 +12,18 @@ namespace CharonsCorner.Runtime
         private protected override void OnEnter()
         {
             _isTeleporting = true;
+            _context.Rb.isKinematic = true;
         }
 
         private protected override void OnExit()
         {
-            //_isTeleporting = false;
+            _isTeleporting = false;
+            _context.Rb.isKinematic = false;
         }
 
         private protected override void OnFixedUpdate()
         {
-            
+
         }
 
         private protected override void OnUpdate()
@@ -35,7 +37,6 @@ namespace CharonsCorner.Runtime
             _currentTeleportBumper = teleportBumper;
 
             _context.Rb.linearVelocity = Vector3.zero;
-            _context.Rb.isKinematic = true;
         }
         private protected override State<GameplayPlayerController> GetTransition()
         {
@@ -44,10 +45,13 @@ namespace CharonsCorner.Runtime
 
         private void Teleport()
         {
-            Debug.LogError("Teleporting");
             _context.SetPlayerPosition(_currentTeleportBumper.teleportDestination);
             _isTeleporting = false;
             _context.IsTeleporting = false;
+
+            // Setting the player to max speed once they're done teleporting
+            Vector3 forwardDirection = _context.Orientation.forward.normalized;
+            _context.Rb.linearVelocity = forwardDirection * _context.GroundState.MoveState.MaxSpeed;
         }
 
     }
