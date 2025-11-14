@@ -34,7 +34,7 @@ namespace CharonsCorner.Runtime
         {
             if (CannonBallState.LaunchCompleted)
             {
-                _context.CannonAir = true;
+                _context.SetCannonAir(true);
                 return _context.GroundState;
             }
 

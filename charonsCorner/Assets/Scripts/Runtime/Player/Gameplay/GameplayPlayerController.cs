@@ -9,8 +9,6 @@ namespace CharonsCorner.Runtime
     public class GameplayPlayerController : MonoBehaviour
     {
         [SerializeField] private float _gravityAmount = 30f;
-        private float _verticalVelocity = 0f;
-
 
         [Header("Ground Check")]
         [SerializeField] private float _groundCheckLength = 0.5f;
@@ -26,8 +24,7 @@ namespace CharonsCorner.Runtime
         public SphereCollider Collider { get; private set; }
         public SlopeSensor SlopeSensor { get; private set; }
         public bool IsGrounded { get; private set; }
-
-        public bool CannonAir { get; set; } = false;
+        public bool CannonAir { get; private set; } = false;
 
         #region StateMachine Vars
         public StateMachine<GameplayPlayerController> StateMachine { get; private set; }
@@ -63,14 +60,11 @@ namespace CharonsCorner.Runtime
         
         private void FixedUpdate()
         {
-            if (!CannonState.CannonBallState.IsLaunching)
-                ApplyGravity();
-
             CheckGrounded();
             StateMachine.FixedUpdate();
         }
 
-        private void ApplyGravity()
+        public void ApplyGravity()
         {
             Rb.AddForce(Vector3.down * _gravityAmount, ForceMode.Acceleration);
         }
@@ -97,6 +91,11 @@ namespace CharonsCorner.Runtime
             DriftSuperState.Init(StateMachine, this);
             
             StateMachine.ChangeState(GroundSuperState, true);
+        }
+
+        public void SetCannonAir(bool t)
+        {
+            CannonAir = t;
         }
 
         private void OnDrawGizmos()
