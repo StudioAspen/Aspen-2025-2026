@@ -51,7 +51,7 @@ namespace CharonsCorner.Runtime
 
             // Setting the player to max speed once they're done teleporting
             Vector3 forwardDirection = _context.Orientation.forward.normalized;
-            _context.Rb.linearVelocity = forwardDirection * _context.GroundState.MoveState.MaxSpeed;
+            _context.Rb.linearVelocity = forwardDirection * _context.GetMaxSpeed();
         }
 
     }

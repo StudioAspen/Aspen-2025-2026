@@ -34,12 +34,7 @@ namespace CharonsCorner.Runtime
 
         private protected override State<GameplayPlayerController> GetTransition()
         {
-            if(!_context.IsTeleporting)
-            {
-                Debug.LogError("Exiting teleport to ground state");
-                //_context.IsTeleporting = false;
-                return _context.GroundState;
-            }
+            if(!_context.IsTeleporting) return _context.GroundState;
 
             return null;
         }

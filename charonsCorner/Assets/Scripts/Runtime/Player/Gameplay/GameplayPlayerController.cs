@@ -102,5 +102,7 @@ namespace CharonsCorner.Runtime
         }
 
         public void SetPlayerPosition(Transform newPos) => transform.position = newPos.position;
+
+        public float GetMaxSpeed() => GroundState.MoveState.MaxSpeed;
     }
 }
