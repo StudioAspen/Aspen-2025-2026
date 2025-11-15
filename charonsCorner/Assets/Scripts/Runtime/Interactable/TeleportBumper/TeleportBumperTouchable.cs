@@ -27,8 +27,8 @@ namespace CharonsCorner.Runtime
 
         private void ActivateTeleport()
         {
-            _player.StateMachine.ChangeState(_player.TeleportState, true);
             _player.TeleportState.SetTeleportBumperReference(_teleportBumper);
+            _player.StateMachine.ChangeState(_player.TeleportState, true);
         }
 
         private void OnTriggerExit(Collider other)

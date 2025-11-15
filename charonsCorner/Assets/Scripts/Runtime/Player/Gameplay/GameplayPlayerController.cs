@@ -102,8 +102,6 @@ namespace CharonsCorner.Runtime
         }
 
         public void SetPlayerPosition(Transform newPos) => transform.position = newPos.position;
-        public float GetMaxSpeed() => GroundState.MoveState.MaxSpeed;
-        public float GetAcceleration() => GroundState.MoveState.Acceleration;
         public bool SetIsTeleporting(bool val) => IsTeleporting = val;
     }
 }

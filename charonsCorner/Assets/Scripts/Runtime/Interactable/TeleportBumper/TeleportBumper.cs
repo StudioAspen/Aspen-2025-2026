@@ -5,13 +5,17 @@ namespace CharonsCorner.Runtime
     public class TeleportBumper : MonoBehaviour
     {
         [Header("Destination Parameters")]
-        public Transform teleportDestination;
-        public Color gizmoColor = Color.blue;        
+        [field: SerializeField] public Transform TeleportDestination {get; private set;}
+        [field: SerializeField] Color gizmoColor = Color.blue;
+
+
 
         private void OnDrawGizmos()
         {
+            const float GIZMO_RADIUS = 1.0f;
+
             Gizmos.color = gizmoColor;
-            Gizmos.DrawSphere(teleportDestination.position, 1.0f);
+            Gizmos.DrawSphere(TeleportDestination.position, GIZMO_RADIUS);
         }
     }
 }
