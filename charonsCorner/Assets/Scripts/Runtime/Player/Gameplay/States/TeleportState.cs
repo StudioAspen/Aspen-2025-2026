@@ -3,21 +3,19 @@ using UnityEngine;
 namespace CharonsCorner.Runtime
 {
     [System.Serializable]
-    public class TeleportBumperState : State<GameplayPlayerController>
+    public class TeleportState : State<GameplayPlayerController>
     {
-        private TeleportBumper _currentTeleportBumper;
-        private bool _isTeleporting = false;
-
+        private TeleportBumper _currentTeleportBumper = null;
 
         private protected override void OnEnter()
         {
-            _isTeleporting = true;
+            _context.SetIsTeleporting(true);
             _context.Rb.isKinematic = true;
         }
 
         private protected override void OnExit()
         {
-            _isTeleporting = false;
+            _context.SetIsTeleporting(false);
             _context.Rb.isKinematic = false;
         }
 
@@ -28,30 +26,27 @@ namespace CharonsCorner.Runtime
 
         private protected override void OnUpdate()
         {
-            if(_isTeleporting) Teleport();
+            _context.CurrentSubState = _context.TeleportState.GetType().Name;
+            if (_context.IsTeleporting) Teleport();
         }
 
-        public void SetTeleportBumperReference(TeleportBumper teleportBumper )
-        {
-            if (_currentTeleportBumper != null) return;
-            _currentTeleportBumper = teleportBumper;
-
-            _context.Rb.linearVelocity = Vector3.zero;
-        }
+        public void SetTeleportBumperReference(TeleportBumper teleportBumper) => _currentTeleportBumper = teleportBumper;
         private protected override State<GameplayPlayerController> GetTransition()
         {
+            if (!_context.IsTeleporting) return _context.GroundState;
             return null;
         }
 
         private void Teleport()
         {
             _context.SetPlayerPosition(_currentTeleportBumper.teleportDestination);
-            _isTeleporting = false;
-            _context.IsTeleporting = false;
+            _context.SetIsTeleporting(false);
 
             // Setting the player to max speed once they're done teleporting
             Vector3 forwardDirection = _context.Orientation.forward.normalized;
-            _context.Rb.linearVelocity = forwardDirection * _context.GetMaxSpeed();
+            Vector3 accelerationForce = forwardDirection * _context.GetAcceleration();
+
+            _context.Rb.AddForce(accelerationForce, ForceMode.Impulse);
         }
 
     }

@@ -22,7 +22,7 @@ namespace CharonsCorner.Runtime
         public bool IsGrounded { get; private set; }
 
         public bool CannonAir { get; set; } = false;
-        public bool IsTeleporting { get; set; } = false;
+        public bool IsTeleporting { get; private set; } = false;
 
         #region StateMachine Vars
         public StateMachine<GameplayPlayerController> StateMachine { get; private set; }
@@ -31,7 +31,7 @@ namespace CharonsCorner.Runtime
         [field: SerializeField] public GroundSuperState GroundState { get; private set; } = new();
         [field: SerializeField] public AirSuperState AirState { get; private set; } = new();
         [field: SerializeField] public CannonBallSuperState CannonState { get; private set; } = new();
-        [field: SerializeField] public TeleportBumperSuperState TeleportState { get; private set; } = new();
+        [field: SerializeField] public TeleportState TeleportState { get; private set; } = new();
 
         [NonSerialized] public String CurrentSubState;
         #endregion
@@ -102,7 +102,8 @@ namespace CharonsCorner.Runtime
         }
 
         public void SetPlayerPosition(Transform newPos) => transform.position = newPos.position;
-
         public float GetMaxSpeed() => GroundState.MoveState.MaxSpeed;
+        public float GetAcceleration() => GroundState.MoveState.Acceleration;
+        public bool SetIsTeleporting(bool val) => IsTeleporting = val;
     }
 }
