@@ -25,6 +25,8 @@ namespace CharonsCorner.Runtime
         public SlopeSensor SlopeSensor { get; private set; }
         public bool IsGrounded { get; private set; }
         public bool CannonAir { get; private set; } = false;
+        public CannonBall CurrentCannon { get; private set; }
+
 
         #region StateMachine Vars
         public StateMachine<GameplayPlayerController> StateMachine { get; private set; }
@@ -32,7 +34,6 @@ namespace CharonsCorner.Runtime
         [field: Header("State Machine")]
         [field: SerializeField] public GroundSuperState GroundState { get; private set; } = new();
         [field: SerializeField] public AirSuperState AirState { get; private set; } = new();
-        [field: SerializeField] public CannonBallSuperState CannonState { get; private set; } = new();
 
         [field: SerializeField] public GroundSuperState GroundSuperState { get; private set; } = new();
         [field: SerializeField] public AirSuperState AirSuperState { get; private set; } = new();
@@ -68,7 +69,25 @@ namespace CharonsCorner.Runtime
         {
             Rb.AddForce(Vector3.down * _gravityAmount, ForceMode.Acceleration);
         }
-        
+
+        public bool CheckOverlap(LayerMask layerMask, float sizeScale, out Collider hitCollider)
+        {
+            //Reset Out Parameter:
+            hitCollider = null;
+            if (Collider == null) return false;
+
+            //Check Overlap Sphere:
+            Collider[] hits = Physics.OverlapSphere(transform.position, Collider.radius * sizeScale, layerMask, QueryTriggerInteraction.Ignore);
+            foreach (Collider hit in hits)
+            {
+                if (hit == Collider) continue;
+                hitCollider = hit;
+                return true;
+            }
+
+            return false;
+        }
+
         private void CheckGrounded()
         {
             IsGrounded = Physics.CheckSphere(transform.position + Vector3.down * _groundCheckLength, Collider.radius * 0.9f, _groundLayer);
@@ -83,16 +102,20 @@ namespace CharonsCorner.Runtime
 
             GroundState.Init(StateMachine, this);
             AirState.Init(StateMachine, this);
-            CannonState.Init(StateMachine, this);
 
             StateMachine.ChangeState(GroundState, true);
             GroundSuperState.Init(StateMachine, this);
             AirSuperState.Init(StateMachine, this);
+            CannonBallSuperState.Init(StateMachine, this);  
             DriftSuperState.Init(StateMachine, this);
             
             StateMachine.ChangeState(GroundSuperState, true);
         }
 
+        public void SetCurrentCannon(CannonBall cannon)
+        {
+            CurrentCannon = cannon;
+        }   
         public void SetCannonAir(bool t)
         {
             CannonAir = t;
