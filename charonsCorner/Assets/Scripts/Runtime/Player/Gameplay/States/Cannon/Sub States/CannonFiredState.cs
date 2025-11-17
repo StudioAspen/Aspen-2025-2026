@@ -66,8 +66,11 @@ namespace CharonsCorner.Runtime
         {
             //Get Current Cannon:
             CannonBall cannon = _context.CurrentCannon;
-            if (cannon == null) return;
-
+            if (cannon == null)
+            {
+                _context.CannonBallSuperState.LaunchFailed = true;
+                return;
+            }
             //Update Launch Timer based on Shot Power:
             _launchTimer += Time.deltaTime * cannon.ShotPower;
             float t = _launchTimer;

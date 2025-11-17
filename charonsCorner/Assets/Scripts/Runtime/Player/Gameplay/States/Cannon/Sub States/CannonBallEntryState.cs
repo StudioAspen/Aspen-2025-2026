@@ -11,8 +11,13 @@ namespace CharonsCorner.Runtime
         private bool _shouldTransitionToPillarMove = false;
         private bool _shouldTransitionToFired = false;
 
+        public bool IsInCannon { get; private set; }
+
         private protected override void OnEnter()
         {
+            //Set Is In Cannon Flag:
+            IsInCannon = true;
+
             //Set Current Substate Name:
             _context.CurrentSubState = GetType().Name;
 
@@ -44,6 +49,9 @@ namespace CharonsCorner.Runtime
                 _context.StopCoroutine(_lerpRoutine);
                 _lerpRoutine = null;
             }
+
+            //Reset Is In Cannon Flag:
+            IsInCannon = false;
         }
 
         private IEnumerator LerpToCannonBase(CannonBall cannonBall)
@@ -80,10 +88,12 @@ namespace CharonsCorner.Runtime
             //Start Transition To Next State Based On Cannon Settings:
             if (cannonBall.MovingPillar)
             {
+                IsInCannon = false;
                 _shouldTransitionToPillarMove = true;
             }
             else
             {
+                IsInCannon = false;
                 _shouldTransitionToFired = true;
             }
         }
