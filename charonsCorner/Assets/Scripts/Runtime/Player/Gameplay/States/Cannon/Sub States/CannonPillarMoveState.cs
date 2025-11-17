@@ -95,8 +95,8 @@ namespace CharonsCorner.Runtime
                 //Draw Live Trajectory During Oscillation:
                 DrawTrajectoryRuntime(cannonBall);
 
-                //Temporary Key Press To Test Functionality For Launch:
-                if (Input.GetKeyDown(KeyCode.Space))
+                //Check For Player Input To Confirm Launch:
+                if (InputManager.Instance.InputActions.Player.Jump.triggered)
                 {
                     //Reset Camera If Using Cannon Camera:
                     if (cannonBall.UseCamera) CameraManager.Instance.ResetActiveCamera();

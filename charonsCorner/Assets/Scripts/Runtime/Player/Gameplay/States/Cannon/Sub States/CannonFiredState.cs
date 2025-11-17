@@ -9,8 +9,9 @@ namespace CharonsCorner.Runtime
         public bool IsLaunching { get; private set; } = false;
 
         [Header("Cannon Launch Detection Settings")]
-        [SerializeField] private const float CollisionCheckRadius = 1;
-        [SerializeField] private const float CollisionCheckDelay = 0.1f;
+        [SerializeField] private float CollisionCheckRadius = 1;
+        [SerializeField] private float CollisionCheckDelay = 0.1f;
+        [SerializeField] private LayerMask _collisionLayers = ~0;
         private LayerMask _collisionMask;
 
         private protected override void OnEnter()
@@ -23,7 +24,7 @@ namespace CharonsCorner.Runtime
 
             //Setup Collision Mask to Ignore Current Cannon Layer:
             int cannonLayer = _context.CurrentCannon.gameObject.layer;
-            _collisionMask = ~ (1 << cannonLayer);
+            _collisionMask = _collisionLayers & ~(1 << cannonLayer);
 
             //Ensure Rigidbody is non-kinematic to allow physics to take over after launch:
             _context.Rb.isKinematic = false;

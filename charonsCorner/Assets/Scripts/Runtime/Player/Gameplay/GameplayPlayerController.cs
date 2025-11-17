@@ -70,18 +70,22 @@ namespace CharonsCorner.Runtime
             Rb.AddForce(Vector3.down * _gravityAmount, ForceMode.Acceleration);
         }
 
+        private Collider[] _overlapResults = new Collider[10]; // Reusable buffer
         public bool CheckOverlap(LayerMask layerMask, float sizeScale, out Collider hitCollider)
         {
             //Reset Out Parameter:
             hitCollider = null;
             if (Collider == null) return false;
 
+            Vector3 center = Collider.bounds.center;
+            float radius = Collider.radius * sizeScale;
+
             //Check Overlap Sphere:
-            Collider[] hits = Physics.OverlapSphere(transform.position, Collider.radius * sizeScale, layerMask, QueryTriggerInteraction.Ignore);
-            foreach (Collider hit in hits)
+            int hitCount = Physics.OverlapSphereNonAlloc(center, radius, _overlapResults, layerMask, QueryTriggerInteraction.Ignore);
+            for (int i = 0; i < hitCount; i++)
             {
-                if (hit == Collider) continue;
-                hitCollider = hit;
+                if (_overlapResults[i] == Collider) continue;
+                hitCollider = _overlapResults[i];
                 return true;
             }
 
