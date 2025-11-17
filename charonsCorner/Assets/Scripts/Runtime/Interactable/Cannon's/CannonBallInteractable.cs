@@ -18,7 +18,9 @@ namespace CharonsCorner.Runtime
         public void HandleInteract()
         {
             if (_player == null || _cannonBall == null) return;
-            if (_player.CannonBallSuperState.LaunchCompleted == false && (_player.CannonBallSuperState.PillarMoveState.IsInCannon || _player.CannonBallSuperState.FiredState.IsLaunching)) return;
+
+            var cannonSuper = _player.CannonBallSuperState;
+            if (!cannonSuper.LaunchCompleted && (cannonSuper.EntryState.IsInCannon || cannonSuper.PillarMoveState.IsInCannon || cannonSuper.FiredState.IsLaunching)) return;
 
             ActivateCannon();
         }
