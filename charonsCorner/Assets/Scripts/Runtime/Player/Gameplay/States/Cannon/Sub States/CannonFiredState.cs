@@ -22,12 +22,22 @@ namespace CharonsCorner.Runtime
             //Set Current Substate Name:
             _context.CurrentSubState = GetType().Name;
 
+            //Get Current Cannon Being Used By Player:
+            CannonBall cannon = _context.CurrentCannon;
+            if (cannon == null)
+            {
+                //If No Cannon Found, Return To Ground State:
+                _context.CannonBallSuperState.LaunchFailed = true;
+                return;
+            }
+
             //Setup Collision Mask to Ignore Current Cannon Layer:
             int cannonLayer = _context.CurrentCannon.gameObject.layer;
             _collisionMask = _collisionLayers & ~(1 << cannonLayer);
 
-            //Ensure Rigidbody is non-kinematic to allow physics to take over after launch:
+            //Set Rigidbody to Non-Kinematic and Reset Target Velocity:
             _context.Rb.isKinematic = false;
+            _targetVelocity = Vector3.zero;
 
             //Reset Launch Completion Flag & Timer:
             _context.CannonBallSuperState.LaunchCompleted = false;
@@ -41,9 +51,11 @@ namespace CharonsCorner.Runtime
             _collisionMask = 0;
 
             //Reset Cannon Ball Touchable Activation:
-            if (_context.CurrentCannon.GetComponent<CannonBallTouchable>() != null)
+            CannonBall cannon = _context.CurrentCannon;
+            if (cannon != null)
             {
-                _context.CurrentCannon.GetComponent<CannonBallTouchable>().ResetActivation();
+                var touchable = cannon.GetComponent<CannonBallTouchable>();
+                touchable?.ResetActivation();
             }
 
             //Set Launch Completion Flag:

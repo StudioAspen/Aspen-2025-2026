@@ -12,6 +12,8 @@ namespace CharonsCorner.Runtime
 
         public override State<GameplayPlayerController> InitialSubState => EntryState;
         public bool LaunchCompleted { get; internal set; }
+        public bool LaunchFailed { get; internal set; }
+
 
         private protected override void InitializeSubStates()
         {
@@ -24,10 +26,12 @@ namespace CharonsCorner.Runtime
         {
             _context.Rb.isKinematic = false;
             LaunchCompleted = false;
+            LaunchFailed = false;
         }
 
         private protected override void OnExit()
         {
+            LaunchFailed = false;
             LaunchCompleted = false;
             _context.Rb.isKinematic = false;
         }
@@ -44,6 +48,7 @@ namespace CharonsCorner.Runtime
         {
             //Set The Cannon Reference in the Player Context:
             _context.SetCurrentCannon(cannon);
+            LaunchFailed = false;
             LaunchCompleted = false;
 
             //Reset Rigidbody State:
@@ -61,8 +66,12 @@ namespace CharonsCorner.Runtime
             if (LaunchCompleted)
             {
                 _context.SetCannonAir(true);
-                return _context.GroundState;
+                return _context.GroundSuperState;
             }
+            else if (LaunchFailed)
+            {
+                return _context.GroundSuperState;
+            }   
 
             return null;
         }

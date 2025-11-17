@@ -28,8 +28,8 @@ namespace CharonsCorner.Runtime
             CannonBall cannon = _context.CurrentCannon;
             if (cannon == null)
             {
-                //No Cannon Found, Exit State:
-                _context.StateMachine.ChangeState(_context.GroundSuperState, true);
+                //If No Cannon Found, Return To Ground State:
+                _context.CannonBallSuperState.LaunchFailed = true;
                 return;
             }
 

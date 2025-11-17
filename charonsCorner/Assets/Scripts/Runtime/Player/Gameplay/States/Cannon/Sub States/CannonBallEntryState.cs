@@ -25,7 +25,7 @@ namespace CharonsCorner.Runtime
             if (cannon == null)
             {
                 //If No Cannon Found, Return To Ground State:
-                _context.StateMachine.ChangeState(_context.GroundSuperState, true);
+                _context.CannonBallSuperState.LaunchFailed = true;
                 return;
             }
 
