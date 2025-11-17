@@ -6,6 +6,8 @@ namespace CharonsCorner.Runtime
     public class JumpHandler : MonoBehaviour
     {
         private GameplayPlayerController _player;
+        [Header("Jump Settings")]
+        [Tooltip("Force applied when jump is initiated")]
         [SerializeField] private float _jumpForce = 40f; //double jump force
         [Tooltip("Scale down upward velocity on early release by this value")]
         [SerializeField, Range(0f, 1f)] private float _earlyReleaseMultiplier = 0.5f;
@@ -16,6 +18,9 @@ namespace CharonsCorner.Runtime
         [SerializeField] private float _bounceThreshold = 1f; // e.g., only bounce if falling faster than 1 unit/s
         [Tooltip("Multiplier for bounce velocity")]
         [SerializeField] private float _bounceMultiplier = 0.5f; // e.g., bounce back up at 50% of impact velocity
+        [Tooltip("Maximum upward velocity after bounce")]
+        [SerializeField] private float _maxBounceVelocity = 20f; // cap the maximum bounce velocity
+
         void Awake()
         {
             _player = GetComponent<GameplayPlayerController>();
@@ -82,12 +87,21 @@ namespace CharonsCorner.Runtime
             {
                 Vector3 velocity = _player.Rb.linearVelocity;
 
-                if (velocity.y < -_bounceThreshold) // only bounce if falling fast enough
+                if (_player.SlopeSensor.IsOnSlope) // If on slope, do not bounce
+                {
+                    //Debug.Log("Landed on slope, no bounce.");
+                    return;
+                }
+
+                if (velocity.y < -_bounceThreshold) // only bounce if falling faster than threshold
                 {
                     velocity.y = Mathf.Abs(velocity.y) * _bounceMultiplier; // bounce upward at 50% speed
+                    if(velocity.y > _maxBounceVelocity)
+                    {
+                        velocity.y = _maxBounceVelocity; // cap max bounce velocity
+                    }
                     _player.Rb.linearVelocity = velocity;
-                    Debug.Log("Bounce! New Y Velocity: " + velocity.y);
-                    
+                    //Debug.Log("Bounce! New Y Velocity: " + velocity.y);
                 }
             }
         }
