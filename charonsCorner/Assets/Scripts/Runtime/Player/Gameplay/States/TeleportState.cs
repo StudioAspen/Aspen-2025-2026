@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 namespace CharonsCorner.Runtime
@@ -40,6 +41,14 @@ namespace CharonsCorner.Runtime
         {
             _context.SetPlayerPosition(_currentTeleportBumper.TeleportDestination);
             _context.SetIsTeleporting(false);
+            _context.StartCoroutine(TempAccelerationIncrease(_currentTeleportBumper.BoostSpeedMultiplier, _currentTeleportBumper.BoostSpeedDuration));
+        }
+
+        private IEnumerator TempAccelerationIncrease(float boostMultiplier, float boostDuration)
+        {
+            _context.Rb.linearVelocity *= boostMultiplier;
+            yield return new WaitForSeconds(boostDuration);
+            _context.Rb.linearVelocity /= boostMultiplier;
         }
 
     }

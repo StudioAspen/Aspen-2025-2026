@@ -8,6 +8,9 @@ namespace CharonsCorner.Runtime
         [field: SerializeField] public Transform TeleportDestination {get; private set;}
         [field: SerializeField] Color gizmoColor = Color.blue;
 
+        [Header("Post-Destination Boost Parameters")]
+        [field: SerializeField] public float BoostSpeedMultiplier { get; private set;}
+        [field: SerializeField] public float BoostSpeedDuration { get; private set; }
 
 
         private void OnDrawGizmos()
@@ -17,5 +20,6 @@ namespace CharonsCorner.Runtime
             Gizmos.color = gizmoColor;
             Gizmos.DrawSphere(TeleportDestination.position, GIZMO_RADIUS);
         }
+
     }
 }
