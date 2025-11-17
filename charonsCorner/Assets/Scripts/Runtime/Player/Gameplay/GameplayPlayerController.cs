@@ -32,14 +32,9 @@ namespace CharonsCorner.Runtime
         public StateMachine<GameplayPlayerController> StateMachine { get; private set; }
         
         [field: Header("State Machine")]
-        [field: SerializeField] public GroundSuperState GroundState { get; private set; } = new();
-        [field: SerializeField] public AirSuperState AirState { get; private set; } = new();
-
         [field: SerializeField] public GroundSuperState GroundSuperState { get; private set; } = new();
         [field: SerializeField] public AirSuperState AirSuperState { get; private set; } = new();
         [field: SerializeField] public CannonBallSuperState CannonBallSuperState { get; private set; } = new();
-
-
         [field: SerializeField] public DriftSuperState DriftSuperState { get; private set; } = new();
 
         
@@ -103,18 +98,14 @@ namespace CharonsCorner.Runtime
         private void SetupStateMachine()
         {
             StateMachine = new StateMachine<GameplayPlayerController>(this);
-
-            GroundState.Init(StateMachine, this);
-            AirState.Init(StateMachine, this);
-
-            StateMachine.ChangeState(GroundState, true);
+           
             GroundSuperState.Init(StateMachine, this);
+
+            StateMachine.ChangeState(GroundSuperState, true);
             AirSuperState.Init(StateMachine, this);
             CannonBallSuperState.Init(StateMachine, this);  
             DriftSuperState.Init(StateMachine, this);
-            
-            StateMachine.ChangeState(GroundSuperState, true);
-        }
+                    }
 
         public void SetCurrentCannon(CannonBall cannon)
         {
