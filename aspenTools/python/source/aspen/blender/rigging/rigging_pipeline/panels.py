@@ -10,3 +10,6 @@ class ASPENRIGGING_PT_panel(bpy.types.Panel):
 
     def draw(self, context):
         layout = self.layout
+
+        layout.operator(ASPENRIGGING_PT_panel.bl_idname, icon='BONE CUSTOMIZATION')
+        layout.operator('bone_customization_menu')

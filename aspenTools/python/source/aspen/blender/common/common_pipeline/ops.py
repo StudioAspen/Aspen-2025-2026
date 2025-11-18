@@ -1,4 +1,3 @@
-
 import bpy
 from aspen.blender.common.export_manager.ui import ExportManagerMainWindow
 from aspen.blender.core import flags
