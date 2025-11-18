@@ -26454,7 +26454,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2142010340}
-  - component: {fileID: 2142010341}
+  - component: {fileID: 2142010342}
+  - component: {fileID: 2142010343}
   m_Layer: 0
   m_Name: PlayerFeelManager
   m_TagString: Untagged
@@ -26482,7 +26483,7 @@ Transform:
   - {fileID: 1292118549}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2142010341
+--- !u!114 &2142010342
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -26491,13 +26492,26 @@ MonoBehaviour:
   m_GameObject: {fileID: 2142010339}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a12c524440895dd4b92fb21b394f5936, type: 3}
+  m_Script: {fileID: 11500000, guid: 24648721b6d17274cbc6ea37749118f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageFeedBack: {fileID: 1292118550}
-  attackFeedBack: {fileID: 1731675546}
-  jumpFeedBack: {fileID: 193956473}
-  ScaleFeedBack: {fileID: 848822286}
+  effects:
+  - name: 
+    player: {fileID: 0}
+    alsoTriggerGlobal: 0
+--- !u!114 &2142010343
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2142010339}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb581204c9d5b8f4b94a39fedb1a5695, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  effects: []
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
