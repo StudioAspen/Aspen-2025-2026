@@ -33,6 +33,9 @@ namespace CharonsCorner.Runtime
                 return;
             }
 
+            //Disable Player Physics:
+            _context.Rb.isKinematic = true;
+
             SetupTrajectoryRenderer();
 
             //Start Oscillation Coroutine To Move Pillar Angle Back & Forth:
