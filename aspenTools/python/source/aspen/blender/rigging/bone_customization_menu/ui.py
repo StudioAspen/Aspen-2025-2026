@@ -13,8 +13,8 @@ class BoneCustomizationMainWindow(SingletonMainWindow):
             os.path.join(os.path.dirname(__file__), 'main_window.ui')
         )
         #buttons and input fields
-        self.asset_name_bone_selection.hasSelectedText()
-        self.asset_name_shape_selection_combobox
+        self.asset_name_bone_selection.setText('bone go here')
+        self.asset_name_shape_selection_combobox.addItems(['Circle', 'Sphere', 'Square', 'Cube', 'Rectangle', 'Box'])
         self.asset_name_rotation_x.setText('0')
         self.asset_name_rotation_y.setText('0')
 
