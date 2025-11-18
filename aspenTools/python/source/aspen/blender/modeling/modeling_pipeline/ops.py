@@ -6,6 +6,7 @@ from aspen.core.telemetry import trace
 from . import ASSET_VALIDATION_BL_IDNAME, HELP_ASSET_VALIDATION_BL_IDNAME
 from ..asset_validation import api
 from ..asset_validation import ui
+from ...common.results_log.ui import ResultLogMainWindow
 
 
 class MODELINGPIPELINE_OT_asset_validation(bpy.types.Operator):
@@ -20,6 +21,7 @@ class MODELINGPIPELINE_OT_asset_validation(bpy.types.Operator):
         api.check_objects_in_collection(context)
         api.check_asset_vertex_count(context)
         api.check_object_default_names()
+        result_log_ui.print_hline()
 
         result_log_ui.show_result_log_window()
         return flags.FINISHED_REPORT_FLAG

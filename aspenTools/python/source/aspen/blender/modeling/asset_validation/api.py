@@ -42,7 +42,7 @@ def check_objects_in_collection(context: bpy.types.Context)-> bool:
     else:
         logger.info("All meshes were found in collections, collection test passed.")
 
-    return bad_collection
+    return not bad_collection
 
 def check_asset_vertex_count(context: bpy.types.Context):
     """ This tests if the asset meets target vertex counts.
