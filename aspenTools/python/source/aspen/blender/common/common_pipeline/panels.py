@@ -18,4 +18,3 @@ class ASPENCOMMON_PT_panel(bpy.types.Panel):
         layout = self.layout
 
         layout.operator(EXPORT_MANAGER_BL_IDNAME, icon='EXPORT')
-        layout.operator(RESULT_LOG_BL_IDNAME)

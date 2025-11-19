@@ -23,15 +23,3 @@ class COMMONPIPELINE_OT_exportmanager(bpy.types.Operator):
         ExportManagerMainWindow().show()
 
         return flags.FINISHED_REPORT_FLAG
-
-class COMMONPIPELINE_OT_resultlog(bpy.types.Operator):
-    bl_idname = RESULT_LOG_BL_IDNAME
-    bl_label = 'Show Result Log'
-    bl_description = 'Open the Result Log to display results from Aspen Tools.'
-    bl_options = {'REGISTER'}
-
-    @trace.trace_blender_operator()
-    def execute(self, context):
-        ui.show_result_log_window()
-
-        return flags.FINISHED_REPORT_FLAG

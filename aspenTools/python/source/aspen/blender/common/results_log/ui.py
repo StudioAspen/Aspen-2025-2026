@@ -84,9 +84,8 @@ class ResultLogMainWindow(SingletonMainWindow):
         self.consoleList.add_log("Welcome to the Aspen result log! Results of any tool operations will be printed here.", logging.DEBUG)
 
 class ResultLogHandler(logging.Handler):
-    def __init__(self, window: ResultLogMainWindow, level: int = logging.NOTSET):
+    def __init__(self, level: int = logging.NOTSET):
         logging.Handler.__init__(self, level)
-        self.window = window
 
     def emit(self, record: logging.LogRecord):
         """ Overrides base class to call ResultLogMainWindow's print_log()
@@ -94,14 +93,14 @@ class ResultLogHandler(logging.Handler):
             record (logging.LogRecord): Holds information about a given log.
         """
         msg = self.format(record)
-        self.window.consoleList.add_log(record.msg, record.levelno)
+        g_ResultLogMainWindow.consoleList.add_log(record.msg, record.levelno)
 
-# Declared it here so that we could have a persistent window in a Blender session.
+# Should we have a persistent window?
 g_ResultLogMainWindow = ResultLogMainWindow()
 
 aspenLogger = logging.getLogger("aspen")
 
-handler = ResultLogHandler(g_ResultLogMainWindow)
+handler = ResultLogHandler()
 handler.setLevel(logging.INFO)
 handler.set_name("ResultLogHandler")
 
