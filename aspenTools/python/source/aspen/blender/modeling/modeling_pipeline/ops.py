@@ -6,8 +6,7 @@ from aspen.core.telemetry import trace
 from . import ASSET_VALIDATION_BL_IDNAME, HELP_ASSET_VALIDATION_BL_IDNAME
 from ..asset_validation import api
 from ..asset_validation import ui
-from ...common.results_log.ui import ResultLogMainWindow
-
+import logging
 
 class MODELINGPIPELINE_OT_asset_validation(bpy.types.Operator):
     bl_idname = ASSET_VALIDATION_BL_IDNAME
@@ -18,13 +17,21 @@ class MODELINGPIPELINE_OT_asset_validation(bpy.types.Operator):
     @trace.trace_blender_operator()
     def execute(self, context: bpy.types.Context):
         """ Execute model review tests and show the results in Result Log. """
+        window = result_log_ui.ResultLogMainWindow()
+
         api.check_objects_in_collection(context)
         api.check_asset_vertex_count(context)
         api.check_object_default_names()
-        result_log_ui.print_hline()
 
-        result_log_ui.show_result_log_window()
-        return flags.FINISHED_REPORT_FLAG
+        window.show()
+
+        # Testing if we removed old handlers correctly
+        # aspenLogger = logging.getLogger('aspen')
+        # print("printing handlers: ")
+        # for h in aspenLogger.handlers:
+        #     print(f"Handler: {h.name}")
+        #
+        # return flags.FINISHED_REPORT_FLAG
 
 class MODELINGPIPELINE_OT_asset_validation_help(bpy.types.Operator):
     bl_idname = HELP_ASSET_VALIDATION_BL_IDNAME

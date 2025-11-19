@@ -15,7 +15,7 @@ LOG_LEVEL_COLOR_DICT = {
 }
 
 class QHLine(QFrame):
-    # I guess there's no Qt class for a horizontal line, so you can define one using QFrame.
+    # I guess there's no Qt class for a horizontal line, so define one using QFrame.
     def __init__(self, parent=None):
         super(QHLine, self).__init__(parent)
         self.setFrameShape(QFrame.Shape.HLine)
@@ -43,8 +43,11 @@ class ConsoleArea(QListWidget):
         super().__init__(parent)
         self.setSpacing(2)
 
-    def add_widget(self, widget):
-        """ This """
+    def add_widget(self, widget: QWidget):
+        """ This adds a widget as an item to this obj's list.
+        Args:
+            widget (QWidget): The widget to add.
+        """
         list_item = QListWidgetItem(self)
         list_item.setSizeHint(widget.sizeHint())
         self.setItemWidget(list_item, widget)
@@ -79,13 +82,52 @@ class ResultLogMainWindow(SingletonMainWindow):
             ConsoleArea
         )
 
+        aspenLogger = logging.getLogger('aspen')
+
+        # ResultLogHandler is initialized here to pass ref to the window being initd
+        log_handler = ResultLogHandler(self, logging.INFO)
+        log_handler.set_name("ResultLog Handler")
+        aspenLogger.addHandler(log_handler)
+
         # consoleList is the name of the ConsoleArea widget defined in the .ui file, not defined here so will have warning.
         self.move(0, 0)
         self.consoleList.add_log("Welcome to the Aspen result log! Results of any tool operations will be printed here.", logging.DEBUG)
 
+    def print_hline(self):
+        """ This makes the window show itself. """
+        self.consoleList.add_hline()
+
+    def _test_print_log_levels(self):
+
+        """ This function tests calling each of the log_levels to ensure the colors display correctly. """
+
+        self.consoleList.add_log("Welcome! Any output from Aspen tools will be displayed here.",
+                                                  logging.DEBUG)
+        self.consoleList.add_log("Run successful.", logging.INFO)
+        self.consoleList.add_log("Cancelled operation.", logging.WARNING)
+        self.consoleList.add_log("Error from a tool has occurred.", logging.ERROR)
+
+    def _test_mass_print(self):
+        """ This functions tests whether the Window will handle deleting old logs when capacity is reached. """
+        for i in range(105):
+            self.consoleList.add_log(f"Log {i}")
+
+    def closeEvent(self, event):
+        """ Overrides closeEvent to make sure we clean up ResultLogHandler. """
+        logger = logging.getLogger("aspen")
+
+        # ResultLogHandlers aren't GC'd b/c they keep a reference to the window, so manually remove.
+        logger.handlers = [
+            h for h in logger.handlers
+            if not (isinstance(h, ResultLogHandler))
+        ]
+
+        super().closeEvent(event)
+
 class ResultLogHandler(logging.Handler):
-    def __init__(self, level: int = logging.NOTSET):
+    def __init__(self, window: ResultLogMainWindow,level: int = logging.NOTSET):
         logging.Handler.__init__(self, level)
+        self.window = window
 
     def emit(self, record: logging.LogRecord):
         """ Overrides base class to call ResultLogMainWindow's print_log()
@@ -93,37 +135,4 @@ class ResultLogHandler(logging.Handler):
             record (logging.LogRecord): Holds information about a given log.
         """
         msg = self.format(record)
-        g_ResultLogMainWindow.consoleList.add_log(record.msg, record.levelno)
-
-# Should we have a persistent window?
-g_ResultLogMainWindow = ResultLogMainWindow()
-
-aspenLogger = logging.getLogger("aspen")
-
-handler = ResultLogHandler()
-handler.setLevel(logging.INFO)
-handler.set_name("ResultLogHandler")
-
-aspenLogger.addHandler(handler)
-
-def show_result_log_window():
-    """ This makes the window show itself. """
-    g_ResultLogMainWindow.show()
-
-def print_hline():
-    """ This makes the window show itself. """
-    g_ResultLogMainWindow.consoleList.add_hline()
-
-def _test_print_log_levels(self):
-    """ This function tests calling each of the log_levels to ensure the colors display correctly. """
-
-    g_ResultLogMainWindow.consoleList.add_log("Welcome! Any output from Aspen tools will be displayed here.", logging.DEBUG)
-    g_ResultLogMainWindow.consoleList.add_log("Run successful.", logging.INFO)
-    g_ResultLogMainWindow.consoleList.add_log("Cancelled operation.", logging.WARNING)
-    g_ResultLogMainWindow.consoleList.add_log("Error from a tool has occurred.", logging.ERROR)
-
-def _test_mass_print(self):
-    """ This functions tests whether the Window will handle deleting old logs when capacity is reached. """
-    for i in range(105):
-        g_ResultLogMainWindow.consoleList.add_log(f"Log {i}")
-
+        self.window.consoleList.add_log(msg, record.levelno)
