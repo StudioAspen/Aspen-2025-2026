@@ -5,7 +5,6 @@ from aspen.blender.common.results_log import ui
 from aspen.blender.core import flags
 
 from . import EXPORT_MANAGER_BL_IDNAME
-from . import RESULT_LOG_BL_IDNAME
 
 from aspen.core.telemetry import trace
 
