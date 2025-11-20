@@ -1,7 +1,6 @@
 
 import bpy
 from . import EXPORT_MANAGER_BL_IDNAME
-from . import RESULT_LOG_BL_IDNAME
 
 
 class ASPENCOMMON_PT_panel(bpy.types.Panel):
