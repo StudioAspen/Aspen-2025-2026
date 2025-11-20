@@ -1,37 +1,22 @@
 import bpy
 
-from aspen.blender.common.results_log import ui as result_log_ui
 from aspen.blender.core import flags
 from aspen.core.telemetry import trace
+
 from . import ASSET_VALIDATION_BL_IDNAME, HELP_ASSET_VALIDATION_BL_IDNAME
-from ..asset_validation import api
-from ..asset_validation import ui
-import logging
+from ..asset_validation.ui import AssetValidationHelpWindow, AssetValidationSelectionWindow
 
 class MODELINGPIPELINE_OT_asset_validation(bpy.types.Operator):
     bl_idname = ASSET_VALIDATION_BL_IDNAME
-    bl_label = 'Start Asset Validation'
-    bl_description = 'Check Aspen Requirements for the current Asset.'
+    bl_label = 'Select Asset Type'
+    bl_description = 'Select Asset Type before beginning tests.'
     bl_options = {'REGISTER'}
 
     @trace.trace_blender_operator()
     def execute(self, context: bpy.types.Context):
-        """ Execute model review tests and show the results in Result Log. """
-        window = result_log_ui.ResultLogMainWindow()
-
-        api.check_objects_in_collection(context)
-        api.check_asset_vertex_count(context)
-        api.check_object_default_names()
-
-        window.show()
-
-        # Testing if we removed old handlers correctly
-        # aspenLogger = logging.getLogger('aspen')
-        # print("printing handlers: ")
-        # for h in aspenLogger.handlers:
-        #     print(f"Handler: {h.name}")
-        #
-        # return flags.FINISHED_REPORT_FLAG
+        """ Display window to select type for Asset Validation """
+        AssetValidationSelectionWindow().show()
+        return flags.FINISHED_REPORT_FLAG
 
 class MODELINGPIPELINE_OT_asset_validation_help(bpy.types.Operator):
     bl_idname = HELP_ASSET_VALIDATION_BL_IDNAME
@@ -42,5 +27,5 @@ class MODELINGPIPELINE_OT_asset_validation_help(bpy.types.Operator):
     @trace.trace_blender_operator()
     def execute(self, context: bpy.types.Context):
         """" Show the help window """
-        ui.AssetValidationHelpWindow().show()
+        AssetValidationHelpWindow().show()
         return flags.FINISHED_REPORT_FLAG

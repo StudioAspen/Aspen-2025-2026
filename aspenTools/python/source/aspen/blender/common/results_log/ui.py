@@ -84,7 +84,7 @@ class ResultLogMainWindow(SingletonMainWindow):
 
         aspenLogger = logging.getLogger('aspen')
 
-        # ResultLogHandler is initialized here to pass ref to the window being initd
+        # ResultLogHandler is initialized here to pass window reference
         log_handler = ResultLogHandler(self, logging.INFO)
         log_handler.set_name("ResultLog Handler")
         aspenLogger.addHandler(log_handler)
@@ -98,7 +98,6 @@ class ResultLogMainWindow(SingletonMainWindow):
         self.consoleList.add_hline()
 
     def _test_print_log_levels(self):
-
         """ This function tests calling each of the log_levels to ensure the colors display correctly. """
 
         self.consoleList.add_log("Welcome! Any output from Aspen tools will be displayed here.",
@@ -116,7 +115,7 @@ class ResultLogMainWindow(SingletonMainWindow):
         """ Overrides closeEvent to make sure we clean up ResultLogHandler. """
         logger = logging.getLogger("aspen")
 
-        # ResultLogHandlers aren't GC'd b/c they keep a reference to the window, so manually remove.
+        # ResultLogHandlers aren't GC'd b/c they keep a reference to the window, so I manually remove.
         logger.handlers = [
             h for h in logger.handlers
             if not (isinstance(h, ResultLogHandler))
@@ -125,7 +124,7 @@ class ResultLogMainWindow(SingletonMainWindow):
         super().closeEvent(event)
 
 class ResultLogHandler(logging.Handler):
-    def __init__(self, window: ResultLogMainWindow,level: int = logging.NOTSET):
+    def __init__(self, window: ResultLogMainWindow, level: int = logging.NOTSET):
         logging.Handler.__init__(self, level)
         self.window = window
 
