@@ -8,7 +8,7 @@ from ..asset_validation.ui import AssetValidationHelpWindow, AssetValidationSele
 
 class MODELINGPIPELINE_OT_asset_validation(bpy.types.Operator):
     bl_idname = ASSET_VALIDATION_BL_IDNAME
-    bl_label = 'Select Asset Type'
+    bl_label = 'Open Asset Validation'
     bl_description = 'Select Asset Type before beginning tests.'
     bl_options = {'REGISTER'}
 
