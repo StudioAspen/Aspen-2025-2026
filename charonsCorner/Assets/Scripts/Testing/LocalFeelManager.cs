@@ -12,8 +12,7 @@ public class LocalFeelManager : MonoBehaviour
         public bool alsoTriggerGlobal = false;
     }
 
-    public List<FeelEntry> effects = new List<FeelEntry>();
-
+    [SerializeField] private List<FeelEntry> effects = new List<FeelEntry>();
     private Dictionary<string, FeelEntry> lookup;
 
     void Awake()
@@ -21,12 +20,15 @@ public class LocalFeelManager : MonoBehaviour
         BuildLookup();
     }
 
-
+    
+    /// <summary>
+    /// Adds effects in the list to a dictionary,making it easy to access 
+    /// </summary>
     void BuildLookup()
     {
         lookup = new Dictionary<string, FeelEntry>();
 
-        foreach (var entry in effects)
+        foreach (FeelEntry entry in effects)
         {
             if (entry.player == null)
             {
@@ -39,34 +41,38 @@ public class LocalFeelManager : MonoBehaviour
         }
     }
 
-    // for local player 
-    
-    public void PlayerLocal(string id)
+    /// <summary>
+    /// Plays only the local MMFplayer, that matches the name given
+    /// </summary>
+    /// <param name="name">Name given to run the matching mmf player in the list</param>
+    public void PlayerLocal(string name)
     {
-        if (lookup.TryGetValue(id, out var entry))
+        if (lookup.TryGetValue(name, out FeelEntry entry))
         {
             entry.player.PlayFeedbacks();
         }
     }
 
 
-    // for global player
-
-    public void PlayUnified(string id)
+    /// <summary>
+    /// Plays both local and global mmf players that match the given name
+    /// if there is no matching global mmf player it simply skips 
+    /// </summary>
+    /// <param name="name">Name given to run the matching mmf player in the list</param>
+    public void PlayUnified(string name)
     {
-        PlayerLocal(id);
+        PlayerLocal(name);
 
-        if(lookup.TryGetValue(id, out var entry))
+        if(lookup.TryGetValue(name, out FeelEntry entry))
         {
-            if (entry.alsoTriggerGlobal && GlobalFeelManager.Instance != null)
-            {
-                GlobalFeelManager.Instance.Play(id);
-            }
+            if (entry.alsoTriggerGlobal == true && GlobalFeelManager.Instance != null)
+                GlobalFeelManager.Instance.Play(name);
+             
         }
     }
 
 
-    public bool Has(string id) => lookup.ContainsKey(id);
+    public bool Has(string name) => lookup.ContainsKey(name);
 
     
 

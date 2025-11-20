@@ -7,15 +7,13 @@ public class GlobalFeelManager : MonoBehaviour
     public static GlobalFeelManager Instance;
 
     [System.Serializable]
-    public class CameraEffect
+    public class GlobalFeelEffect
     {
-        public string id;
+        public string Name;
         public MMF_Player player;
     }
 
-
-
-    public List<CameraEffect> effects = new List<CameraEffect>();
+    public List<GlobalFeelEffect> effects = new List<GlobalFeelEffect>();
     private Dictionary<string, MMF_Player> lookup;
 
     void Awake()
@@ -24,27 +22,36 @@ public class GlobalFeelManager : MonoBehaviour
         BuildLookUp();
     }
 
+
+
+
+    /// <summary>
+    /// Adds effects in the list to a dictionary,making it easy to access 
+    /// </summary>
     void BuildLookUp()
     {
         lookup = new Dictionary<string, MMF_Player>();
-
-        foreach(var effect in effects)
+        foreach(GlobalFeelEffect effect in effects)
         {
-            if(effect.id == null && !lookup.ContainsKey(effect.id))
-                lookup.Add(effect.id, effect.player);
+            if(effect.Name != null && !lookup.ContainsKey(effect.Name))
+                lookup.Add(effect.Name, effect.player);       
+            
         }
-
-
     }
 
-
-    public void Play(string id)
+    /// <summary>
+    /// Plays the effect in the list matching the given name
+    /// </summary>
+    /// <param name="name">name/id of given to play the matching mmf player</param>
+    public void Play(string name)
     {
-        if (lookup.TryGetValue(id, out var player))
+        
+        if (lookup.TryGetValue(name, out MMF_Player player))
             player.PlayFeedbacks();
+        
     }
 
-    public bool has(string id) => lookup.ContainsKey(id);
+    public bool has(string name) => lookup.ContainsKey(name);
 
     // HOW TO USE 
 
