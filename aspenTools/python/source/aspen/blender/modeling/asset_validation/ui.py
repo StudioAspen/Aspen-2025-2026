@@ -41,7 +41,8 @@ class AssetValidationSelectionWindow(SingletonMainWindow):
 
 
     def _on_asset_type_combo_box_changed(self, index: int):
-        """ Set the export manager's asset type if the combo box is changed.
+        """ Set the asset validation asset type when combo box changes.
+        Shamelessly 'inspired' by Mikyle's code.
 
         Args:
             index (int): The index of the combo box
@@ -49,6 +50,7 @@ class AssetValidationSelectionWindow(SingletonMainWindow):
         bpy.context.scene.asset_validation_type = self.asset_types[index]
 
     def _on_start_validation_button_clicked(self):
+        """ Begins the asset validation process when the start button is pressed. """
         window = ResultLogMainWindow()
 
         context = bpy.context
