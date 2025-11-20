@@ -1,1 +1,1 @@
-BONE_CUSTOMIZATION_BL_IDNAME = 'bone_customization_menu'
+BONE_CUSTOMIZATION_BL_IDNAME = 'rigging_pipeline.bone_customization_menu'

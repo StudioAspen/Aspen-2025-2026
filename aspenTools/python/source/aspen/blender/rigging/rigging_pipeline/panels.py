@@ -1,4 +1,5 @@
 import bpy
+from . import BONE_CUSTOMIZATION_BL_IDNAME
 
 class ASPENRIGGING_PT_panel(bpy.types.Panel):
     bl_label = 'Aspen Rigging'
@@ -11,5 +12,4 @@ class ASPENRIGGING_PT_panel(bpy.types.Panel):
     def draw(self, context):
         layout = self.layout
 
-        layout.operator(ASPENRIGGING_PT_panel.bl_idname, icon='BONE CUSTOMIZATION')
-        layout.operator('bone_customization_menu')
+        layout.operator(BONE_CUSTOMIZATION_BL_IDNAME, icon='BONE_DATA')
