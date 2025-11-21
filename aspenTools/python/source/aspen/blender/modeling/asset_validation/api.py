@@ -22,6 +22,14 @@ asset_type_vertex_requirements = { # [0] is acceptable number but prefer to redu
     'PROP': (500, 750),
 }
 
+def is_not_valid_object_for_test(obj: bpy.types.Object):
+    """ This function helps check if the object is valid for testing.
+    I'm only going to test visible meshes.
+    Args:
+        obj (bpy.types.Object): Object to test.
+        """
+    return obj is None or obj.type != 'MESH' or not obj.visible_get()
+
 def is_default_blender_mesh_name(name: str):
     """Check if a string matches a Blender default object pattern.
     Args:
@@ -39,6 +47,9 @@ def check_objects_in_collection(context: bpy.types.Context)-> bool:
     """
     bad_collection = False
     for obj in bpy.data.objects:
+        if is_not_valid_object_for_test(obj):
+            continue
+
         if context.scene.collection in obj.users_collection: # scene.collection is the default collection.
             bad_collection = True
             logger.warning(f"{obj.name} found in default collection!")
@@ -58,7 +69,7 @@ def check_asset_vertex_count(context: bpy.types.Context):
     # Code is from depsgraph example in python documentation. See https://docs.blender.org/api/current/bpy.types.Depsgraph.html
     vertex_count = 0
     for obj in bpy.data.objects:
-        if obj is None or obj.type != 'MESH' or not obj.visible_get():
+        if is_not_valid_object_for_test(obj):
             continue
 
         depsgraph = context.evaluated_depsgraph_get()
@@ -85,6 +96,9 @@ def check_object_default_names():
     default_named_objects = []
 
     for obj in bpy.data.objects:
+        if is_not_valid_object_for_test(obj):
+            continue
+
         if obj.type == 'MESH' and is_default_blender_mesh_name(obj.name):
                 default_named_objects.append(obj.name)
 
