@@ -37,7 +37,7 @@ namespace CharonsCorner.Runtime
         {
             if (!_context.IsGrounded)
             {
-                return _context.AirState;
+                return _context.AirSuperState;
             }
 
             return null;
