@@ -4,6 +4,9 @@ using UnityEngine.UI;
 
 namespace CharonsCorner.Runtime
 {
+    /// <summary>
+    /// Base class for UIManager persistent panels.
+    /// </summary>
     public abstract class UIPanel : MonoBehaviour
     {
         private protected UIManager uiManager;
@@ -25,7 +28,10 @@ namespace CharonsCorner.Runtime
         /// </summary>
         private protected abstract void Initialize();
 
-        public virtual void Show()
+        /// <summary>
+        /// Easy method to enable this UI.
+        /// </summary>
+        public void Show()
         {
             gameObject.SetActive(true);
         }
@@ -33,7 +39,7 @@ namespace CharonsCorner.Runtime
         /// <summary>
         /// Forces the panel to hide without any additional logic.
         /// </summary>
-        public virtual void Hide()
+        public void Hide()
         {
             gameObject.SetActive(false);
         }
