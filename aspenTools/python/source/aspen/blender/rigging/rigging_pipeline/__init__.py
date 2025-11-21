@@ -1,0 +1,1 @@
+PUBLISH_RIG_BL_IDNAME = 'rigging_pipeline.export_'
