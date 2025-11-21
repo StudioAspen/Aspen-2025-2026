@@ -17,6 +17,9 @@
         },
         {
             "m_Id": "1f5689eb0274462cabc41910e8176694"
+        },
+        {
+            "m_Id": "eb0e11cb61ab4870ba648aa9e64767bb"
         }
     ],
     "m_Keywords": [],
@@ -275,6 +278,9 @@
         },
         {
             "m_Id": "1f5689eb0274462cabc41910e8176694"
+        },
+        {
+            "m_Id": "eb0e11cb61ab4870ba648aa9e64767bb"
         }
     ]
 }
@@ -728,10 +734,10 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": 323.0000305175781,
-            "y": -218.99996948242188,
-            "width": 100.99996948242188,
-            "height": 125.00000762939453
+            "x": 3.999981641769409,
+            "y": -216.0,
+            "width": 101.00004577636719,
+            "height": 125.00003051757813
         }
     },
     "m_Slots": [
@@ -829,9 +835,9 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": -335.9999694824219,
-            "y": -217.99996948242188,
-            "width": 268.9999694824219,
+            "x": -336.0,
+            "y": -217.0,
+            "width": 269.0,
             "height": 238.0
         }
     },
@@ -879,7 +885,7 @@
     "m_FunctionName": "AddAdditionalLights",
     "m_FunctionSource": "",
     "m_FunctionSourceUsePragmas": true,
-    "m_FunctionBody": "Diffuse = MainDiffuse;\r\n//Specular = MainSpecular;\r\nColor = MainColor * MainDiffuse;\r\n\r\n#ifndef SHADERGRAPH_PREVIEW\r\n\r\n  uint pixelLightCount = GetAdditionalLightsCount();\r\n\r\n  LIGHT_LOOP_BEGIN(pixelLightCount)\r\n  \r\n    //get light color and direction\r\n    lightIndex = GetPerObjectLightIndex(lightIndex);\r\n    Light light = GetAdditionalPerObjectLight(lightIndex, WorldPosition);\r\n\r\n    //calculate shadows\r\n    light.shadowAttenuation = AdditionalLightRealtimeShadow(lightIndex, WorldPosition, light.direction);\r\n    float atten = light.distanceAttenuation * light.shadowAttenuation;\r\n\r\n    //calculate diffuse and specular\r\n    float NdotL = saturate(dot(WorldNormal, light.direction));\r\n    float thisDiff = atten * NdotL;\r\n    //float thisSpec = LightingSpecular(thisDiff, light.direction, WorldNormal, WorldView, 1, Smoothness);\r\n\r\n    //accumalate light\r\n    Diffuse += thisDiff;\r\n    //Specular += thisSpecu;\r\n    Color += light.color * thisDiff; //+ thisSpec);\r\n\r\n  LIGHT_LOOP_END\r\n\r\n  float total = Diffuse; //+ dot(Specular, float3(0.333, 0.333, 0.333));\r\n  Color = total <= 0 ? MainColor : Color / total;\r\n\r\n#endif"
+    "m_FunctionBody": "Diffuse = MainDiffuse;\r\n//Specular = MainSpecular;\r\nColor = MainColor * MainDiffuse;\r\n\r\n#ifndef SHADERGRAPH_PREVIEW\r\n\r\n  uint pixelLightCount = GetAdditionalLightsCount();\r\n\r\n  LIGHT_LOOP_BEGIN(pixelLightCount)\r\n  \r\n    //get light color and direction\r\n    lightIndex = GetPerObjectLightIndex(lightIndex);\r\n    Light light = GetAdditionalPerObjectLight(lightIndex, WorldPosition);\r\n\r\n    //calculate shadows\r\n    light.shadowAttenuation = AdditionalLightRealtimeShadow(lightIndex, WorldPosition, light.direction);\r\n    float atten = light.distanceAttenuation * light.shadowAttenuation; // - shadowPower;\r\n\r\n    //if certain distance, make shadow color black?\r\n    //#if light.distanceAttenuation > 50x\r\n\r\n\r\n    //calculate diffuse and specular\r\n    float NdotL = saturate(dot(WorldNormal, light.direction) * 0.5 + 0.5);\r\n    float thisDiff = atten * NdotL;\r\n    //float thisSpec = LightingSpecular(thisDiff, light.direction, WorldNormal, WorldView, 1, Smoothness);\r\n\r\n    //accumalate light\r\n    Diffuse += thisDiff;\r\n    //Specular += thisSpecu;\r\n    Color += light.color * thisDiff; //+ thisSpec);\r\n\r\n  LIGHT_LOOP_END\r\n\r\n  float total = Diffuse; //+ dot(Specular, float3(0.333, 0.333, 0.333));\r\n  Color = total <= 0 ? MainColor : Color / total;\r\n\r\n#endif"
 }
 
 {
@@ -1040,6 +1046,34 @@
     "m_DefaultRefNameVersion": 1,
     "m_RefNameGeneratedByDisplayName": "NormalWS",
     "m_DefaultReferenceName": "_NormalWS",
+    "m_OverrideReferenceName": "",
+    "m_GeneratePropertyBlock": true,
+    "m_UseCustomSlotLabel": false,
+    "m_CustomSlotLabel": "",
+    "m_DismissedVersion": 0,
+    "m_Precision": 0,
+    "overrideHLSLDeclaration": false,
+    "hlslDeclarationOverride": 0,
+    "m_Hidden": false,
+    "m_Value": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 0.0
+    }
+}
+
+{
+    "m_SGVersion": 1,
+    "m_Type": "UnityEditor.ShaderGraph.Internal.Vector3ShaderProperty",
+    "m_ObjectId": "eb0e11cb61ab4870ba648aa9e64767bb",
+    "m_Guid": {
+        "m_GuidSerialized": "5d77754c-8235-4779-bd99-70932aba38f6"
+    },
+    "m_Name": "shadowPower",
+    "m_DefaultRefNameVersion": 1,
+    "m_RefNameGeneratedByDisplayName": "shadowPower",
+    "m_DefaultReferenceName": "_shadowPower",
     "m_OverrideReferenceName": "",
     "m_GeneratePropertyBlock": true,
     "m_UseCustomSlotLabel": false,
