@@ -1,4 +1,5 @@
 import bpy
+from . import PUBLISH_RIG_BL_IDNAME
 
 class ASPENRIGGING_PT_panel(bpy.types.Panel):
     bl_label = 'Aspen Rigging'
@@ -9,4 +10,8 @@ class ASPENRIGGING_PT_panel(bpy.types.Panel):
     bl_options = {'DEFAULT_CLOSED'}
 
     def draw(self, context):
+
+        """Draws the Rigging panel."""
         layout = self.layout
+
+        layout.operator(PUBLISH_RIG_BL_IDNAME, icon='EXPORT')
