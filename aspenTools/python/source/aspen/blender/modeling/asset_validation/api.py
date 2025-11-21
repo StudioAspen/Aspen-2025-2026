@@ -58,7 +58,7 @@ def check_asset_vertex_count(context: bpy.types.Context):
     # Code is from depsgraph example in python documentation. See https://docs.blender.org/api/current/bpy.types.Depsgraph.html
     vertex_count = 0
     for obj in bpy.data.objects:
-        if obj is None or obj.type != 'MESH':
+        if obj is None or obj.type != 'MESH' or not obj.visible_get():
             continue
 
         depsgraph = context.evaluated_depsgraph_get()
