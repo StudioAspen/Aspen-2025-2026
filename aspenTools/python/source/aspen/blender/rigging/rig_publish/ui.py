@@ -16,14 +16,14 @@ from aspen.core.telemetry import trace as aspen_trace
 from opentelemetry import trace
 _logger = get_blender_logger()
 
-class ExportManagerMainWindow(SingletonMainWindow):
+class RigPublishMainWindow(SingletonMainWindow):
 
     def __init__(self, parent=None):
         super().__init__(parent=parent)
 
         #for loading UI
         ui_loader.load_ui(
-            os.path.join(os.path.dirname(__file__), 'ui/rig_publish.ui'),
+            os.path.join(os.path.dirname(__file__), 'publishRig.ui'),
             self
         )
 
