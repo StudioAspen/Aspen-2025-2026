@@ -13,6 +13,7 @@ namespace CharonsCorner.Runtime
         public bool isAutoBounce = true;
         public Vector3 manualRepel = Vector3.zero;
         public float repelForceMultiplier;
+        public float minimumForce;
 
         [Header("Linked Node Reference: ")]
         public RailSystem nextNode;
@@ -23,6 +24,8 @@ namespace CharonsCorner.Runtime
 
         private Transform railVisual;
         private BoxCollider railCollider;
+        private BoxCollider railTriggerCollider;
+
         private bool visualNeedsSetup = false;
 
         private void OnValidate()
@@ -30,16 +33,16 @@ namespace CharonsCorner.Runtime
             if (nextNode != null)
             {
 #if UNITY_EDITOR
-            // Delay the creation call so Unity editor is in a safe state
-            EditorApplication.delayCall += () =>
-            {
-                if (this != null) // check object wasn't destroyed meanwhile
+                // Delay the creation call so Unity editor is in a safe state
+                EditorApplication.delayCall += () =>
                 {
-                    SetupRailVisual();
-                    SetupCollider();
-                    EditorUtility.SetDirty(this); // Mark dirty so scene saves changes
-                }
-            };
+                    if (this != null) // check object wasn't destroyed meanwhile
+                    {
+                        SetupRailVisual();
+                        SetupCollider();
+                        EditorUtility.SetDirty(this); // Mark dirty so scene saves changes
+                    }
+                };
 #endif
             }
         }
@@ -84,13 +87,16 @@ namespace CharonsCorner.Runtime
                     railVisual = go.transform;
 
 #if UNITY_EDITOR
-        DestroyImmediate(go.GetComponent<Collider>());
+                    DestroyImmediate(go.GetComponent<Collider>());
 #else
                     Destroy(go.GetComponent<Collider>());
 #endif
 
                     railCollider = go.AddComponent<BoxCollider>();
                     railCollider.isTrigger = true;
+
+                    railTriggerCollider = go.AddComponent<BoxCollider>();
+                    railTriggerCollider.isTrigger = true;
                 }
             }
 
@@ -119,11 +125,19 @@ namespace CharonsCorner.Runtime
             //Apply The Values To The Box Collider:
             railVisual.localScale = new Vector3(railWidthX, railWidthY, length);
 
+            //Box Collider Settings:
             if (railCollider != null)
             {
                 railCollider.center = Vector3.zero;
                 railCollider.size = Vector3.one;
                 railCollider.isTrigger = true;
+            }
+
+            if (railTriggerCollider != null)
+            {
+                railTriggerCollider.center = Vector3.zero;
+                railTriggerCollider.size = Vector3.one;
+                railTriggerCollider.isTrigger = true;
             }
         }
     }

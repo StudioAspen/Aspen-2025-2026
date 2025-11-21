@@ -10,7 +10,6 @@ namespace CharonsCorner.Runtime
         private CollisionDetectionMode _originalMode;
         private bool _modeChanged = false;
 
-
         private void Awake()
         {
             _railSystem = GetComponent<RailSystem>();
@@ -25,6 +24,8 @@ namespace CharonsCorner.Runtime
             Rigidbody playerRb = _player.Rb;
             if (playerRb == null) return;
 
+            playerRb.WakeUp();
+
             if (!_modeChanged)
             {
                 //Save Current Collision Detection:
@@ -35,8 +36,6 @@ namespace CharonsCorner.Runtime
 
                 _modeChanged = true;
             }
-
-            playerRb.WakeUp();
 
             //Variable Setup:
             Vector3 currentVelocity = playerRb.linearVelocity;
@@ -63,13 +62,13 @@ namespace CharonsCorner.Runtime
             Vector3 railEnd = _railSystem.nextNode.transform.position;
             Vector3 railDirection = (railEnd - railStart).normalized;
 
-            //Push Player Along The Rail Direction:
+            //Calculate Player Speed Along The Rail:
             float playerSpeed = currentVelocity.magnitude * _railSystem.repelForceMultiplier;
             float minSpeed = 1f;
             if (playerSpeed < minSpeed) playerSpeed = minSpeed;
 
-            // Apply railDirection force scaled by deltaTime for smoothness
-            float railForceScale = 0.1f; // tune this to your liking
+            //Calculate The Velocity Change Along The Rail Direction:
+            float railForceScale = 0.1f;
             Vector3 deltaVelocity = railDirection * playerSpeed * railForceScale * deltaTime;
 
             //Find Out The Player Position Relative To The Entire railDir:
@@ -102,6 +101,13 @@ namespace CharonsCorner.Runtime
 
             //Apply Repel Force To Player:
             deltaVelocity += repel;
+
+            //Ensure Minimum Force Is Applied:
+            if (deltaVelocity.magnitude < _railSystem.minimumForce)
+            {
+                deltaVelocity = railDirection * _railSystem.minimumForce;
+            }
+
             return deltaVelocity;
         }
 
