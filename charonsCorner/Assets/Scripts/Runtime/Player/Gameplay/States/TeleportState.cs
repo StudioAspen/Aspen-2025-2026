@@ -31,7 +31,7 @@ namespace CharonsCorner.Runtime
                 Teleport();
             }
 
-            if (_context.Rb.transform.position == _currentTeleportBumper.TeleportDestination.position)
+            if (_context.Rb.transform.position == _currentTeleportBumper.GetTeleportDestination().position)
             {
                 _context.SetIsTeleporting(false);
             }
@@ -51,8 +51,8 @@ namespace CharonsCorner.Runtime
         private void Teleport()
         {
             _context.Rb.isKinematic = true;
-            _context.SetPlayerPosition(_currentTeleportBumper.TeleportDestination);
-            _context.StartCoroutine(TempAccelerationIncrease(_currentTeleportBumper.BoostSpeedMultiplier, _currentTeleportBumper.BoostSpeedDuration));
+            _context.SetPlayerPosition(_currentTeleportBumper.GetTeleportDestination());
+            _context.StartCoroutine(TempAccelerationIncrease(_currentTeleportBumper.GetBoostSpeedMultiplier(), _currentTeleportBumper.GetBoostSpeedDuration()));
         }
 
         private IEnumerator TempAccelerationIncrease(float boostMultiplier, float boostDuration)
