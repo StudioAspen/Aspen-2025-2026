@@ -11,11 +11,12 @@ namespace CharonsCorner.Runtime
         private protected override void OnEnter()
         {
             _context.SetIsTeleporting(true);
+            _context.CurrentSubState = _context.TeleportState.GetType().Name;
         }
 
         private protected override void OnExit()
         {
-            _context.SetIsTeleporting(false);
+            _context.Rb.isKinematic = false;
         }
 
         private protected override void OnFixedUpdate()
@@ -25,13 +26,23 @@ namespace CharonsCorner.Runtime
 
         private protected override void OnUpdate()
         {
-            _context.CurrentSubState = _context.TeleportState.GetType().Name;
-            if (_context.IsTeleporting) Teleport();
+            if (_context.IsTeleporting)
+            {
+                Teleport();
+            }
+
+            if (_context.Rb.transform.position == _currentTeleportBumper.TeleportDestination.position)
+            {
+                _context.SetIsTeleporting(false);
+            }
+
+
         }
 
         private protected override State<GameplayPlayerController> GetTransition()
         {
-            if (!_context.IsTeleporting) return _context.GroundState;
+            if (!_context.IsTeleporting) return _context.AirState;
+
             return null;
         }
 
@@ -39,15 +50,17 @@ namespace CharonsCorner.Runtime
 
         private void Teleport()
         {
+            _context.Rb.isKinematic = true;
             _context.SetPlayerPosition(_currentTeleportBumper.TeleportDestination);
-            _context.SetIsTeleporting(false);
             _context.StartCoroutine(TempAccelerationIncrease(_currentTeleportBumper.BoostSpeedMultiplier, _currentTeleportBumper.BoostSpeedDuration));
         }
 
         private IEnumerator TempAccelerationIncrease(float boostMultiplier, float boostDuration)
         {
             _context.Rb.linearVelocity *= boostMultiplier;
+
             yield return new WaitForSeconds(boostDuration);
+
             _context.Rb.linearVelocity /= boostMultiplier;
         }
 

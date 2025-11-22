@@ -5,8 +5,8 @@ namespace CharonsCorner.Runtime
     public class TeleportBumper : MonoBehaviour
     {
         [Header("Destination Parameters")]
-        [field: SerializeField] public Transform TeleportDestination {get; private set;}
-        [field: SerializeField] Color gizmoColor = Color.blue;
+        [field: SerializeField] public Transform TeleportDestination { get; private set; }
+        [field: SerializeField] public Color gizmoColor = Color.blue;
 
         [Header("Post-Destination Boost Parameters")]
         [field: SerializeField] public float BoostSpeedMultiplier { get; private set;}

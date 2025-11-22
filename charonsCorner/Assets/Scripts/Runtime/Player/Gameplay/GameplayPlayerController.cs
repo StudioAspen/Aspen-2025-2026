@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks.Triggers;
 using System;
 using UnityEditor;
 using UnityEngine;
@@ -22,7 +23,7 @@ namespace CharonsCorner.Runtime
         public bool IsGrounded { get; private set; }
 
         public bool CannonAir { get; set; } = false;
-        public bool IsTeleporting { get; private set; } = false;
+        public bool IsTeleporting { get; set; } = false;
 
         #region StateMachine Vars
         public StateMachine<GameplayPlayerController> StateMachine { get; private set; }
@@ -101,7 +102,7 @@ namespace CharonsCorner.Runtime
         #endif
         }
 
-        public void SetPlayerPosition(Transform newPos) => transform.position = newPos.position;
-        public bool SetIsTeleporting(bool val) => IsTeleporting = val;
+        public void SetPlayerPosition(Transform newPos) => Rb.transform.position = newPos.position;
+        public void SetIsTeleporting(bool val) => IsTeleporting = val;
     }
 }
