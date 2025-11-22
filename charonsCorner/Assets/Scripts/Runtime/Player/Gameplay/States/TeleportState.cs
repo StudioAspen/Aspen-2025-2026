@@ -24,7 +24,7 @@ namespace CharonsCorner.Runtime
         private protected override void OnExit()
         {
             _context.Rb.isKinematic = false;
-            _context.Rb.AddForce(_context.Rb.transform.position * _currentTeleportBumper.GetBoostSpeedMultiplier(), ForceMode.VelocityChange);
+            _context.Rb.AddForce(_currentTeleportBumper.GetBoostDiection() * _currentTeleportBumper.GetBoostSpeedMultiplier(), ForceMode.VelocityChange);
         }
 
         private protected override void OnFixedUpdate()
