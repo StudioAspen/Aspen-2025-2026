@@ -10,6 +10,13 @@ namespace CharonsCorner.Runtime
 
         private protected override void OnEnter()
         {
+            if (_currentTeleportBumper == null)
+            {
+                Debug.LogError("Player entered teleport state without a valid TeleportBumper reference");
+                _context.SetIsTeleporting(false);
+                return;
+            }
+
             _context.SetIsTeleporting(true);
             _context.CurrentSubState = _context.TeleportState.GetType().Name;
         }

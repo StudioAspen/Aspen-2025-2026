@@ -16,6 +16,12 @@ namespace CharonsCorner.Runtime
 
         private void OnDrawGizmos()
         {
+            if (_teleportDestination == null)
+            {
+                Debug.LogError("Missing teleport destination object");
+                return;
+            }
+
             const float GIZMO_RADIUS = 1.0f;
 
             Gizmos.color = _gizmoColor;

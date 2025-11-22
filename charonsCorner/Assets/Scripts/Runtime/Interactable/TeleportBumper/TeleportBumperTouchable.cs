@@ -27,6 +27,12 @@ namespace CharonsCorner.Runtime
 
         private void ActivateTeleport()
         {
+            if (_player.TeleportState == null)
+            {
+                Debug.LogError("Teleport State is null in the player controller. Add it");
+                return;
+            }
+
             _player.TeleportState.SetTeleportBumperReference(_teleportBumper);
             _player.StateMachine.ChangeState(_player.TeleportState, true);
         }
