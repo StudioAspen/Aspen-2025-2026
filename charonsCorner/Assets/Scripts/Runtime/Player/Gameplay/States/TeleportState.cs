@@ -52,7 +52,9 @@ namespace CharonsCorner.Runtime
         private void Teleport()
         {
             _context.Rb.isKinematic = true;
-            _context.SetPlayerPosition(_currentTeleportBumper.GetTeleportDestination());
+            SetPlayerPosition(_currentTeleportBumper.GetTeleportDestination());
         }
+
+        void SetPlayerPosition(Transform newPos) => _context.Rb.transform.position = newPos.position;
     }
 }

@@ -119,6 +119,8 @@ namespace CharonsCorner.Runtime
             CannonAir = t;
         }
 
+        public void SetIsTeleporting(bool val) => IsTeleporting = val;
+
         private void OnDrawGizmos()
         {
         #if UNITY_EDITOR
@@ -135,9 +137,6 @@ namespace CharonsCorner.Runtime
                     StateMachine.CurrentState.GetType().Name + ">" + CurrentSubState, style);
             }
         #endif
-        }
-
-        public void SetPlayerPosition(Transform newPos) => Rb.transform.position = newPos.position;
-        public void SetIsTeleporting(bool val) => IsTeleporting = val;
+        }        
     }
 }
