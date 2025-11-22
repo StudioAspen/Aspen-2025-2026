@@ -49,6 +49,11 @@ namespace CharonsCorner.Runtime
             SetupStateMachine();
         }
 
+        private void Start()
+        {
+            SpawnPointManager.Instance.OnRespawn += Respawn;
+        }
+
         private void Update()
         {
             StateMachine.Update();
@@ -114,6 +119,12 @@ namespace CharonsCorner.Runtime
         public void SetCannonAir(bool t)
         {
             CannonAir = t;
+        }
+
+        private void Respawn(Vector3 position)
+        {
+            transform.position = position;
+            Rb.linearVelocity = Vector3.zero;
         }
 
         private void OnDrawGizmos()
