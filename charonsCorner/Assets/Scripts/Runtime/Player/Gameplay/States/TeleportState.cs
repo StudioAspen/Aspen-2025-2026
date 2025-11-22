@@ -24,7 +24,7 @@ namespace CharonsCorner.Runtime
         private protected override void OnExit()
         {
             _context.Rb.isKinematic = false;
-            _context.Rb.AddForce(_currentTeleportBumper.GetBoostDiection() * _currentTeleportBumper.GetBoostSpeedMultiplier(), ForceMode.VelocityChange);
+            PostTeleportBoost();
         }
 
         private protected override void OnFixedUpdate()
@@ -54,7 +54,6 @@ namespace CharonsCorner.Runtime
             return null;
         }
 
-        public void SetTeleportBumperReference(TeleportBumper teleportBumper) => _currentTeleportBumper = teleportBumper;
 
         private void Teleport()
         {
@@ -63,5 +62,8 @@ namespace CharonsCorner.Runtime
         }
 
         void SetPlayerPosition(Transform newPos) => _context.Rb.transform.position = newPos.position;
+        public void SetTeleportBumperReference(TeleportBumper teleportBumper) => _currentTeleportBumper = teleportBumper;
+
+        void PostTeleportBoost() => _context.Rb.AddForce(_currentTeleportBumper.GetBoostDiection() * _currentTeleportBumper.GetBoostSpeedMultiplier(), ForceMode.VelocityChange);
     }
 }
