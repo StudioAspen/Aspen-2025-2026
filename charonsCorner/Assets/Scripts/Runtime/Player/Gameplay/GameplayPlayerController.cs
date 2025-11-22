@@ -26,6 +26,7 @@ namespace CharonsCorner.Runtime
         public bool IsGrounded { get; private set; }
         public bool CannonAir { get; private set; } = false;
         public CannonBall CurrentCannon { get; private set; }
+        public bool IsTeleporting { get; private set; } = false;
 
 
         #region StateMachine Vars
@@ -36,8 +37,9 @@ namespace CharonsCorner.Runtime
         [field: SerializeField] public AirSuperState AirSuperState { get; private set; } = new();
         [field: SerializeField] public CannonBallSuperState CannonBallSuperState { get; private set; } = new();
         [field: SerializeField] public DriftSuperState DriftSuperState { get; private set; } = new();
+        [field: SerializeField] public TeleportState TeleportState { get; private set; } = new();
 
-        
+
         [HideInInspector] public String CurrentSubState;
         #endregion
 
@@ -105,7 +107,8 @@ namespace CharonsCorner.Runtime
             AirSuperState.Init(StateMachine, this);
             CannonBallSuperState.Init(StateMachine, this);  
             DriftSuperState.Init(StateMachine, this);
-                    }
+            TeleportState.Init(StateMachine, this);
+        }
 
         public void SetCurrentCannon(CannonBall cannon)
         {
@@ -133,5 +136,8 @@ namespace CharonsCorner.Runtime
             }
         #endif
         }
+
+        public void SetPlayerPosition(Transform newPos) => Rb.transform.position = newPos.position;
+        public void SetIsTeleporting(bool val) => IsTeleporting = val;
     }
 }
