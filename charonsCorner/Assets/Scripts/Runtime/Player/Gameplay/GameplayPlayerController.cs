@@ -24,6 +24,9 @@ namespace CharonsCorner.Runtime
         public SphereCollider Collider { get; private set; }
         public SlopeSensor SlopeSensor { get; private set; }
         public bool IsGrounded { get; private set; }
+        public bool CannonAir { get; private set; } = false;
+        public CannonBall CurrentCannon { get; private set; }
+
 
         #region StateMachine Vars
         public StateMachine<GameplayPlayerController> StateMachine { get; private set; }
@@ -31,7 +34,7 @@ namespace CharonsCorner.Runtime
         [field: Header("State Machine")]
         [field: SerializeField] public GroundSuperState GroundSuperState { get; private set; } = new();
         [field: SerializeField] public AirSuperState AirSuperState { get; private set; } = new();
-        
+        [field: SerializeField] public CannonBallSuperState CannonBallSuperState { get; private set; } = new();
         [field: SerializeField] public DriftSuperState DriftSuperState { get; private set; } = new();
 
         
@@ -53,16 +56,37 @@ namespace CharonsCorner.Runtime
         
         private void FixedUpdate()
         {
-            ApplyGravity();
             CheckGrounded();
             StateMachine.FixedUpdate();
         }
 
-        private void ApplyGravity()
+        public void ApplyGravity()
         {
             Rb.AddForce(Vector3.down * _gravityAmount, ForceMode.Acceleration);
         }
-        
+
+        private Collider[] _overlapResults = new Collider[10]; // Reusable buffer
+        public bool CheckOverlap(LayerMask layerMask, float sizeScale, out Collider hitCollider)
+        {
+            //Reset Out Parameter:
+            hitCollider = null;
+            if (Collider == null) return false;
+
+            Vector3 center = Collider.bounds.center;
+            float radius = Collider.radius * sizeScale;
+
+            //Check Overlap Sphere:
+            int hitCount = Physics.OverlapSphereNonAlloc(center, radius, _overlapResults, layerMask, QueryTriggerInteraction.Ignore);
+            for (int i = 0; i < hitCount; i++)
+            {
+                if (_overlapResults[i] == Collider) continue;
+                hitCollider = _overlapResults[i];
+                return true;
+            }
+
+            return false;
+        }
+
         private void CheckGrounded()
         {
             IsGrounded = Physics.CheckSphere(transform.position + Vector3.down * _groundCheckLength, Collider.radius * 0.9f, _groundLayer);
@@ -74,12 +98,22 @@ namespace CharonsCorner.Runtime
         private void SetupStateMachine()
         {
             StateMachine = new StateMachine<GameplayPlayerController>(this);
-
+           
             GroundSuperState.Init(StateMachine, this);
-            AirSuperState.Init(StateMachine, this);
-            DriftSuperState.Init(StateMachine, this);
-            
+
             StateMachine.ChangeState(GroundSuperState, true);
+            AirSuperState.Init(StateMachine, this);
+            CannonBallSuperState.Init(StateMachine, this);  
+            DriftSuperState.Init(StateMachine, this);
+                    }
+
+        public void SetCurrentCannon(CannonBall cannon)
+        {
+            CurrentCannon = cannon;
+        }   
+        public void SetCannonAir(bool t)
+        {
+            CannonAir = t;
         }
 
         private void OnDrawGizmos()
