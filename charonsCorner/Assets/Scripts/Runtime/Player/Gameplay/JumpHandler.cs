@@ -8,7 +8,7 @@ namespace CharonsCorner.Runtime
         private GameplayPlayerController _player;
         [Header("Jump Settings")]
         [Tooltip("Force applied when jump is initiated")]
-        [SerializeField] private float _jumpForce = 40f; //double jump force
+        [SerializeField] private float _jumpForce = 10f; 
         [Tooltip("Scale down upward velocity on early release by this value")]
         [SerializeField, Range(0f, 1f)] private float _earlyReleaseMultiplier = 0.5f;
 
@@ -21,7 +21,7 @@ namespace CharonsCorner.Runtime
         [Tooltip("Maximum upward velocity after bounce")]
         [SerializeField] private float _maxBounceVelocity = 20f; // cap the maximum bounce velocity
 
-        void Awake()
+        private void Awake()
         {
             _player = GetComponent<GameplayPlayerController>();
         }
@@ -33,7 +33,7 @@ namespace CharonsCorner.Runtime
 
         }
 
-        void OnEnable()
+        private void OnEnable()
         {
             // subscribe to new JumpPressed and JumpReleased events, hold-to-jump logic
             InputManager.Instance.JumpPressed += OnJumpPressed;
@@ -42,8 +42,8 @@ namespace CharonsCorner.Runtime
             // keep existing Jump event subscribed for compatibility if other code uses it
             InputManager.Instance.Jump += OnJumpPerformed;
         }
-        
-        void OnDisable()
+
+        private void OnDisable()
         {
             InputManager.Instance.JumpPressed -= OnJumpPressed;
             InputManager.Instance.JumpReleased -= OnJumpReleased;
@@ -76,7 +76,6 @@ namespace CharonsCorner.Runtime
 
         private void StartJump()
         {
-            // Debug.Log("Jump");
             _player.Rb.linearVelocity = new Vector3(_player.Rb.linearVelocity.x, 0f, _player.Rb.linearVelocity.z);
             _player.Rb.AddForce(_player.Orientation.up * _jumpForce, ForceMode.VelocityChange);
         }
@@ -89,7 +88,6 @@ namespace CharonsCorner.Runtime
 
                 if (_player.SlopeSensor.IsOnSlope) // If on slope, do not bounce
                 {
-                    //Debug.Log("Landed on slope, no bounce.");
                     return;
                 }
 
@@ -101,7 +99,6 @@ namespace CharonsCorner.Runtime
                         velocity.y = _maxBounceVelocity; // cap max bounce velocity
                     }
                     _player.Rb.linearVelocity = velocity;
-                    //Debug.Log("Bounce! New Y Velocity: " + velocity.y);
                 }
             }
         }
