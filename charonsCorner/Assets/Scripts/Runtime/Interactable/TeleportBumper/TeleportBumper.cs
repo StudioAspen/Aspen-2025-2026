@@ -10,7 +10,7 @@ namespace CharonsCorner.Runtime
 
         [Header("Post-Destination Boost Parameters")]
         [SerializeField] private float _boostSpeedMultiplier = 2;
-        [SerializeField] private BoostDiection _boostDirection;
+        [SerializeField] private BoostDirection _boostDirection;
         private Vector3 _boostDirectionVec = Vector3.back;
 
         [Header("Debug Parameters")]
@@ -29,7 +29,7 @@ namespace CharonsCorner.Runtime
             }
         }
 
-        private enum BoostDiection {
+        private enum BoostDirection {
             Back,
             Down, 
             Forward,
@@ -38,26 +38,26 @@ namespace CharonsCorner.Runtime
             Up
         }
 
-        void SelectedBoostDirection(BoostDiection direction)
+        private void SelectedBoostDirection(BoostDirection direction)
         {
             switch (direction)
             {
-                case BoostDiection.Back:
+                case BoostDirection.Back:
                     _boostDirectionVec = Vector3.back;
                     break;
-                case BoostDiection.Down:
+                case BoostDirection.Down:
                     _boostDirectionVec = Vector3.down;
                     break;
-                case BoostDiection.Forward:
+                case BoostDirection.Forward:
                     _boostDirectionVec = Vector3.forward;
                     break;
-                case BoostDiection.Left:
+                case BoostDirection.Left:
                     _boostDirectionVec = Vector3.left;
                     break;
-                case BoostDiection.Right:
+                case BoostDirection.Right:
                     _boostDirectionVec = Vector3.right;
                     break;
-                case BoostDiection.Up:
+                case BoostDirection.Up:
                     _boostDirectionVec = Vector3.up;
                     break;
             }

@@ -10,7 +10,7 @@ namespace CharonsCorner.Runtime
         private bool _isActivated = false;
 
         // Start is called once before the first execution of Update after the MonoBehaviour is created
-        void Start()
+        private void Start()
         {
             _teleportBumper = GetComponent<TeleportBumper>();
             _player = FindAnyObjectByType<GameplayPlayerController>();
