@@ -1,12 +1,12 @@
 
 import bpy
 from aspen.blender.common.export_manager.ui import ExportManagerMainWindow
+from aspen.blender.common.results_log import ui
 from aspen.blender.core import flags
 
 from . import EXPORT_MANAGER_BL_IDNAME
 
 from aspen.core.telemetry import trace
-
 
 class COMMONPIPELINE_OT_exportmanager(bpy.types.Operator):
     """An operator used to export directly into the unity project."""
