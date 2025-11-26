@@ -28,6 +28,9 @@ namespace CharonsCorner.Runtime
         public CannonBall CurrentCannon { get; private set; }
 
 
+        public bool JustLanded { get; set; }
+        private bool _wasGrounded { get; set; }
+
         #region StateMachine Vars
         public StateMachine<GameplayPlayerController> StateMachine { get; private set; }
         
@@ -89,9 +92,14 @@ namespace CharonsCorner.Runtime
 
         private void CheckGrounded()
         {
-            IsGrounded = Physics.CheckSphere(transform.position + Vector3.down * _groundCheckLength, Collider.radius * 0.9f, _groundLayer);
-        }
+            bool grounded = Physics.CheckSphere(transform.position + Vector3.down * _groundCheckLength, Collider.radius * 0.9f, _groundLayer);
 
+            JustLanded = !_wasGrounded && grounded; // true if we were not grounded last frame but are grounded now
+
+            _wasGrounded = grounded;
+            IsGrounded = grounded;
+        }
+        
         /// <summary>
         /// Runs in awake. Sets up the state machine and all the states for the player controller.
         /// </summary>
