@@ -11,8 +11,8 @@ namespace CharonsCorner.Runtime
     public class PinKnockback : MonoBehaviour
     {
         [Header("Base Impulses")]
-        [SerializeField] private float _baseHorizontalImpulse = 6f;
-        [SerializeField] private float _baseUpwardImpulse = 4f;
+        [SerializeField] private float _baseHorizontalImpulse = 20f;
+        [SerializeField] private float _baseUpwardImpulse = 20f;
 
         [Header("Speed")]
         [SerializeField] private float _minSpeedForKnockback = 1f;
@@ -25,6 +25,7 @@ namespace CharonsCorner.Runtime
 
         private Rigidbody _rigidbody;
         private float _lastHitTime = -10f; // Start negative for first collision
+        private bool hasBeenHit = false;
 
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
@@ -35,7 +36,21 @@ namespace CharonsCorner.Runtime
         // Update is called once per frame
         void Update()
         {
-            
+
+        }
+
+        // dampen the "infinite" spinning that happens sometimes
+        void FixedUpdate()
+        {
+            if (!hasBeenHit) return;
+
+            Vector3 av = _rigidbody.angularVelocity;
+
+            // Kill some Y spin every step (0.0–1.0, closer to 0 = stronger damping)
+            float damping = 0.9f;
+            av.y *= damping;
+
+            _rigidbody.angularVelocity = av;
         }
 
         // Called when the script is loaded
@@ -52,10 +67,14 @@ namespace CharonsCorner.Runtime
         /// <param name="collision"></param>
         private void OnCollisionEnter(Collision collision)
         {
-            //if (!collision.collider.CompareTag("Player")) return;
+            bool isPlayer = collision.collider.CompareTag("Player");
+            bool isPin = collision.gameObject.layer == 7;
+
+            if (!isPlayer && !isPin) return;
+
             if (Time.time - _lastHitTime < _hitCooldown) return;
             _lastHitTime = Time.time;
-
+            hasBeenHit = true;
 
             float speed = GetApproachSpeed(collision);
             float t = Mathf.InverseLerp(_minSpeedForKnockback, _maxSpeedForKnockback, speed);
