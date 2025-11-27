@@ -1,0 +1,2 @@
+ASSET_VALIDATION_BL_IDNAME = 'modeling_pipeline.asset_validation'
+HELP_ASSET_VALIDATION_BL_IDNAME = 'modeling_pipeline.show_asset_validation_help'
