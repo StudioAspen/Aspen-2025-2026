@@ -6,7 +6,7 @@ namespace CharonsCorner.Runtime
     {
         [SerializeField] private Transform _orientation;
         
-        public void Update()
+        public void LateUpdate()
         {
             // Rotate orientation towards camera
             Vector3 viewDir = _orientation.position - new Vector3(transform.position.x, _orientation.position.y, transform.position.z); 
