@@ -7194,6 +7194,37 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 548322870}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &551536908
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 551536909}
+  m_Layer: 0
+  m_Name: Elevator
+  m_TagString: SpawnPoint
+  m_Icon: {fileID: 1206586993520771344, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &551536909
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 551536908}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.00009484588, y: -0.9514468, z: 0.00029470373, w: -0.3078131}
+  m_LocalPosition: {x: -31.163984, y: -197.0615, z: 472.42206}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1176476694}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &562283350
 GameObject:
   m_ObjectHideFlags: 0
@@ -13753,6 +13784,7 @@ Transform:
   - {fileID: 340427166}
   - {fileID: 975401797}
   - {fileID: 2110166383}
+  - {fileID: 551536909}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1183664880
@@ -25147,12 +25179,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b1d6b4652c0c794bbae4c64319002ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  elevator: {fileID: 1613457460}
-  startPos: {fileID: 1659857010}
-  endPos: {fileID: 1335987387}
-  moveSpeed: 0.5
-  arrivalRadius: 0.25
-  playerOnElevator: 0
+  _elevator: {fileID: 1613457460}
+  _startPos: {fileID: 1659857010}
+  _endPos: {fileID: 1335987387}
+  _moveSpeed: 0.5
+  _arrivalRadius: 0.25
+  _playerOnElevator: 0
 --- !u!1 &2023030466
 GameObject:
   m_ObjectHideFlags: 0
