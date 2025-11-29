@@ -16,13 +16,11 @@ namespace CharonsCorner.Runtime
 
         public float LevelTimeSeconds => _levelTimer;
 
-        // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
         {
         
         }
 
-        // Update is called once per frame
         void Update()
         {
             _levelTimer += Time.deltaTime; // will probably need to be adjusted in the future

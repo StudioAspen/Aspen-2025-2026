@@ -1,27 +1,30 @@
 using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace CharonsCorner.Runtime
 {
     public class Elevator : MonoBehaviour
     {
-        [SerializeField] private Transform elevator;
-        [SerializeField] private Transform startPos, endPos;
-        [SerializeField] private float moveSpeed = 0.5f, arrivalRadius = 0.25f;
-        [SerializeField] private bool playerOnElevator;
+        [SerializeField] private Transform _elevator;
+        [SerializeField] private Transform _startPos;
+        [SerializeField] private Transform _endPos;
+        [SerializeField] private float _moveSpeed = 0.5f;
+        [SerializeField] private float _arrivalRadius = 0.25f;
+        [SerializeField] private bool _playerOnElevator;
         private void Update()
         {
-            if (Vector3.Distance(elevator.position, endPos.position) < arrivalRadius && playerOnElevator) return;
+            if (Vector3.Distance(_elevator.position, _endPos.position) < _arrivalRadius && _playerOnElevator) return;
 
-            if (Vector3.Distance(elevator.position, startPos.position) < arrivalRadius && !playerOnElevator) return;
+            if (Vector3.Distance(_elevator.position, _startPos.position) < _arrivalRadius && !_playerOnElevator) return;
             
-            if (playerOnElevator)
+            if (_playerOnElevator)
             {
-                elevator.position = Vector3.Lerp(elevator.position, endPos.position, moveSpeed * Time.deltaTime);
+                _elevator.position = Vector3.Lerp(_elevator.position, _endPos.position, _moveSpeed * Time.deltaTime);
             }
             else
             {
-                elevator.position = Vector3.Lerp(elevator.position, startPos.position, moveSpeed * Time.deltaTime);
+                _elevator.position = Vector3.Lerp(_elevator.position, _startPos.position, _moveSpeed * Time.deltaTime);
             }
         }
 
@@ -29,14 +32,14 @@ namespace CharonsCorner.Runtime
         {
             if (other.TryGetComponent(out GameplayPlayerController player))
             {
-                playerOnElevator = true;
+                _playerOnElevator = true;
             }
         }
         private void OnTriggerExit(Collider other)
         {
             if (other.TryGetComponent(out GameplayPlayerController player))
             {
-                playerOnElevator = false;
+                _playerOnElevator = false;
             }
         }
 

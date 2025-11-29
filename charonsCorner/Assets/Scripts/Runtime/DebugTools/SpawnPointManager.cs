@@ -1,53 +1,50 @@
 using System;
-using Codice.Client.BaseCommands.Download;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace CharonsCorner.Runtime
 {
     public class SpawnPointManager : Singleton<SpawnPointManager>
     {
-        [SerializeField] private TextMeshProUGUI spawnPointText;
-        
-        private GameObject[] spawnPoints;
-        private int currentSpawnPoint = 0;
+        [SerializeField] private TextMeshProUGUI _spawnPointText;
+        private GameObject[] _spawnPoints;
+        private int _currentSpawnPoint = 0;
 
         public Action<Vector3> OnRespawn;
-        // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
         {
-            spawnPoints = GameObject.FindGameObjectsWithTag("SpawnPoint");
+            _spawnPoints = GameObject.FindGameObjectsWithTag("SpawnPoint");
             UpdateUI();
         }
-
-        // Update is called once per frame
+        
         void Update()
         {
             if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.Q))
             {
-                currentSpawnPoint--;
+                _currentSpawnPoint--;
                 
-                if(currentSpawnPoint < 0)
-                    currentSpawnPoint = spawnPoints.Length - 1;
+                if(_currentSpawnPoint < 0)
+                    _currentSpawnPoint = _spawnPoints.Length - 1;
                 
                 UpdateUI();
             }
 
             if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.E))
             {
-                currentSpawnPoint = (currentSpawnPoint + 1) % spawnPoints.Length;
+                _currentSpawnPoint = (_currentSpawnPoint + 1) % _spawnPoints.Length;
                 UpdateUI();
             }
 
             if (Input.GetKeyDown(KeyCode.R))
             {
-                OnRespawn?.Invoke(spawnPoints[currentSpawnPoint].transform.position);
+                OnRespawn?.Invoke(_spawnPoints[_currentSpawnPoint].transform.position);
             }
         }
 
         private void UpdateUI()
         {
-            spawnPointText.text = spawnPoints[currentSpawnPoint].name;
+            _spawnPointText.text = _spawnPoints[_currentSpawnPoint].name;
         }
     }
 }
