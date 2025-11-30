@@ -6857,7 +6857,7 @@ ParticleSystem:
   emitterVelocityMode: 1
   looping: 1
   prewarm: 0
-  playOnAwake: 1
+  playOnAwake: 0
   useUnscaledTime: 0
   autoRandomSeed: 1
   startDelay:
@@ -14318,10 +14318,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2ac4881c79514440b1decf090310aa6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  particleTransform: {fileID: 524878226}
-  startRotation: {x: 0, y: 0, z: 0, w: 0}
-  upToNormal: {x: 0, y: 0, z: 0, w: 0}
-  PS: {fileID: 524878229}
+  _particleTransform: {fileID: 524878226}
+  _startRotation: {x: 0, y: 0, z: 0, w: 0}
+  _upToNormal: {x: 0, y: 0, z: 0, w: 0}
+  _DustTrailParticles: {fileID: 1137940743}
+  _CloudLandingParticles: {fileID: 524878229}
+  _MaxAirTime: 10
+  _canParticleTrigger: 1
+  timer: 0
 --- !u!1 &2027331181
 GameObject:
   m_ObjectHideFlags: 0
