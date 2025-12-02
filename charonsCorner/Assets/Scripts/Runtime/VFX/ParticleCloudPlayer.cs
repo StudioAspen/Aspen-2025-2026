@@ -27,6 +27,12 @@ namespace CharonsCorner.Runtime
         {
             timer += Time.deltaTime;
         }
+        if (timer >= _MaxAirTime)
+        {
+            Debug.Log("playing dust trail");
+            _DustTrailParticles.Play();
+        }
+        
 
     }
 
@@ -46,12 +52,16 @@ namespace CharonsCorner.Runtime
 
         _DustTrailParticles.Play();
 
-        if (timer >= _MaxAirTime)
-        {
-            _CloudLandingParticles.Play();  
-            timer = 0;
-        }
+        // if (timer >= _MaxAirTime)
+        // {
+        //     _CloudLandingParticles.Play();  
+        //     timer = 0;
+        // }
         
     }
-}
+        public void OnCollisionExit(Collision collision)
+        {
+            _DustTrailParticles.Stop();
+        }
+    }
 }
