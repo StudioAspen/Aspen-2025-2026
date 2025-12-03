@@ -143,10 +143,17 @@ namespace CharonsCorner.Runtime
 
         private void Drift(bool drift)
         {
+            if (_driftCooldownRoutine != null)
+            {
+                return;
+            }
+
             if (drift && _canDrift)
+            {
                 StateMachine.ChangeState(DriftSuperState);
                 _canDrift = false;
-
+            }
+            
             _driftCooldownRoutine = StartCoroutine(DriftCooldown());
         }
 
