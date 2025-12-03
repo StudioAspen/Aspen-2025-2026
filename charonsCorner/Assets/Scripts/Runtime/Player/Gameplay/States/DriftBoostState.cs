@@ -19,6 +19,11 @@ namespace CharonsCorner.Runtime
         [SerializeField] private float _timeScaleSpeed = 20f;
         
         [SerializeField] private float _stateDuration = 0.4f;
+
+        [Header("Drift Boost VFX")]
+        [SerializeField] private GameObject _BoostVFX;
+
+
         public bool IsComplete { get; private set; }
         private float _timer;
 
@@ -27,6 +32,7 @@ namespace CharonsCorner.Runtime
             _timer = 0f;
             _context.CurrentSubState = GetType().Name;
             _context.Rb.AddForce(_driftDirection.forward * _boostAmount, ForceMode.VelocityChange);
+            _BoostVFX.SetActive(true);
         }
 
         private protected override void OnExit()
@@ -36,6 +42,7 @@ namespace CharonsCorner.Runtime
             _context.PlayerCamera.Lens.FieldOfView = _baseFOV;
             Time.timeScale = 1;
             IsComplete = false;
+            _BoostVFX.SetActive(false);
         }
 
         private protected override void OnUpdate()
