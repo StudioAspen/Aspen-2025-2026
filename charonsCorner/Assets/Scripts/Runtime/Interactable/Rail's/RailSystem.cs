@@ -10,17 +10,31 @@ namespace CharonsCorner.Runtime
     public class RailSystem : MonoBehaviour
     {
         [Header("Bounce Settings: ")]
-        public bool isAutoBounce = true;
-        public Vector3 manualRepel = Vector3.zero;
-        public float repelForceMultiplier;
-        public float minimumForce;
+        [SerializeField] private bool _isAutoBounce = true;
+        [SerializeField] private Vector3 _manualRepel = Vector3.zero;
+        [Space]
+        [SerializeField] private float _repelForceMultiplier;
+        [SerializeField] private float _minimumForce;
+        [SerializeField] private float _maximumForce;
+
+        public bool IsAutoBounce => _isAutoBounce;
+        public Vector3 ManualRepel => _manualRepel;
+        public float RepelForceMultiplier => _repelForceMultiplier;
+        public float MinimumForce => _minimumForce;
+        public float MaximumForce => _maximumForce;
+
 
         [Header("Linked Node Reference: ")]
-        public RailSystem nextNode;
+        [SerializeField] private RailSystem _nextNode;
+        public RailSystem NextNode => _nextNode;
 
         [Header("Appearance: ")]
-        [Range(0.001f, 10f)] public float railWidthX = 1f;
-        [Range(0.001f, 10f)] public float railWidthY = 1f;
+        [SerializeField] [Range(0.001f, 10f)] private float _railWidthX = 1f;
+        [SerializeField] [Range(0.001f, 10f)] private float _railWidthY = 1f;
+
+        public float RailWidthX => _railWidthX;
+        public float RailWidthY => _railWidthY;
+
 
         private Transform railVisual;
         private BoxCollider railCollider;
@@ -30,7 +44,7 @@ namespace CharonsCorner.Runtime
 
         private void OnValidate()
         {
-            if (nextNode != null)
+            if (_nextNode != null)
             {
 #if UNITY_EDITOR
                 // Delay the creation call so Unity editor is in a safe state
@@ -64,7 +78,7 @@ namespace CharonsCorner.Runtime
 
         private void SetupRailVisual()
         {
-            if (nextNode == null)
+            if (_nextNode == null)
             {
                 if (railVisual != null)
                     railVisual.gameObject.SetActive(false);
@@ -91,10 +105,11 @@ namespace CharonsCorner.Runtime
 #else
                     Destroy(go.GetComponent<Collider>());
 #endif
-
+                    //Physical Collider:
                     railCollider = go.AddComponent<BoxCollider>();
-                    railCollider.isTrigger = true;
+                    railCollider.isTrigger = false;
 
+                    //Trigger Collider:
                     railTriggerCollider = go.AddComponent<BoxCollider>();
                     railTriggerCollider.isTrigger = true;
                 }
@@ -105,11 +120,11 @@ namespace CharonsCorner.Runtime
 
         private void SetupCollider()
         {
-            if (nextNode == null || railVisual == null) return;
+            if (_nextNode == null || railVisual == null) return;
 
             //Set Up Collider Settings Of Child Object For The Rails:
             Vector3 start = transform.position;
-            Vector3 end = nextNode.transform.position;
+            Vector3 end = _nextNode.transform.position;
             Vector3 mid = (start + end) * 0.5f;
 
             //Calculate and Set Middle Position To Be Where the Collider Is Set:
@@ -123,16 +138,17 @@ namespace CharonsCorner.Runtime
             if (length > 0.001f) railVisual.rotation = Quaternion.LookRotation(direction.normalized, Vector3.up);
 
             //Apply The Values To The Box Collider:
-            railVisual.localScale = new Vector3(railWidthX, railWidthY, length);
+            railVisual.localScale = new Vector3(_railWidthX, _railWidthY, length);
 
             //Box Collider Settings:
             if (railCollider != null)
             {
                 railCollider.center = Vector3.zero;
                 railCollider.size = Vector3.one;
-                railCollider.isTrigger = true;
+                railCollider.isTrigger = false;
             }
 
+            //Trigger Collider Settings:
             if (railTriggerCollider != null)
             {
                 railTriggerCollider.center = Vector3.zero;

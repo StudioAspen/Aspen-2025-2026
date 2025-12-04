@@ -55,15 +55,15 @@ namespace CharonsCorner.Runtime
 
         private Vector3 CalculateVelocityChange(Vector3 currentVelocity, float deltaTime)
         {
-            if (_railSystem.nextNode == null) return Vector3.zero;
+            if (_railSystem.NextNode == null) return Vector3.zero;
 
             //Rail Direction To Next Node:
             Vector3 railStart = _railSystem.transform.position;
-            Vector3 railEnd = _railSystem.nextNode.transform.position;
+            Vector3 railEnd = _railSystem.NextNode.transform.position;
             Vector3 railDirection = (railEnd - railStart).normalized;
 
             //Calculate Player Speed Along The Rail:
-            float playerSpeed = currentVelocity.magnitude * _railSystem.repelForceMultiplier;
+            float playerSpeed = currentVelocity.magnitude * _railSystem.RepelForceMultiplier;
             float minSpeed = 1f;
             if (playerSpeed < minSpeed) playerSpeed = minSpeed;
 
@@ -81,7 +81,7 @@ namespace CharonsCorner.Runtime
             //Set A Repel Force:
             Vector3 repel = Vector3.zero;
 
-            if (_railSystem.isAutoBounce)
+            if (_railSystem.IsAutoBounce)
             {
                 //Apply The Calculated Bounce Angle -> Repel Force:
                 if (fromRailToPlayer.sqrMagnitude > 0.001f)
@@ -90,9 +90,9 @@ namespace CharonsCorner.Runtime
             else
             {
                 //Manually Set Vector3 Values For Set Bounces:
-                repel.x = _railSystem.manualRepel.x != 0 ? _railSystem.manualRepel.x : fromRailToPlayer.x;
-                repel.y = _railSystem.manualRepel.y != 0 ? _railSystem.manualRepel.y : fromRailToPlayer.y;
-                repel.z = _railSystem.manualRepel.z != 0 ? _railSystem.manualRepel.z : fromRailToPlayer.z;
+                repel.x = _railSystem.ManualRepel.x != 0 ? _railSystem.ManualRepel.x : fromRailToPlayer.x;
+                repel.y = _railSystem.ManualRepel.y != 0 ? _railSystem.ManualRepel.y : fromRailToPlayer.y;
+                repel.z = _railSystem.ManualRepel.z != 0 ? _railSystem.ManualRepel.z : fromRailToPlayer.z;
 
                 //Apply The Calculated Bounce Angle + Manual Values -> Repel Force:
                 if (repel.sqrMagnitude > 0.001f)
@@ -102,11 +102,19 @@ namespace CharonsCorner.Runtime
             //Apply Repel Force To Player:
             deltaVelocity += repel;
 
-            //Ensure Minimum Force Is Applied:
-            if (deltaVelocity.magnitude < _railSystem.minimumForce)
+            //Clamp The Force Values:
+            if (deltaVelocity.magnitude < _railSystem.MinimumForce)
             {
-                deltaVelocity = railDirection * _railSystem.minimumForce;
+                deltaVelocity = repel.normalized * _railSystem.MinimumForce;
             }
+            else if (deltaVelocity.magnitude > _railSystem.MaximumForce)
+            {
+                deltaVelocity = repel.normalized * _railSystem.MaximumForce;
+            }
+
+            //Debug Information:
+            Debug.Log(deltaVelocity.magnitude);
+            Debug.DrawRay(_player.transform.position, deltaVelocity, Color.yellow, 0.5f);
 
             return deltaVelocity;
         }
