@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 namespace CharonsCorner.Runtime
@@ -10,22 +11,34 @@ namespace CharonsCorner.Runtime
         private CollisionDetectionMode _originalMode;
         private bool _modeChanged = false;
 
+        private bool _initialized = false;
+
+
         private void Awake()
         {
             _railSystem = GetComponent<RailSystem>();
             _player = FindFirstObjectByType<GameplayPlayerController>();
         }
 
+        //Delay HandleTouch Until Next Frame To Ensure All Systems Are Initialized:
+        private IEnumerator Start()
+        {
+            yield return null;
+            _initialized = true;
+        }
 
         public void HandleTouch()
         {
+            //Validation Checks:
+            if (!_initialized) return;
             if (_player == null || _railSystem == null) return;
 
+            //Get Player Rigidbody:
             Rigidbody playerRb = _player.Rb;
             if (playerRb == null) return;
-
             playerRb.WakeUp();
 
+            //Change Collision Detection Mode If Not Changed Yet:
             if (!_modeChanged)
             {
                 //Save Current Collision Detection:
@@ -50,6 +63,7 @@ namespace CharonsCorner.Runtime
                 Vector3 impulse = velocityChange * playerRb.mass;
                 playerRb.AddForce(impulse, ForceMode.Impulse);
             }
+
         }
 
 
