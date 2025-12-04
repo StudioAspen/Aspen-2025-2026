@@ -71,10 +71,16 @@ namespace CharonsCorner.Runtime
             }
         }
 
+#if UNITY_EDITOR
         private void Update()
         {
-            SetupCollider();
+            //Only Run In Editor Mode:
+            if (!Application.isPlaying && _nextNode != null)
+            {
+                SetupCollider();
+            }
         }
+#endif
 
         private void SetupRailVisual()
         {

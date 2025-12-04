@@ -112,9 +112,12 @@ namespace CharonsCorner.Runtime
                 deltaVelocity = repel.normalized * _railSystem.MaximumForce;
             }
 
+
+#if UNITY_EDITOR
             //Debug Information:
             Debug.Log(deltaVelocity.magnitude);
             Debug.DrawRay(_player.transform.position, deltaVelocity, Color.yellow, 0.5f);
+#endif
 
             return deltaVelocity;
         }
