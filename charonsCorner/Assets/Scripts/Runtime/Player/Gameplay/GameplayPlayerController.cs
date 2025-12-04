@@ -60,11 +60,6 @@ namespace CharonsCorner.Runtime
         private void Update()
         {
             StateMachine.Update();
-
-            if (!_canDrift && _driftCooldownRoutine == null)
-            {
-                _driftCooldownRoutine = StartCoroutine(DriftCooldown());
-            }
         }
         
         private void FixedUpdate()
@@ -152,9 +147,8 @@ namespace CharonsCorner.Runtime
             {
                 StateMachine.ChangeState(DriftSuperState);
                 _canDrift = false;
+                _driftCooldownRoutine = StartCoroutine(DriftCooldown());
             }
-            
-            _driftCooldownRoutine = StartCoroutine(DriftCooldown());
         }
 
         IEnumerator DriftCooldown()
