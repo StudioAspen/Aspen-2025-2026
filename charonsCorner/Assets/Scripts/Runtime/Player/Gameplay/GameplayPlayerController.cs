@@ -9,8 +9,6 @@ namespace CharonsCorner.Runtime
     public class GameplayPlayerController : MonoBehaviour
     {
         [SerializeField] private float _gravityAmount = 30f;
-        private float _verticalVelocity = 0f;
-
 
         [Header("Ground Check")]
         [SerializeField] private float _groundCheckLength = 0.5f;
@@ -26,25 +24,22 @@ namespace CharonsCorner.Runtime
         public SphereCollider Collider { get; private set; }
         public SlopeSensor SlopeSensor { get; private set; }
         public bool IsGrounded { get; private set; }
+        public bool CannonAir { get; private set; } = false;
+        public CannonBall CurrentCannon { get; private set; }
+        public bool IsTeleporting { get; private set; } = false;
 
-        public bool CannonAir { get; set; } = false;
 
         #region StateMachine Vars
         public StateMachine<GameplayPlayerController> StateMachine { get; private set; }
         
         [field: Header("State Machine")]
-        [field: SerializeField] public GroundSuperState GroundState { get; private set; } = new();
-        [field: SerializeField] public AirSuperState AirState { get; private set; } = new();
-        [field: SerializeField] public CannonBallSuperState CannonState { get; private set; } = new();
-
         [field: SerializeField] public GroundSuperState GroundSuperState { get; private set; } = new();
         [field: SerializeField] public AirSuperState AirSuperState { get; private set; } = new();
         [field: SerializeField] public CannonBallSuperState CannonBallSuperState { get; private set; } = new();
-
-
         [field: SerializeField] public DriftSuperState DriftSuperState { get; private set; } = new();
+        [field: SerializeField] public TeleportState TeleportState { get; private set; } = new();
 
-        
+
         [HideInInspector] public String CurrentSubState;
         #endregion
 
@@ -63,18 +58,37 @@ namespace CharonsCorner.Runtime
         
         private void FixedUpdate()
         {
-            if (!CannonState.CannonBallState.IsLaunching)
-                ApplyGravity();
-
             CheckGrounded();
             StateMachine.FixedUpdate();
         }
 
-        private void ApplyGravity()
+        public void ApplyGravity()
         {
             Rb.AddForce(Vector3.down * _gravityAmount, ForceMode.Acceleration);
         }
-        
+
+        private Collider[] _overlapResults = new Collider[10]; // Reusable buffer
+        public bool CheckOverlap(LayerMask layerMask, float sizeScale, out Collider hitCollider)
+        {
+            //Reset Out Parameter:
+            hitCollider = null;
+            if (Collider == null) return false;
+
+            Vector3 center = Collider.bounds.center;
+            float radius = Collider.radius * sizeScale;
+
+            //Check Overlap Sphere:
+            int hitCount = Physics.OverlapSphereNonAlloc(center, radius, _overlapResults, layerMask, QueryTriggerInteraction.Ignore);
+            for (int i = 0; i < hitCount; i++)
+            {
+                if (_overlapResults[i] == Collider) continue;
+                hitCollider = _overlapResults[i];
+                return true;
+            }
+
+            return false;
+        }
+
         private void CheckGrounded()
         {
             IsGrounded = Physics.CheckSphere(transform.position + Vector3.down * _groundCheckLength, Collider.radius * 0.9f, _groundLayer);
@@ -86,18 +100,26 @@ namespace CharonsCorner.Runtime
         private void SetupStateMachine()
         {
             StateMachine = new StateMachine<GameplayPlayerController>(this);
-
-            GroundState.Init(StateMachine, this);
-            AirState.Init(StateMachine, this);
-            CannonState.Init(StateMachine, this);
-
-            StateMachine.ChangeState(GroundState, true);
+           
             GroundSuperState.Init(StateMachine, this);
-            AirSuperState.Init(StateMachine, this);
-            DriftSuperState.Init(StateMachine, this);
-            
+
             StateMachine.ChangeState(GroundSuperState, true);
+            AirSuperState.Init(StateMachine, this);
+            CannonBallSuperState.Init(StateMachine, this);  
+            DriftSuperState.Init(StateMachine, this);
+            TeleportState.Init(StateMachine, this);
         }
+
+        public void SetCurrentCannon(CannonBall cannon)
+        {
+            CurrentCannon = cannon;
+        }   
+        public void SetCannonAir(bool t)
+        {
+            CannonAir = t;
+        }
+
+        public void SetIsTeleporting(bool val) => IsTeleporting = val;
 
         private void OnDrawGizmos()
         {
@@ -115,6 +137,6 @@ namespace CharonsCorner.Runtime
                     StateMachine.CurrentState.GetType().Name + ">" + CurrentSubState, style);
             }
         #endif
-        }
+        }        
     }
 }

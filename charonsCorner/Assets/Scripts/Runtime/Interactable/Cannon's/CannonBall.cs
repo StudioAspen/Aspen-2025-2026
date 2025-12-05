@@ -4,12 +4,6 @@ using NaughtyAttributes;
 
 namespace CharonsCorner.Runtime
 {
-    public enum CannonActivationMode
-    {
-        Touch,          
-        InteractButton
-    }
-
     public class CannonBall : MonoBehaviour
     {
         [Header("Projectile Parameters")]
@@ -52,10 +46,6 @@ namespace CharonsCorner.Runtime
         public Transform CannonBase => _cannonBase;
         public Transform CannonPillar => _cannonPillar;
         public Transform LaunchDirection => _launchDirection;
-
-        [Header("Activation Mode")]
-        [SerializeField] private CannonActivationMode _activationMode = CannonActivationMode.InteractButton;
-        public CannonActivationMode ActivationMode => _activationMode;
 
         [Header("Gizmos")]
         [SerializeField] private int _numPointsGizmos = 100;
