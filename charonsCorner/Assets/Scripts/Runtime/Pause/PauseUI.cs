@@ -19,13 +19,21 @@ namespace CharonsCorner.Runtime
         [SerializeField] private Ease _openingAnimationEaseType = Ease.OutBack;
         [SerializeField] private Ease _closingAnimationEaseType = Ease.Linear;
 
-        private bool _isClosing = false;    // To prevent multiple close calls
+        private bool _isClosing = false;    /// <summary>
+        /// Caches this component's RectTransform reference for later use.
+        /// </summary>
 
         private protected override void Initialize()
         {
             _rectTransform = GetComponent<RectTransform>();
         }
 
+        /// <summary>
+        /// Subscribes to the unpause event and plays the pause panel's opening animation while temporarily disabling button interaction.
+        /// </summary>
+        /// <remarks>
+        /// If a closing animation is in progress, this method returns early and does not start an opening animation. Buttons are disabled before the animation begins and re-enabled when the animation completes.
+        /// </remarks>
         private void OnEnable()
         {
             InputManager.Instance.Unpause += InputManager_Unpause;
@@ -53,6 +61,9 @@ namespace CharonsCorner.Runtime
                 });
         }
 
+        /// <summary>
+        /// Unsubscribes this component's Unpause handler from the InputManager if an instance exists when the component is disabled.
+        /// </summary>
         private void OnDisable()
         {
             if (InputManager.Instance != null)
@@ -71,6 +82,12 @@ namespace CharonsCorner.Runtime
         // Called by button UI event
         public void GoBackToHub() => GameManager.Instance.ReturnToHub();
 
+        /// <summary>
+        /// Closes the pause UI by animating the panel out of view and returning the game to gameplay.
+        /// </summary>
+        /// <remarks>
+        /// If a close operation is already in progress, the method returns immediately. It disables UI interactions, plays the close animation independent of timescale, and changes the game state to GameState.Gameplay when the animation completes.
+        /// </remarks>
         public override void CloseUI()
         {
             if (_isClosing) return; // Prevent multiple close calls
@@ -94,12 +111,20 @@ namespace CharonsCorner.Runtime
                 });
         }
 
-        // Called by button UI event
+        /// <summary>
+/// Initiates quitting the game via the GameManager.
+/// </summary>
         public void QuitGame() => GameManager.QuitGame();
 
-        private void InputManager_Unpause() => CloseUI();
+        /// <summary>
+/// Handles the unpause input action by closing the pause UI.
+/// </summary>
+private void InputManager_Unpause() => CloseUI();
 
-        //Helper Methods
+        /// <summary>
+        /// Sets the interactable state of all configured pause panel buttons.
+        /// </summary>
+        /// <param name="enable">`true` to make buttons interactable, `false` to disable their interaction.</param>
         private void EnableButtons(bool enable)
         {
             foreach (var button in _buttons)
