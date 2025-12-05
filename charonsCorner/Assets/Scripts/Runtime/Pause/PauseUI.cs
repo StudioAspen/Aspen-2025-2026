@@ -19,7 +19,7 @@ namespace CharonsCorner.Runtime
         [SerializeField] private Ease _openingAnimationEaseType = Ease.OutBack;
         [SerializeField] private Ease _closingAnimationEaseType = Ease.Linear;
 
-        private bool _isClosing = false;    /// <summary>
+        private bool _isAnimating = false;    /// <summary>
         /// Caches this component's RectTransform reference for later use.
         /// </summary>
 
@@ -36,9 +36,10 @@ namespace CharonsCorner.Runtime
         /// </remarks>
         private void OnEnable()
         {
+            if (_isAnimating) return; // Prevent opening animation if we are in the process of closing
+            _isAnimating = true;
+
             InputManager.Instance.Unpause += InputManager_Unpause;
-            if (_isClosing) return; // Prevent opening animation if we are in the process of closing
-            _isClosing = true;
 
             //Disable all buttons (so player click while animation is playing)
             EnableButtons(false);
@@ -46,18 +47,18 @@ namespace CharonsCorner.Runtime
             //Kill any existing animations from this RectTransform
             _rectTransform.DOKill();
 
-            //Set the starting position of the UI Menu
-            _rectTransform.localPosition = new Vector3(0, Screen.height, 0);
+            //Set the starting position off screen
+            _rectTransform.anchoredPosition = new Vector2(_rectTransform.anchoredPosition.x, _rectTransform.rect.height);
 
             //Animate the UI Menu into view
             _rectTransform
-                .DOMoveY(Screen.height / 2f, _openingAnimationDuration)
+                .DOAnchorPosY(Screen.height / 2f, _openingAnimationDuration)
                 .SetUpdate(true)
                 .SetEase(_openingAnimationEaseType)
                 .OnComplete(() =>
                 {
                     EnableButtons(true);
-                    _isClosing = false;
+                    _isAnimating = false;
                 });
         }
 
@@ -90,8 +91,8 @@ namespace CharonsCorner.Runtime
         /// </remarks>
         public override void CloseUI()
         {
-            if (_isClosing) return; // Prevent multiple close calls
-            _isClosing = true;
+            if (_isAnimating) return; // Prevent multiple close calls
+            _isAnimating = true;
 
             //Disabling all buttons
             EnableButtons(false);
@@ -107,19 +108,19 @@ namespace CharonsCorner.Runtime
                 .OnComplete(() =>
                 {
                     GameManager.Instance.ChangeGameState(GameState.Gameplay);
-                    _isClosing = false;
+                    _isAnimating = false;
                 });
         }
 
         /// <summary>
-/// Initiates quitting the game via the GameManager.
-/// </summary>
+        /// Initiates quitting the game via the GameManager.
+        /// </summary>
         public void QuitGame() => GameManager.QuitGame();
 
         /// <summary>
-/// Handles the unpause input action by closing the pause UI.
-/// </summary>
-private void InputManager_Unpause() => CloseUI();
+        /// Handles the unpause input action by closing the pause UI.
+        /// </summary>
+        private void InputManager_Unpause() => CloseUI();
 
         /// <summary>
         /// Sets the interactable state of all configured pause panel buttons.
