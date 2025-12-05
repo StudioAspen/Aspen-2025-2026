@@ -14,57 +14,114 @@ namespace CharonsCorner.Runtime
     /// </summary>
     public class LightPath : MonoBehaviour
     {
-
         [Header("Light Sphere Variables")]
         [field: SerializeField] public Transform Player { get; private set; }
         [field: SerializeField] public SplineContainer SplinePath { get; private set; }
         [field: SerializeField] public float MoveDistance { get; private set; } = 10f;
         [field: SerializeField] public float Speed { get; private set; } = 10f;
-        
+        [SerializeField] private float transitionDuration = 0.5f; // Duration for smoothing between splines
+
         [Header("Shader Variables")]
-        [SerializeField] private Material _revealMaterial; 
-        [SerializeField] private Transform _revealField; 
-        [SerializeField] private float _revealRadius = 5.0f; 
-        [SerializeField] private float _fadeWidth = 0.5f; 
+        [SerializeField] private Material _revealMaterial;
+        [SerializeField] private Transform _revealField;
+        [SerializeField] private float _revealRadius = 5.0f;
+        [SerializeField] private float _fadeWidth = 0.5f;
         [SerializeField] private bool _proximityEnabled = true;
+
+        private int _currentSplineIndex = 0;
         private float _progress = 0f;
+        private bool _isTransitioning = false;
+        private Vector3 _transitionStartPos;
+        private Quaternion _transitionStartRot;
+        private Vector3 _transitionEndPos;
+        private Quaternion _transitionEndRot;
+        private float _transitionTimer = 0f;
+
         private void Update()
         {
-
             float distance = Vector3.Distance(transform.position, Player.position);
 
-            if (distance <= MoveDistance) // Check if player is within move distance
+            if (distance <= MoveDistance && SplinePath != null && SplinePath.Splines.Count > 0)
             {
-                _progress += Speed * Time.deltaTime / SplinePath.CalculateLength();
-                _progress %= 1f;
+                if (_isTransitioning)
+                {
+                    _transitionTimer += Time.deltaTime;
+                    float t = Mathf.Clamp01(_transitionTimer / transitionDuration);
+                    transform.position = Vector3.Lerp(_transitionStartPos, _transitionEndPos, t);
+                    transform.rotation = Quaternion.Slerp(_transitionStartRot, _transitionEndRot, t);
+                    if (t >= 1f)
+                    {
+                        _isTransitioning = false;
+                    }
+                    return;
+                }
 
-               
-                Vector3 position = SplinePath.EvaluatePosition(_progress); // Get position and tangent from the spline
-                Vector3 tangent = SplinePath.EvaluateTangent(_progress);
+                Spline currentSpline = SplinePath.Splines[_currentSplineIndex];
+                float splineLength = SplineUtility.CalculateLength(currentSpline, SplinePath.transform.localToWorldMatrix);
 
-                transform.position = position;   // Update object's position and rotation
+                _progress += Speed * Time.deltaTime / splineLength;
+
+                if (_progress > 1f)
+                {
+                    int nextSplineIndex = _currentSplineIndex + 1;
+                    if (nextSplineIndex >= SplinePath.Splines.Count)
+                    {
+                        _currentSplineIndex = SplinePath.Splines.Count - 1;
+                        _progress = 1f;
+                    }
+                    else
+                    {
+                        // Prepare for smooth transition
+                        Spline nextSpline = SplinePath.Splines[nextSplineIndex];
+                        Vector3 endPos = currentSpline.EvaluatePosition(1f);
+                        Vector3 endTangent = currentSpline.EvaluateTangent(1f);
+                        endPos = SplinePath.transform.TransformPoint(endPos);
+                        endTangent = SplinePath.transform.TransformDirection(endTangent);
+                        Quaternion endRot = Quaternion.LookRotation(endTangent);
+
+                        Vector3 startPos = nextSpline.EvaluatePosition(0f);
+                        Vector3 startTangent = nextSpline.EvaluateTangent(0f);
+                        startPos = SplinePath.transform.TransformPoint(startPos);
+                        startTangent = SplinePath.transform.TransformDirection(startTangent);
+                        Quaternion startRot = Quaternion.LookRotation(startTangent);
+
+                        _transitionStartPos = endPos;
+                        _transitionStartRot = endRot;
+                        _transitionEndPos = startPos;
+                        _transitionEndRot = startRot;
+                        _transitionTimer = 0f;
+                        _isTransitioning = true;
+
+                        _currentSplineIndex = nextSplineIndex;
+                        _progress = 0f;
+                        return;
+                    }
+                }
+
+                Vector3 position = currentSpline.EvaluatePosition(_progress);
+                Vector3 tangent = currentSpline.EvaluateTangent(_progress);
+
+                position = SplinePath.transform.TransformPoint(position);
+                tangent = SplinePath.transform.TransformDirection(tangent);
+
+                transform.position = position;
                 transform.rotation = Quaternion.LookRotation(tangent);
-                
             }
 
-            
-            if (_revealMaterial != null) 
+            if (_revealMaterial != null)
             {
-                _revealMaterial.SetFloat("_ProximityEnabled", _proximityEnabled ? 1.0f : 0.0f); // Update the proximity toggle
+                _revealMaterial.SetFloat("_ProximityEnabled", _proximityEnabled ? 1.0f : 0.0f);
 
                 if (_proximityEnabled && _revealField != null)
-                { 
-               
-                    _revealMaterial.SetVector("_RevealPosition", _revealField.position);  // Update the reveal position
-
-                   
-                    _revealMaterial.SetFloat("_RevealRadius", _revealRadius);  // Update the reveal radius and fade width
+                {
+                    _revealMaterial.SetVector("_RevealPosition", _revealField.position);
+                    _revealMaterial.SetFloat("_RevealRadius", _revealRadius);
                     _revealMaterial.SetFloat("_FadeWidth", _fadeWidth);
                 }
             }
         }
 
-        private void OnDrawGizmos() // Draw the reveal radius in the Scene view for debugging
+        private void OnDrawGizmos()
         {
             if (_proximityEnabled && _revealField != null)
             {
@@ -74,5 +131,3 @@ namespace CharonsCorner.Runtime
         }
     }
 }
-
-
