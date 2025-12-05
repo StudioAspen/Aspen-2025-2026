@@ -6,9 +6,12 @@ using UnityEngine.InputSystem;
 public class WhiteFlash : MonoBehaviour
 {
     [Header("Effect Parameters")]
-    private float _flashDuration = 1.5f;
-    private float _holdDuration = 1.0f;
-    private float _fadeDuration = 2.0f;
+    [SerializeField] private float _flashDuration = 1.0f;
+    [SerializeField] private float _holdDuration = 1.5f;
+    [SerializeField] private float _fadeDuration = 2.0f;
+    [SerializeField] private AnimationCurve _fadeInTransition;
+    [SerializeField] private AnimationCurve _fadeOutTransition;
+
 
     private float startingIntensity = 0.0f;
     private const float MAX_INTENSITY = 1.0f;
@@ -18,6 +21,7 @@ public class WhiteFlash : MonoBehaviour
     void Start()
     {
         _flashMaterial.SetFloat("_Intensity", startingIntensity);
+        _flashMaterial.SetFloat("_Alpha", 0f);
     }
 
     void Update()
@@ -53,11 +57,12 @@ public class WhiteFlash : MonoBehaviour
         {
             elapsedTime += Time.deltaTime;
             // I'm considering using a different interpolation function for a differnet transitional effect.
-            float lerpedIntensity = Mathf.Lerp(MAX_INTENSITY, 0.0f, elapsedTime / _flashDuration);
+            float lerpedIntensity = _fadeOutTransition.Evaluate(elapsedTime);
             // Debug.Log("Lerped Intensity: " + lerpedIntensity);
             _flashMaterial.SetFloat("_Intensity", lerpedIntensity);
             yield return null;
         }
 
+        _flashMaterial.SetFloat("_Alpha", 0f); // Reset alpha so the scene doesn't stay dark, but I wonder how this will work if we actually change scenes.
     }
 }
