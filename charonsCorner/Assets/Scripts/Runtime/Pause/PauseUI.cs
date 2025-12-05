@@ -50,7 +50,7 @@ namespace CharonsCorner.Runtime
 
             //Animate the UI Menu into view
             _rectTransform
-                .DOAnchorPosY(Screen.height / 2f, _openingAnimationDuration)
+                .DOAnchorPosY(0, _openingAnimationDuration)
                 .SetUpdate(true)
                 .SetEase(_openingAnimationEaseType)
                 .OnComplete(() =>
