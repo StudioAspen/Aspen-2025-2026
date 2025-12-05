@@ -20,22 +20,24 @@ namespace CharonsCorner.Runtime
         public void HandleTouch()
         {
             if (_player == null || _cannonBall == null) return;
+
+            var cannonSuper = _player.CannonBallSuperState;
+            if (!cannonSuper.LaunchCompleted && (cannonSuper.EntryState.IsInCannon || cannonSuper.PillarMoveState.IsInCannon ||cannonSuper.FiredState.IsLaunching)) return;
+
             if (_isActivated) return;
-            if (_player.CannonState.CannonBallState.LaunchCompleted == false && (_player.CannonState.CannonBallState.IsInCannon || _player.CannonState.CannonBallState.IsLaunching)) return;
-
-            if (_cannonBall._useCamera) CameraManager.Instance.ChangeActiveCamera(_cannonBall._cinemachineCamera);
-
-            _isActivated = true;
             ActivateCannon();
         }
 
         private void ActivateCannon()
         {
-            _player.StateMachine.ChangeState(_player.CannonState, true);
-            _player.CannonState.CannonBallState.SetCannonReference(_cannonBall);
+            _isActivated = true;
+
+            if (_cannonBall.UseCamera && _cannonBall.CinemachineCamera != null) CameraManager.Instance.ChangeActiveCamera(_cannonBall.CinemachineCamera);
+            _player.CannonBallSuperState.SetCannonReference(_cannonBall);
+            _player.StateMachine.ChangeState(_player.CannonBallSuperState, true);
         }
 
-        private void OnTriggerExit(Collider other)
+        public void ResetActivation()
         {
             _isActivated = false;
         }

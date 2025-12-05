@@ -18,17 +18,18 @@ namespace CharonsCorner.Runtime
         public void HandleInteract()
         {
             if (_player == null || _cannonBall == null) return;
-            if (_player.CannonState.CannonBallState.LaunchCompleted == false && (_player.CannonState.CannonBallState.IsInCannon || _player.CannonState.CannonBallState.IsLaunching)) return;
 
-            if (_cannonBall._useCamera) CameraManager.Instance.ChangeActiveCamera(_cannonBall._cinemachineCamera);
+            var cannonSuper = _player.CannonBallSuperState;
+            if (!cannonSuper.LaunchCompleted && (cannonSuper.EntryState.IsInCannon || cannonSuper.PillarMoveState.IsInCannon || cannonSuper.FiredState.IsLaunching)) return;
 
             ActivateCannon();
         }
 
         private void ActivateCannon()
         {
-            _player.StateMachine.ChangeState(_player.CannonState, true);
-            _player.CannonState.CannonBallState.SetCannonReference(_cannonBall);
+            if (_cannonBall.UseCamera && _cannonBall.CinemachineCamera != null) CameraManager.Instance.ChangeActiveCamera(_cannonBall.CinemachineCamera);
+            _player.CannonBallSuperState.SetCannonReference(_cannonBall);
+            _player.StateMachine.ChangeState(_player.CannonBallSuperState, true);
         }
     }
 }
