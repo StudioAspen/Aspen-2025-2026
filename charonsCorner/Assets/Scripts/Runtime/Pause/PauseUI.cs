@@ -19,9 +19,7 @@ namespace CharonsCorner.Runtime
         [SerializeField] private Ease _openingAnimationEaseType = Ease.OutBack;
         [SerializeField] private Ease _closingAnimationEaseType = Ease.Linear;
 
-        private bool _isAnimating = false;    /// <summary>
-        /// Caches this component's RectTransform reference for later use.
-        /// </summary>
+        private bool _isAnimating = false;    
 
         private protected override void Initialize()
         {
@@ -41,7 +39,7 @@ namespace CharonsCorner.Runtime
 
             InputManager.Instance.Unpause += InputManager_Unpause;
 
-            //Disable all buttons (so player click while animation is playing)
+            //Disable all buttons (so player can't click while animation is playing)
             EnableButtons(false);
 
             //Kill any existing animations from this RectTransform
