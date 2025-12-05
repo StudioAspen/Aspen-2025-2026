@@ -12,10 +12,26 @@ namespace CharonsCorner.Runtime
         [SerializeField] private TMP_Text _timerText;
         [SerializeField] private ScoringSystem _scoringSystem;
 
-        // Start is called once before the first execution of Update after the MonoBehaviour is created
-        void Start()
+        private void Awake()
         {
+            // Auto-assign text if not set in Inspector
+            if (_timerText == null)
+            {
+                _timerText = GetComponentInChildren<TMP_Text>();
+                if (_timerText == null)
+                {
+                    Debug.LogError("TimerDisplay: No TMP_Text assigned or found in children.", this);
+                }
+            }
 
+            if (_scoringSystem == null)
+            {
+                _scoringSystem = FindFirstObjectByType<ScoringSystem>();
+                if (_scoringSystem == null)
+                {
+                    Debug.Log("TimerDisplay: No ScoringSystem found in scene", this);
+                }
+            }
         }
 
         // Update is called once per frame
