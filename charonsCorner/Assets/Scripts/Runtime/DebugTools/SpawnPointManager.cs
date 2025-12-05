@@ -5,13 +5,14 @@ using UnityEngine.Serialization;
 
 namespace CharonsCorner.Runtime
 {
-    public class SpawnPointManager : Singleton<SpawnPointManager>
+    public class SpawnPointManager : MonoBehaviour
     {
         [SerializeField] private TextMeshProUGUI _spawnPointText;
         private GameObject[] _spawnPoints;
         private int _currentSpawnPoint = 0;
 
-        public Action<Vector3> OnRespawn;
+        public event Action<Vector3> OnRespawn;
+        
         void Start()
         {
             _spawnPoints = GameObject.FindGameObjectsWithTag("SpawnPoint");
