@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace CharonsCorner.Runtime
 {
-    public class TomatoProjectile : MonoBehaviour
+    public class ProjectileTimer : MonoBehaviour
     {
         [SerializeField] private float _lifeTime = 5f;
         void Start()

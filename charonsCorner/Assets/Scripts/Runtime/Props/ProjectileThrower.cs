@@ -3,9 +3,9 @@ using UnityEngine.Serialization;
 
 namespace CharonsCorner.Runtime
 {
-    public class TomatoThrower : MonoBehaviour
+    public class ProjectileThrower : MonoBehaviour
     {
-        [SerializeField] private GameObject _tomatoPrefab;
+        [SerializeField] private GameObject _projectilePrefab;
         [SerializeField] private Transform _firePoint;
 
         [SerializeField] private float _throwForce = 10f;
@@ -26,9 +26,9 @@ namespace CharonsCorner.Runtime
         
         public void Throw()
         {
-            GameObject tomato = Instantiate(_tomatoPrefab, _firePoint.position, _firePoint.rotation);
-
-            Rigidbody rb = tomato.GetComponent<Rigidbody>();
+            GameObject projectile = Instantiate(_projectilePrefab, _firePoint.position, _firePoint.rotation);
+            projectile.transform.eulerAngles = new Vector3(0f, projectile.transform.eulerAngles.y, 0f);
+            Rigidbody rb = projectile.GetComponent<Rigidbody>();
 
             // Create an arc by adding forward + upward force
             Vector3 force = _firePoint.forward * _throwForce + Vector3.up * _upwardForce;
