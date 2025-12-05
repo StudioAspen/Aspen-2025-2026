@@ -2,6 +2,7 @@
 import bpy
 from . import EXPORT_MANAGER_BL_IDNAME
 
+
 class ASPENCOMMON_PT_panel(bpy.types.Panel):
     bl_label = 'Aspen Common'
     bl_idname = 'ASPENCOMMON_PT_panel'

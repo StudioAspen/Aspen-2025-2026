@@ -44,15 +44,21 @@ class UIFileLoader(QtUiTools.QUiLoader):
         return widget
 
 
-def load_ui(ui_file : str, base_instance: Optional[QtWidgets.QWidget] = None):
+def load_ui(ui_file : str, base_instance: Optional[QtWidgets.QWidget] = None, custom_widget_class: QtWidgets.QWidget = None):
     """ Create a loader to load a UI file into a existing widget.
 
     Args:
         ui_file: The path to the .ui file to be loaded.
         base_instance: An existing widget that will be used for the UI file.
+        custom_widget_class: Optional arg. If you define a custom widget class in your qt ui, you must pass it in or else
+        the ui loader won't be able to recognize it in your .ui file.
     """
 
     loader = UIFileLoader(base_instance=base_instance)
+
+    # If you define a custom widget class, you must pass it to the function so the loader will register it.
+    if custom_widget_class is not None:
+        loader.registerCustomWidget(custom_widget_class)
 
     widget = loader.load(ui_file)
     QtCore.QMetaObject.connectSlotsByName(widget)

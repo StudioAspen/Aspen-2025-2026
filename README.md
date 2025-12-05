@@ -21,6 +21,7 @@ Unity Version 6000.0.58f2
 8. [Unity-SerializeReferenceExtensions](https://github.com/mackysoft/Unity-SerializeReferenceExtensions)
 9. [Animancer Pro v8](https://assetstore.unity.com/packages/tools/animation/animancer-pro-v8-293522)
 10. [Wwise 2024.1.8.8898.3638](https://www.audiokinetic.com/en/public-library/2024.1.8_8898/?source=Unity&id=index.html)
+11. [FEEL Asset](https://assetstore.unity.com/packages/tools/particles-effects/feel-183370?srsltid=AfmBOooHa_rwDhJEvoAl4vVXIQqpogJlFllJnpaJ5I5-jwP1xEqtnKd_)
 
 # License
 Shield: [![CC BY-NC 4.0][cc-by-nc-shield]][cc-by-nc]
