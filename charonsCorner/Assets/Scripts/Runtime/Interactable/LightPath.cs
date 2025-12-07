@@ -1,6 +1,6 @@
-using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.Splines;
+
 
 namespace CharonsCorner.Runtime
 {
@@ -19,7 +19,7 @@ namespace CharonsCorner.Runtime
         [field: SerializeField] public SplineContainer SplinePath { get; private set; }
         [field: SerializeField] public float MoveDistance { get; private set; } = 10f;
         [field: SerializeField] public float Speed { get; private set; } = 10f;
-        [SerializeField] private float transitionDuration = 0.5f; // Duration for smoothing between splines
+        [SerializeField] private float _transitionDuration = 0.5f; // Duration for smoothing between splines
 
         [Header("Shader Variables")]
         [SerializeField] private Material _revealMaterial;
@@ -46,20 +46,19 @@ namespace CharonsCorner.Runtime
                 if (_isTransitioning)
                 {
                     _transitionTimer += Time.deltaTime;
-                    float t = Mathf.Clamp01(_transitionTimer / transitionDuration);
+                    float t = Mathf.Clamp01(_transitionTimer / _transitionDuration);
                     transform.position = Vector3.Lerp(_transitionStartPos, _transitionEndPos, t);
                     transform.rotation = Quaternion.Slerp(_transitionStartRot, _transitionEndRot, t);
                     if (t >= 1f)
-                    {
                         _isTransitioning = false;
-                    }
+
                     return;
                 }
 
                 Spline currentSpline = SplinePath.Splines[_currentSplineIndex];
                 float splineLength = SplineUtility.CalculateLength(currentSpline, SplinePath.transform.localToWorldMatrix);
 
-                _progress += Speed * Time.deltaTime / splineLength;
+                _progress += (Speed * Time.deltaTime) / splineLength;
 
                 if (_progress > 1f)
                 {
