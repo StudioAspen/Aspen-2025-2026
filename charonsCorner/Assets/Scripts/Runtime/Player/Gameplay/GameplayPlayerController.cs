@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using Unity.Cinemachine;
 using UnityEditor;
 using UnityEngine;
@@ -18,10 +19,18 @@ namespace CharonsCorner.Runtime
 
         [SerializeField] private LayerMask _groundLayer;
         
+        [Header("Drift Settings")]
+        [SerializeField] private bool _canDrift = true;
+        [SerializeField] private float _driftCooldownTime = 5f;
+
+        private Coroutine _driftCooldownRoutine;
+
+        [Header("References")]
         [field: SerializeField] public Transform Orientation { get; private set; }
         
         [field: SerializeField] public CinemachineCamera PlayerCamera { get; private set; }
-
+        
+        
 
         public Rigidbody Rb { get; private set; }
         public SphereCollider Collider { get; private set; }
@@ -66,12 +75,29 @@ namespace CharonsCorner.Runtime
         private void Update()
         {
             StateMachine.Update();
+
+            if (!_canDrift && _driftCooldownRoutine == null)
+            {
+                _driftCooldownRoutine = StartCoroutine(DriftCooldown());
+            }
         }
-        
+
         private void FixedUpdate()
         {
             CheckGrounded();
             StateMachine.FixedUpdate();
+        }
+
+        private void OnEnable()
+        {
+            if (InputManager.Instance != null)
+                InputManager.Instance.Drift += Drift;
+        }
+
+        private void OnDisable()
+        {
+            if (InputManager.Instance != null)
+                InputManager.Instance.Drift -= Drift;
         }
 
         public void ApplyGravity()
@@ -139,6 +165,29 @@ namespace CharonsCorner.Runtime
         {
             transform.position = position;
             Rb.linearVelocity = Vector3.zero;
+        }
+
+        private void Drift(bool drift)
+        {
+            if (_driftCooldownRoutine != null)
+            {
+                return;
+            }
+
+            if (drift && _canDrift)
+            {
+                StateMachine.ChangeState(DriftSuperState);
+                _canDrift = false;
+                _driftCooldownRoutine = StartCoroutine(DriftCooldown());
+            }
+                
+        }
+
+        IEnumerator DriftCooldown()
+        {
+            yield return new WaitForSeconds(_driftCooldownTime);
+            _canDrift = true;
+            _driftCooldownRoutine = null;
         }
 
         private void OnDrawGizmos()
