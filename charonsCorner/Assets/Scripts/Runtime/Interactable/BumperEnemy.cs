@@ -6,9 +6,9 @@ namespace CharonsCorner.Runtime
     public class BumperEnemy : MonoBehaviour
     {
         [Header("Movement Settings")]
-        [SerializeField] private float _detectionRadius = 5f;
-        [SerializeField] private float _moveSpeed = 5f;
-        [SerializeField] private float _anticipationFactor = 1.5f; // How much to anticipate player's movement
+        [SerializeField] private float _detectionRadius =26f;
+        [SerializeField] private float _moveSpeed = 15f;
+        [SerializeField] private float _anticipationFactor = 1.5f; 
 
         [Header("Squash & Stretch Settings")]
         [SerializeField] private float _squashDuration = 0.2f;
