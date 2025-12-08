@@ -3,6 +3,13 @@ using DG.Tweening;
 
 namespace CharonsCorner.Runtime
 {
+    /// <summary>
+    /// This script is on the enemy bumper blocks for the soccer level (Scene 1 Level 3). The enemy detects the player within a radius
+    /// then is intended to move towards them by trying to anticipate their position, 'bullying' them. 
+    /// When an enemy and player collide, the enemy has a 'squash' animation using DOTween
+    /// Setaggro mode is intended to override the radius activation to made the bumpers pursue the player regardles of location 
+    /// This script is WIP
+    /// </summary>
     public class BumperEnemy : MonoBehaviour
     {
         [Header("Movement Settings")]
