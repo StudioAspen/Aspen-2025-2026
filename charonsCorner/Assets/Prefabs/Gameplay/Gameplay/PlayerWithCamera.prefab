@@ -421,6 +421,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12104891ff0149b082aef4a7db66e22b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _spawnPointManager: {fileID: 0}
   _gravityAmount: 30
   _groundCheckLength: 0.5
   _groundLayer:
@@ -432,8 +433,8 @@ MonoBehaviour:
     <MoveState>k__BackingField:
       <MaxSpeed>k__BackingField: 25
       <Acceleration>k__BackingField: 30
-      <Deceleration>k__BackingField: 10
-      <SlopeBoost>k__BackingField: 10
+      <Deceleration>k__BackingField: 15
+      <SlopeBoost>k__BackingField: 5
       <GroundStickForce>k__BackingField: 10
   <AirSuperState>k__BackingField:
     <MoveState>k__BackingField:
@@ -444,10 +445,10 @@ MonoBehaviour:
   <DriftSuperState>k__BackingField:
     <DriftingChargeState>k__BackingField:
       _driftDirection: {fileID: 35495043732603114}
-      _driftDirectionSpeed: 200
+      _driftDirectionSpeed: 210
       _driftDesiredFOV: 40
-      _fovSpeed: 5
-      _desiredTimeScale: 1
+      _fovSpeed: 4
+      _desiredTimeScale: 0.2
       _timeScaleSpeed: 30
       _stateDuration: 0.5
     <DriftingBoostState>k__BackingField:
