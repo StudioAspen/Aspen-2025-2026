@@ -1,68 +1,53 @@
-using System;
-using System.Collections;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class WhiteFlash : MonoBehaviour
 {
     [Header("Effect Parameters")]
-    [SerializeField] private float _flashDuration = 1.0f;
-    [SerializeField] private float _holdDuration = 1.5f;
-    [SerializeField] private float _fadeDuration = 2.0f;
+    [SerializeField] private Material _flashMaterial;
+    [SerializeField] private Color flashColor;
+
     [SerializeField] private AnimationCurve _fadeInTransition;
     [SerializeField] private AnimationCurve _fadeOutTransition;
 
+    [SerializeField] public float minRange = 10f;
+    [SerializeField] public float maxRange = 50f;
 
-    private float startingIntensity = 0.0f;
-    private const float MAX_INTENSITY = 1.0f;
+    [SerializeField] private Transform playerTransform;
 
-    [SerializeField] private Material _flashMaterial;
+    private float _MAX_INTENSITY = 1.5f;
 
     void Start()
     {
-        _flashMaterial.SetFloat("_Intensity", startingIntensity);
+        _flashMaterial.SetFloat("_Intensity", 0f);
+        _flashMaterial.SetFloat("_Alpha", 0f);
+        _flashMaterial.SetColor("_FlashColor", flashColor);
+    }
+
+    void OnDisable()
+    {
+        _flashMaterial.SetFloat("_Intensity", 0f);
         _flashMaterial.SetFloat("_Alpha", 0f);
     }
 
     void Update()
     {
-        if(Keyboard.current.spaceKey.wasPressedThisFrame)
-        {
-            StartCoroutine(ActivateFlash());
-        }
+        UpdateFlash();
     }
 
-    private IEnumerator ActivateFlash()
+    private void UpdateFlash()
     {
-        _flashMaterial.SetFloat("_Intensity", startingIntensity);
-        _flashMaterial.SetFloat("_Alpha", 0f);
+        _flashMaterial.SetColor("_FlashColor", flashColor);
 
-        // First the white flash by quickly ramping intensity.
-        float elapsedTime = 0.0f;
-        while(elapsedTime <  _flashDuration)
-        {
-            elapsedTime += Time.deltaTime;
-            float lerpedIntensity = Mathf.Lerp(0f, MAX_INTENSITY, elapsedTime / _flashDuration);
-            float lerpedAlpha = Mathf.Lerp(0.0f, 1.0f, elapsedTime / _flashDuration);
-            // Debug.Log("Lerped Intensity: " + lerpedIntensity);
-            _flashMaterial.SetFloat("_Intensity", lerpedIntensity);
-            _flashMaterial.SetFloat("_Alpha", lerpedAlpha);
-            yield return null;
-        }
+        float distance = Vector3.Distance(playerTransform.position, transform.position);
+        float clampedDistance = Mathf.Clamp(distance, minRange, maxRange);
+        float inverseProportion = 1 - Mathf.InverseLerp(minRange, maxRange, clampedDistance);
+        
+        float lerpedAlpha = Mathf.Lerp(0.0f, 1.0f, inverseProportion);
+        float lerpedIntensity = Mathf.Lerp(0f, _MAX_INTENSITY, inverseProportion);
 
-        yield return new WaitForSeconds(_holdDuration);
+        _flashMaterial.SetFloat("_Intensity", lerpedIntensity);
+        _flashMaterial.SetFloat("_Alpha", lerpedAlpha);
 
-        elapsedTime = 0.0f;
-        while(elapsedTime < _fadeDuration)
-        {
-            elapsedTime += Time.deltaTime;
-            // I'm considering using a different interpolation function for a differnet transitional effect.
-            float lerpedIntensity = _fadeOutTransition.Evaluate(elapsedTime);
-            // Debug.Log("Lerped Intensity: " + lerpedIntensity);
-            _flashMaterial.SetFloat("_Intensity", lerpedIntensity);
-            yield return null;
-        }
-
-        _flashMaterial.SetFloat("_Alpha", 0f); // Reset alpha so the scene doesn't stay dark, but I wonder how this will work if we actually change scenes.
     }
+
 }
