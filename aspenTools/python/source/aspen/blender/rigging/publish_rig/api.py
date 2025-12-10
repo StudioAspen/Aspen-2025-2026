@@ -9,17 +9,17 @@ from aspen.core.telemetry import trace
 
 @trace.trace_blender_function()
 def publish_rig(file_path: str):
-    """Publish rig as a .blend file to the specified file path."""
+    """Publish rig as a .blend file to the specified file path. But for testing purposes, it will save as a .blend file."""
 
     # save_textures() # will need.
-    bpy.ops.wm.save_as_mainfile(
-        filepath=file_path,
-        check_existing=True,
+    bpy.ops.wm.save_as_mainfile()
 
-        # If 
+        # check_existing=True,
 
-    ) # saves file as a .blend file.
+        # If
+
+    # ) # saves file as a .blend file.
         # use_custom_props=True, # Custom properties will be applied to the current save
-
-@trace.trace_blender_function()
-def
+#
+# @trace.trace_blender_function()
+# def

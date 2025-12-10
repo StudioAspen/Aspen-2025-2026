@@ -19,6 +19,7 @@ _logger = get_blender_logger()
 
 class ExportManagerMainWindow(SingletonMainWindow):
 
+    # Mikyle is setting up variables here.
     def __init__(self, parent=None):
         super().__init__(parent=parent)
 
@@ -50,6 +51,7 @@ class ExportManagerMainWindow(SingletonMainWindow):
         # Set up export selection button
         self.export_selection_button.clicked.connect(self._on_export_selection_button_clicked)
 
+    # for "Asset Name" box
     def _on_asset_name_line_edit_changed(self, text: str):
         """ Set the export manager's asset name if the line edit is changed.
 
@@ -58,6 +60,7 @@ class ExportManagerMainWindow(SingletonMainWindow):
         """
         bpy.context.scene.export_manager.asset_name = text
 
+    # for "Export Type" dropdown menu
     def _on_export_type_combo_box_changed(self, index: int):
         """ Set the export manager's export type if the combo box is changed.
 
@@ -66,6 +69,7 @@ class ExportManagerMainWindow(SingletonMainWindow):
         """
         bpy.context.scene.export_manager.export_type = self.export_types[index]
 
+    # for "Asset Type" dropdown menu
     def _on_asset_type_combo_box_changed(self, index: int):
         """ Set the export manager's asset type if the combo box is changed.
 
@@ -74,6 +78,7 @@ class ExportManagerMainWindow(SingletonMainWindow):
         """
         bpy.context.scene.export_manager.asset_type = self.asset_types[index]
 
+    # for when the button is clicked.
     @aspen_trace.trace_blender_function()
     def _on_export_selection_button_clicked(self):
         """ Call the export operator.

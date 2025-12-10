@@ -2,12 +2,13 @@ import os
 
 import bpy
 
+from aspen.blender.rigging.publish_rig.api import publish_rig
 from aspen.core.qt.singleton_main_window import SingletonMainWindow
 from aspen.core.qt import ui_loader
 
 import aspen.sitecustomize as sitecustomize
 
-from aspen.blender.common.export_manager import api
+from aspen.blender.rigging.publish_rig import api
 # from . import (ASSET_TYPE_ENUM_ITEMS, EXPORT_TYPE_ENUM_ITEMS,
                # EXPORT_TYPE_ENUM_MODEL, EXPORT_TYPE_ENUM_RIG, EXPORT_TYPE_ENUM_ANIMATION)
 
@@ -26,6 +27,16 @@ class RigPublishMainWindow(SingletonMainWindow):
             os.path.join(os.path.dirname(__file__), 'publishRig.ui'),
             self
         )
+
+        # Get the publish rig tool
+        publish_rig = bpy.context.scene.publish_rig
+
+
+        # Set up the Publish button
+        self.publish_rig_button.clicked.connect(self._TEST_on_button_clicked)
+
+    def _TEST_on_button_clicked(self):
+        api.publish_rig(); #HOPEFULLY it saves the blend file
 
 
 # )
