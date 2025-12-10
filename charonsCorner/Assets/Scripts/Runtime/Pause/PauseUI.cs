@@ -21,6 +21,9 @@ namespace CharonsCorner.Runtime
 
         private bool _isAnimating = false;    
 
+        /// <summary>
+        /// Caches the panel's RectTransform component for later layout and animation operations.
+        /// </summary>
         private protected override void Initialize()
         {
             _rectTransform = GetComponent<RectTransform>();
@@ -31,6 +34,11 @@ namespace CharonsCorner.Runtime
         /// </summary>
         /// <remarks>
         /// If a closing animation is in progress, this method returns early and does not start an opening animation. Buttons are disabled before the animation begins and re-enabled when the animation completes.
+        /// <summary>
+        /// Starts the pause panel's opening sequence and subscribes to the unpause input.
+        /// </summary>
+        /// <remarks>
+        /// If an animation is already running this method returns immediately. It disables panel buttons, positions the panel off-screen, plays the configured opening animation, re-enables buttons when the animation completes, and updates the internal animation state. Also subscribes to InputManager.Instance.Unpause to handle unpause input.
         /// </remarks>
         private void OnEnable()
         {
@@ -62,6 +70,8 @@ namespace CharonsCorner.Runtime
 
         /// <summary>
         /// Unsubscribes this component's Unpause handler from the InputManager if an instance exists when the component is disabled.
+        /// <summary>
+        /// Unsubscribes the pause UI's unpause handler from the InputManager's Unpause event if an InputManager instance exists.
         /// </summary>
         private void OnDisable()
         {
@@ -78,7 +88,10 @@ namespace CharonsCorner.Runtime
         // Called by button UI event
         public void GoBackToMenu() => GameManager.Instance.ReturnToMenu();
 
-        // Called by button UI event
+        /// <summary>
+/// Return the player to the game's hub scene.
+/// </summary>
+/// <remarks>Called by the pause menu's "Back to Hub" button.</remarks>
         public void GoBackToHub() => GameManager.Instance.ReturnToHub();
 
         /// <summary>
@@ -86,6 +99,13 @@ namespace CharonsCorner.Runtime
         /// </summary>
         /// <remarks>
         /// If a close operation is already in progress, the method returns immediately. It disables UI interactions, plays the close animation independent of timescale, and changes the game state to GameState.Gameplay when the animation completes.
+        /// <summary>
+        /// Closes the pause UI with a closing animation and restores the game to the gameplay state.
+        /// </summary>
+        /// <remarks>
+        /// If a close animation is already in progress this method returns immediately. It disables
+        /// all pause-panel buttons, cancels any existing animations on the panel, animates the panel
+        /// out of view, and sets the game state to <see cref="GameState.Gameplay"/> when the animation completes.
         /// </remarks>
         public override void CloseUI()
         {
@@ -112,18 +132,25 @@ namespace CharonsCorner.Runtime
 
         /// <summary>
         /// Initiates quitting the game via the GameManager.
-        /// </summary>
+        /// <summary>
+/// Quits the game application.
+/// </summary>
         public void QuitGame() => GameManager.QuitGame();
 
         /// <summary>
         /// Handles the unpause input action by closing the pause UI.
-        /// </summary>
+        /// <summary>
+/// Handles the unpause input action by closing the pause UI.
+/// </summary>
         private void InputManager_Unpause() => CloseUI();
 
         /// <summary>
         /// Sets the interactable state of all configured pause panel buttons.
         /// </summary>
-        /// <param name="enable">`true` to make buttons interactable, `false` to disable their interaction.</param>
+        /// <summary>
+        /// Sets the interactable state for every button in the pause panel.
+        /// </summary>
+        /// <param name="enable">`true` to enable interaction on all buttons, `false` to disable interaction on all buttons.</param>
         private void EnableButtons(bool enable)
         {
             foreach (var button in _buttons)
