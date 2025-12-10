@@ -4,6 +4,7 @@ namespace CharonsCorner.Runtime
 {
     /// <summary>
     /// A class to calculate the player's score and rank based on parameters achieved in the level.
+    /// Only ONE ScoringSystem should exist per level.
     /// </summary>
     public class ScoringSystem : MonoBehaviour
     {
@@ -11,16 +12,10 @@ namespace CharonsCorner.Runtime
         [SerializeField] private RankCriteriaSO _rankData;
 
         private float _levelTimer;
-        private int _score;
+        private int _score = 0;
         private bool _bonusApplied = false;
 
         public float LevelTimeSeconds => _levelTimer;
-
-        // Start is called once before the first execution of Update after the MonoBehaviour is created
-        void Start()
-        {
-        
-        }
 
         // Update is called once per frame
         void Update()
@@ -34,6 +29,15 @@ namespace CharonsCorner.Runtime
         /// </summary>
         /// <param name="amount"></param>
         public void AddPoints(int amount) => _score += amount;
+
+        /// <summary>
+        /// Get the amount of points the player has.
+        /// </summary>
+        /// <returns>The player's score.</returns>
+        public int GetPoints()
+        {
+            return _score;
+        }
 
         /// <summary>
         /// Calculates the Rank the player receives based on scoring criteria.

@@ -25,27 +25,18 @@ namespace CharonsCorner.Runtime
 
         private Rigidbody _rigidbody;
         private float _lastHitTime = -10f; // Start negative for first collision
-        private bool hasBeenHit = false;
+        private bool _hasBeenHit = false;
+        private int _pinLayer = 7;
 
-        // Start is called once before the first execution of Update after the MonoBehaviour is created
-        void Start()
-        {
-
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-
-        }
+        private CapsuleCollider _capsuleCollider;
 
         // dampen the "infinite" spinning that happens sometimes
         void FixedUpdate()
         {
-            if (!hasBeenHit) return;
+            if (!_hasBeenHit) return;
 
             Vector3 av = _rigidbody.angularVelocity;
-
+            
             // Kill some Y spin every step (0.0–1.0, closer to 0 = stronger damping)
             float damping = 0.9f;
             av.y *= damping;
@@ -57,8 +48,13 @@ namespace CharonsCorner.Runtime
         private void Awake()
         {
             _rigidbody = GetComponent<Rigidbody>();
+            _capsuleCollider = GetComponent<CapsuleCollider>();
             _rigidbody.interpolation = RigidbodyInterpolation.Interpolate;
-            _rigidbody.isKinematic = false;
+
+            // disable physics until hit (so doesnt fall over)
+            _rigidbody.useGravity = false;
+
+            _rigidbody.centerOfMass = new Vector3(0f, -0.2f, 0f);
         }
 
         /// <summary>
@@ -68,13 +64,22 @@ namespace CharonsCorner.Runtime
         private void OnCollisionEnter(Collision collision)
         {
             bool isPlayer = collision.collider.CompareTag("Player");
-            bool isPin = collision.gameObject.layer == 7;
+            bool isPin = collision.gameObject.layer == _pinLayer;
 
             if (!isPlayer && !isPin) return;
 
             if (Time.time - _lastHitTime < _hitCooldown) return;
             _lastHitTime = Time.time;
-            hasBeenHit = true;
+
+            // activate physics when hit
+            if (!_hasBeenHit)
+            {
+                _hasBeenHit = true;
+                _rigidbody.useGravity = true;
+                _rigidbody.isKinematic = false;
+                _rigidbody.WakeUp();
+                _capsuleCollider.excludeLayers = new LayerMask(); // clear all layer overrides
+            }
 
             float speed = GetApproachSpeed(collision);
             float t = Mathf.InverseLerp(_minSpeedForKnockback, _maxSpeedForKnockback, speed);
