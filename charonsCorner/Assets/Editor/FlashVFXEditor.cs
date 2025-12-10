@@ -1,34 +1,34 @@
 using UnityEngine;
 using UnityEditor;
 
-[CustomEditor(typeof(WhiteFlash))]
-public class WhiteFlashEditor : Editor
+[CustomEditor(typeof(FlashVFX))]
+public class FlashVFXEditor : Editor
 {
 
     void OnSceneGUI()
     {
-        WhiteFlash WhiteFlashObject = target as WhiteFlash;
+        FlashVFX FlashVFXObject = target as FlashVFX;
     
         Handles.color = Color.blue;
         Handles.DrawSolidDisc( // Origin Point
-            center: WhiteFlashObject.transform.position,
+            center: FlashVFXObject.transform.position,
             normal: Vector3.up,
             radius: 1f
         );
 
         Handles.color = Color.red;
         Handles.DrawWireDisc( // MinRange Radius
-            center: WhiteFlashObject.transform.position,
+            center: FlashVFXObject.transform.position,
             normal: Vector3.up,
-            radius: WhiteFlashObject.minRange,
+            radius: FlashVFXObject.minRange,
             thickness: 1f
         );
 
         Handles.color = Color.green;
         Handles.DrawWireDisc( // MaxRange Radius
-            center: WhiteFlashObject.transform.position,
+            center: FlashVFXObject.transform.position,
             normal: Vector3.up,
-            radius: WhiteFlashObject.maxRange,
+            radius: FlashVFXObject.maxRange,
             thickness: 1f
         );
     }

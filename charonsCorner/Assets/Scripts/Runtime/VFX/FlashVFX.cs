@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class WhiteFlash : MonoBehaviour
+public class FlashVFX : MonoBehaviour
 {
     [Header("Effect Parameters")]
     [SerializeField] private Material _flashMaterial;
