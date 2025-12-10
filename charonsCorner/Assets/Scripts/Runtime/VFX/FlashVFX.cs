@@ -6,9 +6,6 @@ public class FlashVFX : MonoBehaviour
     [SerializeField] private Material _flashMaterial;
     [SerializeField] private Color flashColor;
 
-    [SerializeField] private AnimationCurve _fadeInTransition;
-    [SerializeField] private AnimationCurve _fadeOutTransition;
-
     [SerializeField] public float minRange = 10f;
     [SerializeField] public float maxRange = 50f;
 
