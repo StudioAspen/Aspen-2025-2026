@@ -95,6 +95,18 @@ namespace CharonsCorner.Runtime
             }
             
         }
+        private void OnGameplayPlayerControllerColiderHit(ColliderHit hit)
+        {
+            // ColliderHit does not have a gameObject property, but it has a collider property.
+            // Use collider.gameObject to access the GameObject
+            switch (hit.collider.gameObject.tag)
+            {
+                case "SpeedBoost":
+                    Debug.Log("SpeedBoost triggered"); // Fixed: replaced 'print()' with 'Debug.Log()'
+                    float MaxSpeed = 25f;
+                    break;
+            }
+        }
 
         private protected override State<GameplayPlayerController> GetTransition()
         {

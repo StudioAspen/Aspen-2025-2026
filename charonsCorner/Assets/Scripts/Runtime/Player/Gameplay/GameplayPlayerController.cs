@@ -134,7 +134,18 @@ namespace CharonsCorner.Runtime
             transform.position = position;
             Rb.linearVelocity = Vector3.zero;
         }
-
+        private void OnGameplayPlayerControllerColiderHit(ColliderHit hit)
+        {
+            // ColliderHit does not have a gameObject property, but it has a collider property.
+            // Use collider.gameObject to access the GameObject
+            switch (hit.collider.gameObject.tag)
+            {
+                case "SpeedBoost":
+                    // float MoveSpeed = 25f; // Removed unused variable to fix CS0219 and IDE0059
+                    break;
+            }
+            
+        }
         private void OnDrawGizmos()
         {
         #if UNITY_EDITOR
