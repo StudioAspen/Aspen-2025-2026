@@ -8,6 +8,9 @@ namespace CharonsCorner.Runtime
     [RequireComponent(typeof(Rigidbody))]
     public class GameplayPlayerController : MonoBehaviour
     {
+        [Header("References")]
+        [SerializeField] private SpawnPointManager _spawnPointManager;
+        
         [SerializeField] private float _gravityAmount = 30f;
 
         [Header("Ground Check")]
@@ -47,6 +50,16 @@ namespace CharonsCorner.Runtime
             Collider = GetComponent<SphereCollider>();
             SlopeSensor = GetComponentInChildren<SlopeSensor>();
             SetupStateMachine();
+        }
+
+        private void Start()
+        {
+            _spawnPointManager.OnRespawn += Respawn;
+        }
+
+        private void OnDestroy()
+        {
+            _spawnPointManager.OnRespawn -= Respawn;
         }
 
         private void Update()
@@ -114,6 +127,12 @@ namespace CharonsCorner.Runtime
         public void SetCannonAir(bool t)
         {
             CannonAir = t;
+        }
+
+        private void Respawn(Vector3 position)
+        {
+            transform.position = position;
+            Rb.linearVelocity = Vector3.zero;
         }
 
         private void OnDrawGizmos()
