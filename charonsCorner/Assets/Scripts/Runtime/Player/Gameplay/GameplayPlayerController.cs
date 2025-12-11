@@ -3,6 +3,7 @@ using System.Collections;
 using Unity.Cinemachine;
 using UnityEditor;
 using UnityEngine;
+using MoreMountains.Feedbacks;
 
 namespace CharonsCorner.Runtime
 {
@@ -29,8 +30,8 @@ namespace CharonsCorner.Runtime
         [field: SerializeField] public Transform Orientation { get; private set; }
         
         [field: SerializeField] public CinemachineCamera PlayerCamera { get; private set; }
-        
-        
+
+        [field: SerializeField] public MMFeedbacks DriftFeedbacks { get; private set; }
 
         public Rigidbody Rb { get; private set; }
         public SphereCollider Collider { get; private set; }
@@ -59,6 +60,7 @@ namespace CharonsCorner.Runtime
             Rb = GetComponent<Rigidbody>();
             Collider = GetComponent<SphereCollider>();
             SlopeSensor = GetComponentInChildren<SlopeSensor>();
+            DriftFeedbacks?.Initialization();
             SetupStateMachine();
         }
 
@@ -180,7 +182,6 @@ namespace CharonsCorner.Runtime
                 _canDrift = false;
                 _driftCooldownRoutine = StartCoroutine(DriftCooldown());
             }
-                
         }
 
         IEnumerator DriftCooldown()

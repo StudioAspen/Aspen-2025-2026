@@ -47,6 +47,7 @@ namespace CharonsCorner.Runtime
             _boostAmount = Mathf.Min(_maxBoostAmount, (_maxBoostAmount * frac) + _initialDashSpeed);
 
             _context.Rb.AddForce(_driftDirection.forward * _boostAmount, ForceMode.VelocityChange);
+            _context.DriftFeedbacks.PlayFeedbacks();
         }
 
         private protected override void OnExit()
