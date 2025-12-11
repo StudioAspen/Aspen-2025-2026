@@ -28,9 +28,11 @@ namespace CharonsCorner.Runtime
         private bool _forceAggro = false;
         private MeshRenderer _meshRenderer;
         private Vector3 _initialScale;
+        private Rigidbody _rigidbody;
 
         private void Awake()
         {
+            _rigidbody = GetComponent<Rigidbody>();
             _meshRenderer = GetComponent<MeshRenderer>();
             if (_meshRenderer == null)
                 _meshRenderer = GetComponentInChildren<MeshRenderer>();
@@ -55,19 +57,25 @@ namespace CharonsCorner.Runtime
                 _isPlayerInRadius = false;
             }
         }
+        private void MoveTowardsPlayer()
+        {
+            if (_playerTransform == null) return;
+    
+            Vector3 playerVelocity = (_playerTransform.position - _lastPlayerPosition) / Mathf.Max(Time.deltaTime, 0.0001f);
+            Vector3 anticipatedPosition = _playerTransform.position + (_anticipationFactor * playerVelocity);
+            Vector3 direction = (anticipatedPosition - transform.position).normalized;
+            if (_rigidbody != null)
+                _rigidbody.MovePosition(transform.position + (_moveSpeed * Time.deltaTime) * direction);
+            else
+                transform.position += (_moveSpeed * Time.deltaTime) * direction;
+            _lastPlayerPosition = _playerTransform.position;
+        }
 
         private void Update()
         {
             if (_forceAggro)
             {
-                if (_playerTransform != null)
-                {
-                    Vector3 playerVelocity = (_playerTransform.position - _lastPlayerPosition) / Mathf.Max(Time.deltaTime, 0.0001f);
-                    Vector3 anticipatedPosition = _playerTransform.position + (_anticipationFactor * playerVelocity);
-                    Vector3 direction = (anticipatedPosition - transform.position).normalized;
-                    transform.position += (_moveSpeed * Time.deltaTime) * direction;
-                    _lastPlayerPosition = _playerTransform.position;
-                }
+                MoveTowardsPlayer();
                 return;
             }
 
@@ -75,11 +83,7 @@ namespace CharonsCorner.Runtime
 
             if (_isPlayerInRadius && _playerTransform != null)
             {
-                Vector3 playerVelocity = (_playerTransform.position - _lastPlayerPosition) / Mathf.Max(Time.deltaTime, 0.0001f);
-                Vector3 anticipatedPosition = _playerTransform.position + (_anticipationFactor * playerVelocity);
-                Vector3 direction = (anticipatedPosition - transform.position).normalized;
-                transform.position += (_moveSpeed * Time.deltaTime) * direction;
-                _lastPlayerPosition = _playerTransform.position;
+               MoveTowardsPlayer();
             }
         }
 
@@ -105,6 +109,7 @@ namespace CharonsCorner.Runtime
             if (!foundPlayer)
             {
                 _playerTransform = null;
+                _lastPlayerPosition = Vector3.zero;
                 _isPlayerInRadius = false;
             }
             else

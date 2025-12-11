@@ -30,6 +30,7 @@ namespace CharonsCorner.Runtime
 
         private int _currentSplineIndex = 0;
         private float _progress = 0f;
+        private float _cachedSplineLength = 0f;
         private bool _isTransitioning = false;
         private Vector3 _transitionStartPos;
         private Quaternion _transitionStartRot;
@@ -56,9 +57,11 @@ namespace CharonsCorner.Runtime
                 }
 
                 Spline currentSpline = SplinePath.Splines[_currentSplineIndex];
-                float splineLength = SplineUtility.CalculateLength(currentSpline, SplinePath.transform.localToWorldMatrix);
 
-                _progress += (Speed * Time.deltaTime) / splineLength;
+                if (_cachedSplineLength == 0f)
+                    _cachedSplineLength = SplineUtility.CalculateLength(currentSpline, SplinePath.transform.localToWorldMatrix);
+
+                _progress += (Speed * Time.deltaTime) / _cachedSplineLength;
 
                 if (_progress > 1f)
                 {
