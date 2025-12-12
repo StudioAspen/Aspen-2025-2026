@@ -162,7 +162,6 @@ GameObject:
   - component: {fileID: 6604270249019159897}
   - component: {fileID: 2573684202500331662}
   - component: {fileID: 969224947008455038}
-  - component: {fileID: 6830632286044090848}
   m_Layer: 5
   m_Name: Back
   m_TagString: Untagged
@@ -273,8 +272,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: CharonsCorner.Runtime.PauseUI, CharonsCorner.Runtime
-        m_MethodName: Restart
+        m_TargetAssemblyTypeName: CharonsCorner.Runtime.HubLevelSelectUI, CharonsCorner.Runtime
+        m_MethodName: OnBack
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -284,22 +283,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &6830632286044090848
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1802388327647369265}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 89ba9d30dac7fbc46acc96d3b54ae63b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _scenesToHideFrom:
-  - asset: {fileID: 102900000, guid: 669c59aec439bab43b7f448ecd2634da, type: 3}
-    guid: 669c59aec439bab43b7f448ecd2634da
-  _invertVisibility: 1
 --- !u!1 &2350776023234357817
 GameObject:
   m_ObjectHideFlags: 0
@@ -497,8 +480,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: CharonsCorner.Runtime.UIPanel, CharonsCorner.Runtime
-        m_MethodName: CloseUI
+        m_TargetAssemblyTypeName: CharonsCorner.Runtime.HubLevelSelectUI, CharonsCorner.Runtime
+        m_MethodName: StartLevel
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -709,9 +692,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Restart
-
-'
+  m_text: Back
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -797,7 +778,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &7622883035878588582
 RectTransform:
   m_ObjectHideFlags: 0
