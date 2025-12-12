@@ -34,6 +34,7 @@ namespace CharonsCorner.Runtime
             _context.CurrentSubState = GetType().Name;
             _context.Rb.AddForce(_driftDirection.forward * _boostAmount, ForceMode.VelocityChange);
             _BoostVFX.SetActive(true);
+            
             _BoostSpeedLines.SetActive(true);
         }
 

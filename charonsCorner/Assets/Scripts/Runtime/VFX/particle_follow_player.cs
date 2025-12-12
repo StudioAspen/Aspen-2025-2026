@@ -14,22 +14,26 @@ namespace CharonsCorner.Runtime
     [SerializeField] private bool _followDirectionOfParent;
     private Vector3 Offset;
 
-    
-    void Start()
+
+    void OnEnable()
     {
-        Offset = transform.localPosition - _Parent.localPosition;
+        Offset = transform.position - _Parent.position;
+
     }
 
     // Update is called once per frame
     void Update()
     {
 
-        // not sure what this offset does exactly so ill leave alone
-        transform.localPosition = _Parent.localPosition + Offset;
 
         if (_followDirectionOfParent && _ParentRigidbody.linearVelocity.sqrMagnitude > 0.01f)
         {
+            transform.position = _Parent.position;
             transform.forward = _ParentRigidbody.linearVelocity.normalized;
+        }
+        else
+        {
+            transform.position = _Parent.position + Offset;
         }
 
 
