@@ -4,18 +4,15 @@ using DG.Tweening;
 namespace CharonsCorner.Runtime
 {
     /// <summary>
-    /// This script is on the enemy bumper blocks for the soccer level (Scene 1 Level 3). The enemy detects the player within a radius
-    /// then is intended to move towards them by trying to anticipate their position, 'bullying' them. 
-    /// When an enemy and player collide, the enemy has a 'squash' animation using DOTween
-    /// Setaggro mode is intended to override the radius activation to made the bumpers pursue the player regardles of location 
-    /// This script is WIP
+    /// Enemy bumper for the soccer level: detects player, anticipates position, and moves toward them.
+    /// Movement now uses FixedUpdate for physics consistency across Editor and Windows build.
     /// </summary>
     public class BumperEnemy : MonoBehaviour
     {
         [Header("Movement Settings")]
-        [SerializeField] private float _detectionRadius =26f;
+        [SerializeField] private float _detectionRadius = 26f;
         [SerializeField] private float _moveSpeed = 15f;
-        [SerializeField] private float _anticipationFactor = 1.5f; 
+        [SerializeField] private float _anticipationFactor = 1.5f;
 
         [Header("Squash & Stretch Settings")]
         [SerializeField] private float _squashDuration = 0.2f;
@@ -30,52 +27,50 @@ namespace CharonsCorner.Runtime
         private Vector3 _initialScale;
         private Rigidbody _rigidbody;
 
+        // Cache movement direction computed in Update, applied in FixedUpdate
+        private Vector3 _currentMoveDirection;
+
         private void Awake()
         {
             _rigidbody = GetComponent<Rigidbody>();
+            if (_rigidbody != null)
+            {
+                // Smooth physics at varying frame rates in build
+                _rigidbody.interpolation = RigidbodyInterpolation.Interpolate;
+            }
+
             _meshRenderer = GetComponent<MeshRenderer>();
             if (_meshRenderer == null)
                 _meshRenderer = GetComponentInChildren<MeshRenderer>();
 
-            if (_meshRenderer != null)
-                _initialScale = _meshRenderer.transform.localScale;
-            else
-                _initialScale = transform.localScale;
+            _initialScale = (_meshRenderer != null) ? _meshRenderer.transform.localScale : transform.localScale;
         }
 
         public void SetAggro(bool enabled, Transform player = null)
         {
             _forceAggro = enabled;
-            if (enabled && player != null)
+            if (enabled)
             {
-                _playerTransform = player;
-                _lastPlayerPosition = player.position;
+                _playerTransform = player != null ? player : GameObject.FindGameObjectWithTag("Player")?.transform;
+                if (_playerTransform != null)
+                {
+                    _lastPlayerPosition = _playerTransform.position;
+                }
             }
-            if (!enabled)
+            else
             {
                 _playerTransform = null;
                 _isPlayerInRadius = false;
+                _currentMoveDirection = Vector3.zero;
             }
-        }
-        private void MoveTowardsPlayer()
-        {
-            if (_playerTransform == null) return;
-    
-            Vector3 playerVelocity = (_playerTransform.position - _lastPlayerPosition) / Mathf.Max(Time.deltaTime, 0.0001f);
-            Vector3 anticipatedPosition = _playerTransform.position + (_anticipationFactor * playerVelocity);
-            Vector3 direction = (anticipatedPosition - transform.position).normalized;
-            if (_rigidbody != null)
-                _rigidbody.MovePosition(transform.position + (_moveSpeed * Time.deltaTime) * direction);
-            else
-                transform.position += (_moveSpeed * Time.deltaTime) * direction;
-            _lastPlayerPosition = _playerTransform.position;
         }
 
         private void Update()
         {
+            // Compute direction each frame (render loop), independent of physics step
             if (_forceAggro)
             {
-                MoveTowardsPlayer();
+                ComputeMoveDirection();
                 return;
             }
 
@@ -83,8 +78,43 @@ namespace CharonsCorner.Runtime
 
             if (_isPlayerInRadius && _playerTransform != null)
             {
-               MoveTowardsPlayer();
+                ComputeMoveDirection();
             }
+            else
+            {
+                _currentMoveDirection = Vector3.zero;
+            }
+        }
+
+        private void FixedUpdate()
+        {
+            if (_currentMoveDirection.sqrMagnitude > 0.0001f)
+            {
+                // Apply physics movement at fixed timestep
+                if (_rigidbody != null)
+                {
+                    var newPos = _rigidbody.position + _currentMoveDirection * _moveSpeed * Time.fixedDeltaTime;
+                    _rigidbody.MovePosition(newPos);
+                }
+                else
+                {
+                    transform.position += _currentMoveDirection * _moveSpeed * Time.fixedDeltaTime;
+                }
+            }
+        }
+
+        private void ComputeMoveDirection()
+        {
+            if (_playerTransform == null)
+            {
+                _currentMoveDirection = Vector3.zero;
+                return;
+            }
+
+            Vector3 playerVelocity = (_playerTransform.position - _lastPlayerPosition) / Mathf.Max(Time.deltaTime, 0.0001f);
+            Vector3 anticipatedPosition = _playerTransform.position + (_anticipationFactor * playerVelocity);
+            _currentMoveDirection = (anticipatedPosition - transform.position).normalized;
+            _lastPlayerPosition = _playerTransform.position;
         }
 
         private void DetectPlayer()
@@ -122,7 +152,6 @@ namespace CharonsCorner.Runtime
         {
             if (collision.gameObject.CompareTag("Player"))
             {
-                // Squash and stretch animation using DOTween
                 if (_meshRenderer != null)
                 {
                     Transform meshTransform = _meshRenderer.transform;
