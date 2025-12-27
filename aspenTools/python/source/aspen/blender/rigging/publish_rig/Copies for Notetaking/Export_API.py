@@ -31,7 +31,9 @@ def save_textures():
                                                                                           #image.name refers to the name the user already set by the user.
                                                                                           #...plus .png added as the extension.
             image.file_format = 'PNG'
-            image.save() // # #
+            image.save()
+            # dirname + filepath grab the current file path of the blend file.
+
 
 @trace.trace_blender_function()
 # This function exports the user's model to the user's specified file path. This file path is specified in...
