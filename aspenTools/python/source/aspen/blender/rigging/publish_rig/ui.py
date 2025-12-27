@@ -2,6 +2,7 @@ import os
 
 import bpy
 
+import aspen
 # from aspen.blender.rigging.publish_rig.api import publish_rig
 from aspen.core.qt.singleton_main_window import SingletonMainWindow
 from aspen.core.qt import ui_loader
@@ -17,13 +18,12 @@ from aspen.core.telemetry import trace as aspen_trace
 from opentelemetry import trace
 _logger = get_blender_logger()
 
-class RigPublishMainWindow(SingletonMainWindow):
+class PublishRigMainWindow(SingletonMainWindow):
 
     def __init__(self, parent=None):
         super().__init__(parent=parent)
 
         #for loading UI
-        self.publish_rig_button = None
         ui_loader.load_ui(
             os.path.join(os.path.dirname(__file__), 'publishRig.ui'),
             self
@@ -34,6 +34,7 @@ class RigPublishMainWindow(SingletonMainWindow):
 
 
         # Set up the Publish button
+        self.publish_rig_button = aspen.blender.rigging.publish_rig.publishRig.ui.Button()
         self.publish_rig_button.clicked.connect(self._TEST_on_button_clicked)
 
     def _TEST_on_button_clicked(self):

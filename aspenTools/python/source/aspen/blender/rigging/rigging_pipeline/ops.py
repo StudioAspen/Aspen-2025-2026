@@ -1,6 +1,6 @@
 
 import bpy
-from aspen.blender.rigging.publish_rig.ui import RigPublishMainWindow
+from aspen.blender.rigging.publish_rig.ui import PublishRigMainWindow
 from aspen.blender.core import flags
 
 from . import PUBLISH_RIG_BL_IDNAME
@@ -19,6 +19,6 @@ class RIGGINGPIPELINE_OT_publishrig(bpy.types.Operator):
     def execute(self, context):
         """Launch the Publish Rig Tool."""
 
-        RigPublishMainWindow().show()
+        PublishRigMainWindow().show()
 
         return flags.FINISHED_REPORT_FLAG
