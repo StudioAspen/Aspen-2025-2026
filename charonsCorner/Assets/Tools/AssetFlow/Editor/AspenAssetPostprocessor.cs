@@ -140,5 +140,25 @@ namespace Aspen.Tools.Assets
 			GameObject.DestroyImmediate(root);
 			Debug.Log($"Created prefab variant: {prefabPath}");
 		}
+
+		/// <summary>
+		/// Loads material into asset.
+		/// </summary>
+
+		private static void OnAssignMaterialModel(Material material, Renderer renderer) {
+        var materialPath = "Assets/" + material.name + ".mat";
+
+        // Find if there is a material at the material path
+        // Turn this off to always regeneration materials
+        //if (AssetDatabase.LoadAssetAtPath(materialPath, typeof(Material)))
+            //return AssetDatabase.LoadAssetAtPath(materialPath, typeof(Material));
+        
+        // Create a new material asset using the specular shader
+        // but otherwise the default values from the model
+        material.shader = Shader.Find("Specular");
+        AssetDatabase.CreateAsset(material, "Assets/" + material.name + ".mat");
+        return;
+    }
 	}
+
 }
