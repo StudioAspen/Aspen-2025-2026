@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Publish Rig Tool</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QWidget" name="horizontalLayoutWidget">
@@ -37,7 +37,11 @@
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="asset_name_line_edit"/>
+      <widget class="QLineEdit" name="asset_name_line_edit">
+       <property name="placeholderText">
+        <string>Select a rig to display here</string>
+       </property>
+      </widget>
      </item>
     </layout>
    </widget>
@@ -71,11 +75,14 @@
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
+       <property name="placeholderText">
+        <string>Select Asset Type</string>
+       </property>
       </widget>
      </item>
     </layout>
    </widget>
-   <widget class="QPushButton" name="pushButton">
+   <widget class="QPushButton" name="publish_selection_button">
     <property name="geometry">
      <rect>
       <x>20</x>

@@ -32,13 +32,14 @@ class PublishRigMainWindow(SingletonMainWindow):
         # Get the publish rig tool
         publish_rig = api.publish_rig = f'{os.path.dirname(bpy.data.filepath)}'
 
+        # Set up
+
 
         # Set up the Publish button
-        self.publish_rig_button = aspen.blender.rigging.publish_rig.publishRig.ui.Button()
+        self.publish_rig_button = aspen.blender.rigging.publish_rig.publishRig.publish_selection_button()
         self.publish_rig_button.clicked.connect(self._TEST_on_button_clicked)
 
     def _TEST_on_button_clicked(self):
         api.publish_rig(); #HOPEFULLY it saves the blend file
 
 
-# )
