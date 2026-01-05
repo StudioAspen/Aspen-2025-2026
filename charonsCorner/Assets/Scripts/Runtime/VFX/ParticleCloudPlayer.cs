@@ -2,66 +2,64 @@ using System;
 using UnityEngine;
 
 namespace CharonsCorner.Runtime
-{
+{ 
     public class ParticleCloudPlayer : MonoBehaviour
-{
-    [SerializeField] private Transform _particleTransform;
-    [SerializeField] private Quaternion _startRotation;
-    [SerializeField] private Quaternion _upToNormal;
-    [SerializeField] private ParticleSystem _DustTrailParticles;
-    [SerializeField] private ParticleSystem _CloudLandingParticles;
-    [SerializeField] private float _MaxAirTime;
-
-    public bool _canParticleTrigger;
-
-    public float timer;
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
     {
-        _startRotation = _particleTransform.rotation;
-    }
-    void Update()
-    {
-        if (_canParticleTrigger)
+        [SerializeField] private Transform _particleTransform;
+        [SerializeField] private Quaternion _startRotation;
+        [SerializeField] private Quaternion _upToNormal;
+        [SerializeField] private ParticleSystem _dustTrailParticles;
+        [SerializeField] private ParticleSystem _cloudLandingParticles;
+        [SerializeField] private float _maxAirTime = 0.5f;
+    
+        private bool _canParticleTrigger;
+    
+        private float _timer;
+    
+        // Start is called once before the first execution of Update after the MonoBehaviour is created
+        void Start()
         {
-            timer += Time.deltaTime;
-        }
-        if (timer >= _MaxAirTime)
-        {
-            Debug.Log("playing dust trail");
-            _DustTrailParticles.Play();
+            _startRotation = _particleTransform.rotation;
         }
         
-
-    }
-
-    public void OnCollisionEnter(Collision collision)
-    {
-        ContactPoint contact = collision.contacts[0];
-        Vector3 normal = contact.normal;
+        void Update()
+        {
+            if (_canParticleTrigger)
+            {
+                _timer += Time.deltaTime;
+            }
+            if (_timer >= _maxAirTime)
+            {
+                // Debug.Log("playing dust trail");
+                _dustTrailParticles.Play();
+            }
+        }
         
-
-        // resets after hitting the ground
-        _canParticleTrigger = false;
-        timer = 0;
-
-        _upToNormal = Quaternion.FromToRotation(Vector3.up, normal);
-
-        _particleTransform.rotation = _upToNormal * _startRotation;
-
-        _DustTrailParticles.Play();
-
-        // if (timer >= _MaxAirTime)
-        // {
-        //     _CloudLandingParticles.Play();  
-        //     timer = 0;
-        // }
-        
-    }
+        public void OnCollisionEnter(Collision collision)
+        {
+            ContactPoint contact = collision.contacts[0];
+            Vector3 normal = contact.normal;
+    
+            _upToNormal = Quaternion.FromToRotation(Vector3.up, normal);
+    
+            _particleTransform.rotation = _upToNormal * _startRotation;
+    
+            _dustTrailParticles.Play();
+    
+            if (_timer >= _maxAirTime)
+            {
+                _cloudLandingParticles.Play();  
+            }
+            
+            // resets after hitting the ground
+            EnableParticleTrigger(false);
+            _timer = 0;
+        }
         public void OnCollisionExit(Collision collision)
         {
-            _DustTrailParticles.Stop();
+            _dustTrailParticles.Stop();
         }
+            
+        public void EnableParticleTrigger(bool canParticleTrigger) => _canParticleTrigger = canParticleTrigger;
     }
 }

@@ -18,7 +18,6 @@ namespace CharonsCorner.Runtime
         {
             _player = GetComponent<GameplayPlayerController>();
             _particleCloudPlayer = GetComponent<ParticleCloudPlayer>();
-
         }
 
         void OnEnable()
@@ -33,11 +32,10 @@ namespace CharonsCorner.Runtime
 
         private void OnJump()
         {
-            if (_player.StateMachine.CurrentState == _player.GroundSuperState)
-            {
-                Jump();
-                _particleCloudPlayer._canParticleTrigger = true;
-            }
+            if (_player.StateMachine.CurrentState != _player.GroundSuperState)
+                return;
+            
+            Jump();
         }
 
         private void Jump()
@@ -45,6 +43,8 @@ namespace CharonsCorner.Runtime
             // Debug.Log("Jump");
             _player.Rb.linearVelocity = new Vector3(_player.Rb.linearVelocity.x, 0f, _player.Rb.linearVelocity.z);
             _player.Rb.AddForce(_player.Orientation.up * _jumpForce, ForceMode.VelocityChange);
+            
+            _particleCloudPlayer.EnableParticleTrigger(true);
         }
     }
 }

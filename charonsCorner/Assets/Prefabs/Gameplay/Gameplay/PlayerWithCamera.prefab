@@ -5021,8 +5021,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30a463f0a18ee0e42a06e99bad7e3ecf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _Parent: {fileID: 6649848618118795005}
-  _ParentRigidbody: {fileID: 3033495566973822909}
+  _parent: {fileID: 6649848618118795005}
+  _parentRigidbody: {fileID: 3033495566973822909}
   _followDirectionOfParent: 1
 --- !u!1 &2509831410462703953
 GameObject:
@@ -10097,8 +10097,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30a463f0a18ee0e42a06e99bad7e3ecf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _Parent: {fileID: 6649848618118795005}
-  _ParentRigidbody: {fileID: 0}
+  _parent: {fileID: 6649848618118795005}
+  _parentRigidbody: {fileID: 3033495566973822909}
   _followDirectionOfParent: 0
 --- !u!1 &4322968303192338109
 GameObject:
@@ -15240,6 +15240,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12104891ff0149b082aef4a7db66e22b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _spawnPointManager: {fileID: 0}
   _gravityAmount: 30
   _groundCheckLength: 0.5
   _groundLayer:
@@ -15277,8 +15278,7 @@ MonoBehaviour:
       _fovSpeed: 10
       _timeScaleSpeed: 20
       _stateDuration: 0.4
-      _BoostVFX: {fileID: 2341021130145493732}
-      _BoostSpeedLines: {fileID: 0}
+      _boostVFX: {fileID: 2341021130145493732}
   CurrentSubState: 
 --- !u!114 &7562710238517373384
 MonoBehaviour:
@@ -15310,7 +15310,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05afbb9506a4d5841b56c9cd9ff4c29a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _particleCloudPlayer: {fileID: 0}
+  _particleCloudPlayer: {fileID: 7042396200899670913}
   _jumpForce: 15
 --- !u!114 &7042396200899670913
 MonoBehaviour:
@@ -15327,11 +15327,9 @@ MonoBehaviour:
   _particleTransform: {fileID: 9182450235370564384}
   _startRotation: {x: 0, y: 0, z: 0, w: 0}
   _upToNormal: {x: 0, y: 0, z: 0, w: 0}
-  _DustTrailParticles: {fileID: 5845324790380553881}
-  _CloudLandingParticles: {fileID: 3699065981071893425}
-  _MaxAirTime: 0.5
-  _canParticleTrigger: 0
-  timer: 0
+  _dustTrailParticles: {fileID: 5845324790380553881}
+  _cloudLandingParticles: {fileID: 3699065981071893425}
+  _maxAirTime: 0.5
 --- !u!1 &7906076677972268054
 GameObject:
   m_ObjectHideFlags: 0
@@ -15383,7 +15381,7 @@ ParticleSystem:
   emitterVelocityMode: 1
   looping: 0
   prewarm: 0
-  playOnAwake: 1
+  playOnAwake: 0
   useUnscaledTime: 0
   autoRandomSeed: 1
   startDelay:
@@ -20245,8 +20243,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30a463f0a18ee0e42a06e99bad7e3ecf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _Parent: {fileID: 6649848618118795005}
-  _ParentRigidbody: {fileID: 0}
+  _parent: {fileID: 6649848618118795005}
+  _parentRigidbody: {fileID: 3033495566973822909}
   _followDirectionOfParent: 0
 --- !u!1 &8727389702971598761
 GameObject:
