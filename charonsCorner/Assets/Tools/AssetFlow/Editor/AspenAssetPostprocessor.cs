@@ -145,7 +145,7 @@ namespace Aspen.Tools.Assets
 		/// Loads material into asset.
 		/// </summary>
 
-		private static void OnAssignMaterialModel(Material material, Renderer renderer) {
+		Material OnAssignMaterialModel(Material material, Renderer renderer) {
         var materialPath = "Assets/" + material.name + ".mat";
 
         // Find if there is a material at the material path
@@ -153,11 +153,10 @@ namespace Aspen.Tools.Assets
         //if (AssetDatabase.LoadAssetAtPath(materialPath, typeof(Material)))
             //return AssetDatabase.LoadAssetAtPath(materialPath, typeof(Material));
         
-        // Create a new material asset using the specular shader
-        // but otherwise the default values from the model
-        material.shader = Shader.Find("Specular");
+        // Create a new material asset using the custom shader
+        material.shader = Shader.Find("Shader Graphs/4I_VLighting");
         AssetDatabase.CreateAsset(material, "Assets/" + material.name + ".mat");
-        return;
+        return material;
     }
 	}
 
