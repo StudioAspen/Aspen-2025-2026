@@ -12,8 +12,8 @@ def publish_rig():
     """Publish rig as a .blend file to the specified file path. But for testing purposes, it will save as a .blend file."""
 
     # save_textures() # will need.
+    # bpy.ops.wm.save_as_mainfile(filepath=)
     bpy.ops.wm.save_as_mainfile()
-
         # check_existing=True,
 
         # If
