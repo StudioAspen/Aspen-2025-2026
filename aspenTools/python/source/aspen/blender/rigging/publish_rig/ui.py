@@ -16,6 +16,7 @@ from aspen.core.telemetry.loggers import get_blender_logger
 from aspen.core.telemetry import trace as aspen_trace
 from opentelemetry import trace
 _logger = get_blender_logger()
+TestPath = aspen.blender.rigging.publish_rig
 
 class PublishRigMainWindow(SingletonMainWindow):
 
@@ -38,6 +39,6 @@ class PublishRigMainWindow(SingletonMainWindow):
         self.publish_selection_button.clicked.connect(self._on_publish_selection_button_clicked)
 
     def _on_publish_selection_button_clicked(self):
-        api.publish_rig(); #HOPEFULLY it saves the blend file
+        api.publish_rig(TestPath); #HOPEFULLY it saves the blend file
 
 
