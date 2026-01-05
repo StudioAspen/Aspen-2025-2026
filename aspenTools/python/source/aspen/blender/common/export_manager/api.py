@@ -14,12 +14,19 @@ def save_textures():
 
     # Save images
     for image in bpy.data.images:
-        # If a FILE, just save
-        if image.source == 'FILE':
-            image.save()
 
+        # Check if the image has no users and no source file path
+        if image.has_data == False:
+            bpy.data.images.remove(image)
+            continue
+
+        # If a FILE, just save
+        if image.source == 'FILE' and image.filepath:
+            print(f'FILE')
+            image.save()
         # If generated in blender, save it to blend file directly as a PNG
         elif image.source == 'GENERATED':
+            print(f'{os.path.dirname(bpy.data.filepath)}/{image.name}.png')
             image.filepath_raw = f'{os.path.dirname(bpy.data.filepath)}/{image.name}.png'
             image.file_format = 'PNG'
             image.save()
