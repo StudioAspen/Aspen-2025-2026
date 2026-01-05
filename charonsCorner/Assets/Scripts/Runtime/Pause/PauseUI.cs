@@ -24,6 +24,10 @@ namespace CharonsCorner.Runtime
         private protected override void Initialize()
         {
             _rectTransform = GetComponent<RectTransform>();
+            if (_rectTransform == null)
+            {
+                Debug.LogError("PauseUI: RectTransform component not found.");
+            }
         }
 
         /// <summary>
@@ -34,7 +38,8 @@ namespace CharonsCorner.Runtime
         /// </remarks>
         private void OnEnable()
         {
-            if (_isAnimating) return; // Prevent opening animation if we are in the process of closing
+            _rectTransform.DOKill(); // Kill any existing animations from this RectTransform
+
             _isAnimating = true;
 
             InputManager.Instance.Unpause += InputManager_Unpause;
@@ -42,11 +47,8 @@ namespace CharonsCorner.Runtime
             //Disable all buttons (so player can't click while animation is playing)
             EnableButtons(false);
 
-            //Kill any existing animations from this RectTransform
-            _rectTransform.DOKill();
-
             //Set the starting position off screen
-            _rectTransform.anchoredPosition = new Vector2(_rectTransform.anchoredPosition.x, _rectTransform.rect.height);
+            _rectTransform.anchoredPosition = new Vector2(_rectTransform.anchoredPosition.x, Screen.height);
 
             //Animate the UI Menu into view
             _rectTransform
@@ -67,6 +69,9 @@ namespace CharonsCorner.Runtime
         {
             if (InputManager.Instance != null)
                 InputManager.Instance.Unpause -= InputManager_Unpause;
+            
+            _isAnimating = false;
+            _rectTransform.DOKill(); // Cancel any in-progress animation
         }
 
         // Called by button UI event
@@ -100,7 +105,7 @@ namespace CharonsCorner.Runtime
 
             //Animate the UI Menu out of view
             _rectTransform
-                .DOLocalMoveY(Screen.height, _closingAnimationDuration)
+                .DOAnchorPosY(Screen.height, _closingAnimationDuration)
                 .SetUpdate(true)
                 .SetEase(_closingAnimationEaseType)
                 .OnComplete(() =>
@@ -126,8 +131,11 @@ namespace CharonsCorner.Runtime
         /// <param name="enable">`true` to make buttons interactable, `false` to disable their interaction.</param>
         private void EnableButtons(bool enable)
         {
+            if (_buttons == null) return;
+
             foreach (var button in _buttons)
             {
+                if (button == null) continue;
                 button.interactable = enable;
             }
         }
