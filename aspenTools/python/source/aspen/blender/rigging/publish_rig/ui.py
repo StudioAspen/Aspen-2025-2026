@@ -41,10 +41,10 @@ class PublishRigMainWindow(SingletonMainWindow):
         self.asset_type_combo_box.currentIndexChanged.connect(self._asset_type_combo_box_changed) # links the combo box to the uhhhh
 
         # Set up the Publish button
-        self.publish_selection_button.clicked.connect(self._on_publish_selection_button_clicked())
+        self.publish_selection_button.clicked.connect(self._on_publish_selection_button_clicked)
 
     def _on_publish_selection_button_clicked(self):
-        api.publish_rig(file_path: ); # HOPEFULLY it saves the blend file
+        api.publish_rig(); # HOPEFULLY it saves the blend file
 
 
 
