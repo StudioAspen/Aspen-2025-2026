@@ -3,7 +3,6 @@ import os
 import bpy
 
 import aspen
-# from aspen.blender.rigging.publish_rig.api import publish_rig
 from aspen.core.qt.singleton_main_window import SingletonMainWindow
 from aspen.core.qt import ui_loader
 
@@ -30,16 +29,15 @@ class PublishRigMainWindow(SingletonMainWindow):
         )
 
         # Get the publish rig tool
-        publish_rig = api.publish_rig = f'{os.path.dirname(bpy.data.filepath)}'
+        publish_rig = api.publish_rig = f'{os.path.dirname(bpy.data.filepath)}' # needed?
 
         # Set up
 
 
         # Set up the Publish button
-        self.publish_rig_button = aspen.blender.rigging.publish_rig.publishRig.publish_selection_button()
-        self.publish_rig_button.clicked.connect(self._TEST_on_button_clicked)
+        self.publish_selection_button.clicked.connect(self._on_publish_selection_button_clicked)
 
-    def _TEST_on_button_clicked(self):
+    def _on_publish_selection_button_clicked(self):
         api.publish_rig(); #HOPEFULLY it saves the blend file
 
 
