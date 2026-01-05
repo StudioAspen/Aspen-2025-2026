@@ -1,15 +1,20 @@
 using UnityEngine;
 using UnityEngine.Serialization;
+using UnityEngine.UIElements;
 
 namespace CharonsCorner.Runtime
 {
     [System.Serializable]
     public class DriftBoostState : State<GameplayPlayerController>
     {
-        [Header("Drift Direction")]
+        [Header("Drift Settings")]
         [SerializeField] private Transform _driftDirection;
+        [SerializeField] private float _maxAngle = 90f;
 
-        [SerializeField] private float _boostAmount = 50f;
+        [SerializeField] private float _boostAmount;
+        [SerializeField] private float _maxBoostAmount = 50f;
+        [SerializeField, Tooltip("Base initial dash speed added regardless of angle")]
+        private float _initialDashSpeed = 0f;
         
         [Header("Camera FOV")]
         [SerializeField] private float _baseFOV = 75f;
@@ -32,7 +37,23 @@ namespace CharonsCorner.Runtime
         {
             _timer = 0f;
             _context.CurrentSubState = GetType().Name;
+            Vector3 currentVel = _context.Rb.linearVelocity;
+            Vector3 currentDir;
+            if (currentVel.sqrMagnitude > 0.0001f)
+                currentDir = currentVel.normalized;
+            else
+                currentDir = _driftDirection.forward; // if not moving, treat as aligned -> angle 0
+
+            float angle = Vector3.Angle(currentDir, _driftDirection.forward);
+
+            // Fraction of maxAngle (clamped). Do NOT use look direction.
+            float frac = Mathf.Clamp01(angle / Mathf.Max(0.0001f, _maxAngle));
+
+            // Boost scales only with angle (plus optional initial dash). Caps at _maxBoostAmount.
+            _boostAmount = Mathf.Min(_maxBoostAmount, (_maxBoostAmount * frac) + _initialDashSpeed);
+
             _context.Rb.AddForce(_driftDirection.forward * _boostAmount, ForceMode.VelocityChange);
+            _context.DriftFeedbacks.PlayFeedbacks();
             _boostVFX.SetActive(true);
             
             // _boostSpeedLines.SetActive(true);
