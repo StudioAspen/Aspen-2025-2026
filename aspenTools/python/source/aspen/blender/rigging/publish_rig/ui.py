@@ -59,33 +59,33 @@ class PublishRigMainWindow(SingletonMainWindow):
 
                 # Get export settings
                 asset_name = publish_rig.asset_name.strip
-                export_type = publish_rig.export_type
+                publish_type = publish_rig.export_type
                 asset_type = f'{publish_rig.asset_type.lower()}s'
 
                 # Set the export directory based on export and asset type
-                if export_type == PUBLISH_TYPE_ENUM_CHARACTER:
-                    export_dir = os.path.join(sitecustomize.UNITY_PROJECT_ASSETS_DIR, 'Art', 'models', asset_type,
+                if publish_type == PUBLISH_TYPE_ENUM_CHARACTER:
+                    publish_dir = os.path.join(sitecustomize.BLENDER_PROJECT_ASSETS_DIR, 'Art', 'models', asset_type,
                                               asset_name) # "Export to a folder of the rig's name"
-                elif export_type == PUBLISH_TYPE_ENUM_ACTOR:
-                    blend_dir = os.path.basename(os.path.dirname(bpy.data.filepath))
-                    export_dir = os.path.join(sitecustomize.UNITY_PROJECT_ASSETS_DIR, 'Art', 'animations',
+                elif publish_type == PUBLISH_TYPE_ENUM_ACTOR:
+                    blend_dir = os.path.basename(os.path.dirname(bpy.data.filepath)) # gets the .blend file's current file path, apparently.
+                    publish_dir = os.path.join(sitecustomize.BLENDER_PROJECT_ASSETS_DIR, 'Art', 'animations',
                                               asset_type, blend_dir)
                 else:
                     # Cancel if unknown export type
-                    raise Exception(f'Unknown export type: {export_type}')
+                    raise Exception(f'Unknown export type: {publish_type}')
 
-                export_path = os.path.join(export_dir, f'{asset_name}.fbx')
+                publish_path = os.path.join(publish_dir, f'{asset_name}.fbx')
 
-                # Export at export path
-                if export_type == PUBLISH_TYPE_ENUM_CHARACTER:
-                    api.export_model_fbx(export_path)
-                elif export_type == PUBLISH_TYPE_ENUM_ACTOR:
-                    api.export_animation_fbx(export_path)
+                # Publish at publish path
+                if publish_type == PUBLISH_TYPE_ENUM_CHARACTER:
+                    api.export_model_fbx(publish_path)
+                elif publish_type == PUBLISH_TYPE_ENUM_ACTOR:
+                    api.export_animation_fbx(publish_path)
                 else:
                     # Cancel if unknown export type
-                    raise Exception(f'Unknown export type: {export_type}')
+                    raise Exception(f'Unknown export type: {publish_type}')
 
-                api.publish_rig() # HOPEFULLY it saves the blend file
+                # api.publish_rig() # HOPEFULLY it saves the blend file
 
 
 
