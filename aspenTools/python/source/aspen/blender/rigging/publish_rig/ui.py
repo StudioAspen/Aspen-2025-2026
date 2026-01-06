@@ -68,15 +68,17 @@ class PublishRigMainWindow(SingletonMainWindow):
 
 
                 # Get export settings
-                asset_name = publish_rig.asset_name.strip # !! probably will be an issue soon. Update: yeah
+                asset_name = publish_rig.asset_name.strip() # !! probably will be an issue soon. Update: yeah
                 # publish_type = publish_rig
                 publish_type = publish_rig.publish_type
                 asset_type = f'{publish_rig.asset_type.lower()}s'
 
                 # Set the export directory based on export and asset type
                 if publish_type == PUBLISH_TYPE_ENUM_CHARACTER:
-                    publish_dir = os.path.join(sitecustomize.ART_ASSETS_DIR, 'Art', 'models', asset_type,
-                                              asset_name) # "Export to a folder of the rig's name"
+                    # publish_dir = os.path.join(sitecustomize.TECH_ART_BLENDER_ASSETS_DIR, asset_type,
+                    #                           asset_name) # "Export to a folder of the rig's name"
+                    publish_dir = os.path.join(sitecustomize.TECH_ART_BLENDER_ASSETS_DIR, 'characters', '[a].blend'
+                                              ) # "Export to a folder of the rig's name"
                 elif publish_type == PUBLISH_TYPE_ENUM_ACTOR:
                     blend_dir = os.path.basename(os.path.dirname(bpy.data.filepath)) # gets the .blend file's current file path, apparently.
                     publish_dir = os.path.join(sitecustomize.ART_ASSETS_DIR, 'Art', 'animations',
@@ -85,13 +87,14 @@ class PublishRigMainWindow(SingletonMainWindow):
                     # Cancel if unknown export type
                     raise Exception(f'Unknown export type: {publish_type}')
 
-                publish_path = os.path.join(publish_dir, f'{asset_name}.fbx')
+                publish_path = os.path.join(publish_dir)
+                # publish_path = os.path.join(publish_dir, f'{asset_name}.fbx')
 
                 # Publish at publish path
                 if publish_type == PUBLISH_TYPE_ENUM_CHARACTER:
-                    api.export_model_fbx(publish_path)
+                    api.publish_character(publish_path)
                 elif publish_type == PUBLISH_TYPE_ENUM_ACTOR:
-                    api.export_animation_fbx(publish_path)
+                    api.publish_character(publish_path)
                 else:
                     # Cancel if unknown export type
                     raise Exception(f'Unknown export type: {publish_type}')
@@ -103,3 +106,4 @@ class PublishRigMainWindow(SingletonMainWindow):
     def _asset_type_combo_box_changed(self, i: int):
         print(ASSET_TYPE[i]) # for testing
         print(bpy.context)
+        print(ASSET_TYPE_ENUM_ITEMS[i]) # works.

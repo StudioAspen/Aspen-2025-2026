@@ -1,3 +1,6 @@
+import bpy
+
+
 PUBLISH_TYPE_ENUM_CHARACTER = 'CHARACTER'
 """Export Type: Character"""
 
@@ -11,6 +14,7 @@ PUBLISH_TYPE_ENUM_ITEMS = [
 ]
 
 ASSET_TYPE_ENUM_ITEMS = [
-    ('CHARACTER', 'Character', ''), #item #0
-    ('ACTOR', 'Actor', 'Rigged props'), #item #1 and so forth...
+    ('CHARACTER', 'Character', ''), #item #0. 'CHARACTER' is the "identifier", 'Character' is how it appears in the UI.
+    ('ACTOR', 'Actor', ''), #item #1 and so forth...
 ]
+

@@ -8,12 +8,16 @@ from aspen.core.telemetry import trace
 
 
 @trace.trace_blender_function()
-def publish_character():
+def publish_character(file_path: str):
     """Publish rig as a .blend file to the specified file path. But for testing purposes, it will save as a .blend file."""
 
     # save_textures() # will need.
     # bpy.ops.wm.save_as_mainfile(filepath=)
-    bpy.ops.wm.save_as_mainfile()
+    bpy.ops.wm.save_as_mainfile(
+        filepath=file_path,
+
+    )
+
         # check_existing=True,
 
         # If
