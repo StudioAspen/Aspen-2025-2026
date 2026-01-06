@@ -11,6 +11,6 @@ PUBLISH_TYPE_ENUM_ITEMS = [
 ]
 
 ASSET_TYPE_ENUM_ITEMS = [
-    ('CHARACTER', 'Character', ''),
-    ('ACTOR', 'Actor', 'Rigged props'),
+    ('CHARACTER', 'Character', ''), #item #0
+    ('ACTOR', 'Actor', 'Rigged props'), #item #1 and so forth...
 ]

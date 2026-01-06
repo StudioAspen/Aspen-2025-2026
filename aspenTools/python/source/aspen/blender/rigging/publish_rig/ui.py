@@ -17,10 +17,9 @@ from aspen.core.telemetry.loggers import get_blender_logger
 from aspen.core.telemetry import trace as aspen_trace
 from opentelemetry import trace
 
-from .api import publish_rig
+# from .api import publish_rig
 
 _logger = get_blender_logger()
-TestPath = aspen.blender.rigging.publish_rig
 
 ASSET_TYPE = ['Characters', 'Actors']
 
@@ -48,6 +47,13 @@ class PublishRigMainWindow(SingletonMainWindow):
         # Get publish settings
         # publish_type = publish_rig.export_type
 
+    def _on_asset_name_line_edit_changed(self, text: str):
+        bpy.context.scene.publish_rig.asset_name = text
+
+
+    def _on_asset_type_combo_box_changed(self, index: int):
+        bpy.context.scene.publish_rig.publish_type = self.publish_types[index]
+
 
 
     def _on_publish_selection_button_clicked(self):
@@ -57,10 +63,14 @@ class PublishRigMainWindow(SingletonMainWindow):
                 if not bpy.data.filepath:
                     raise Exception('File must be saved in order to export a model.')
 
+                # Get publish rig tool
+                publish_rig = bpy.context.scene.publish_rig
+
+
                 # Get export settings
                 asset_name = publish_rig.asset_name.strip # !! probably will be an issue soon. Update: yeah
                 # publish_type = publish_rig
-                # publish_type = publish_rig.export_type
+                publish_type = publish_rig.publish_type
                 asset_type = f'{publish_rig.asset_type.lower()}s'
 
                 # Set the export directory based on export and asset type
@@ -92,3 +102,4 @@ class PublishRigMainWindow(SingletonMainWindow):
 
     def _asset_type_combo_box_changed(self, i: int):
         print(ASSET_TYPE[i]) # for testing
+        print(bpy.context)

@@ -8,7 +8,7 @@ from aspen.core.telemetry import trace
 
 
 @trace.trace_blender_function()
-def publish_rig():
+def publish_character():
     """Publish rig as a .blend file to the specified file path. But for testing purposes, it will save as a .blend file."""
 
     # save_textures() # will need.
