@@ -7,8 +7,7 @@ import aspen
 from aspen.core.qt.singleton_main_window import SingletonMainWindow
 from aspen.core.qt import ui_loader
 
-import aspen.sitecustomize as sitecustomize # This is controlling directories and is allowing Mikyle's tool to access the Unity folders. It's a gate woahh
-
+import aspen.sitecustomize as sitecustomize # This is controlling directories and is allowing Mikyle's tool to access the Unity folders.
 from aspen.blender.rigging.publish_rig import api
 from . import (ASSET_TYPE_ENUM_ITEMS, PUBLISH_TYPE_ENUM_ITEMS,
                PUBLISH_TYPE_ENUM_CHARACTER, PUBLISH_TYPE_ENUM_ACTOR)
@@ -39,7 +38,7 @@ class PublishRigMainWindow(SingletonMainWindow):
         # Set up asset types
         self.asset_types = [asset_type[0] for asset_type in ASSET_TYPE_ENUM_ITEMS]
         self.asset_type_combo_box.addItems(['Characters', 'Actors'])
-        self.asset_type_combo_box.currentIndexChanged.connect(self._asset_type_combo_box_changed) # links the combo box to the uhhhh
+        self.asset_type_combo_box.currentIndexChanged.connect(self._asset_type_combo_box_changed)
 
         # Set up the Publish button
         self.publish_selection_button.clicked.connect(self._on_publish_selection_button_clicked)
