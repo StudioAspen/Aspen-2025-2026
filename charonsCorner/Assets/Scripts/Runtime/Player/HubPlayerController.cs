@@ -14,11 +14,14 @@ namespace CharonsCorner.Runtime
         [SerializeField] private SphereCollider _sphereCollider;
 
         [Header("Movement Attributes")]
-        [SerializeField] private float _turnResponsiveness = 2f;
         [SerializeField] private float _maxSpeed = 10f;
         [SerializeField] private float _acceleration = 2f;
         [SerializeField] private float _dampening = 0.25f;
 
+        [Header("Lock Points")]
+        [SerializeField] private float _minX = -10f;
+        [SerializeField] private float _maxX = 10f;
+        
         private void Awake()
         {
             _input = InputManager.Instance;
@@ -26,38 +29,22 @@ namespace CharonsCorner.Runtime
 
         private void FixedUpdate()
         {
-            if (_input.MoveDirection != Vector2.zero)
+            float horizontalInput = _input.MoveDirection.x;
+
+            if (Mathf.Abs(horizontalInput) > 0.01f)
             {
-                Vector3 desiredDirection = Utilities.GetCameraBasedMoveInput(
-                CameraManager.Instance.CurrentCamera.transform,
-                _input.MoveDirection
-                );
+                // Move only along X axis
+                Vector3 desiredDirection = horizontalInput > 0 ? Vector3.right : Vector3.left;
 
-                Vector3 currentDirection = _rigidBody.linearVelocity;
-                currentDirection.y = 0;
-                currentDirection.Normalize();
-
-                float directionChangeFactor = 1f;
-                if (_rigidBody.linearVelocity.sqrMagnitude > 0.01f)
-                {
-                    float angle = Vector3.Angle(currentDirection, desiredDirection);
-                    directionChangeFactor = Mathf.InverseLerp(0f, 180f, angle); // Normalize angle (0 = no change, 180 = full change)
-                }
-
-                // Torque scales with how much you're turning
-                Vector3 turnTorque = _turnResponsiveness * directionChangeFactor * Vector3.Cross(Vector3.up, desiredDirection);
-
-                // Propulsion torque based on speed for snappy direction changes at low speed
+                // Propulsion torque based on speed
                 float speedFactor = Mathf.Clamp01(_rigidBody.linearVelocity.magnitude / _maxSpeed);
                 Vector3 propulsionTorque = _acceleration * Vector3.Cross(Vector3.up, desiredDirection) * (1f - speedFactor);
 
-                Vector3 totalTorque = turnTorque + propulsionTorque;
+                _rigidBody.AddTorque(propulsionTorque, ForceMode.VelocityChange);
 
-                _rigidBody.AddTorque(totalTorque, ForceMode.VelocityChange);
-
-                // To prevent y-axis spin
+                // To prevent y-axis spin and any movement not on X
                 _rigidBody.angularVelocity = Vector3.ProjectOnPlane(_rigidBody.angularVelocity, Vector3.up);
-
+                
                 // Cap final speed
                 if (_rigidBody.linearVelocity.magnitude > _maxSpeed)
                     _rigidBody.linearVelocity = Vector3.ClampMagnitude(_rigidBody.linearVelocity, _maxSpeed);
@@ -67,6 +54,25 @@ namespace CharonsCorner.Runtime
                 Vector3 torque = _dampening * -_rigidBody.angularVelocity;
                 _rigidBody.AddTorque(torque, ForceMode.VelocityChange);
             }
+
+            // Enforce lock points
+            Vector3 position = transform.position;
+            if (position.x < _minX)
+            {
+                position.x = _minX;
+                _rigidBody.linearVelocity = new Vector3(Mathf.Max(0, _rigidBody.linearVelocity.x), _rigidBody.linearVelocity.y, _rigidBody.linearVelocity.z);
+            }
+            else if (position.x > _maxX)
+            {
+                position.x = _maxX;
+                _rigidBody.linearVelocity = new Vector3(Mathf.Min(0, _rigidBody.linearVelocity.x), _rigidBody.linearVelocity.y, _rigidBody.linearVelocity.z);
+            }
+            transform.position = position;
+
+            // Constrain Z movement as well since we only want X
+            Vector3 velocity = _rigidBody.linearVelocity;
+            velocity.z = 0;
+            _rigidBody.linearVelocity = velocity;
         }
 
         
