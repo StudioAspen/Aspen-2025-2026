@@ -14,6 +14,7 @@ namespace CharonsCorner.Runtime
         [Header("References")]
         [SerializeField] private Rigidbody _rigidBody;
         [SerializeField] private SphereCollider _sphereCollider;
+        [SerializeField] private Transform _tiltObject;
 
         [Header("State")]
         [SerializeField] private HubState _currentState = HubState.TitleScreen;
@@ -27,6 +28,10 @@ namespace CharonsCorner.Runtime
         [SerializeField] private float _maxSpeed = 10f;
         [SerializeField] private float _acceleration = 2f;
         [SerializeField] private float _dampening = 0.25f;
+
+        [Header("Tilt Settings")]
+        [SerializeField] private float _tiltAngle = 15f;
+        [SerializeField] private float _tiltSpeed = 5f;
 
         [Header("Lock Points")]
         [SerializeField] private float _minX = -10f;
@@ -123,6 +128,33 @@ namespace CharonsCorner.Runtime
             Vector3 velocity = _rigidBody.linearVelocity;
             velocity.z = 0;
             _rigidBody.linearVelocity = velocity;
+
+            HandleTilt(horizontalInput);
+        }
+
+        private void HandleTilt(float horizontalInput)
+        {
+            if (_tiltObject == null) return;
+
+            float targetAngle = 0f;
+            if (_currentState == HubState.Gameplay)
+            {
+                if (horizontalInput > 0.01f)
+                {
+                    targetAngle = _tiltAngle; // Tilt right (negative around Z or similar, depending on coordinate system)
+                }
+                else if (horizontalInput < -0.01f)
+                {
+                    targetAngle = -_tiltAngle; // Tilt left
+                }
+            }
+
+            // In local space, assuming Z is forward and X is right, tilting left/right usually means rotating around Z or X depending on setup.
+            // Usually "tilting left" when moving left means the top of the object moves left, which is a positive rotation around Z (in Unity's LH system if looking from back).
+            // Let's assume we want to rotate around the Z axis.
+            
+            Quaternion targetRotation = Quaternion.Euler(0f, 0f, targetAngle);
+            _tiltObject.localRotation = Quaternion.Slerp(_tiltObject.localRotation, targetRotation, Time.fixedDeltaTime * _tiltSpeed);
         }
 
         public void SetState(HubState state)
