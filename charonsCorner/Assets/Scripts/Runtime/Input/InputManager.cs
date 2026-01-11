@@ -71,7 +71,7 @@ namespace CharonsCorner.Runtime
             playerInput.onControlsChanged += PlayerInput_OnControlsChanged;
         }
 
-        private void OnDestroy()
+        private protected override void OnDestroy()
         {
             playerInput.onControlsChanged -= PlayerInput_OnControlsChanged;
         }

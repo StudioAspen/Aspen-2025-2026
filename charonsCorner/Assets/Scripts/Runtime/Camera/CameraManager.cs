@@ -47,7 +47,7 @@ namespace CharonsCorner.Runtime
             CameraShaker = new CameraShaker(this);
         }
 
-        private void OnDestroy()
+        private protected override void OnDestroy()
         {
             SceneManager.activeSceneChanged -= SceneManager_ActiveSceneChanged;
 
