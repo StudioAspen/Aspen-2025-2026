@@ -54,12 +54,14 @@ namespace CharonsCorner.Runtime
 
         private void Start()
         {
-            _spawnPointManager.OnRespawn += Respawn;
+            if(_spawnPointManager != null)
+                _spawnPointManager.OnRespawn += Respawn;
         }
 
         private void OnDestroy()
         {
-            _spawnPointManager.OnRespawn -= Respawn;
+            if(_spawnPointManager != null)
+                _spawnPointManager.OnRespawn -= Respawn;
         }
 
         private void Update()
