@@ -15,6 +15,7 @@ public class FeedbackTester : MonoBehaviour
             if (Input.GetKeyDown(key))
             {
                 PlayFeedback(i);
+            }
         }
     }
 
