@@ -9,14 +9,14 @@ namespace CharonsCorner.Runtime
     public class HubPlayerController : MonoBehaviour
     {
         private InputManager _input;
-        private HubStateManager _stateManager;
+        private GameManager _gameManager;
 
         [Header("References")]
         [SerializeField] private Rigidbody _rigidBody;
         [SerializeField] private SphereCollider _sphereCollider;
 
         [Header("State")]
-        [SerializeField] private HubState _currentState = HubState.TitleScreen;
+        [SerializeField] private GameState _currentState = GameState.Title;
 
         [Header("Title Screen Movement")]
         [SerializeField] private float _titleScreenIntensity = 0.5f;
@@ -35,24 +35,24 @@ namespace CharonsCorner.Runtime
         private void Awake()
         {
             _input = InputManager.Instance;
-            _stateManager = FindFirstObjectByType<HubStateManager>(FindObjectsInactive.Include);
+            _gameManager = GameManager.Instance;
 
-            if (_stateManager != null)
+            if (_gameManager != null)
             {
-                _stateManager.OnStateChanged += StateManager_OnStateChanged;
-                SetState(_stateManager.CurrentState);
+                _gameManager.OnGameStateChanged += GameManager_OnGameStateChanged;
+                SetState(_gameManager.CurrentGameState);
             }
         }
 
         private void OnDestroy()
         {
-            if (_stateManager != null)
+            if (_gameManager != null)
             {
-                _stateManager.OnStateChanged -= StateManager_OnStateChanged;
+                _gameManager.OnGameStateChanged -= GameManager_OnGameStateChanged;
             }
         }
 
-        private void StateManager_OnStateChanged(HubState newState)
+        private void GameManager_OnGameStateChanged(GameState newState)
         {
             SetState(newState);
         }
@@ -62,18 +62,18 @@ namespace CharonsCorner.Runtime
             float horizontalInput = 0f;
             
             // Wobble Back and Forth during the TitleScreen, listen to the player input for Gameplay
-            if (_currentState == HubState.Gameplay)
+            if (_currentState == GameState.Gameplay)
             {
                 horizontalInput = _input.MoveDirection.x;
             }
-            else if (_currentState == HubState.TitleScreen)
+            else if (_currentState == GameState.Title)
             {
                 _titleScreenTimer += Time.fixedDeltaTime;
                 float omega = Mathf.PI / _titleScreenDuration;
                 horizontalInput = -Mathf.Cos(_titleScreenTimer * omega) * _titleScreenIntensity;
             }
 
-            if (Mathf.Abs(horizontalInput) > 0.01f || _currentState == HubState.TitleScreen)
+            if (Mathf.Abs(horizontalInput) > 0.01f || _currentState == GameState.Title)
             {
                 // Move only along X axis
                 Vector3 desiredDirection = horizontalInput >= 0 ? Vector3.right : Vector3.left;
@@ -101,7 +101,7 @@ namespace CharonsCorner.Runtime
             }
 
             // Enforce lock points
-            if (_currentState == HubState.Gameplay)
+            if (_currentState == GameState.Gameplay)
             {
                 Vector3 position = transform.position;
                 if (position.x < _minX)
@@ -126,12 +126,12 @@ namespace CharonsCorner.Runtime
             _rigidBody.linearVelocity = velocity;
         }
 
-        public void SetState(HubState state)
+        public void SetState(GameState state)
         {
             _currentState = state;
             
-            // Set layer based on state
-            if (state == HubState.Gameplay)
+            // Set layer based on state to avoid detection from interactable objects
+            if (state == GameState.Gameplay)
             {
                 gameObject.layer = LayerMask.NameToLayer("Player");
             }
@@ -140,7 +140,7 @@ namespace CharonsCorner.Runtime
                 gameObject.layer = LayerMask.NameToLayer("Default");
             }
 
-            if (state == HubState.TitleScreen)
+            if (state == GameState.Title)
             {
                 _titleScreenTimer = 0f;
             }

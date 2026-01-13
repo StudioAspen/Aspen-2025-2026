@@ -8,31 +8,31 @@ public class HubCameraTilt : MonoBehaviour
     [SerializeField] private float _tiltAngle = 15f;
     [SerializeField] private float _tiltSpeed = 5f;
 
-    private HubStateManager _stateManager;
+    private GameManager _gameManager;
     private InputManager _input;
-    private HubState _currentState = HubState.TitleScreen;
+    private GameState _currentState = GameState.Title;
 
     private void Awake()
     {
         _input = InputManager.Instance;
-        _stateManager = FindFirstObjectByType<HubStateManager>(FindObjectsInactive.Include);
+        _gameManager = GameManager.Instance;
 
-        if (_stateManager != null)
+        if (_gameManager != null)
         {
-            _stateManager.OnStateChanged += StateManager_OnStateChanged;
-            _currentState = _stateManager.CurrentState;
+            _gameManager.OnGameStateChanged += GameManager_OnGameStateChanged;
+            _currentState = _gameManager.CurrentGameState;
         }
     }
 
     private void OnDestroy()
     {
-        if (_stateManager != null)
+        if (_gameManager != null)
         {
-            _stateManager.OnStateChanged -= StateManager_OnStateChanged;
+            _gameManager.OnGameStateChanged -= GameManager_OnGameStateChanged;
         }
     }
 
-    private void StateManager_OnStateChanged(HubState newState)
+    private void GameManager_OnGameStateChanged(GameState newState)
     {
         _currentState = newState;
     }
@@ -41,7 +41,7 @@ public class HubCameraTilt : MonoBehaviour
     {
         float targetAngle = 0f;
 
-        if (_currentState == HubState.Gameplay && _input != null)
+        if (_currentState == GameState.Gameplay && _input != null)
         {
             float horizontalInput = _input.MoveDirection.x;
             if (horizontalInput > 0.01f)
