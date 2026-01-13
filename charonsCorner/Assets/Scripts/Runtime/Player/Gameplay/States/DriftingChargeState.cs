@@ -18,7 +18,10 @@ namespace CharonsCorner.Runtime
         [SerializeField] private float _desiredTimeScale = 1f;
         [SerializeField] private float _timeScaleSpeed = 30f;
         
-        [SerializeField] private float _stateDuration = 0.5f;
+        [SerializeField] private float _stateDuration = 0.5f;  
+
+        [SerializeField] private float _slowPlayerStrength = 5f;
+
         private float _timer;
 
         private protected override void OnEnter()
@@ -27,11 +30,12 @@ namespace CharonsCorner.Runtime
             _timer = 0;
             _context.CurrentSubState = GetType().Name;
             InputManager.Instance.Drift += Drift;
+            
         }
 
         private protected override void OnExit()
         {
-            Time.timeScale = _desiredTimeScale;
+            // Time.timeScale = _desiredTimeScale;
             InputManager.Instance.Drift -= Drift;
         }
 
@@ -41,8 +45,13 @@ namespace CharonsCorner.Runtime
             
             _driftDirection.Rotate(InputManager.Instance.MoveDirection.x * _driftDirectionSpeed * Time.unscaledDeltaTime * Vector3.up);
             
-            _timer += Time.unscaledDeltaTime;
-            Time.timeScale = Mathf.Lerp(Time.timeScale, _desiredTimeScale, _timeScaleSpeed * Time.unscaledDeltaTime);
+            // _timer += Time.unscaledDeltaTime;
+            // Time.timeScale = Mathf.Lerp(Time.timeScale, _desiredTimeScale, _timeScaleSpeed * Time.unscaledDeltaTime);
+
+            Vector3 horizontalVelocity = new Vector3(_context.Rb.linearVelocity.x, 0f, _context.Rb.linearVelocity.z);
+
+            Vector3 counterforce = -horizontalVelocity * _slowPlayerStrength;
+            _context.Rb.AddForce(counterforce, ForceMode.Acceleration);
         }
 
         private protected override void OnFixedUpdate()
