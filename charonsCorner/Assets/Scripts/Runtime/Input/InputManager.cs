@@ -21,6 +21,9 @@ namespace CharonsCorner.Runtime
         public event Action<Vector2> Move = delegate { };
         public event Action<Vector2> Look = delegate { };
         public event Action Jump = delegate { };
+        public event Action JumpPressed = delegate { };
+        public event Action JumpReleased = delegate { };
+
         /// <summary>
         /// Invoked when start/stop drifting. True for start, false for stop.
         /// </summary>
@@ -68,7 +71,7 @@ namespace CharonsCorner.Runtime
             playerInput.onControlsChanged += PlayerInput_OnControlsChanged;
         }
 
-        private void OnDestroy()
+        private protected override void OnDestroy()
         {
             playerInput.onControlsChanged -= PlayerInput_OnControlsChanged;
         }
@@ -142,10 +145,21 @@ namespace CharonsCorner.Runtime
 
         public void OnJump(InputAction.CallbackContext context)
         {
+            if (context.started)
+            {
+                JumpPressed.Invoke();
+            }
             if (context.performed)
+            {
                 Jump.Invoke();
+            }
+            if (context.canceled)
+            {
+                JumpReleased.Invoke();
+            }
+
         }
- 
+
         public void OnInteract(InputAction.CallbackContext context)
         {
             if (context.performed)

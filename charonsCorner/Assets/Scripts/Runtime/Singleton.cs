@@ -5,26 +5,65 @@ namespace CharonsCorner.Runtime
 {
     public abstract class Singleton<T> : MonoBehaviour where T : MonoBehaviour
     {
-        public static T Instance { get; private set; }
+        private static T _instance;
+        private static bool _applicationIsQuitting;
 
         /// <summary>
-        /// Make sure this is called on override when inheriting this class.
+        /// Returns the singleton instance if one exists in the scene.
+        /// Returns null if no instance is present.
+        /// </summary>
+        public static T Instance
+        {
+            get
+            {
+                if (_applicationIsQuitting)
+                {
+                    Debug.LogWarning($"[Singleton] Instance '{typeof(T)}' already destroyed on application quit.");
+                    return null;
+                }
+
+                if (_instance == null)
+                {
+                    // Try to find an existing instance in the scene
+                    _instance = FindObjectOfType<T>();
+
+                    if (_instance == null)
+                    {
+                        // Do NOT create a new object
+                        Debug.LogWarning($"[Singleton] No instance of {typeof(T)} found in the scene. Returning null.");
+                    }
+                }
+
+                return _instance;
+            }
+        }
+
+        /// <summary>
+        /// Override in derived classes and call base.Awake() if needed.
         /// </summary>
         private protected virtual void Awake()
         {
-            if (Instance != null && Instance != this)
+            if (_instance != null && _instance != this)
             {
                 Destroy(gameObject);
                 return;
             }
-            Instance = this as T;
 
-            DontDestroyOnLoad(gameObject);
+            _instance = this as T;
+            /*DontDestroyOnLoad(gameObject);*/
         }
 
-        private void OnDestroy()
+        private protected virtual void OnDestroy()
         {
-            Instance = null;
+            if (_instance == this)
+            {
+                _instance = null;
+            }
+        }
+
+        private void OnApplicationQuit()
+        {
+            _applicationIsQuitting = true;
         }
     }
 }

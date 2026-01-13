@@ -60,7 +60,7 @@ namespace CharonsCorner.Runtime
             InputManager.Instance.OnControlSchemeChanged += InputManager_OnControlSchemeChanged;
         }
 
-        private void OnDestroy()
+        private protected override void OnDestroy()
         {
             if (InputManager.Instance != null)
                 InputManager.Instance.OnControlSchemeChanged -= InputManager_OnControlSchemeChanged;
