@@ -23,6 +23,7 @@ namespace CharonsCorner.Runtime
             Settings,
             Dialogue,
             Confirm, // When the player wants to confirm an action, like starting a level
+            HubTitle,
         }
 
         [Header("Panels")]
