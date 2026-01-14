@@ -45,7 +45,8 @@ namespace CharonsCorner.Runtime
                     {
                         PlayFeedback(_sequenceExitTitle);
                     }
-                    else PlayFeedback(_sequenceToGameplay);
+                    else 
+                        PlayFeedback(_sequenceToGameplay);
                     break;
                 case GameState.Dialogue:
                     PlayFeedback(_sequenceToDialogue);
