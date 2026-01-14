@@ -3,6 +3,8 @@ using UnityEditor;
 using UnityEngine;
 using System.IO;
 using System.Reflection;
+using UnityEditor.AssetImporters;
+using System.Collections.Generic;
 
 namespace Aspen.Tools.Assets
 {
@@ -26,17 +28,19 @@ namespace Aspen.Tools.Assets
 		{
 			foreach (string assetPath in importedAssets)
 			{
+
 				// If asset is FBX and in the models folder
 				if (assetPath.EndsWith(".fbx", System.StringComparison.OrdinalIgnoreCase)
-				    && assetPath.StartsWith("Assets/Art/models"))
+					&& assetPath.StartsWith("Assets/Art/models"))
 				{
 					ModelImporter modelImporter = AssetImporter.GetAtPath(assetPath) as ModelImporter;
-					
+					modelImporter.materialImportMode = ModelImporterMaterialImportMode.ImportStandard; //Anastasia added
+
 					ExtractTexturesFromFBX(modelImporter, assetPath);
-					
+
 					// Create avatar for characters and actors
 					if (assetPath.StartsWith("Assets/Art/models/characters") ||
-					    assetPath.StartsWith("Assets/Art/models/actors") && modelImporter != null)
+						assetPath.StartsWith("Assets/Art/models/actors") && modelImporter != null)
 					{
 						modelImporter.avatarSetup = ModelImporterAvatarSetup.CreateFromThisModel;
 					}
@@ -46,7 +50,7 @@ namespace Aspen.Tools.Assets
 					{
 						CreatePrefabFromFBX(assetPath);
 					}
-					
+
 					AssetDatabase.SaveAssets();
 					AssetDatabase.Refresh();
 				}
@@ -60,20 +64,21 @@ namespace Aspen.Tools.Assets
 		/// <param name="propNames"></param>
 		/// <param name="values"></param>
 		private void OnPostprocessGameObjectWithUserProperties(GameObject go, string[] propNames, object[] values)
-		{	
+		{
 			// Get Model Importer
 			ModelImporter modelImporter = assetImporter as ModelImporter;
-			
+			modelImporter.materialImportMode = ModelImporterMaterialImportMode.ImportStandard; //Anastasia added
+
 			if (modelImporter != null)
 			{
 				// Importing Animations - Check for property name "avatar_path"
 				if (propNames[0].Equals("avatar_path"))
 				{
 					string avatar_path = values[0] as string;
-					
+
 					// Set avatar to copy from other
 					modelImporter.avatarSetup = ModelImporterAvatarSetup.CopyFromOther;
-					
+
 					// Try to set avatar
 					Avatar avatar = AssetDatabase.LoadAssetAtPath<Avatar>(avatar_path);
 					if (avatar != null)
@@ -103,7 +108,7 @@ namespace Aspen.Tools.Assets
 				Debug.LogError("No ModelImporter found at: " + fbxPath);
 				return;
 			}
-					
+
 			// Extract textures from model
 			modelImporter.ExtractTextures(extractPath);
 		}
@@ -119,11 +124,11 @@ namespace Aspen.Tools.Assets
 			string fileName = Path.GetFileNameWithoutExtension(fbxPath);
 			string prefabPath = $"Assets/Prefabs/Props/{fileName}.prefab";
 			Directory.CreateDirectory(Path.GetFullPath(Path.GetDirectoryName(prefabPath)));
-            
+
 			// If the prefab already exists, don't create one
 			if (AssetDatabase.LoadAssetAtPath<GameObject>(prefabPath) != null)
 				return;
-            
+
 			// Try to load FBX
 			GameObject fbxPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(fbxPath);
 			if (fbxPrefab == null)
@@ -135,29 +140,71 @@ namespace Aspen.Tools.Assets
 			GameObject root = new GameObject();
 			GameObject tempInstance = (GameObject)PrefabUtility.InstantiatePrefab(fbxPrefab);
 			tempInstance.transform.parent = root.transform;
-            
+
 			PrefabUtility.SaveAsPrefabAsset(root, prefabPath);
 			GameObject.DestroyImmediate(root);
 			Debug.Log($"Created prefab variant: {prefabPath}");
+		}
+
+		void onPreprocessModel()
+        {
+			//set import option to standard PLEASEEE PLEASSEPEPLEAPAPPA
+			Debug.Log($"onpreprocess run");
+			ModelImporter modelImporter = (ModelImporter)assetImporter;
+			modelImporter.materialImportMode = ModelImporterMaterialImportMode.ImportStandard;
 		}
 
 		/// <summary>
 		/// Loads material into asset.
 		/// </summary>
 
-		Material OnAssignMaterialModel(Material material, Renderer renderer) {
-        var materialPath = "Assets/" + material.name + ".mat";
+		//Material PostprocessMaterial(Material material)
+		//{
+			//Note: PostprocessMaterial won't be called unless ModelImporter.MaterialImportMode option is set to ModelImporterMaterialImportMode.ImportStandard.
+			//Debug.Log($"preprocess material run");
+			//var materialPath = "Assets/" + "Materials/" + "Anastasia_Materials/" + material.name + ".mat";
 
-        // Find if there is a material at the material path
-        // Turn this off to always regeneration materials
-        //if (AssetDatabase.LoadAssetAtPath(materialPath, typeof(Material)))
-            //return AssetDatabase.LoadAssetAtPath(materialPath, typeof(Material));
-        
-        // Create a new material asset using the custom shader
-        material.shader = Shader.Find("Shader Graphs/4I_VLighting");
-        AssetDatabase.CreateAsset(material, "Assets/" + material.name + ".mat");
-        return material;
-    }
+			// Find if there is a material at the material path
+			// Turn this off to always regeneration materials
+			//if (AssetDatabase.LoadAssetAtPath(materialPath, typeof(Material)))
+			//	return AssetDatabase.LoadAssetAtPath(materialPath, typeof(Material));
+
+			// Create a new material asset using the custom shader. Defaults to lit if not found
+
+			//var shader = Shader.Find("Shader Graphs/4I_VLighting");
+			//material.shader = shader;
+			//material.color = Color.red;
+
+			//AssetDatabase.CreateAsset(material, materialPath);
+			//return material;
+		//}
+
+		public void OnPreprocessMaterialDescription(MaterialDescription description, Material material, AnimationClip[] materialAnimation)
+		{
+			var materialPath = "Assets/" + "Materials/" + "Anastasia_Materials/" + material.name + "test" + .mat";
+
+			var shader = Shader.Find("Shader Graphs/4I_VLighting");
+			if (shader == null)
+				return;
+			material.shader = shader;
+
+			List<string> props = new List<string>();
+			// list the properties of type Vector4 :
+			description.GetVector4PropertyNames(props);
+			Debug.Log(props);
+
+			// Read a texture property from the material description.
+			TexturePropertyDescription textureProperty;
+			if (description.TryGetProperty("DiffuseColor", out textureProperty))
+			{
+				// Assign the texture to the material.
+				material.SetTexture("_MainTex", textureProperty.texture);
+			}
+
+			AssetDatabase.CreateAsset(material, materialPath);
+		}
+
 	}
+
 
 }
