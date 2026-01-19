@@ -1,34 +1,39 @@
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-/// <summary>
-/// Used to open level select with custom level data
-/// </summary>
-public class HubLevelSelectOpener : MonoBehaviour
+namespace CharonsCorner.Runtime
 {
-    [SerializeField, Required] private HubLevelSelectController _controller;
-    [SerializeField, Required] private LevelDataSO _levelData;
-
     /// <summary>
-    /// Calls controller's OpenLevelSelect() method when the player interacts with this portal (uses TouchInteractable)
+    /// Used to open level select with custom level data
     /// </summary>
-    [Button("Trigger Level Select")]
-    public void TriggerOpenLevelSelect()
+    public class HubLevelSelectOpener : MonoBehaviour
     {
-        //Error Handling
-        if (_controller == null)
-        {
-            Debug.LogError($"[HubLevelSelectOpener] Missing controller reference on {gameObject.name}");
-            return;
-        }
+        [SerializeField, Required] private HubLevelSelectController _controller;
+        [SerializeField, Required] private LevelDataSO _levelData;
 
-        if (_levelData == null)
+        /// <summary>
+        /// Calls controller's OpenLevelSelect() method when the player interacts with this portal (uses TouchInteractable)
+        /// </summary>
+        [Button("Trigger Level Select")]
+        public void TriggerOpenLevelSelect()
         {
-            Debug.LogError($"[HubLevelSelectOpener] Missing LevelData reference on {gameObject.name}");
-            return;
-        }
+            //Error Handling
+            if (_controller == null)
+            {
+                Debug.LogError($"[HubLevelSelectOpener] Missing controller reference on {gameObject.name}");
+                return;
+            }
 
-        //Call controller method
-        _controller.OpenLevelSelect(_levelData);
+            if (_levelData == null)
+            {
+                Debug.LogError($"[HubLevelSelectOpener] Missing LevelData reference on {gameObject.name}");
+                return;
+            }
+
+            //Call controller method
+            _controller.OpenLevelSelect(_levelData);
+        }
     }
 }
+
+
