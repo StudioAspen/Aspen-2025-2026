@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace CharonsCorner.Runtime
 {
-    public static class Utilities 
+    public static class CustomUtils 
     {
         /// <summary>
         /// Null propogation check for Unity object methods.

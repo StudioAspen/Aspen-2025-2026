@@ -5,12 +5,12 @@ using System.Text;
 
 namespace CharonsCorner.Runtime
 {
-    public static class EncryptionUtilities
+    public static class EncryptionUtils
     {
         private static readonly byte[] Key;
         private static readonly byte[] InitializationVector;
 
-        static EncryptionUtilities()
+        static EncryptionUtils()
         {
             string passphrase = "YourMomHahahahaha!!!!!";
             GetKeyAndIV(passphrase, out Key, out InitializationVector);
