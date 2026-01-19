@@ -1,5 +1,5 @@
 using AYellowpaper.SerializedCollections;
-using NaughtyAttributes;
+using Sirenix.OdinInspector;
 using System;
 using System.Collections.Generic;
 using UnityEngine;

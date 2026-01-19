@@ -1,9 +1,9 @@
 using UnityEngine;
 using System;
 using UnityEngine.SceneManagement;
-using NaughtyAttributes;
 using CharonsCorner.Runtime;
 using Cysharp.Threading.Tasks;
+using Sirenix.OdinInspector;
 
 /// <summary>
 /// Controls the level select process to be used by the UI.

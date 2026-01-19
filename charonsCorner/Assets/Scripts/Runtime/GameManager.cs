@@ -1,9 +1,9 @@
 using Eflatun.SceneReference;
-using NaughtyAttributes;
 using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Cysharp.Threading.Tasks;
+using Sirenix.OdinInspector;
 
 #if UNITY_EDITOR
 using UnityEngine.AddressableAssets;
