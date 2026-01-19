@@ -1,10 +1,11 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace CharonsCorner.Runtime
 {
-    public class HubLevelSelectUI : SceneUI
+    public class HubLevelSelectUI : UIPanel
     {
         [Header("Controller")]
         [SerializeField] private HubLevelSelectController _controller;
@@ -27,18 +28,20 @@ namespace CharonsCorner.Runtime
             Details,
         }
 
-        private protected override void OnAwake()
+        private void Awake()
         {
             //Subscribe to controller events
             _controller.OnLevelSelectOpen += HandleLevelSelectOpen;
             _controller.OnLevelSelectClose += HandleLevelSelectClose;
         }
-        
-        private protected override void OnOnDestroy()
+
+        private protected override void OnDestroy()
         {
             //Unsubscribe from controller events
             _controller.OnLevelSelectOpen -= HandleLevelSelectOpen;
             _controller.OnLevelSelectClose -= HandleLevelSelectClose;
+            
+            base.OnDestroy(); // must call this after since it cleans up the UIPanel
         }
 
         private void ShowPanel(LevelSelectPanel panel)

@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace CharonsCorner.Runtime
 {
-    public class DialogueManager : MonoBehaviour
+    public class DialogueManager : Singleton<DialogueManager>
     {
         [field: SerializeField, ReadOnly] public DialogueOpenerSO CurrentOpener { get; private set; }
         public event Action<DialogueOpenerSO> OnDialogueOpenerStarted = delegate { };
