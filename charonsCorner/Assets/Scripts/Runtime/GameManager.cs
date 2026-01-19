@@ -137,7 +137,7 @@ namespace CharonsCorner.Runtime
         /// </summary>
         public void StartGame()
         {
-            SwitchScenes(_hubScene, GameState.Gameplay).Forget();
+            SwitchScenes(_hubScene, GameState.Title).Forget();
         }
 
         /// <summary>
