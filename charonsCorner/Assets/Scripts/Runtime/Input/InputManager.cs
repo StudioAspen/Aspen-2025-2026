@@ -8,7 +8,6 @@ using static CharonsCorner.Runtime.InputActions;
 
 namespace CharonsCorner.Runtime
 {
-
     public class InputManager : Singleton<InputManager>, IPlayerActions, IUIActions
     {
         [Header("References")]
@@ -197,7 +196,7 @@ namespace CharonsCorner.Runtime
             if (selectedObject == null)
                 return;
 
-            if (!UIManager.IsUIObjectInteractable(eventSystem, selectedObject))
+            if (!UIPanel.IsUIObjectInteractable(eventSystem, selectedObject))
                 return;
 
             ExecuteEvents.Execute(selectedObject, new BaseEventData(eventSystem), ExecuteEvents.submitHandler);

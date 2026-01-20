@@ -942,6 +942,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 6870499370222332592}
+        m_TargetAssemblyTypeName: CharonsCorner.Runtime.HubTitlePanel, CharonsCorner.Runtime
+        m_MethodName: OpenSettings
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1492990367231143872
 GameObject:
   m_ObjectHideFlags: 0
@@ -1998,7 +2010,19 @@ MonoBehaviour:
         m_Calls: []
     OnComplete:
       m_PersistentCalls:
-        m_Calls: []
+        m_Calls:
+        - m_Target: {fileID: 6870499370222332592}
+          m_TargetAssemblyTypeName: CharonsCorner.Runtime.HubTitlePanel, CharonsCorner.Runtime
+          m_MethodName: BackOrClose
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
     OnRestoreInitialValues:
       m_PersistentCalls:
         m_Calls: []
@@ -2326,6 +2350,8 @@ GameObject:
   - component: {fileID: 3801148284093561677}
   - component: {fileID: 8179037204271888724}
   - component: {fileID: 6870499370222332592}
+  - component: {fileID: 1557859680497392846}
+  - component: {fileID: 638861462729954713}
   m_Layer: 0
   m_Name: HubTitlePanel
   m_TagString: Untagged
@@ -2404,7 +2430,39 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5671a34a1162bca4db7db251d4341ddb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <DefaultSelectedObject>k__BackingField: {fileID: 8940101360062303242}
+  <IsAdditive>k__BackingField: 0
+  <DefaultSelected>k__BackingField: {fileID: 0}
+  OnFocused:
+    m_PersistentCalls:
+      m_Calls: []
+  OnUnfocused:
+    m_PersistentCalls:
+      m_Calls: []
+  PreviousPanel: {fileID: 0}
+--- !u!225 &1557859680497392846
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7801741488236234081}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
+--- !u!114 &638861462729954713
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7801741488236234081}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4359bbc2d2264c80a9f4159f2d42b14a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8268960418538907615
 GameObject:
   m_ObjectHideFlags: 0
