@@ -5,6 +5,8 @@ using System.IO;
 using System.Reflection;
 using UnityEditor.AssetImporters;
 using System.Collections.Generic;
+using System.Linq;
+using Object = UnityEngine.Object;
 
 namespace Aspen.Tools.Assets
 {
@@ -34,9 +36,9 @@ namespace Aspen.Tools.Assets
 					&& assetPath.StartsWith("Assets/Art/models"))
 				{
 					ModelImporter modelImporter = AssetImporter.GetAtPath(assetPath) as ModelImporter;
-					modelImporter.materialImportMode = ModelImporterMaterialImportMode.ImportStandard; //Anastasia added
+					modelImporter.materialImportMode = ModelImporterMaterialImportMode.ImportViaMaterialDescription;
 
-					ExtractTexturesFromFBX(modelImporter, assetPath);
+					ExtractTexturesAndMaterialsFromFBX(modelImporter, assetPath);
 
 					// Create avatar for characters and actors
 					if (assetPath.StartsWith("Assets/Art/models/characters") ||
@@ -67,11 +69,10 @@ namespace Aspen.Tools.Assets
 		{
 			// Get Model Importer
 			ModelImporter modelImporter = assetImporter as ModelImporter;
-			modelImporter.materialImportMode = ModelImporterMaterialImportMode.ImportStandard; //Anastasia added
 
 			if (modelImporter != null)
 			{
-				// Importing Animations - Check for property name "avatar_path"
+				// Handle mporting Animations - Check for property name "avatar_path"
 				if (propNames[0].Equals("avatar_path"))
 				{
 					string avatar_path = values[0] as string;
@@ -98,8 +99,10 @@ namespace Aspen.Tools.Assets
 		///    Extract textures from FBX. The textures will be extracted to same folder as FBX.
 		/// </summary>
 		/// <param name="fbxPath">The path of the FBX to extract textures from.</param>
-		private static void ExtractTexturesFromFBX(ModelImporter modelImporter, string fbxPath)
+		private static void ExtractTexturesAndMaterialsFromFBX(ModelImporter modelImporter, string fbxPath)
 		{
+			List<string> assetsToReload = new List<string>();
+			
 			string extractPath = Path.GetDirectoryName(fbxPath);
 
 			// Get model importer
@@ -111,6 +114,21 @@ namespace Aspen.Tools.Assets
 
 			// Extract textures from model
 			modelImporter.ExtractTextures(extractPath);
+			
+			// Extract materials from model
+			Object[] materials = AssetDatabase.LoadAllAssetsAtPath(fbxPath)
+				.Where(asset => asset.GetType() == typeof(Material)).ToArray();
+			foreach (Material material in materials)
+			{
+				string newMaterialPath = Path.Combine(new string[]{extractPath, $"{material.name}.mat"});
+				newMaterialPath = AssetDatabase.GenerateUniqueAssetPath(newMaterialPath);
+				
+				string errorMessage = AssetDatabase.ExtractAsset(material, newMaterialPath);
+				if (String.IsNullOrEmpty(errorMessage))
+				{
+					assetsToReload.Add(fbxPath);
+				}
+			}
 		}
 
 		/// <summary>
@@ -135,6 +153,8 @@ namespace Aspen.Tools.Assets
 			{
 				Debug.LogError($"No base prefab found at {fbxPath}. Unable to create prefab.");
 			}
+			
+			
 
 			// Create root object for new prefab. FBX is a child object.
 			GameObject root = new GameObject();
@@ -146,64 +166,21 @@ namespace Aspen.Tools.Assets
 			Debug.Log($"Created prefab variant: {prefabPath}");
 		}
 
-		void onPreprocessModel()
-        {
-			//set import option to standard PLEASEEE PLEASSEPEPLEAPAPPA
-			Debug.Log($"onpreprocess run");
-			ModelImporter modelImporter = (ModelImporter)assetImporter;
-			modelImporter.materialImportMode = ModelImporterMaterialImportMode.ImportStandard;
-		}
-
-		/// <summary>
-		/// Loads material into asset.
-		/// </summary>
-
-		//Material PostprocessMaterial(Material material)
-		//{
-			//Note: PostprocessMaterial won't be called unless ModelImporter.MaterialImportMode option is set to ModelImporterMaterialImportMode.ImportStandard.
-			//Debug.Log($"preprocess material run");
-			//var materialPath = "Assets/" + "Materials/" + "Anastasia_Materials/" + material.name + ".mat";
-
-			// Find if there is a material at the material path
-			// Turn this off to always regeneration materials
-			//if (AssetDatabase.LoadAssetAtPath(materialPath, typeof(Material)))
-			//	return AssetDatabase.LoadAssetAtPath(materialPath, typeof(Material));
-
-			// Create a new material asset using the custom shader. Defaults to lit if not found
-
-			//var shader = Shader.Find("Shader Graphs/4I_VLighting");
-			//material.shader = shader;
-			//material.color = Color.red;
-
-			//AssetDatabase.CreateAsset(material, materialPath);
-			//return material;
-		//}
-
 		public void OnPreprocessMaterialDescription(MaterialDescription description, Material material, AnimationClip[] materialAnimation)
 		{
-			var materialPath = "Assets/" + "Materials/" + "Anastasia_Materials/" + material.name + "test" + .mat";
-
-			var shader = Shader.Find("Shader Graphs/4I_VLighting");
+			var shader = Shader.Find("Shader Graphs/R_Shader");
 			if (shader == null)
 				return;
 			material.shader = shader;
-
-			List<string> props = new List<string>();
-			// list the properties of type Vector4 :
-			description.GetVector4PropertyNames(props);
-			Debug.Log(props);
-
+			
 			// Read a texture property from the material description.
 			TexturePropertyDescription textureProperty;
 			if (description.TryGetProperty("DiffuseColor", out textureProperty))
 			{
 				// Assign the texture to the material.
-				material.SetTexture("_MainTex", textureProperty.texture);
+				material.SetTexture("_ColorMap", textureProperty.texture);
 			}
-
-			AssetDatabase.CreateAsset(material, materialPath);
-		}
-
+		} 
 	}
 
 
