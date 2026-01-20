@@ -63,7 +63,7 @@ namespace CharonsCorner.Runtime
             string json = JsonUtility.ToJson(new DictionaryWrapper<string, string>(data), true);
 
             if (Obfuscate)
-                json = EncryptionUtilities.Encrypt(json);
+                json = EncryptionUtils.Encrypt(json);
 
             File.WriteAllText(FilePath, json);
 
@@ -84,7 +84,7 @@ namespace CharonsCorner.Runtime
         {
             try
             {
-                json = EncryptionUtilities.Decrypt(json);
+                json = EncryptionUtils.Decrypt(json);
                 return true;
             }
             catch (Exception e)
