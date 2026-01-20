@@ -119,6 +119,44 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &11778087 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8956668216304605270, guid: 6d48529886416864bbaf3c4def9a0ed6, type: 3}
+  m_PrefabInstance: {fileID: 3821810812286172835}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &11778091
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 11778087}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ebc4ea3f5d644ba698d39ca4903c7351, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _confirmationText: Quit game?
+  _yesText: Yes
+  _noText: No
+  _yesAction:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 3821810812286172837}
+        m_TargetAssemblyTypeName: CharonsCorner.Runtime.HubTitlePanel, CharonsCorner.Runtime
+        m_MethodName: QuitGame
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  _noAction:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1001 &24643657
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6015,7 +6053,7 @@ Transform:
   m_GameObject: {fileID: 1425768925}
   serializedVersion: 2
   m_LocalRotation: {x: 0.5, y: 0.5, z: -0.5, w: 0.5}
-  m_LocalPosition: {x: -10.44, y: 6.38, z: 0.8}
+  m_LocalPosition: {x: -10.63, y: 6.38, z: 0.8}
   m_LocalScale: {x: 17.5, y: 1, z: 16}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -6612,17 +6650,18 @@ GameObject:
   m_Component:
   - component: {fileID: 1788152606}
   - component: {fileID: 1788152607}
+  - component: {fileID: 1788152609}
   - component: {fileID: 1788152608}
   - component: {fileID: 1788152605}
   - component: {fileID: 1788152604}
   - component: {fileID: 1788152603}
   m_Layer: 9
-  m_Name: TitlePortal
+  m_Name: QuitPortal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!65 &1788152603
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6651,7 +6690,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1788152602}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -6706,8 +6745,8 @@ Transform:
   m_GameObject: {fileID: 1788152602}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -24.5002, y: 3.3839, z: 0.4325}
-  m_LocalScale: {x: 1.4796404, y: 7.7677736, z: 8.726616}
+  m_LocalPosition: {x: -10.22, y: 2.9611, z: 0.0238}
+  m_LocalScale: {x: 1.4796404, y: 6.921863, z: 7.908932}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1412849843}
@@ -6728,10 +6767,10 @@ MonoBehaviour:
   OnTouch:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: CharonsCorner.Runtime.GameplayConfirmPromptOpener,
+      - m_Target: {fileID: 1788152609}
+        m_TargetAssemblyTypeName: CharonsCorner.Runtime.ConfirmationCanvasOpener,
           CharonsCorner.Runtime
-        m_MethodName: OpenGameplayConfirmPrompt
+        m_MethodName: ShowConfirmation
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -6750,13 +6789,42 @@ MonoBehaviour:
   m_GameObject: {fileID: 1788152602}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c6350314814a107479d2702659a9a7a0, type: 3}
+  m_Script: {fileID: 11500000, guid: 387e009857f84c5c84915232c65d014c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _targetScene:
-    asset: {fileID: 102900000, guid: 22207101db9630a44a1f850b484d41e6, type: 3}
-    guid: 22207101db9630a44a1f850b484d41e6
-  _stateAfterSwitch: 0
+--- !u!114 &1788152609
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1788152602}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ebc4ea3f5d644ba698d39ca4903c7351, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _confirmationText: Quit game?
+  _yesText: Yes
+  _noText: No
+  _yesAction:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1788152608}
+        m_TargetAssemblyTypeName: CharonsCorner.Runtime.GameQuitter, CharonsCorner.Runtime
+        m_MethodName: QuitGame
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  _noAction:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1001 &1830622629
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7597,6 +7665,34 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 401182969}
     m_Modifications:
+    - target: {fileID: 1044511506412679109, guid: 6d48529886416864bbaf3c4def9a0ed6, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1044511506412679109, guid: 6d48529886416864bbaf3c4def9a0ed6, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1044511506412679109, guid: 6d48529886416864bbaf3c4def9a0ed6, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 11778091}
+    - target: {fileID: 1044511506412679109, guid: 6d48529886416864bbaf3c4def9a0ed6, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1044511506412679109, guid: 6d48529886416864bbaf3c4def9a0ed6, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: ShowConfirmation
+      objectReference: {fileID: 0}
+    - target: {fileID: 1044511506412679109, guid: 6d48529886416864bbaf3c4def9a0ed6, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
+      value: CharonsCorner.Runtime.ConfirmationCanvasOpener, CharonsCorner.Runtime
+      objectReference: {fileID: 0}
+    - target: {fileID: 1044511506412679109, guid: 6d48529886416864bbaf3c4def9a0ed6, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 2893658475845894605, guid: 6d48529886416864bbaf3c4def9a0ed6, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -7684,13 +7780,27 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8956668216304605270, guid: 6d48529886416864bbaf3c4def9a0ed6, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 11778091}
   m_SourcePrefab: {fileID: 100100000, guid: 6d48529886416864bbaf3c4def9a0ed6, type: 3}
 --- !u!224 &3821810812286172836 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2893658475845894605, guid: 6d48529886416864bbaf3c4def9a0ed6, type: 3}
   m_PrefabInstance: {fileID: 3821810812286172835}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &3821810812286172837 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6870499370222332592, guid: 6d48529886416864bbaf3c4def9a0ed6, type: 3}
+  m_PrefabInstance: {fileID: 3821810812286172835}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5671a34a1162bca4db7db251d4341ddb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &4309455093057115008
 PrefabInstance:
   m_ObjectHideFlags: 0

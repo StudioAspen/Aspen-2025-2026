@@ -18,5 +18,10 @@ namespace CharonsCorner.Runtime
         {
             SettingsCanvas.ShowSettings();
         }
+
+        public void QuitGame()
+        {
+            GameManager.QuitGame();
+        }
     }
 }
