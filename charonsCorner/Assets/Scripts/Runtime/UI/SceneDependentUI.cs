@@ -1,5 +1,5 @@
 ﻿using Eflatun.SceneReference;
-using NaughtyAttributes;
+using Sirenix.OdinInspector;
 using System;
 using System.Collections.Generic;
 using UnityEngine;

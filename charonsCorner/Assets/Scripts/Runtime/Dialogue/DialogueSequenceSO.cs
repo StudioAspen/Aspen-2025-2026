@@ -1,5 +1,4 @@
-﻿using NaughtyAttributes;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace CharonsCorner.Runtime
@@ -12,7 +11,7 @@ namespace CharonsCorner.Runtime
         [System.Serializable]
         public class DialogueContainer
         {
-            [field: SerializeField, Expandable] public DialogueSO Dialogue { get; private set; }
+            [field: SerializeField] public DialogueSO Dialogue { get; private set; }
         }
 
         [field: SerializeField] public List<DialogueContainer> DialogueContainers { get; private set; } = new();

@@ -1,6 +1,6 @@
 ﻿using DG.Tweening;
-using NaughtyAttributes;
 using System;
+using Sirenix.OdinInspector;
 using Unity.Cinemachine;
 using UnityEngine;
 
