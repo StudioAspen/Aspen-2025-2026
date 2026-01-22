@@ -50,6 +50,8 @@ namespace CharonsCorner.Runtime
 
         private void OnDisable()
         {
+            _inputDisplayerCanvasObject.SetActive(false);
+            
             if(InputManager.Instance != null)
                 InputManager.Instance.Interact -= InputManager_Interact;
 
@@ -67,6 +69,9 @@ namespace CharonsCorner.Runtime
 
         private void OnTriggerEnter(Collider other)
         {
+            if (!enabled)
+                return;
+            
             _isOverlapping = true; // No need to filter because this object only looks for player layer
             _inputDisplayerCanvasObject.SetActive(GameManager.Instance.CurrentGameState == GameState.Gameplay);
         }

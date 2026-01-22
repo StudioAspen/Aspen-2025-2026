@@ -145,5 +145,11 @@ namespace CharonsCorner.Runtime
                 _titleScreenTimer = 0f;
             }
         }
+
+        public void Stop()
+        {
+            _rigidBody.linearVelocity = Vector3.zero;
+            _rigidBody.angularVelocity = Vector3.zero;
+        }
     }
 }

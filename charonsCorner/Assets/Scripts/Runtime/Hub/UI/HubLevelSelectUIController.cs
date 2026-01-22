@@ -4,7 +4,7 @@ namespace CharonsCorner.Runtime
 {
     public class HubLevelSelectUIController : MonoBehaviour
     {
-        [Header("Controller")]
+        /*[Header("Controller")]
         [SerializeField] private HubLevelSelectController _controller;
         
         [Header("UI References")]
@@ -39,6 +39,6 @@ namespace CharonsCorner.Runtime
                 _previewPanel.Close();
             else if (UIPanel.ActivePanel == _detailsPanel)
                 _detailsPanel.Close();
-        }
+        }*/
     }
 }
