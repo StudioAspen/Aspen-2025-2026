@@ -7,7 +7,6 @@ namespace CharonsCorner.Runtime
 {
     public class HubLevelSelectDetailsPanel : UIPanel
     {
-        [SerializeField] private GameObject _detailsPanelObject;
         [SerializeField] private TMP_Text _detailsPanelTitleText;
         [SerializeField] private TMP_Text _detailsPanelBestText;
         [SerializeField] private TMP_Text _detailsPanelPinsText;

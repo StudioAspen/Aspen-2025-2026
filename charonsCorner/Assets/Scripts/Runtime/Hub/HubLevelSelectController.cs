@@ -11,8 +11,8 @@ namespace CharonsCorner.Runtime
     /// </summary>
     public class HubLevelSelectController : MonoBehaviour
     {
-        public event Action<LevelDataSO> OnLevelSelectOpen;
-        public UnityEvent OnLevelSelectClose;
+        public UnityEvent<LevelDataSO> OnLevelSelectOpen = new();
+        public UnityEvent OnLevelSelectClose = new();
 
         //Editor references
         [Header("References")]
