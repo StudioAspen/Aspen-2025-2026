@@ -1,11 +1,11 @@
 using System;
 using Cysharp.Threading.Tasks;
 using Eflatun.SceneReference;
+using NaughtyAttributes;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 #if UNITY_EDITOR
-using Sirenix.OdinInspector;
 using UnityEditor;
 #endif
 

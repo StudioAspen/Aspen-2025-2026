@@ -1,5 +1,5 @@
 using Cysharp.Threading.Tasks;
-using Sirenix.OdinInspector;
+using NaughtyAttributes;
 using UnityEngine;
 using UnityEngine.Events;
 

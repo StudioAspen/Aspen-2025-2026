@@ -25,7 +25,7 @@ namespace CharonsCorner.Runtime
                 if (_instance == null)
                 {
                     // Try to find an existing instance in the scene
-                    _instance = FindFirstObjectByType<T>();
+                    _instance = FindObjectOfType<T>();
 
                     if (_instance == null)
                     {

@@ -1,9 +1,14 @@
 using Eflatun.SceneReference;
+using NaughtyAttributes;
 using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Cysharp.Threading.Tasks;
-using Sirenix.OdinInspector;
+
+#if UNITY_EDITOR
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.ResourceProviders;
+#endif
 
 namespace CharonsCorner.Runtime
 {
@@ -14,6 +19,7 @@ namespace CharonsCorner.Runtime
         Gameplay,
         Dialogue,
         Paused,
+        GameplayConfirm, // When the player wants to confirm a gameplay action
         Cutscene
     }
 
@@ -68,6 +74,7 @@ namespace CharonsCorner.Runtime
             {
                 case GameState.Title:
                     Time.timeScale = 1f;
+                    UIManager.Instance.HideAllPanels();
                     InputManager.Instance.EnableUIActions();
                     break;
                 case GameState.Loading:
@@ -77,6 +84,7 @@ namespace CharonsCorner.Runtime
                     break;
                 case GameState.Gameplay:
                     Time.timeScale = 1f;
+                    UIManager.Instance.HideAllPanels();
                     InputManager.Instance.EnablePlayerActions();
                     // If the Steam overlay is open, pause the game
                     if(SteamOverlayListener.IsOverlayOpen)
@@ -84,10 +92,15 @@ namespace CharonsCorner.Runtime
                     break;
                 case GameState.Dialogue:
                     Time.timeScale = 1f;
+                    UIManager.Instance.ShowPanel(UIManager.PanelName.Dialogue);
                     break;
                 case GameState.Paused:
                     Time.timeScale = 0f;
-                    PauseCanvas.Instance.ShowPause();
+                    UIManager.Instance.ShowPanel(UIManager.PanelName.PauseMenu);
+                    break;
+                case GameState.GameplayConfirm:
+                    Time.timeScale = 1f;
+                    UIManager.Instance.ShowPanel(UIManager.PanelName.Confirm);
                     break;
                 case GameState.Cutscene:
                     Time.timeScale = 1f;
@@ -106,13 +119,17 @@ namespace CharonsCorner.Runtime
         public async UniTask SwitchScenes(SceneReference scene, GameState afterState)
         {
             ChangeGameState(GameState.Loading);
-            await LoadingCanvas.Instance.FadeIn();
-            
+            await UIManager.Instance.LoadingPanel.FadeIn();
+
+#if UNITY_EDITOR
+            await Addressables.LoadSceneAsync(scene.Path, LoadSceneMode.Single).ToUniTask(this);
+#else
             await SceneManager.LoadSceneAsync(scene.Name);
+#endif
 
             ChangeGameState(afterState);
 
-            await LoadingCanvas.Instance.FadeOut(null);
+            await UIManager.Instance.LoadingPanel.FadeOut();
         }
 
         /// <summary>
@@ -120,7 +137,7 @@ namespace CharonsCorner.Runtime
         /// </summary>
         public void StartGame()
         {
-            SwitchScenes(_hubScene, GameState.Title).Forget();
+            SwitchScenes(_hubScene, GameState.Gameplay).Forget();
         }
 
         /// <summary>

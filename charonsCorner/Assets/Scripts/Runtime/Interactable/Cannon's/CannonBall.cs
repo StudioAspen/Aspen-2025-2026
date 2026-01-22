@@ -1,6 +1,6 @@
-using Sirenix.OdinInspector;
 using UnityEngine;
 using Unity.Cinemachine;
+using NaughtyAttributes;
 
 namespace CharonsCorner.Runtime
 {
