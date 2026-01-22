@@ -1,38 +1,70 @@
-using UnityEngine;
-using UnityEngine.SceneManagement;
-using CharonsCorner.Runtime;
+using System;
+using Cysharp.Threading.Tasks;
 using Sirenix.OdinInspector;
+using UnityEngine;
 using UnityEngine.Events;
 
 namespace CharonsCorner.Runtime
 {
+    /// <summary>
+    /// Controls the level select process to be used by the UI.
+    /// </summary>
     public class HubLevelSelectController : MonoBehaviour
     {
-        [ShowInInspector, ReadOnly] public bool IsSelectingLevel { get; private set; }
-        
-        public UnityEvent OnLevelSelectStarted = new UnityEvent();
-        public UnityEvent OnLevelSelectEnded = new UnityEvent();
-        
-        [Button("Start Level Select", ButtonSizes.Large)]
-        public void StartLevelSelect()
+        public event Action<LevelDataSO> OnLevelSelectOpen;
+        public UnityEvent OnLevelSelectClose;
+
+        //Editor references
+        [Header("References")]
+        [SerializeField, ReadOnly] private LevelDataSO _currentLevelData;
+
+        [SerializeField, ReadOnly] private bool _isOpen;
+
+        public bool IsOpen => _isOpen;
+
+        /// <summary>
+        /// Called by the trigger when the player approaches a level entrance.
+        /// </summary>
+        public void OpenLevelSelect(LevelDataSO data)
         {
-            if (IsSelectingLevel) // Can't start if already selecting
-                return;
-            
-            IsSelectingLevel = true;
-            
-            OnLevelSelectStarted.Invoke();
+            if (_isOpen) return;
+
+            _currentLevelData = data;
+            _isOpen = true;
+            OnLevelSelectOpen?.Invoke(_currentLevelData);
+
         }
 
-        [Button("End Level Select", ButtonSizes.Large)]
-        public void EndLevelSelect()
+        /// <summary>
+        /// Called by the popup’s Close button or automatically when player leaves range.
+        /// </summary>
+        [Button("Close")]
+        public void CloseLevelSelect()
         {
-            if (!IsSelectingLevel) // Can't end selection if not selecting
+            if (!_isOpen) return;
+
+            _currentLevelData = null;
+            _isOpen = false;
+            OnLevelSelectClose?.Invoke();
+            Debug.Log("[HubLevelSelectController] Closed level select.");
+        }
+
+        /// <summary>
+        /// Starts the selected level via GameManager.
+        /// </summary>
+        [Button("Start Level")]
+        public void StartLevel()
+        {
+            if (_currentLevelData == null)
+            {
+                Debug.LogWarning("[HubLevelSelectController] Missing level data to start");  
                 return;
-            
-            IsSelectingLevel = false;
-            
-            OnLevelSelectEnded.Invoke();
+            }
+
+            Debug.Log($"[HubLevelSelectController] Starting level: {_currentLevelData.LevelScene}");
+
+            //Open level scene
+            GameManager.Instance.SwitchScenes(_currentLevelData.LevelScene, GameState.Gameplay).Forget();
         }
     }
 }
