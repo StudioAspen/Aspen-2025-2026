@@ -7,6 +7,8 @@ namespace CharonsCorner.Runtime
 {
     public class DialogueManager : Singleton<DialogueManager>
     {
+        [field: SerializeField] public DialogueBacklog Backlog { get; private set; }
+        
         [field: SerializeField, ReadOnly] public DialogueOpenerSO CurrentOpener { get; private set; }
         public event Action<DialogueOpenerSO> OnDialogueOpenerStarted = delegate { };
 

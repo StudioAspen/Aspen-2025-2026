@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Animancer;
 using AYellowpaper.SerializedCollections;
 using UnityEngine;
@@ -10,6 +11,7 @@ namespace CharonsCorner.Runtime
 
         [Header("References")]
         [SerializeField] private AnimancerComponent _animator;
+        [SerializeField] private DialogueOpenerSO _defaultCharonDialogueOpener;
 
         [Header("Config")]
         [SerializeField] private float _animatorFadeDuration = 0.2f;
@@ -19,7 +21,7 @@ namespace CharonsCorner.Runtime
 
         private void Awake()
         {
-            _dialogueManager = FindFirstObjectByType<DialogueManager>(FindObjectsInactive.Include);
+            _dialogueManager = DialogueManager.Instance;
 
             _dialogueManager.OnDialogueOpenerStarted += DialogueManager_OnDialogueOpenerStarted;
             _dialogueManager.OnDialogueStarted += DialogueManager_OnDialogueStarted;
@@ -39,6 +41,17 @@ namespace CharonsCorner.Runtime
                 _dialogueManager.OnDialogueStarted -= DialogueManager_OnDialogueStarted;
                 _dialogueManager.OnDialogueEnded -= DialogueManager_OnDialogueEnded;
             }
+        }
+        
+        public void StartCharonDialogue()
+        {
+            if (!_dialogueManager.Backlog.HasPendingDialogue())
+            {
+                _dialogueManager.StartDialogueOpener(_defaultCharonDialogueOpener);
+                return;
+            }
+
+            _dialogueManager.StartDialogueOpener(_dialogueManager.Backlog.GetCurrentDialogueOpener());
         }
 
         private void DialogueManager_OnDialogueOpenerStarted(DialogueOpenerSO opener)
