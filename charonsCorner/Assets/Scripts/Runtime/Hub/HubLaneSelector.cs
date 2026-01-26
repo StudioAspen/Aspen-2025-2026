@@ -8,25 +8,19 @@ namespace CharonsCorner.Runtime
 {
     public class HubLaneSelector : MonoBehaviour
     {
-        [System.Serializable]
-        public class LaneData
-        {
-            public GameObject SpotlightObject;
-            public LevelDataSO LevelData;
-        }
-        
-        [SerializeField] private List<LaneData> _lanes = new List<LaneData>();
-        [ShowInInspector, ReadOnly] private int _currentLaneIndex;
+        [field: SerializeField] public List<LevelDataSO> LaneData { get; private set; } = new List<LevelDataSO>();
+        [ShowInInspector, ReadOnly] public int CurrentLaneIndex { get; private set; }
         
         private InputManager _input;
 
+        public UnityEvent OnLeave = new();
+        public UnityEvent<int> OnLaneSelected = new();
         public UnityEvent<LevelDataSO> OnLaneInteracted = new();
+        public UnityEvent<int> OnLaneInteractedIndex = new();
 
         private void Awake()
         {
             _input = InputManager.Instance;
-            
-            _currentLaneIndex = -1;
         }
 
         private void OnEnable()
@@ -49,71 +43,56 @@ namespace CharonsCorner.Runtime
 
         private void OnMove(Vector2 direction)
         {
+            if (direction.y < 0)
+            {
+                OnLeave.Invoke();
+                return;
+            }
+            
             if (direction.x < 0)
-            {
                 SelectPreviousLane();   
-            }
             else if (direction.x > 0)
-            {
                 SelectNextLane();
-            }
         }
 
         private void OnInteract()
         {
-            LaneData selectedLane = _lanes[_currentLaneIndex];
-            OnLaneInteracted?.Invoke(selectedLane.LevelData);
+            LevelDataSO selectedLane = LaneData[CurrentLaneIndex];
+            OnLaneInteracted?.Invoke(selectedLane);
+            OnLaneInteractedIndex?.Invoke(CurrentLaneIndex);
         }
 
         public void SelectLane(int index)
         {
-            if(_currentLaneIndex == index)
-                return;
-
-            if (index < 0 || index >= _lanes.Count)
+            if (index < 0 || index >= LaneData.Count)
                 return;
             
-            _currentLaneIndex = index;
-            OnLaneSelected(GetCurrentLaneData());
+            CurrentLaneIndex = index;
+            OnLaneSelected.Invoke(CurrentLaneIndex);
         }
 
         public void SelectNextLane()
         {
-            if (_currentLaneIndex == _lanes.Count - 1)
+            if (CurrentLaneIndex == LaneData.Count - 1)
             {
                 // SelectLane(0); // Uncomment to get wrapping
                 return;
             }
             
-            SelectLane(_currentLaneIndex + 1);
+            SelectLane(CurrentLaneIndex + 1);
         }
 
         public void SelectPreviousLane()
         {
-            if (_currentLaneIndex == 0)
+            if (CurrentLaneIndex == 0)
             {
                 // SelectLane(_lanes.Count - 1); // Uncomment to get wrapping
                 return;
             }
             
-            SelectLane(_currentLaneIndex - 1);
+            SelectLane(CurrentLaneIndex - 1);
         }
         
-        public LaneData GetCurrentLaneData() => _lanes[_currentLaneIndex];
-
-        public void DisableAllSpotlights()
-        {
-            foreach (var laneData in _lanes)
-            {
-                if(laneData.SpotlightObject != null)
-                    laneData.SpotlightObject.SetActive(false);
-            }
-        }
-        
-        private void OnLaneSelected(LaneData laneData)
-        {
-            DisableAllSpotlights();
-            laneData.SpotlightObject.SetActive(true);
-        }
+        public LevelDataSO GetCurrentLevelData() => LaneData[CurrentLaneIndex];
     }
 }

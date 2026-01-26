@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 6131826958377703313}
   - component: {fileID: 8730617017274691078}
   - component: {fileID: 573634015020855248}
+  - component: {fileID: 3066369299629099235}
   m_Layer: 0
   m_Name: HubLevelSelectController
   m_TagString: Untagged
@@ -47,6 +48,63 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31951cfa9a0349ab8cebe12fe769719b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnLevelSelectOpen:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: CharonsCorner.Runtime.HubLevelSelectDetailsPanel,
+          CharonsCorner.Runtime
+        m_MethodName: SetData
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: CharonsCorner.Runtime.HubLevelSelectPreviewPanel,
+          CharonsCorner.Runtime
+        m_MethodName: SetData
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: CharonsCorner.Runtime.HubLevelSelectPreviewPanel,
+          CharonsCorner.Runtime
+        m_MethodName: FocusPanel
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: CharonsCorner.Runtime.UIPanel, CharonsCorner.Runtime
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnLevelSelectClose:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 573634015020855248}
+        m_TargetAssemblyTypeName: CharonsCorner.Runtime.HubLaneSelector, CharonsCorner.Runtime
+        m_MethodName: set_enabled
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
   _currentLevelData: {fileID: 0}
   _isOpen: 0
 --- !u!114 &6131826958377703313
@@ -237,8 +295,9 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 573634015020855248}
-        m_TargetAssemblyTypeName: CharonsCorner.Runtime.HubLaneSelector, CharonsCorner.Runtime
+      - m_Target: {fileID: 3066369299629099235}
+        m_TargetAssemblyTypeName: CharonsCorner.Runtime.HubLaneSelectorSpotlightController,
+          CharonsCorner.Runtime
         m_MethodName: DisableAllSpotlights
         m_Mode: 1
         m_Arguments:
@@ -247,7 +306,7 @@ MonoBehaviour:
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
-          m_BoolArgument: 1
+          m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &8730617017274691078
 MonoBehaviour:
@@ -275,20 +334,51 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1add1cbd8c16465c9c3597cae7fc4ca5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _lanes:
-  - SpotlightObject: {fileID: 0}
-    LevelData: {fileID: 11400000, guid: fbe141a7c66e6d24f89ae702b9f1cf46, type: 2}
-  - SpotlightObject: {fileID: 0}
-    LevelData: {fileID: 11400000, guid: 5962af86fd6f08b4e90e21a61638fd66, type: 2}
-  - SpotlightObject: {fileID: 0}
-    LevelData: {fileID: 11400000, guid: d7cadaaae1d43614bb32af7376bb533e, type: 2}
+  <LaneData>k__BackingField:
+  - {fileID: 11400000, guid: fbe141a7c66e6d24f89ae702b9f1cf46, type: 2}
+  - {fileID: 11400000, guid: 5962af86fd6f08b4e90e21a61638fd66, type: 2}
+  - {fileID: 11400000, guid: d7cadaaae1d43614bb32af7376bb533e, type: 2}
+  OnLeave:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6131826958377703313}
+        m_TargetAssemblyTypeName: CharonsCorner.Runtime.HubLaneSelectController,
+          CharonsCorner.Runtime
+        m_MethodName: EndLevelSelect
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnLaneSelected:
+    m_PersistentCalls:
+      m_Calls: []
   OnLaneInteracted:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1218423375257724636}
-        m_TargetAssemblyTypeName: CharonsCorner.Runtime.HubLevelSelectController,
+      - m_Target: {fileID: 573634015020855248}
+        m_TargetAssemblyTypeName: CharonsCorner.Runtime.HubLaneSelector, CharonsCorner.Runtime
+        m_MethodName: set_enabled
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnLaneInteractedIndex:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 3066369299629099235}
+        m_TargetAssemblyTypeName: CharonsCorner.Runtime.HubLaneSelectorSpotlightController,
           CharonsCorner.Runtime
-        m_MethodName: OpenLevelSelect
+        m_MethodName: FlickerLight
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -298,10 +388,38 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 573634015020855248}
-        m_TargetAssemblyTypeName: CharonsCorner.Runtime.HubLaneSelector, CharonsCorner.Runtime
-        m_MethodName: set_enabled
-        m_Mode: 6
+--- !u!114 &3066369299629099235
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7227862289874109081}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6208eb29a3e14ac7b9e6873a2b76efb5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _spotlightObjects:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  _flickerCount: 3
+  _flickerInterval: 0.25
+  OnFlickerStartedIndex:
+    m_PersistentCalls:
+      m_Calls: []
+  OnFlickerEndedIndex:
+    m_PersistentCalls:
+      m_Calls: []
+  OnFlickerEndedData:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1218423375257724636}
+        m_TargetAssemblyTypeName: CharonsCorner.Runtime.HubLevelSelectController,
+          CharonsCorner.Runtime
+        m_MethodName: OpenLevelSelect
+        m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine

@@ -45,7 +45,7 @@ namespace CharonsCorner.Runtime
             InputManager.Instance.Interact += InputManager_Interact;
             GameManager.Instance.OnGameStateChanged += GameManager_OnGameStateChanged;
 
-            _inputDisplayerCanvasObject.SetActive(false);
+            _inputDisplayerCanvasObject.SetActive(_isOverlapping);
         }
 
         private void OnDisable()

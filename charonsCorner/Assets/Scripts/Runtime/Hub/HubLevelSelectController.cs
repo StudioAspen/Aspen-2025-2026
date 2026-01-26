@@ -32,7 +32,6 @@ namespace CharonsCorner.Runtime
             _currentLevelData = data;
             _isOpen = true;
             OnLevelSelectOpen?.Invoke(_currentLevelData);
-
         }
 
         /// <summary>
@@ -46,7 +45,7 @@ namespace CharonsCorner.Runtime
             _currentLevelData = null;
             _isOpen = false;
             OnLevelSelectClose?.Invoke();
-            Debug.Log("[HubLevelSelectController] Closed level select.");
+            // Debug.Log("[HubLevelSelectController] Closed level select.");
         }
 
         /// <summary>
