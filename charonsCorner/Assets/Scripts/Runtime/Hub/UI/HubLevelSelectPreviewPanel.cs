@@ -6,7 +6,6 @@ namespace CharonsCorner.Runtime
 {
     public class HubLevelSelectPreviewPanel : UIPanel
     {
-        [SerializeField] private GameObject _previewPanelObject;
         [SerializeField] private TMP_Text _previewPanelTitleText;
         [SerializeField] private Image _previewPanelImage;
 
