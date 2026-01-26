@@ -21,26 +21,22 @@ namespace CharonsCorner.Runtime
         [SerializeField, ReadOnly] private bool _isOpen;
 
         public bool IsOpen => _isOpen;
-
-        /// <summary>
-        /// Called by the trigger when the player approaches a level entrance.
-        /// </summary>
+        
         public void OpenLevelSelect(LevelDataSO data)
         {
-            if (_isOpen) return;
+            if (_isOpen) 
+                return;
 
             _currentLevelData = data;
             _isOpen = true;
             OnLevelSelectOpen?.Invoke(_currentLevelData);
         }
-
-        /// <summary>
-        /// Called by the popup’s Close button or automatically when player leaves range.
-        /// </summary>
+        
         [Button("Close")]
         public void CloseLevelSelect()
         {
-            if (!_isOpen) return;
+            if (!_isOpen) 
+                return;
 
             _currentLevelData = null;
             _isOpen = false;

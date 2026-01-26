@@ -3210,6 +3210,8 @@ GameObject:
   - component: {fileID: 252271054}
   - component: {fileID: 252271053}
   - component: {fileID: 252271055}
+  - component: {fileID: 252271057}
+  - component: {fileID: 252271056}
   m_Layer: 0
   m_Name: Lane3Spotlight
   m_TagString: Untagged
@@ -3336,6 +3338,70 @@ MonoBehaviour:
   _inputDisplayText: {fileID: 2024303857}
   _autoDetectControlScheme: 1
   _controlScheme: 0
+--- !u!114 &252271056
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 252271051}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2bbd9c3dcc54b32b0e5218eeac29943, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _spotlight: {fileID: 252271054}
+  _inputDisplayCanvas: {fileID: 1537828383}
+  _lockedColor: {r: 1, g: 0, b: 0, a: 1}
+  _unlockedColor: {r: 1, g: 1, b: 1, a: 1}
+--- !u!114 &252271057
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 252271051}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 52c6c4bc5f354b238391a05c3c12fc09, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _requiredFlags:
+    _serializedList:
+    - Key: 1
+      Value: 2
+  <UnlockedAction>k__BackingField:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 252271056}
+        m_TargetAssemblyTypeName: CharonsCorner.Runtime.LaneProgressDisplayHandler,
+          CharonsCorner.Runtime
+        m_MethodName: ShowUnlocked
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  <LockedAction>k__BackingField:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 252271056}
+        m_TargetAssemblyTypeName: CharonsCorner.Runtime.LaneProgressDisplayHandler,
+          CharonsCorner.Runtime
+        m_MethodName: ShowLocked
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &303907030
 GameObject:
   m_ObjectHideFlags: 0
@@ -5470,6 +5536,8 @@ GameObject:
   - component: {fileID: 992223849}
   - component: {fileID: 992223848}
   - component: {fileID: 992223850}
+  - component: {fileID: 992223852}
+  - component: {fileID: 992223851}
   m_Layer: 0
   m_Name: Lane2Spotlight
   m_TagString: Untagged
@@ -5596,6 +5664,70 @@ MonoBehaviour:
   _inputDisplayText: {fileID: 1086788140}
   _autoDetectControlScheme: 1
   _controlScheme: 0
+--- !u!114 &992223851
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 992223846}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2bbd9c3dcc54b32b0e5218eeac29943, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _spotlight: {fileID: 992223849}
+  _inputDisplayCanvas: {fileID: 230673086}
+  _lockedColor: {r: 1, g: 0, b: 0, a: 1}
+  _unlockedColor: {r: 1, g: 1, b: 1, a: 1}
+--- !u!114 &992223852
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 992223846}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 52c6c4bc5f354b238391a05c3c12fc09, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _requiredFlags:
+    _serializedList:
+    - Key: 1
+      Value: 1
+  <UnlockedAction>k__BackingField:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 992223851}
+        m_TargetAssemblyTypeName: CharonsCorner.Runtime.LaneProgressDisplayHandler,
+          CharonsCorner.Runtime
+        m_MethodName: ShowUnlocked
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  <LockedAction>k__BackingField:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 992223851}
+        m_TargetAssemblyTypeName: CharonsCorner.Runtime.LaneProgressDisplayHandler,
+          CharonsCorner.Runtime
+        m_MethodName: ShowLocked
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!4 &1061552530 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: d86af994bc9449443bee9ea08f05a1ca, type: 3}
@@ -8369,6 +8501,8 @@ GameObject:
   - component: {fileID: 1953512977}
   - component: {fileID: 1953512976}
   - component: {fileID: 1953512978}
+  - component: {fileID: 1953512980}
+  - component: {fileID: 1953512979}
   m_Layer: 0
   m_Name: Lane1Spotlight
   m_TagString: Untagged
@@ -8495,6 +8629,68 @@ MonoBehaviour:
   _inputDisplayText: {fileID: 490128536}
   _autoDetectControlScheme: 1
   _controlScheme: 0
+--- !u!114 &1953512979
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1953512974}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2bbd9c3dcc54b32b0e5218eeac29943, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _spotlight: {fileID: 1953512977}
+  _inputDisplayCanvas: {fileID: 4254654}
+  _lockedColor: {r: 1, g: 0, b: 0, a: 1}
+  _unlockedColor: {r: 1, g: 1, b: 1, a: 1}
+--- !u!114 &1953512980
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1953512974}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 52c6c4bc5f354b238391a05c3c12fc09, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _requiredFlags:
+    _serializedList: []
+  <UnlockedAction>k__BackingField:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1953512979}
+        m_TargetAssemblyTypeName: CharonsCorner.Runtime.LaneProgressDisplayHandler,
+          CharonsCorner.Runtime
+        m_MethodName: ShowUnlocked
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  <LockedAction>k__BackingField:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1953512979}
+        m_TargetAssemblyTypeName: CharonsCorner.Runtime.LaneProgressDisplayHandler,
+          CharonsCorner.Runtime
+        m_MethodName: ShowLocked
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1001 &1986788144
 PrefabInstance:
   m_ObjectHideFlags: 0

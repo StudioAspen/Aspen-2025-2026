@@ -1,14 +1,27 @@
+using System;
+using UnityEngine;
+
 namespace CharonsCorner.Runtime
 {
     public enum ProgressFlag
     {
         TutorialCompleted,
-        World1CurrentChapter,
-        World1CurrentDialogue
+        World1CurrentChapterIndex,
+        World1CurrentDialogueIndex
     }
 
+    /// <summary>
+    /// Handles the saving and tracking of progression through flags.
+    /// Provides change notifications when flag values are modified.
+    /// </summary>
     public static class FlagManager
     {
+        /// <summary>
+        /// Invoked when a progress flag value changes.
+        /// The event is fired only if the new value differs from the previous value.
+        /// </summary>
+        public static event Action<ProgressFlag, int> OnFlagChanged;
+        
         /// <summary>
         /// Retrieves the current value of a progress flag.
         /// If the flag has not been set, returns the provided default value.
@@ -23,13 +36,16 @@ namespace CharonsCorner.Runtime
 
         /// <summary>
         /// Sets the value of a progress flag.
-        /// This will overwrite any existing value.
+        /// Triggers the OnFlagChanged event if the value has changed.
         /// </summary>
-        /// <param name="flag">The progress flag to set.</param>
-        /// <param name="value">The value to assign to the flag.</param>
         public static void Set(ProgressFlag flag, int value)
         {
+            int previousValue = Get(flag);
+            if (previousValue == value)
+                return;
+
             SaveManager.GameStore.SetInt(flag.ToString(), value);
+            OnFlagChanged?.Invoke(flag, value);
         }
 
         /// <summary>
@@ -44,14 +60,25 @@ namespace CharonsCorner.Runtime
 
         /// <summary>
         /// Resets all progress flags to their default value (0).
-        /// Intended for new games, save wipes, or debugging.
+        /// Triggers change events for any flags that were previously non-zero.
         /// </summary>
         public static void ResetAll()
         {
-            foreach (ProgressFlag flag in System.Enum.GetValues(typeof(ProgressFlag)))
+            foreach (ProgressFlag flag in Enum.GetValues(typeof(ProgressFlag)))
             {
-                SaveManager.GameStore.SetInt(flag.ToString(), 0);
+                Set(flag, 0);
             }
+        }
+        
+        /// <summary>
+        /// Clears all event subscribers.
+        /// Called automatically on domain reload / play mode start.
+        /// Prevents leaked subscriptions from previous sessions.
+        /// </summary>
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetEvents()
+        {
+            OnFlagChanged = null;
         }
     }
 }

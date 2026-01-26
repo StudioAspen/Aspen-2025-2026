@@ -57,8 +57,16 @@ namespace CharonsCorner.Runtime
 
         private void OnInteract()
         {
-            LevelDataSO selectedLane = LaneData[CurrentLaneIndex];
-            OnLaneInteracted?.Invoke(selectedLane);
+            LevelDataSO selectedLaneData = LaneData[CurrentLaneIndex];
+            
+            int world1CurrentChapterFlagIndex = FlagManager.Get(ProgressFlag.World1CurrentChapterIndex);
+            if (selectedLaneData.WorldFlagIndex > world1CurrentChapterFlagIndex)
+            {
+                Debug.LogWarning($"Current progression is at {world1CurrentChapterFlagIndex}, cannot open level select for {selectedLaneData.LevelTitle} (Flag Index: {selectedLaneData.WorldFlagIndex})");
+                return;
+            }
+            
+            OnLaneInteracted?.Invoke(selectedLaneData);
             OnLaneInteractedIndex?.Invoke(CurrentLaneIndex);
         }
 
