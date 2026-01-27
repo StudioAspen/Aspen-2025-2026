@@ -11,7 +11,7 @@ namespace CharonsCorner.Runtime
 
         [Header("References")]
         [SerializeField] private AnimancerComponent _animator;
-        [SerializeField] private DialogueOpenerSO _defaultCharonDialogueOpener;
+        [SerializeField] private DialogueOpener _dialogueOpener;
 
         [Header("Config")]
         [SerializeField] private float _animatorFadeDuration = 0.2f;
@@ -45,13 +45,14 @@ namespace CharonsCorner.Runtime
         
         public void StartCharonDialogue()
         {
-            if (!_dialogueManager.Backlog.HasPendingDialogue())
+            DialogueOpenerSO currentOpener = _dialogueManager.Backlog.GetCurrentDialogueOpener();
+            if (currentOpener == null)
             {
-                _dialogueManager.StartDialogueOpener(_defaultCharonDialogueOpener);
+                _dialogueOpener.StartOpener(_dialogueManager.Backlog.DefaultCharonDialogueOpener);
                 return;
             }
 
-            _dialogueManager.StartDialogueOpener(_dialogueManager.Backlog.GetCurrentDialogueOpener());
+            _dialogueOpener.StartOpener(currentOpener);
         }
 
         private void DialogueManager_OnDialogueOpenerStarted(DialogueOpenerSO opener)

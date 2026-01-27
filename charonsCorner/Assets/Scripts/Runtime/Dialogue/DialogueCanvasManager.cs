@@ -77,21 +77,24 @@ namespace CharonsCorner.Runtime
         private void DialogueManager_OnDialogueSequenceEndReached(DialogueSequenceSO sequence, DialogueSO dialogue)
         {
             ShowOptions(new());
-            
-            if (_dialogueManager.Backlog.CurrentChapterDialogue == null)
-                return;
 
-            if (FlagManager.Get(ProgressFlag.CurrentDialogueSequenceCompleted) == 0)
+            if (_dialogueManager.Backlog.CurrentChapterDialogue != null)
             {
                 int completedIndex =
                     _dialogueManager.Backlog.CurrentChapterDialogue.DialogueOpener.SequenceOptions.FindIndex(s => s == sequence);
-                if (completedIndex == -1)
-                    return;
-                FlagManager.Set(ProgressFlag.CurrentDialogueSequenceCompleted, completedIndex + 1);
+                if (completedIndex != -1)
+                {
+                    if (FlagManager.Get(ProgressFlag.CurrentDialogueSequenceCompleted) == 0)
+                        FlagManager.Set(ProgressFlag.CurrentDialogueSequenceCompleted, completedIndex + 1);
+                    else
+                        _dialogueManager.Backlog.CompleteCurrentDialogueSet();
+                }
             }
-            else
+            
+            if (_dialogueManager.Backlog.CurrentSRankDialogue != null)
             {
-                _dialogueManager.Backlog.CompleteCurrentDialogueSet();
+                if(_dialogueManager.Backlog.CurrentSRankDialogue.DialogueSequence == sequence)
+                    _dialogueManager.Backlog.CompleteCurrentSRankDialogueSet();
             }
         }
 

@@ -50,6 +50,9 @@ namespace CharonsCorner.Runtime
 
             CurrentDialogueIndex = 0;
             StartDialogue(sequence.DialogueContainers[CurrentDialogueIndex].Dialogue);
+            
+            if(CurrentDialogueIndex >= CurrentSequence.DialogueContainers.Count - 1)
+                OnDialogueSequenceEndReached.Invoke(CurrentSequence, CurrentDialogue);
         }
 
         public void StartDialogue(DialogueSO dialogue)

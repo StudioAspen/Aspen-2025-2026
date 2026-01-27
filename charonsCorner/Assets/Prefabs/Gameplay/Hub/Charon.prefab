@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4330120544472715104}
   - component: {fileID: 3071377622202203597}
   - component: {fileID: 1237692140379531003}
+  - component: {fileID: 1869440743056354465}
   - component: {fileID: 3753544221577819239}
   - component: {fileID: 2251239428750671827}
   - component: {fileID: 8024124051656696801}
@@ -52,7 +53,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _animator: {fileID: 2251239428750671827}
-  _defaultCharonDialogueOpener: {fileID: 11400000, guid: 579f4c408a9292840b8dc05c489ace15, type: 2}
+  _dialogueOpener: {fileID: 1869440743056354465}
   _animatorFadeDuration: 0.2
   _reactionAnimations:
     _serializedList:
@@ -139,6 +140,21 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &1869440743056354465
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3239045656199082840}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 424d0a6c52a9fae4a9cffd9fd3d139b0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _opener: {fileID: 0}
+  _useCamera: 1
+  _cinemachineCamera: {fileID: 5454533530177445654}
 --- !u!114 &3753544221577819239
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -382,7 +398,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1480377022541311623
 Transform:
   m_ObjectHideFlags: 0
