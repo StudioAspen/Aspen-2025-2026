@@ -41,6 +41,8 @@ namespace CharonsCorner.Runtime
 
         private void OnEnable()
         {
+            if (InputManager.Instance == null) return;
+
             InputManager.Instance.JumpPressed += OnJumpPressed;
             InputManager.Instance.JumpReleased += OnJumpReleased;
 
@@ -49,6 +51,8 @@ namespace CharonsCorner.Runtime
 
         private void OnDisable()
         {
+            if (InputManager.Instance == null) return;
+
             InputManager.Instance.JumpPressed -= OnJumpPressed;
             InputManager.Instance.JumpReleased -= OnJumpReleased;
             InputManager.Instance.Jump -= OnJumpPerformed;

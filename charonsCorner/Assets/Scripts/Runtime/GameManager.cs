@@ -5,10 +5,6 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using Cysharp.Threading.Tasks;
 
-#if UNITY_EDITOR
-using UnityEngine.AddressableAssets;
-using UnityEngine.ResourceManagement.ResourceProviders;
-#endif
 
 namespace CharonsCorner.Runtime
 {
@@ -122,7 +118,7 @@ namespace CharonsCorner.Runtime
             await UIManager.Instance.LoadingPanel.FadeIn();
 
 #if UNITY_EDITOR
-            await Addressables.LoadSceneAsync(scene.Path, LoadSceneMode.Single).ToUniTask(this);
+            await SceneManager.LoadSceneAsync(scene.Path);
 #else
             await SceneManager.LoadSceneAsync(scene.Name);
 #endif
