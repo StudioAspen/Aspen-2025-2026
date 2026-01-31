@@ -168,7 +168,7 @@ namespace Aspen.Tools.Assets
 
 		public void OnPreprocessMaterialDescription(MaterialDescription description, Material material, AnimationClip[] materialAnimation)
 		{
-			var shader = Shader.Find("Shader Graphs/R_Shader");
+			var shader = Shader.Find("Shader Graphs/C_VLighting");
 			if (shader == null)
 				return;
 			material.shader = shader;
