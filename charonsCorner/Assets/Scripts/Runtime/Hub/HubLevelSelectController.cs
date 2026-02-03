@@ -1,9 +1,8 @@
-using UnityEngine;
 using System;
-using UnityEngine.SceneManagement;
-using CharonsCorner.Runtime;
 using Cysharp.Threading.Tasks;
 using Sirenix.OdinInspector;
+using UnityEngine;
+using UnityEngine.Events;
 
 namespace CharonsCorner.Runtime
 {
@@ -12,9 +11,8 @@ namespace CharonsCorner.Runtime
     /// </summary>
     public class HubLevelSelectController : MonoBehaviour
     {
-        public event Action<LevelDataSO> OnLevelSelectOpen;
-        public event Action OnLevelSelectClose;
-        public event Action OnLevelStarted;
+        public UnityEvent<LevelDataSO> OnLevelSelectOpen = new();
+        public UnityEvent OnLevelSelectClose = new();
 
         //Editor references
         [Header("References")]
@@ -23,32 +21,27 @@ namespace CharonsCorner.Runtime
         [SerializeField, ReadOnly] private bool _isOpen;
 
         public bool IsOpen => _isOpen;
-
-        /// <summary>
-        /// Called by the trigger when the player approaches a level entrance.
-        /// </summary>
+        
         public void OpenLevelSelect(LevelDataSO data)
         {
-            if (_isOpen) return;
+            if (_isOpen) 
+                return;
 
             _currentLevelData = data;
             _isOpen = true;
             OnLevelSelectOpen?.Invoke(_currentLevelData);
-
         }
-
-        /// <summary>
-        /// Called by the popup’s Close button or automatically when player leaves range.
-        /// </summary>
+        
         [Button("Close")]
         public void CloseLevelSelect()
         {
-            if (!_isOpen) return;
+            if (!_isOpen) 
+                return;
 
             _currentLevelData = null;
             _isOpen = false;
             OnLevelSelectClose?.Invoke();
-            Debug.Log("[HubLevelSelectController] Closed level select.");
+            // Debug.Log("[HubLevelSelectController] Closed level select.");
         }
 
         /// <summary>
@@ -64,7 +57,6 @@ namespace CharonsCorner.Runtime
             }
 
             Debug.Log($"[HubLevelSelectController] Starting level: {_currentLevelData.LevelScene}");
-            OnLevelStarted?.Invoke();
 
             //Open level scene
             GameManager.Instance.SwitchScenes(_currentLevelData.LevelScene, GameState.Gameplay).Forget();
