@@ -359,7 +359,7 @@
 {
     "m_SGVersion": 0,
     "m_Type": "UnityEditor.ShaderGraph.Vector2MaterialSlot",
-    "m_ObjectId": "407fe8eeca584b139cb48005aa5e7ab6",
+    "m_ObjectId": "4437133f742043f1be66443b2914a07d",
     "m_Id": 10,
     "m_DisplayName": "ScreenPosition",
     "m_SlotType": 0,
@@ -599,10 +599,10 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": -611.4999389648438,
-            "y": 125.0,
-            "width": 145.0,
-            "height": 127.49998474121094
+            "x": -614.0000610351563,
+            "y": 127.0,
+            "width": 145.00003051757813,
+            "height": 128.00001525878907
         }
     },
     "m_Slots": [
@@ -611,7 +611,7 @@
         }
     ],
     "synonyms": [],
-    "m_Precision": 1,
+    "m_Precision": 0,
     "m_PreviewExpanded": false,
     "m_DismissedVersion": 0,
     "m_PreviewMode": 0,
@@ -757,10 +757,10 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": -337.0,
-            "y": -354.5000305175781,
+            "x": -332.0,
+            "y": -215.0,
             "width": 269.0,
-            "height": 262.00006103515627
+            "height": 238.0
         }
     },
     "m_Slots": [
@@ -786,7 +786,7 @@
             "m_Id": "f77a78696dd243108333c226a30046cf"
         },
         {
-            "m_Id": "407fe8eeca584b139cb48005aa5e7ab6"
+            "m_Id": "4437133f742043f1be66443b2914a07d"
         },
         {
             "m_Id": "f29f64a9a0ea4bb2b718a3c41bd3ac46"
@@ -810,7 +810,7 @@
     "m_FunctionName": "AddAdditionalLights",
     "m_FunctionSource": "eab1c7e994593834497652df5f80f160",
     "m_FunctionSourceUsePragmas": true,
-    "m_FunctionBody": "Diffuse = MainDiffuse;\r\nColor = MainColor * MainDiffuse;\n\r\n#ifndef SHADERGRAPH_PREVIEW\r\n    \r\n    uint pixelLightCount = GetAdditionalLightsCount();\n\r\n    #if USE_FORWARD_PLUS\r\n       InputData inputData = (InputData)0;\n       inputData.positionWS = Position;\n       inputData.normalWS = Normal;\n       inputData.normalizedScreenSpaceUV = ScreenPosition;\r\n    #endif\r\n\r\n    LIGHT_LOOP_BEGIN(pixelLightCount)\r\n        #if !USE_FORWARD_PLUS\r\n            lightIndex = GetPerObjectLightIndex(lightIndex);\r\n        #endif\r\n        Light light = GetAdditionalPerObjectLight(lightIndex, WorldPosition);\r\n        float NdotL = saturate(dot(WorldNormal, light.direction));\r\n        float thisDiff = light.distanceAttenuation * NdotL;\r\n        Diffuse += thisDiff;\r\n        Color += light.color * thisDiff;\n\r\n    LIGHT_LOOP_END\r\n    float total = Diffuse;\r\n    Color = total <= 0 ? MainColor : Color / total;\r\n#endif"
+    "m_FunctionBody": "Diffuse = MainDiffuse;\r\nColor = MainColor * MainDiffuse;\r\n\r\n#ifndef SHADERGRAPH_PREVIEW\r\n    \r\n    uint pixelLightCount = GetAdditionalLightsCount();\r\n\r\n    #if USE_FORWARD_PLUS\r\n        InputData inputData = (InputData)0;\r\n        inputData.normalizedScreenSpaceUV = ScreenPosition;\r\n        inputData.positionWS = WorldPosition;\r\n    #endif\r\n\r\n    LIGHT_LOOP_BEGIN(pixelLightCount)\r\n        #if !USE_FORWARD_PLUS\r\n            lightIndex = GetPerObjectLightIndex(lightIndex);\r\n        #endif\n\r\n        Light light = GetAdditionalPerObjectLight(lightIndex, WorldPosition);\r\n        float NdotL = saturate(dot(WorldNormal, light.direction));\r\n        float thisDiff = light.distanceAttenuation * NdotL;\r\n        Diffuse += thisDiff;\r\n        Color += light.color * thisDiff;\n\n\t#if defined(_LIGHT_COOKIES)\n\t   float3 cookieColor = SampleAdditionalLightCookie(lightIndex, WorldPosition);\n\t   light.color *= cookieColor;\n\t#endif\n\r\n    LIGHT_LOOP_END\n\r\n    float total = Diffuse;\r\n    Color = total <= 0 ? MainColor : Color / total;\r\n#endif"
 }
 
 {

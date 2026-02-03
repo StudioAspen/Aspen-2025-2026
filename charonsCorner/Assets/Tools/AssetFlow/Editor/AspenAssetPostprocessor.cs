@@ -102,7 +102,7 @@ namespace Aspen.Tools.Assets
 		private static void ExtractTexturesAndMaterialsFromFBX(ModelImporter modelImporter, string fbxPath)
 		{
 			List<string> assetsToReload = new List<string>();
-
+			
 			string extractPath = Path.GetDirectoryName(fbxPath);
 
 			// Get model importer
@@ -114,15 +114,15 @@ namespace Aspen.Tools.Assets
 
 			// Extract textures from model
 			modelImporter.ExtractTextures(extractPath);
-
+			
 			// Extract materials from model
 			Object[] materials = AssetDatabase.LoadAllAssetsAtPath(fbxPath)
 				.Where(asset => asset.GetType() == typeof(Material)).ToArray();
 			foreach (Material material in materials)
 			{
-				string newMaterialPath = Path.Combine(new string[] { extractPath, $"{material.name}.mat" });
+				string newMaterialPath = Path.Combine(new string[]{extractPath, $"{material.name}.mat"});
 				newMaterialPath = AssetDatabase.GenerateUniqueAssetPath(newMaterialPath);
-
+				
 				string errorMessage = AssetDatabase.ExtractAsset(material, newMaterialPath);
 				if (String.IsNullOrEmpty(errorMessage))
 				{
@@ -153,8 +153,8 @@ namespace Aspen.Tools.Assets
 			{
 				Debug.LogError($"No base prefab found at {fbxPath}. Unable to create prefab.");
 			}
-
-
+			
+			
 
 			// Create root object for new prefab. FBX is a child object.
 			GameObject root = new GameObject();
@@ -172,7 +172,7 @@ namespace Aspen.Tools.Assets
 			if (shader == null)
 				return;
 			material.shader = shader;
-
+			
 			// Read a texture property from the material description.
 			TexturePropertyDescription textureProperty;
 			if (description.TryGetProperty("DiffuseColor", out textureProperty))
@@ -180,7 +180,7 @@ namespace Aspen.Tools.Assets
 				// Assign the texture to the material.
 				material.SetTexture("_ColorMap", textureProperty.texture);
 			}
-		}
+		} 
 	}
 
 
