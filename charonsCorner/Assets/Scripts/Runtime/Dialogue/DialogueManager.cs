@@ -7,6 +7,8 @@ namespace CharonsCorner.Runtime
 {
     public class DialogueManager : Singleton<DialogueManager>
     {
+        [field: SerializeField] public DialogueBacklog Backlog { get; private set; }
+        
         [field: SerializeField, ReadOnly] public DialogueOpenerSO CurrentOpener { get; private set; }
         public event Action<DialogueOpenerSO> OnDialogueOpenerStarted = delegate { };
 
@@ -48,6 +50,9 @@ namespace CharonsCorner.Runtime
 
             CurrentDialogueIndex = 0;
             StartDialogue(sequence.DialogueContainers[CurrentDialogueIndex].Dialogue);
+            
+            if(CurrentDialogueIndex >= CurrentSequence.DialogueContainers.Count - 1)
+                OnDialogueSequenceEndReached.Invoke(CurrentSequence, CurrentDialogue);
         }
 
         public void StartDialogue(DialogueSO dialogue)

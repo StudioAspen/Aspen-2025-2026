@@ -29,5 +29,8 @@ namespace CharonsCorner.Runtime
                 container.Effect.ApplyEffect();
             }
         }
+        
+        public void SetSpeakerName(string speakerName) => SpeakerName = speakerName;
+        public void SetText(string text) => Text = text;
     }
 }
