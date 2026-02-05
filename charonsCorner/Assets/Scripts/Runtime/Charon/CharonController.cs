@@ -1,6 +1,5 @@
 using Animancer;
 using AYellowpaper.SerializedCollections;
-using NaughtyAttributes;
 using UnityEngine;
 
 namespace CharonsCorner.Runtime

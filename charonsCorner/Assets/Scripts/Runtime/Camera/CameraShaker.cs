@@ -59,8 +59,12 @@ namespace CharonsCorner.Runtime
 
         private void StopShake()
         {
-            _cinemachineBasicMultiChannelPerlin.AmplitudeGain = 0f;
-            _cinemachineBasicMultiChannelPerlin.FrequencyGain = 0f;
+            if (_cinemachineBasicMultiChannelPerlin != null)
+            {
+                _cinemachineBasicMultiChannelPerlin.AmplitudeGain = 0f;
+                _cinemachineBasicMultiChannelPerlin.FrequencyGain = 0f;
+            }
+            
             _shakeTimer = 0f;
         }
 
