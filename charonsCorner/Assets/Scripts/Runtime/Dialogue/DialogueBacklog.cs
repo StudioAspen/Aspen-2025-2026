@@ -27,12 +27,16 @@ namespace CharonsCorner.Runtime
                 ChapterDialogues.Find(e => e.ChapterIndex == currDialogueOpenerIndex);
             if (entry == null)
                 Debug.LogWarning($"No dialogue entry found for ChapterIndex {currDialogueOpenerIndex}");
-            
-            int currSRankDialogueSequenceIndex = FlagManager.Get(ProgressFlag.CurrentSRankDialogueIndex);
-            ChapterSRankDialogueEntry sRankEntry =
-                SRankDialogues.Find(e => e.ChapterIndex == currSRankDialogueSequenceIndex);
-            if(sRankEntry == null)
-                Debug.LogWarning($"No S rank entry found for ChapterIndex {currDialogueOpenerIndex}");
+
+            ChapterSRankDialogueEntry sRankEntry = null;
+            if (HasPendingSRankDialogue())
+            {
+                int currSRankDialogueSequenceIndex = FlagManager.Get(ProgressFlag.CurrentSRankDialogueIndex);
+                sRankEntry =
+                    SRankDialogues.Find(e => e.ChapterIndex == currSRankDialogueSequenceIndex);
+                if(sRankEntry == null)
+                    Debug.LogWarning($"No S rank entry found for ChapterIndex {currDialogueOpenerIndex}");
+            }
             
             CurrentChapterDialogue = entry;
             CurrentSRankDialogue = sRankEntry;
@@ -87,13 +91,44 @@ namespace CharonsCorner.Runtime
         /// </summary>
         public bool HasPendingDialogue()
         {
+            return HasPendingRegularDialogue() || HasPendingSRankDialogue();
+        }
+
+        public bool HasPendingRegularDialogue()
+        {
+            int currentChapterIndex = FlagManager.Get(ProgressFlag.CurrentChapterIndex);
             bool hasRegularDialogue = FlagManager.Get(ProgressFlag.CurrentDialogueOpenerIndex)
-                                      <= FlagManager.Get(ProgressFlag.CurrentChapterIndex);
-            
-            bool hasSRankDialogue = FlagManager.Get(ProgressFlag.CurrentSRankDialogueIndex)
-                                    <= FlagManager.Get(ProgressFlag.CurrentChapterIndex);
-            
-            return hasRegularDialogue || hasSRankDialogue;
+                                      <= currentChapterIndex;
+
+            return hasRegularDialogue;
+        }
+
+        public bool HasPendingSRankDialogue()
+        {
+            int currentChapterIndex = FlagManager.Get(ProgressFlag.CurrentChapterIndex);
+            var sRanksAchievedList = SaveManager.GameStore.GetList<int>(DialogueSaveKeys.SRankAchievedListKey, new());
+            bool hasSRankForCurrChapter = sRanksAchievedList.Contains(currentChapterIndex);
+            bool hasSRankDialogue = (FlagManager.Get(ProgressFlag.CurrentSRankDialogueIndex) <= currentChapterIndex)
+                                    && hasSRankForCurrChapter;
+
+            return hasSRankDialogue;
+        }
+
+        [Button("Force S Rank On Chapter")]
+        public void ForceSRankOnChapter(int chapterIndex)
+        {
+            var list = SaveManager.GameStore.GetList<int>(DialogueSaveKeys.SRankAchievedListKey, new());
+            if (!list.Contains(chapterIndex))
+            {
+                list.Add(chapterIndex);
+                SaveManager.GameStore.SetList(DialogueSaveKeys.SRankAchievedListKey, list);
+            }
+        }
+
+        [Button("Clear S Ranks On All Chapter")]
+        public void ClearSRanksOnAllChapters()
+        {
+            SaveManager.GameStore.SetList(DialogueSaveKeys.SRankAchievedListKey, new List<int>());
         }
     }
 }
