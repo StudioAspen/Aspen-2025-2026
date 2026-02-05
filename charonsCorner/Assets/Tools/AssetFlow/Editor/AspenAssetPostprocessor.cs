@@ -112,6 +112,9 @@ namespace Aspen.Tools.Assets
 				return;
 			}
 
+			modelImporter.SearchAndRemapMaterials(ModelImporterMaterialName.BasedOnMaterialName,
+				ModelImporterMaterialSearch.Local);
+
 			// Extract textures from model
 			modelImporter.ExtractTextures(extractPath);
 			
@@ -168,7 +171,7 @@ namespace Aspen.Tools.Assets
 
 		public void OnPreprocessMaterialDescription(MaterialDescription description, Material material, AnimationClip[] materialAnimation)
 		{
-			var shader = Shader.Find("Shader Graphs/R_Shader");
+			var shader = Shader.Find("Shader Graphs/C_VLighting");
 			if (shader == null)
 				return;
 			material.shader = shader;
@@ -178,7 +181,7 @@ namespace Aspen.Tools.Assets
 			if (description.TryGetProperty("DiffuseColor", out textureProperty))
 			{
 				// Assign the texture to the material.
-				material.SetTexture("_ColorMap", textureProperty.texture);
+				material.SetTexture("_BaseTexture", textureProperty.texture);
 			}
 		} 
 	}
