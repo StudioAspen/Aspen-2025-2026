@@ -301,3 +301,13 @@ public class PlayerController : MonoBehaviour
     }
 }
 ```
+
+------------------------------------------------------------------------
+
+## Git Branch Naming
+
+-   Use PascalCase for your feature name
+-   For personal branches, prefix your feature name with `FirstL/`
+    -   `SamsonW/NewUI`
+-   For team branches, prefix with your team `TeamA/`
+    -   `TeamA/Cannon`
