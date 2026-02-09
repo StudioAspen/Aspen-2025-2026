@@ -76,7 +76,7 @@ namespace CharonsCorner.Runtime
 
         private void DialogueManager_OnDialogueSequenceEndReached(DialogueSequenceSO sequence, DialogueSO dialogue)
         {
-            ShowOptions(new());
+            ShowOptions(new(), true);
 
             if (_dialogueManager.Backlog.CurrentChapterDialogue != null)
             {
@@ -136,7 +136,7 @@ namespace CharonsCorner.Runtime
             }
         }
 
-        private void ShowOptions(List<DialogueSequenceSO> sequenceOptions)
+        private void ShowOptions(List<DialogueSequenceSO> sequenceOptions, bool willTryShowReturn = false)
         {
             ClearButtons();
 
@@ -150,6 +150,19 @@ namespace CharonsCorner.Runtime
                 button.onClick.AddListener(() => _dialogueManager.StartDialogueSequence(sequence));
             }
 
+            if (willTryShowReturn && _dialogueManager.ReturnAction != null)
+            {
+                GameObject returnButtonObject = Instantiate(_optionButtonPrefab, _optionsContainer);
+                returnButtonObject.name = "ReturnButton";
+                TMP_Text returnButtonText = returnButtonObject.GetComponentInChildren<TMP_Text>();
+                returnButtonText.text = "Return";
+                Button returnButton = returnButtonObject.GetComponent<Button>();
+                returnButton.onClick.AddListener(() =>
+                {
+                    _dialogueManager.ReturnAction.Invoke();
+                });
+            }
+            
             GameObject closeButtonObject = Instantiate(_optionButtonPrefab, _optionsContainer);
             closeButtonObject.name = "CloseButton";
             TMP_Text closeButtonText = closeButtonObject.GetComponentInChildren<TMP_Text>();

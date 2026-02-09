@@ -21,7 +21,14 @@ namespace CharonsCorner.Runtime
         public event Action<DialogueSO> OnDialogueStarted = delegate { };
 
         public event Action OnDialogueEnded = delegate { };
+        
+        public Action ReturnAction { get; private set; }
 
+        public void SetReturnAction(Action returnAction)
+        {
+            ReturnAction = returnAction;
+        }
+        
         public void StartDialogueOpener(DialogueOpenerSO opener)
         {
             if (opener == null)

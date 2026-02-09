@@ -53,6 +53,7 @@ namespace CharonsCorner.Runtime
             }
 
             _dialogueOpener.StartOpener(currentOpener);
+            _dialogueManager.SetReturnAction(StartCharonDialogue);
         }
 
         private void DialogueManager_OnDialogueOpenerStarted(DialogueOpenerSO opener)
