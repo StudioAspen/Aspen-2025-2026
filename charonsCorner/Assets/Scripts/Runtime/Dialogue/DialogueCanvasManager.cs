@@ -78,16 +78,24 @@ namespace CharonsCorner.Runtime
         {
             ShowOptions(new(), true);
 
-            if (_dialogueManager.CurrentBacklog.CurrentChapterDialogue != null)
+            ChapterDialogueEntry currentChapterEntry = _dialogueManager.CurrentBacklog.CurrentChapterDialogue;
+            if (currentChapterEntry != null)
             {
-                int completedIndex =
-                    _dialogueManager.CurrentBacklog.CurrentChapterDialogue.DialogueOpener.SequenceOptions.FindIndex(s => s == sequence);
-                if (completedIndex != -1)
+                if (currentChapterEntry.DialogueOpener.SequenceOptions.Count == 2)
                 {
-                    if (FlagManager.Get(ProgressFlag.CurrentDialogueSequenceCompleted) == 0)
-                        FlagManager.Set(ProgressFlag.CurrentDialogueSequenceCompleted, completedIndex + 1);
-                    else
-                        _dialogueManager.CurrentBacklog.CompleteCurrentDialogueSet();
+                    int completedIndex =
+                        currentChapterEntry.DialogueOpener.SequenceOptions.FindIndex(s => s == sequence);
+                    if (completedIndex != -1)
+                    {
+                        if (FlagManager.Get(_dialogueManager.CurrentBacklog.CurrentDialogueSequenceCompletedFlag) == 0)
+                            FlagManager.Set(_dialogueManager.CurrentBacklog.CurrentDialogueSequenceCompletedFlag, completedIndex + 1);
+                        else
+                            _dialogueManager.CurrentBacklog.CompleteCurrentDialogueSet();
+                    }
+                }
+                else if (currentChapterEntry.DialogueOpener.SequenceOptions.Count == 1)
+                {
+                    _dialogueManager.CurrentBacklog.CompleteCurrentDialogueSet();
                 }
             }
             

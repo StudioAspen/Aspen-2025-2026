@@ -16,6 +16,9 @@ namespace CharonsCorner.Runtime
         /// </summary>
         public ChapterDialogueEntry CurrentChapterDialogue { get; private set; }
         public ChapterSRankDialogueEntry CurrentSRankDialogue { get; private set; }
+        
+        [field: SerializeField] public ProgressFlag CurrentDialogueOpenerIndexFlag { get; private set; } = ProgressFlag.CurrentDialogueOpenerIndex;
+        [field: SerializeField] public ProgressFlag CurrentDialogueSequenceCompletedFlag { get; private set; } = ProgressFlag.CurrentDialogueSequenceCompleted;
 
         public DialogueOpenerSO GetCurrentDialogueOpener()
         {
@@ -23,7 +26,7 @@ namespace CharonsCorner.Runtime
                 return null;
 
             ChapterDialogueEntry entry = null;
-            int currDialogueOpenerIndex = FlagManager.Get(ProgressFlag.CurrentDialogueOpenerIndex);
+            int currDialogueOpenerIndex = FlagManager.Get(CurrentDialogueOpenerIndexFlag);
             if (HasPendingRegularDialogue())
             {
                 entry =
@@ -54,11 +57,18 @@ namespace CharonsCorner.Runtime
             // Add regular sequences first
             if (entry != null)
             {
-                int completedSequenceIndex = FlagManager.Get(ProgressFlag.CurrentDialogueSequenceCompleted);
-                if (completedSequenceIndex == 1)
-                    runtimeOpener.SetSequenceOptions(new List<DialogueSequenceSO>(){entry.DialogueOpener.SequenceOptions[1]});
-                else if (completedSequenceIndex == 2)
+                if (entry.DialogueOpener.SequenceOptions.Count == 2)
+                {
+                    int completedSequenceIndex = FlagManager.Get(CurrentDialogueSequenceCompletedFlag);
+                    if (completedSequenceIndex == 1)
+                        runtimeOpener.SetSequenceOptions(new List<DialogueSequenceSO>(){entry.DialogueOpener.SequenceOptions[1]});
+                    else if (completedSequenceIndex == 2)
+                        runtimeOpener.SetSequenceOptions(new List<DialogueSequenceSO>(){entry.DialogueOpener.SequenceOptions[0]});
+                }
+                else if (entry.DialogueOpener.SequenceOptions.Count == 1)
+                {
                     runtimeOpener.SetSequenceOptions(new List<DialogueSequenceSO>(){entry.DialogueOpener.SequenceOptions[0]});
+                }
             }
             
             // Add s rank sequence after
@@ -78,8 +88,8 @@ namespace CharonsCorner.Runtime
         /// </summary>
         public void CompleteCurrentDialogueSet()
         {
-            FlagManager.Increment(ProgressFlag.CurrentDialogueOpenerIndex);
-            FlagManager.Set(ProgressFlag.CurrentDialogueSequenceCompleted, 0);
+            FlagManager.Increment(CurrentDialogueOpenerIndexFlag);
+            FlagManager.Set(CurrentDialogueSequenceCompletedFlag, 0);
             CurrentChapterDialogue = null;
         }
 
@@ -101,7 +111,7 @@ namespace CharonsCorner.Runtime
         public bool HasPendingRegularDialogue()
         {
             int currentChapterIndex = FlagManager.Get(ProgressFlag.CurrentChapterIndex);
-            bool hasRegularDialogue = FlagManager.Get(ProgressFlag.CurrentDialogueOpenerIndex)
+            bool hasRegularDialogue = FlagManager.Get(CurrentDialogueOpenerIndexFlag)
                                       <= currentChapterIndex;
 
             return hasRegularDialogue;
