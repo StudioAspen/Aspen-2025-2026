@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 3753544221577819239}
   - component: {fileID: 2251239428750671827}
   - component: {fileID: 8024124051656696801}
+  - component: {fileID: 67755824260414207}
   m_Layer: 8
   m_Name: Charon
   m_TagString: Untagged
@@ -52,6 +53,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04c6bfdb43eebe8438a514364ad19f14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _backlog: {fileID: 67755824260414207}
   _animator: {fileID: 2251239428750671827}
   _dialogueOpener: {fileID: 1869440743056354465}
   _animatorFadeDuration: 0.2
@@ -207,6 +209,27 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 5
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &67755824260414207
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3239045656199082840}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 79cca880ed884e8585ecc30a2ebb9ead, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <ChapterDialogues>k__BackingField:
+  - ChapterIndex: 0
+    DialogueOpener: {fileID: 11400000, guid: eda3a049e73e60a4487faca03e5ac7a5, type: 2}
+  - ChapterIndex: 1
+    DialogueOpener: {fileID: 11400000, guid: ecb6b1a7d6e9ca24084592cd279b2b45, type: 2}
+  <SRankDialogues>k__BackingField:
+  - ChapterIndex: 0
+    DialogueSequence: {fileID: 11400000, guid: ea2ed8854843b97409f37748151c0f10, type: 2}
+  <DefaultCharonDialogueOpener>k__BackingField: {fileID: 11400000, guid: 579f4c408a9292840b8dc05c489ace15, type: 2}
 --- !u!1 &3975539026134502271
 GameObject:
   m_ObjectHideFlags: 0

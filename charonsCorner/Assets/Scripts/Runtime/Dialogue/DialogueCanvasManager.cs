@@ -78,23 +78,23 @@ namespace CharonsCorner.Runtime
         {
             ShowOptions(new(), true);
 
-            if (_dialogueManager.Backlog.CurrentChapterDialogue != null)
+            if (_dialogueManager.CurrentBacklog.CurrentChapterDialogue != null)
             {
                 int completedIndex =
-                    _dialogueManager.Backlog.CurrentChapterDialogue.DialogueOpener.SequenceOptions.FindIndex(s => s == sequence);
+                    _dialogueManager.CurrentBacklog.CurrentChapterDialogue.DialogueOpener.SequenceOptions.FindIndex(s => s == sequence);
                 if (completedIndex != -1)
                 {
                     if (FlagManager.Get(ProgressFlag.CurrentDialogueSequenceCompleted) == 0)
                         FlagManager.Set(ProgressFlag.CurrentDialogueSequenceCompleted, completedIndex + 1);
                     else
-                        _dialogueManager.Backlog.CompleteCurrentDialogueSet();
+                        _dialogueManager.CurrentBacklog.CompleteCurrentDialogueSet();
                 }
             }
             
-            if (_dialogueManager.Backlog.CurrentSRankDialogue != null)
+            if (_dialogueManager.CurrentBacklog.CurrentSRankDialogue != null)
             {
-                if(_dialogueManager.Backlog.CurrentSRankDialogue.DialogueSequence == sequence)
-                    _dialogueManager.Backlog.CompleteCurrentSRankDialogueSet();
+                if(_dialogueManager.CurrentBacklog.CurrentSRankDialogue.DialogueSequence == sequence)
+                    _dialogueManager.CurrentBacklog.CompleteCurrentSRankDialogueSet();
             }
         }
 

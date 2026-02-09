@@ -7,8 +7,6 @@ namespace CharonsCorner.Runtime
 {
     public class DialogueManager : Singleton<DialogueManager>
     {
-        [field: SerializeField] public DialogueBacklog Backlog { get; private set; }
-        
         [field: SerializeField, ReadOnly] public DialogueOpenerSO CurrentOpener { get; private set; }
         public event Action<DialogueOpenerSO> OnDialogueOpenerStarted = delegate { };
 
@@ -22,8 +20,14 @@ namespace CharonsCorner.Runtime
 
         public event Action OnDialogueEnded = delegate { };
         
+        public MonoBehaviour Owner { get; private set; }
+        public DialogueBacklog CurrentBacklog { get; private set; }
         public Action ReturnAction { get; private set; }
 
+        public void SetOwner(MonoBehaviour owner) => Owner = owner;
+        
+        public void SetBacklog(DialogueBacklog backlog) => CurrentBacklog = backlog;
+        
         public void SetReturnAction(Action returnAction)
         {
             ReturnAction = returnAction;
@@ -98,11 +102,16 @@ namespace CharonsCorner.Runtime
 
         public void EndDialogue()
         {
+            OnDialogueEnded.Invoke();
+            
             CurrentOpener = null;
             CurrentSequence = null;
             CurrentDialogueIndex = 0;
             CurrentDialogue = null;
-            OnDialogueEnded.Invoke();
+            
+            Owner = null;
+            CurrentBacklog = null;
+            ReturnAction = null;
         }
     }
 }

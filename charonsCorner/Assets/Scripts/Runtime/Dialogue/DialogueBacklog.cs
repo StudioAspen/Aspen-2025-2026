@@ -21,13 +21,17 @@ namespace CharonsCorner.Runtime
         {
             if (!HasPendingDialogue())
                 return null;
-            
-            int currDialogueOpenerIndex = FlagManager.Get(ProgressFlag.CurrentDialogueOpenerIndex);
-            ChapterDialogueEntry entry =
-                ChapterDialogues.Find(e => e.ChapterIndex == currDialogueOpenerIndex);
-            if (entry == null)
-                Debug.LogWarning($"No dialogue entry found for ChapterIndex {currDialogueOpenerIndex}");
 
+            ChapterDialogueEntry entry = null;
+            int currDialogueOpenerIndex = FlagManager.Get(ProgressFlag.CurrentDialogueOpenerIndex);
+            if (HasPendingRegularDialogue())
+            {
+                entry =
+                    ChapterDialogues.Find(e => e.ChapterIndex == currDialogueOpenerIndex);
+                if (entry == null)
+                    Debug.LogWarning($"No dialogue entry found for ChapterIndex {currDialogueOpenerIndex}");
+            }
+            
             ChapterSRankDialogueEntry sRankEntry = null;
             if (HasPendingSRankDialogue())
             {
