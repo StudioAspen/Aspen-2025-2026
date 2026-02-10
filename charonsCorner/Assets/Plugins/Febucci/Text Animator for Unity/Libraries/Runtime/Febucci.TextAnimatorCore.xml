@@ -1,0 +1,736 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<doc>
+    <assembly>
+        <name>Febucci.TextAnimatorCore</name>
+    </assembly>
+    <members>
+        <member name="F:Febucci.TextAnimatorCore.Text.CharacterData.visibleTime">
+            <summary>
+            Time where the character is visible (any of <see cref="F:Febucci.TextAnimatorCore.Text.CharacterData.appearTime" /> or <see cref="F:Febucci.TextAnimatorCore.Text.CharacterData.disappearTime" /> &gt; 0)
+            </summary>
+        </member>
+        <member name="T:Febucci.TextAnimatorCore.Text.CharacterDataExtensions">
+            <summary>
+            Unified extension methods for MeshData operations across all engines.
+            </summary>
+        </member>
+        <member name="M:Febucci.TextAnimatorCore.Text.CharacterDataExtensions.GetCenter(Febucci.TextAnimatorCore.Text.CharacterData)">
+            <summary />
+            <param name="character" />
+            <returns />
+            <remarks>See: <seealso cref="!:CharacterData.scaleDir" /></remarks>
+        </member>
+        <member name="M:Febucci.TextAnimatorCore.Text.ITextGenerator.GetFirstCharacterIndexInsidePage">
+            <summary>
+            Returns the first character index inside the page, in case the text has an overflow mode set up and the text is paginated.
+            </summary>
+            <example>
+            If each page has 5 characters, and we're on page 2, then this method would return 5 as the starting index of the text.
+            </example>
+            <returns />
+        </member>
+        <member name="M:Febucci.TextAnimatorCore.Text.ITextGenerator.GetRenderedCharactersCountInsidePage(System.Int32)">
+            <summary>
+            Returns the number of characters that fit inside the page, in case the text has an overflow mode set up and the text is paginated. (otherwise simply returns the characters count)
+            </summary>
+            <returns />
+        </member>
+        <member name="T:Febucci.TextAnimatorCore.Text.MeshData">
+            <summary>
+            Compact mesh representation for a single character (4 vertices).
+            64 bytes total: 48 (positions) + 16 (colors).
+            </summary>
+        </member>
+        <member name="T:Febucci.TextAnimatorCore.TextAnimator">
+            <summary>
+            Main class that handles animations
+            </summary>
+        </member>
+        <member name="P:Febucci.TextAnimatorCore.TextAnimator.Words">
+            <summary>
+            The array of words currently present in the text.
+            </summary>
+            <remarks>
+            This array might be larger than the actual number of words, so please cycle for <see cref="P:Febucci.TextAnimatorCore.TextAnimator.WordsCount" /> instead.
+            </remarks>
+        </member>
+        <member name="P:Febucci.TextAnimatorCore.TextAnimator.WordsCount">
+            <summary>
+            Number of words in the text
+            </summary>
+        </member>
+        <member name="P:Febucci.TextAnimatorCore.TextAnimator.FirstVisibleCharacter">
+            <summary>
+            Handles the very first character allowed to be visible in the text.
+            </summary>
+            <remarks>
+            Be aware that in order to visible, a character also needs to also have its own "visible" flag set to true. See <see cref="M:Febucci.TextAnimatorCore.TextAnimator.SetVisibilityChar(System.Int32,System.Boolean,System.Boolean)" /> and <see cref="F:Febucci.TextAnimatorCore.Text.CharacterData.isVisible" /></remarks>
+        </member>
+        <member name="P:Febucci.TextAnimatorCore.TextAnimator.MaxVisibleCharacters">
+            <summary>
+            Handles the very last character allowed to be visible in the text.
+            </summary>
+            <remarks>
+            Be aware that in order to visible, a character also needs to also have its own "visible" flag set to true. See <see cref="M:Febucci.TextAnimatorCore.TextAnimator.SetVisibilityChar(System.Int32,System.Boolean,System.Boolean)" /> and <see cref="F:Febucci.TextAnimatorCore.Text.CharacterData.isVisible" /></remarks>
+        </member>
+        <member name="P:Febucci.TextAnimatorCore.TextAnimator.AllLettersShown">
+            <summary>
+                <c>true</c> if the text is entirely visible, including waiting for appearance effects to finish
+            (as they might still hide a character until the very end)
+            </summary>
+            <remarks>
+            You can use this to check if all the letters have been shown.
+            </remarks>
+        </member>
+        <member name="P:Febucci.TextAnimatorCore.TextAnimator.AnyLetterVisible">
+            <summary>
+                <c>true</c> if any letter is still visible in the text
+            </summary>
+            <remarks>
+            You can use this to check if the disappearance effects are still running.
+            </remarks>
+        </member>
+        <member name="E:Febucci.TextAnimatorCore.TextAnimator.OnStartedParsing">
+            <summary>
+            Called right at the start of text parsing.
+            String = text full
+            </summary>
+        </member>
+        <member name="E:Febucci.TextAnimatorCore.TextAnimator.OnTextParsedInternal">
+            <summary>
+            Gets invoked before <see cref="E:Febucci.TextAnimatorCore.TextAnimator.OnTextParsed" /></summary>
+        </member>
+        <member name="M:Febucci.TextAnimatorCore.TextAnimator.SwapText(System.String)">
+            <summary>
+            Changes the text to Text Animator with a new one, keeping the current visibility
+            </summary>
+            <param name="text" />
+        </member>
+        <member name="M:Febucci.TextAnimatorCore.TextAnimator.Animate">
+            <summary>
+            Animates with the provided <see cref="T:Febucci.TextAnimatorCore.Time.TimeScale" /> time.
+            </summary>
+        </member>
+        <member name="M:Febucci.TextAnimatorCore.TextAnimator.SetVisibilityChar(System.Int32,System.Boolean,System.Boolean)">
+            <summary>
+            Sets a character visibility.
+            </summary>
+            <param name="index">Character's index. See <see cref="P:Febucci.TextAnimatorCore.TextAnimator.CharactersCount" /> and the <see cref="P:Febucci.TextAnimatorCore.TextAnimator.Characters" /> array.</param>
+            <param name="isVisible">Controls if the character should be visible</param>
+            <param name="canPlayEffects" />
+        </member>
+        <member name="M:Febucci.TextAnimatorCore.TextAnimator.SetVisibilityWord(System.Int32,System.Boolean,System.Boolean)">
+            <summary>
+            Sets a word visibility.
+            </summary>
+            <param name="index">Word's index. See <see cref="P:Febucci.TextAnimatorCore.TextAnimator.WordsCount" /> and the <see cref="P:Febucci.TextAnimatorCore.TextAnimator.Words" /> array.</param>
+            <param name="isVisible">Controls if the word should be visible</param>
+            <param name="canPlayEffects" />
+        </member>
+        <member name="M:Febucci.TextAnimatorCore.TextAnimator.SetVisibilityEntireText(System.Boolean,System.Boolean)">
+            <summary>
+            Sets the visibility of the entire text, also allowing to play or skip effects.
+            </summary>
+            <param name="isVisible" />
+            <param name="canPlayEffects" />
+        </member>
+        <member name="M:Febucci.TextAnimatorCore.TextAnimator.RefreshAllEffectStates">
+            <summary>
+            Refreshes all effect parameters from their region parameters.
+            Useful in Editor when preset default values are changed and need to be refreshed.
+            Call this after modifying ScriptableObject presets to update the runtime parameters.
+            </summary>
+        </member>
+        <member name="T:Febucci.TextAnimatorCore.AnimationContext">
+            <summary>
+            Lightweight animation context containing only time data.
+            </summary>
+        </member>
+        <member name="T:Febucci.TextAnimatorCore.BuiltIn.BakedCurve">
+            <summary>
+            Internal, for baking/optimizing curves
+            </summary>
+            <remarks>Needs to invoke <see cref="M:Febucci.TextAnimatorCore.BuiltIn.BakedCurve.Bake" /> for it to have an effect.
+            </remarks>
+        </member>
+        <member name="T:Febucci.TextAnimatorCore.BuiltIn.RainbowColorEffectState">
+            <summary>
+            Runtime state for RainbowEffect.
+            Burst-compatible struct with value types only.
+            </summary>
+        </member>
+        <member name="M:Febucci.TextAnimatorCore.BuiltIn.RainbowColorEffectState.#ctor(System.Boolean)">
+            <summary>
+            for future implementation - use this instead of parameterless constructor
+            </summary>
+            <param name="temp" />
+        </member>
+        <member name="T:Febucci.TextAnimatorCore.DirectEffectContext">
+            <summary>
+            Lightweight context struct that wraps effect parameters for blending
+            </summary>
+        </member>
+        <member name="F:Febucci.TextAnimatorCore.DirectEffectContext.intensity01">
+            <summary>
+            Playback intensity [0,1] for fade in/out.
+            Character-specific based on appearance/disappearance timing.
+            </summary>
+        </member>
+        <member name="T:Febucci.TextAnimatorCore.ManagedEffectContext">
+            <summary>
+            Lightweight context struct that wraps effect parameters for blending
+            </summary>
+        </member>
+        <member name="F:Febucci.TextAnimatorCore.ManagedEffectContext.progressionRange">
+            <summary>
+            Curve evaluation result (already processed sin/cos/linear/etc).
+            Ranges from -1 to 1
+            </summary>
+        </member>
+        <member name="F:Febucci.TextAnimatorCore.ManagedEffectContext.progression01">
+            <summary>
+            Curve evaluation result (already processed sin/cos/linear/etc).
+            Ranges from 0 to 1 (0 -&gt; 1, 0 -&gt; 1.. etc.)
+            </summary>
+        </member>
+        <member name="F:Febucci.TextAnimatorCore.ManagedEffectContext.intensity">
+            <summary>
+            Playback intensity [0,1] for fade in/out.
+            Character-specific based on appearance/disappearance timing.
+            </summary>
+        </member>
+        <member name="P:Febucci.TextAnimatorCore.IEffectCurve.BakeResolution">
+            <summary>
+            0 or less to disable
+            </summary>
+        </member>
+        <member name="M:Febucci.TextAnimatorCore.IEffectCurve.Evaluate01(System.Single)">
+            <summary>
+            Input: normalized time [0,1]. Output: [0,1]
+            </summary>
+        </member>
+        <member name="M:Febucci.TextAnimatorCore.IEffectCurve.EvaluateRange(System.Single)">
+            <summary>
+            Input: normalized time [0,1]. Output: [-1,1]
+            </summary>
+        </member>
+        <member name="M:Febucci.TextAnimatorCore.IEffectPhase.GetSpeedFor(System.Int32,System.Int32)">
+            <summary />
+            <param name="time" />
+            <param name="charIndex">In case you want to create custom speed based on charIndex</param>
+            <param name="wordIndex">In case you want to create custom speed based on wordIndex</param>
+            <returns />
+            <example>
+                <code>
+             float timePassed = phase.SpeedTime(time, ...);
+             </code>
+            </example>
+        </member>
+        <member name="M:Febucci.TextAnimatorCore.IEffectPlayback.CalculateIntensity01(System.Single,System.Single@,System.Boolean@)">
+            <summary>
+            Returns 0 when the effect is NOT applied
+            </summary>
+            <param name="time" />
+            <param name="intensity01" />
+            <param name="hasFinishedEffect" />
+        </member>
+        <member name="M:Febucci.TextAnimatorCore.IEffectState.Apply(Febucci.TextAnimatorCore.Text.CharacterData@,Febucci.TextAnimatorCore.ManagedEffectContext@)">
+            <summary>
+            Applies the effect to a character using this state and context.
+            </summary>
+            <param name="character">Character with source and current mesh data</param>
+            <param name="context">Effect context with progression and intensity</param>
+        </member>
+        <member name="M:Febucci.TextAnimatorCore.IEffectStateSync.Apply(Febucci.TextAnimatorCore.Text.CharacterData@,Febucci.TextAnimatorCore.DirectEffectContext@)">
+            <summary>
+            Applies the effect to a character using this state and context.
+            </summary>
+            <param name="character">Character with source and current mesh data</param>
+            <param name="context">Animation context</param>
+        </member>
+        <member name="T:Febucci.TextAnimatorCore.AnimUtils">
+            <summary>
+            Helper class. Contains methods (including extensions) that modify your letters positions and colors.
+            </summary>
+        </member>
+        <member name="M:Febucci.TextAnimatorCore.AnimUtils.RotateAround(Febucci.Numbers.Vector3,Febucci.Numbers.Vector2,System.Single)">
+            <summary>
+            Rotates a point around a 2D center by X degrees
+            </summary>
+            <param name="vec">point to rotate</param>
+            <param name="center">rotation's center</param>
+            <param name="rotDegrees">rotation degrees</param>
+            <returns />
+            <example>
+            letterVertex.RotateAround(letterMiddlePoint, angle);
+            </example>
+        </member>
+        <member name="T:Febucci.TextAnimatorCore.Time.TimeData">
+            <summary>
+            Contains TextAnimator's current time values.
+            </summary>
+        </member>
+        <member name="P:Febucci.TextAnimatorCore.Time.TimeData.timeSinceStart">
+            <summary>
+            Time passed since the textAnimator started showing the very first letter
+            </summary>
+        </member>
+        <member name="P:Febucci.TextAnimatorCore.Time.TimeData.deltaTime">
+            <summary>
+            TextAnimator's Component delta time, could be Scaled or Unscaled
+            </summary>
+        </member>
+        <member name="T:Febucci.TextAnimatorCore.Time.TimeScale">
+            <summary>
+            TextAnimator's effects time scale, which could match unity's Time.deltaTime or Time.unscaledDeltaTime
+            </summary>
+        </member>
+        <member name="F:Febucci.TextAnimatorCore.DefaultEffectsMode.Fallback">
+            <summary>
+            Applies effects only to characters that don't have any.
+            </summary>
+        </member>
+        <member name="F:Febucci.TextAnimatorCore.DefaultEffectsMode.Constant">
+            <summary>
+            Applies effects to all the characters, even if they already have other tags via text.
+            </summary>
+        </member>
+        <member name="T:Febucci.TextAnimatorCore.Styles.StylesParser">
+            <summary>
+            Rules how to parse a rich text tag that has an opening and ending
+            </summary>
+        </member>
+        <member name="T:Febucci.TextAnimatorCore.Typing.ActionMarker">
+            <summary>
+            Contains information about an action tag in text.
+            </summary>
+        </member>
+        <member name="T:Febucci.TextAnimatorCore.Typing.ActionStatus">
+            <summary>
+            Status of an action's execution
+            </summary>
+        </member>
+        <member name="F:Febucci.TextAnimatorCore.Typing.ActionStatus.Running">
+            <summary>
+            Action is still executing (typewriter will pause until Finished)
+            </summary>
+        </member>
+        <member name="F:Febucci.TextAnimatorCore.Typing.ActionStatus.Finished">
+            <summary>
+            Action has completed (typewriter will resume)
+            </summary>
+        </member>
+        <member name="T:Febucci.TextAnimatorCore.Typing.IActionState">
+            <summary>
+            Runtime state for a typewriter action instance.
+            Each action creates its own independent state when triggered.
+            </summary>
+        </member>
+        <member name="M:Febucci.TextAnimatorCore.Typing.IActionState.Progress(System.Single,Febucci.TextAnimatorCore.Typing.TypingInfo@)">
+            <summary>
+            Updates the action state each frame.
+            </summary>
+            <param name="deltaTime">Time elapsed since last frame</param>
+            <param name="typingInfo">Current typing state (can be modified to change speed, etc.)</param>
+            <returns>Running to pause typewriter, Finished to resume</returns>
+        </member>
+        <member name="T:Febucci.TextAnimatorCore.Typing.ITypewriterAction">
+            <summary>
+            Factory for creating typewriter actions.
+            Implement this in ScriptableObjects (Unity) or Resources (Godot) for data-driven actions.
+            Pattern: Definition (this interface) creates independent States (IActionState) for each usage.
+            </summary>
+        </member>
+        <member name="M:Febucci.TextAnimatorCore.Typing.ITypewriterAction.CreateActionFrom(Febucci.TextAnimatorCore.Typing.ActionMarker,System.Object)">
+            <summary>
+            Creates a new action state instance from parsed tag data.
+            Called when typewriter encounters this action's tag in text.
+            </summary>
+            <param name="marker">Parsed action marker with parameters</param>
+            <param name="typewriter">Reference to typewriter component</param>
+            <returns>New independent state for this action instance</returns>
+        </member>
+        <member name="T:Febucci.TextAnimatorCore.Typing.BuiltIn.SpeedActionState">
+            <summary>
+            State for speed action - applies speed change immediately and finishes
+            </summary>
+        </member>
+        <member name="T:Febucci.TextAnimatorCore.Typing.BuiltIn.WaitForAction">
+            <summary>
+            Typewriter action that pauses typing for a specified duration.
+            Usage: &lt;waitfor=1.5&gt; (pauses for 1.5 seconds)
+            </summary>
+        </member>
+        <member name="T:Febucci.TextAnimatorCore.Typing.BuiltIn.WaitForActionState">
+            <summary>
+            State for wait action - counts down time before finishing
+            </summary>
+        </member>
+        <member name="T:Febucci.TextAnimatorCore.Typing.DisappearanceOrientation">
+            <summary>
+            Controls the orientation/direction of text disappearance
+            </summary>
+        </member>
+        <member name="F:Febucci.TextAnimatorCore.Typing.DisappearanceOrientation.SameAsTypewriter">
+            <summary>
+            Linear left to right (or right to left based on the text's direction)
+            </summary>
+        </member>
+        <member name="F:Febucci.TextAnimatorCore.Typing.DisappearanceOrientation.Inverted">
+            <summary>
+            Opposite direction of the typewriter
+            </summary>
+        </member>
+        <member name="F:Febucci.TextAnimatorCore.Typing.DisappearanceOrientation.Random">
+            <summary>
+            Hides letters randomly from start to finish
+            </summary>
+        </member>
+        <member name="M:Febucci.TextAnimatorCore.Typing.MarkerBase.CompareTo(Febucci.TextAnimatorCore.Typing.MarkerBase)">
+            <summary>
+            Checks if a marker is placed before another in text.
+            PS. Checks for internal order, since when a letter is shown (character index)
+            there might be multiple events happening
+            </summary>
+            <param name="other" />
+            <returns />
+        </member>
+        <member name="T:Febucci.TextAnimatorCore.Typing.StartTypewriterMode">
+            <summary>
+            Controls when the typewriter should automatically start/resume
+            </summary>
+        </member>
+        <member name="F:Febucci.TextAnimatorCore.Typing.StartTypewriterMode.FromScriptOnly">
+            <summary>
+            Typewriter starts typing ONLY if you invoke "StartShowingText" from any of your script.
+            </summary>
+        </member>
+        <member name="F:Febucci.TextAnimatorCore.Typing.StartTypewriterMode.OnEnable">
+            <summary>
+            Typewriter automatically starts/resumes when enabled
+            </summary>
+        </member>
+        <member name="F:Febucci.TextAnimatorCore.Typing.StartTypewriterMode.OnShowText">
+            <summary>
+            Typewriter automatically starts once you call "ShowText" method
+            </summary>
+        </member>
+        <member name="F:Febucci.TextAnimatorCore.Typing.StartTypewriterMode.AutomaticallyFromAllEvents">
+            <summary>
+            Typewriter automatically starts from all events
+            </summary>
+        </member>
+        <member name="T:Febucci.TextAnimatorCore.Typing.TypewriterCore">
+            <summary>
+            Core typewriter system that handles progressive text reveal and disappearance
+            </summary>
+        </member>
+        <member name="F:Febucci.TextAnimatorCore.Typing.TypewriterCore.animator">
+            <summary>
+            The TextAnimator linked to this typewriter
+            </summary>
+        </member>
+        <member name="P:Febucci.TextAnimatorCore.Typing.TypewriterCore.Actions">
+            <summary>
+            Array of action markers parsed from the text
+            </summary>
+        </member>
+        <member name="P:Febucci.TextAnimatorCore.Typing.TypewriterCore.Events">
+            <summary>
+            Array of event markers parsed from the text
+            </summary>
+        </member>
+        <member name="P:Febucci.TextAnimatorCore.Typing.TypewriterCore.ActionProviders">
+            <summary>
+            Database provider for typewriter actions
+            </summary>
+        </member>
+        <member name="P:Febucci.TextAnimatorCore.Typing.TypewriterCore.IsShowingText">
+            <summary>
+            True if the typewriter is currently showing letters
+            </summary>
+        </member>
+        <member name="P:Febucci.TextAnimatorCore.Typing.TypewriterCore.IsHidingText">
+            <summary>
+            True if the typewriter is currently disappearing the text
+            </summary>
+        </member>
+        <member name="E:Febucci.TextAnimatorCore.Typing.TypewriterCore.OnTextShowed">
+            <summary>
+            Called once the text is completely shown
+            </summary>
+        </member>
+        <member name="E:Febucci.TextAnimatorCore.Typing.TypewriterCore.OnTypewriterStart">
+            <summary>
+            Called once the typewriter starts showing text
+            </summary>
+        </member>
+        <member name="E:Febucci.TextAnimatorCore.Typing.TypewriterCore.OnTextDisappeared">
+            <summary>
+            Called once the typewriter has completed hiding all the letters
+            </summary>
+        </member>
+        <member name="E:Febucci.TextAnimatorCore.Typing.TypewriterCore.OnCharacterVisible">
+            <summary>
+            Called once a character has been shown by the typewriter
+            </summary>
+        </member>
+        <member name="E:Febucci.TextAnimatorCore.Typing.TypewriterCore.OnCharacterWaitStarted">
+            <summary>
+            Called once the typewriter has started waiting for a character
+            </summary>
+        </member>
+        <member name="E:Febucci.TextAnimatorCore.Typing.TypewriterCore.OnCharacterWaitFinished">
+            <summary>
+            Called once the typewriter has finished waiting for a character
+            </summary>
+        </member>
+        <member name="E:Febucci.TextAnimatorCore.Typing.TypewriterCore.OnMessage">
+            <summary>
+            Called once an event has been shown by the typewriter
+            </summary>
+        </member>
+        <member name="M:Febucci.TextAnimatorCore.Typing.TypewriterCore.ShowText(System.String)">
+            <summary>
+            Sets the given text to the connected TextAnimator component.
+            If enabled, it also starts showing letters dynamically.
+            </summary>
+        </member>
+        <member name="M:Febucci.TextAnimatorCore.Typing.TypewriterCore.SkipTypewriter">
+            <summary>
+            Skips the typewriter animation (if it's currently showing or hiding)
+            </summary>
+        </member>
+        <member name="M:Febucci.TextAnimatorCore.Typing.TypewriterCore.StartShowingText(System.Boolean)">
+            <summary>
+            Starts showing letters dynamically
+            </summary>
+            <param name="restart">false to resume where it left, true to restart from character 0</param>
+        </member>
+        <member name="M:Febucci.TextAnimatorCore.Typing.TypewriterCore.GetFirstCharacterInPage">
+            <summary>
+            Returns the index of the first character in the current page.
+            </summary>
+        </member>
+        <member name="M:Febucci.TextAnimatorCore.Typing.TypewriterCore.StopShowingText">
+            <summary>
+            Stops showing letters dynamically, leaving the text as it is
+            </summary>
+        </member>
+        <member name="M:Febucci.TextAnimatorCore.Typing.TypewriterCore.StartDisappearingText">
+            <summary>
+            Starts disappearing the text dynamically
+            </summary>
+        </member>
+        <member name="M:Febucci.TextAnimatorCore.Typing.TypewriterCore.StopDisappearingText">
+            <summary>
+            Stops the typewriter from disappearing the text dynamically
+            </summary>
+        </member>
+        <member name="M:Febucci.TextAnimatorCore.Typing.TypewriterCore.SetTypewriterSpeed(System.Single)">
+            <summary>
+            Makes the typewriter slower/faster, by setting its internal speed multiplier
+            </summary>
+        </member>
+        <member name="M:Febucci.TextAnimatorCore.Typing.TypewriterCore.UpdateTypewriter">
+            <summary>
+            Updates the typewriter state.
+            </summary>
+        </member>
+        <member name="P:Febucci.TextAnimatorCore.Typing.TypewriterCore.TypewriterDisabledRange">
+            <summary>
+            Holds any range where the typewriter should be skipped entirely and show the entire text.
+            Only takes effect if you're using a TypewriterCore
+            </summary>
+            <remarks>
+            This value is reset every time you set a new text, calculating the "notypewriter" tags in it
+            </remarks>
+        </member>
+        <member name="M:Febucci.TextAnimatorCore.Typing.TypewriterCore.IsTypewriterEnabledAtIndex(System.Int32)">
+            <summary>
+            True if the typewriter should calculate a character's appearance or disappearance time.
+            Calculated from TypewriterDisabledRange
+            </summary>
+            <param name="index">Character index to check</param>
+            <returns>False if index is within a disabled range, true otherwise</returns>
+        </member>
+        <member name="M:Febucci.TextAnimatorCore.Typing.TypewriterCore.TriggerRemainingEvents">
+            <summary>
+            Triggers all messages/events that have not yet been triggered
+            </summary>
+        </member>
+        <member name="M:Febucci.TextAnimatorCore.Typing.TypewriterCore.TriggerVisibleEvents">
+            <summary>
+            Triggers all messages/events that have not been triggered, but that are in the visible range
+            </summary>
+        </member>
+        <member name="T:Febucci.TextAnimatorCore.Typing.TypingInfo">
+            <summary>
+            Tracks the current state and speed of a typewriter
+            </summary>
+        </member>
+        <member name="F:Febucci.TextAnimatorCore.Typing.TypingInfo.speed">
+            <summary>
+            Speed multiplier for the typewriter (1 = normal speed)
+            </summary>
+        </member>
+        <member name="F:Febucci.TextAnimatorCore.Typing.TypingInfo.timePassed">
+            <summary>
+            Accumulated time passed during typing (for frame-accurate timing)
+            </summary>
+        </member>
+        <member name="T:Febucci.TextAnimatorCore.Typing.EventMarker">
+            <summary>
+            Contains information about an event called in text
+            </summary>
+        </member>
+        <member name="F:Febucci.TextAnimatorCore.Typing.TypewriterSettings.useTypeWriter">
+            <summary>
+            True if the typewriter is enabled
+            </summary>
+        </member>
+        <member name="F:Febucci.TextAnimatorCore.Typing.TypewriterSettings.startTypewriterMode">
+            <summary>
+            Controls from which method(s) the typewriter will automatically start/resume
+            </summary>
+        </member>
+        <member name="F:Febucci.TextAnimatorCore.Typing.TypewriterSettings.hideAppearancesOnSkip">
+            <summary>
+            True = hides appearance effects when skipping
+            </summary>
+        </member>
+        <member name="F:Febucci.TextAnimatorCore.Typing.TypewriterSettings.hideDisappearancesOnSkip">
+            <summary>
+            True = hides disappearance effects when skipping
+            </summary>
+        </member>
+        <member name="F:Febucci.TextAnimatorCore.Typing.TypewriterSettings.triggerEventsOnSkip">
+            <summary>
+            True = plays all remaining events once the typewriter has been skipped during a show routine
+            </summary>
+        </member>
+        <member name="F:Febucci.TextAnimatorCore.Typing.TypewriterSettings.resetTypingSpeedAtStartup">
+            <summary>
+            True = resets the typewriter speed every time a new text is set/shown
+            </summary>
+        </member>
+        <member name="F:Febucci.TextAnimatorCore.Typing.TypewriterSettings.disappearanceOrientation">
+            <summary>
+            Controls the orientation/direction of text disappearance
+            </summary>
+        </member>
+        <member name="F:Febucci.TextAnimatorCore.Typing.TypewriterSettings.triggerShowedAfterEffectsEnd">
+            <summary>
+            True if you want to wait for every single character to animate before invoking onTextShowed
+            </summary>
+        </member>
+        <member name="F:Febucci.TextAnimatorCore.Typing.TypewriterSettings.triggerDisappearedAfterEffectsEnd">
+            <summary>
+            True if you want to wait for every single character to animate before invoking onTextDisappeared
+            </summary>
+        </member>
+        <member name="T:Febucci.Parsing.Core.PlainTagParser">
+            <summary>
+            Parses a tag in a text
+            </summary>
+        </member>
+        <member name="T:Febucci.Parsing.Core.TagParserBase">
+            <summary>
+            Base class to parse a rich text tag
+            </summary>
+        </member>
+        <member name="T:Febucci.Parsing.Regions.Database`1">
+            <summary>
+            Caches information about tag providers, so that it's easier to access them
+            </summary>
+            <typeparam name="T" />
+        </member>
+        <member name="T:Febucci.Parsing.Regions.PlayerKey">
+            <summary>
+            Key for pooling effect players based on tag ID and parameters.
+            Enables zero-overhead animation by pre-configuring players with unique parameter combinations.
+            </summary>
+        </member>
+        <member name="T:Febucci.Parsing.Regions.RegionParser`2">
+            <summary>
+            Rules how to parse a rich text tag that has an opening and ending.
+            </summary>
+            <see cref="T:Febucci.Parsing.Regions.TextRegion`1" />
+        </member>
+        <member name="T:Febucci.Parsing.Regions.TagRange">
+            <summary>
+            A tag range that has <see cref="F:Febucci.Parsing.Regions.TagRange.parameters" /> between the given <see cref="F:Febucci.Parsing.Regions.TagRange.indexes" /></summary>
+        </member>
+        <member name="F:Febucci.Parsing.Regions.TagRange.indexes">
+            <summary>
+            text index range of where to apply the tag
+            </summary>
+        </member>
+        <member name="T:Febucci.Parsing.Regions.TextRegion`1">
+            <summary>
+            A region in the text, that has a <see cref="F:Febucci.Parsing.Regions.TextRegion`1.data" /> that is applied to multiple <see cref="F:Febucci.Parsing.Regions.TextRegion`1.ranges" /></summary>
+            <typeparam name="T" />
+        </member>
+        <member name="T:Febucci.Parsing.TextParser">
+            <summary>
+            Handles text parsing and rich text tags recognition
+            </summary>
+        </member>
+        <member name="T:Febucci.Parsing.FormatUtils">
+            <summary>
+            Helper class. Contains methods to parse attributes/values from strings.
+            </summary>
+        </member>
+        <member name="M:Febucci.Parsing.FormatUtils.TryGetFloat(System.Collections.Generic.List{System.String},System.Int32,System.Single,System.Single@)">
+            <summary>
+            Tries to parse a rich text tag parameter.
+            </summary>
+            <remarks>
+            Mostly used in combination with custom typewriter actions. (Manual: <see href="https://www.febucci.com/text-animator-unity/docs/writing-custom-actions-c-sharp/">Writing Custom actions C#</see>)
+            </remarks>
+            <param name="attributes">list of all the attributesi in the rich text tag</param>
+            <param name="index">the parameter's index in the list</param>
+            <param name="defValue">default value, assigned if the parsing is not successful</param>
+            <param name="result">result from the parsing</param>
+            <returns>
+                <c>true</c> if successful</returns>
+        </member>
+        <member name="M:Febucci.Parsing.FormatUtils.ParseFloat(System.String,System.Single@)">
+            <summary>
+            Tries parsing a float given a string, independently of the system's culture
+            </summary>
+            <param name="value" />
+            <param name="result" />
+            <returns />
+        </member>
+        <member name="T:Febucci.Numbers.Tween">
+            <summary>
+            Helper class used to interpolate effects.
+            </summary>
+        </member>
+        <member name="M:Febucci.Numbers.Tween.BounceTween(System.Single)">
+            <summary>
+            Accepts 0-1
+            </summary>
+            <param name="t" />
+            <returns />
+        </member>
+        <member name="T:Febucci.Numbers.Color32">
+            <summary>
+            RGBA color with byte components (0-255).
+            Compact 4-byte representation for memory efficiency.
+            Used in mesh vertex colors.
+            </summary>
+        </member>
+        <member name="M:Febucci.Numbers.Color32.#ctor(System.Single,System.Single,System.Single,System.Single)">
+            <summary>
+            Creates Color32 from float values [0,1] range
+            </summary>
+        </member>
+        <member name="M:Febucci.Numbers.Color32.LerpUnclamped(Febucci.Numbers.Color32,Febucci.Numbers.Color32,System.Single)">
+            <summary>
+            Lerp between two Color32 values (unclamped).
+            </summary>
+        </member>
+    </members>
+</doc>
