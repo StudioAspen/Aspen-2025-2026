@@ -17,7 +17,7 @@ namespace CharonsCorner.Runtime
         [System.Serializable]
         public class DialogueEffectContainer
         {
-            [field: SerializeReference, SubclassSelector] public DialogueEffect Effect { get; private set; }
+            [field: SerializeReference] public DialogueEffect Effect { get; private set; }
         }
 
         public void ApplyEffects()
