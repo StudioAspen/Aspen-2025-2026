@@ -10,6 +10,8 @@ namespace CharonsCorner.Runtime
         CurrentDialogueOpenerIndex,
         CurrentDialogueSequenceCompleted, // 0 - non finished, 1 - first dialogue finished, 2 - second dialogue finished
         CurrentSRankDialogueIndex,
+        CurrentMomentoDialogueOpenerIndex,
+        CurrentMomentoDialogueSequenceCompleted
     }
 
     /// <summary>
