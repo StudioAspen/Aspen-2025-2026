@@ -76,7 +76,34 @@ namespace CharonsCorner.Runtime
 
         private void DialogueManager_OnDialogueSequenceEndReached(DialogueSequenceSO sequence, DialogueSO dialogue)
         {
-            ShowOptions(new());
+            ShowOptions(new(), true);
+
+            ChapterDialogueEntry currentChapterEntry = _dialogueManager.CurrentBacklog.CurrentChapterDialogue;
+            if (currentChapterEntry != null)
+            {
+                if (currentChapterEntry.DialogueOpener.SequenceOptions.Count == 2)
+                {
+                    int completedIndex =
+                        currentChapterEntry.DialogueOpener.SequenceOptions.FindIndex(s => s == sequence);
+                    if (completedIndex != -1)
+                    {
+                        if (FlagManager.Get(_dialogueManager.CurrentBacklog.CurrentDialogueSequenceCompletedFlag) == 0)
+                            FlagManager.Set(_dialogueManager.CurrentBacklog.CurrentDialogueSequenceCompletedFlag, completedIndex + 1);
+                        else
+                            _dialogueManager.CurrentBacklog.CompleteCurrentDialogueSet();
+                    }
+                }
+                else if (currentChapterEntry.DialogueOpener.SequenceOptions.Count == 1)
+                {
+                    _dialogueManager.CurrentBacklog.CompleteCurrentDialogueSet();
+                }
+            }
+            
+            if (_dialogueManager.CurrentBacklog.CurrentSRankDialogue != null)
+            {
+                if(_dialogueManager.CurrentBacklog.CurrentSRankDialogue.DialogueSequence == sequence)
+                    _dialogueManager.CurrentBacklog.CompleteCurrentSRankDialogueSet();
+            }
         }
 
         private void TypeOutText(string text)
@@ -117,7 +144,7 @@ namespace CharonsCorner.Runtime
             }
         }
 
-        private void ShowOptions(List<DialogueSequenceSO> sequenceOptions)
+        private void ShowOptions(List<DialogueSequenceSO> sequenceOptions, bool willTryShowReturn = false)
         {
             ClearButtons();
 
@@ -131,6 +158,19 @@ namespace CharonsCorner.Runtime
                 button.onClick.AddListener(() => _dialogueManager.StartDialogueSequence(sequence));
             }
 
+            if (willTryShowReturn && _dialogueManager.ReturnAction != null)
+            {
+                GameObject returnButtonObject = Instantiate(_optionButtonPrefab, _optionsContainer);
+                returnButtonObject.name = "ReturnButton";
+                TMP_Text returnButtonText = returnButtonObject.GetComponentInChildren<TMP_Text>();
+                returnButtonText.text = "Return";
+                Button returnButton = returnButtonObject.GetComponent<Button>();
+                returnButton.onClick.AddListener(() =>
+                {
+                    _dialogueManager.ReturnAction.Invoke();
+                });
+            }
+            
             GameObject closeButtonObject = Instantiate(_optionButtonPrefab, _optionsContainer);
             closeButtonObject.name = "CloseButton";
             TMP_Text closeButtonText = closeButtonObject.GetComponentInChildren<TMP_Text>();

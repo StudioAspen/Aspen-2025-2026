@@ -6,8 +6,12 @@ namespace CharonsCorner.Runtime
     public enum ProgressFlag
     {
         TutorialCompleted,
-        World1CurrentChapterIndex,
-        World1CurrentDialogueIndex
+        CurrentChapterIndex,
+        CurrentDialogueOpenerIndex,
+        CurrentDialogueSequenceCompleted, // 0 - non finished, 1 - first dialogue finished, 2 - second dialogue finished
+        CurrentSRankDialogueIndex,
+        CurrentMomentoDialogueOpenerIndex,
+        CurrentMomentoDialogueSequenceCompleted
     }
 
     /// <summary>

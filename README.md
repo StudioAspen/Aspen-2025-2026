@@ -17,10 +17,9 @@ Unity Version 6000.0.58f2
 4. [DOTween (HOTween v2)](https://assetstore.unity.com/packages/tools/animation/dotween-hotween-v2-27676?srsltid=AfmBOornbZYhlGWV3aDX83vnbNypVHFwMPJIVzroHsUGNM_iLoJVLB93)
 5. [uPalette](https://github.com/Haruma-K/uPalette)
 6. [Steamworks.NET](https://github.com/rlabrecque/Steamworks.NET)
-7. [Unity-SerializeReferenceExtensions](https://github.com/mackysoft/Unity-SerializeReferenceExtensions)
-8. [Animancer Pro v8](https://assetstore.unity.com/packages/tools/animation/animancer-pro-v8-293522)
-9. [Odin Inspector](https://odininspector.com/)
-10. [FEEL Asset](https://assetstore.unity.com/packages/tools/particles-effects/feel-183370?srsltid=AfmBOooHa_rwDhJEvoAl4vVXIQqpogJlFllJnpaJ5I5-jwP1xEqtnKd_)
+7. [Animancer Pro v8](https://assetstore.unity.com/packages/tools/animation/animancer-pro-v8-293522)
+8. [Odin Inspector](https://odininspector.com/)
+9. [FEEL Asset](https://assetstore.unity.com/packages/tools/particles-effects/feel-183370?srsltid=AfmBOooHa_rwDhJEvoAl4vVXIQqpogJlFllJnpaJ5I5-jwP1xEqtnKd_)
 
 # License
 Shield: [![CC BY-NC 4.0][cc-by-nc-shield]][cc-by-nc]

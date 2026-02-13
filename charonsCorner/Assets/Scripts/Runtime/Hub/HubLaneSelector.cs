@@ -59,7 +59,7 @@ namespace CharonsCorner.Runtime
         {
             LevelDataSO selectedLaneData = LaneData[CurrentLaneIndex];
             
-            int world1CurrentChapterFlagIndex = FlagManager.Get(ProgressFlag.World1CurrentChapterIndex);
+            int world1CurrentChapterFlagIndex = FlagManager.Get(ProgressFlag.CurrentChapterIndex);
             if (selectedLaneData.WorldFlagIndex > world1CurrentChapterFlagIndex)
             {
                 Debug.LogWarning($"Current progression is at {world1CurrentChapterFlagIndex}, cannot open level select for {selectedLaneData.LevelTitle} (Flag Index: {selectedLaneData.WorldFlagIndex})");

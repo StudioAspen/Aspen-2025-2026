@@ -8,5 +8,7 @@ namespace CharonsCorner.Runtime
     {
         [field: Header("Opener Config")]
         [field: SerializeField] public List<DialogueSequenceSO> SequenceOptions { get; private set; } = new();
+        
+        public void SetSequenceOptions(List<DialogueSequenceSO> sequenceOptions) => SequenceOptions = sequenceOptions;
     }
 }
