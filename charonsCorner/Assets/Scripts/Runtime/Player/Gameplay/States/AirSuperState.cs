@@ -7,6 +7,8 @@ namespace CharonsCorner.Runtime
     {
         public override State<GameplayPlayerController> InitialSubState => MoveState;
         [field: SerializeField] public AirMoveState MoveState { get; private set; } = new();
+        
+        public float InAirTime { get; private set; }
 
         private protected override void InitializeSubStates()
         {
@@ -16,16 +18,17 @@ namespace CharonsCorner.Runtime
         private protected override void OnEnter()
         {
             _context.Rb.linearDamping = 0;
+            InAirTime = 0f;
         }
 
         private protected override void OnExit()
         {
-            
+            InAirTime = 0f;
         }
 
         private protected override void OnUpdate()
         {
-            
+            InAirTime += Time.deltaTime;
         }
 
         private protected override void OnFixedUpdate()
