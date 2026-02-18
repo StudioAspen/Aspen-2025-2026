@@ -26,9 +26,13 @@ public class PinPhysicsRandomizer : MonoBehaviour
     [SerializeField] private float minMassMultiplier = 0.8f;
     [SerializeField] private float maxMassMultiplier = 1.5f;
 
+    [Header("Script References")]
+    [SerializeField] private PinCrashTracker pinCrashTracker;
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
+        pinCrashTracker = GameObject.Find("Player").GetComponent<PinCrashTracker>();
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -42,6 +46,11 @@ public class PinPhysicsRandomizer : MonoBehaviour
         {
             Debug.Log(this.name + " hit by player, randomizing physics!");
             RandomizePhysics(collision);
+
+            if(pinCrashTracker != null)
+                pinCrashTracker.RegisterPinHit(); // Register the pin hit with the crash tracker
+            else
+                Debug.LogWarning("PinCrashTracker not found.");
 
             hasBeenHit = true;
         }
