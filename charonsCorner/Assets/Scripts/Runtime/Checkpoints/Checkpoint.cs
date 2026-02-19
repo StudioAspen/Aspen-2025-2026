@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace CharonsCorner.Runtime
@@ -7,8 +8,10 @@ namespace CharonsCorner.Runtime
     /// </summary>
     public class Checkpoint : MonoBehaviour
     {
-        [SerializeField] private int _checkpointIndex;
-        private Transform _respawnPoint;
+        [SerializeField] public int _checkpointIndex;
+        [SerializeField] private Transform _respawnPoint;
+
+        public static event Action<Checkpoint> OnCheckpointHit;
 
         private void Awake()
         {
@@ -19,12 +22,8 @@ namespace CharonsCorner.Runtime
         private void OnTriggerEnter(Collider other)
         {
             // notify checkpoint manager
-
-        }
-
-        public int GetCheckpointIndex()
-        {
-            return _checkpointIndex;
+            if (!other.CompareTag("Player")) return;
+            OnCheckpointHit?.Invoke(this);
         }
     }
 }

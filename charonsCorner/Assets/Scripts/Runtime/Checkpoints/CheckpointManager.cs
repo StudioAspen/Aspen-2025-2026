@@ -11,22 +11,27 @@ namespace CharonsCorner.Runtime
     {
         private Checkpoint _currentCheckpoint;
 
+        private void OnEnable() => Checkpoint.OnCheckpointHit += HandleCheckpoint;
+        private void OnDisable() => Checkpoint.OnCheckpointHit -= HandleCheckpoint;
+
         /// <summary>
         /// This method sets a checkpoint as active, meaning the one the player will respawn/fly back to after death.
         /// </summary>
         /// <param name="checkpoint">The checkpoint to be set.</param>
-        private void SetActiveCheckpoint(Checkpoint checkpoint)
+        private void HandleCheckpoint(Checkpoint checkpoint)
         {
             if (_currentCheckpoint == null)
             {
                 _currentCheckpoint = checkpoint;
+                Debug.Log($"checkpoint: {_currentCheckpoint._checkpointIndex}");
             }
             else
             {
                 // can only progress forward in checkpoints
-                if (_currentCheckpoint.GetCheckpointIndex() < checkpoint.GetCheckpointIndex()) 
+                if (_currentCheckpoint._checkpointIndex < checkpoint._checkpointIndex) 
                 {
                     _currentCheckpoint = checkpoint;
+                    Debug.Log($"checkpoint: {_currentCheckpoint._checkpointIndex}");
                 }
             }
         }
