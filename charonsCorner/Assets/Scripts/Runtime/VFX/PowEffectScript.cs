@@ -7,14 +7,14 @@ namespace CharonsCorner.Runtime
     public class PowEffectScript : MonoBehaviour
     {
 
-        [SerializeField]private float growDuration = 0.2f;
-        public float growTimer = 0.5f;
+        [SerializeField]private float growDuration {get; set;} = 0.2f;
+        [SerializeField]public float growTimer {get; set;} = 0.5f;
 
 
-        [SerializeField]private float minScale = 1f;
-        [SerializeField]private float maxScale = 2f;
+        [SerializeField]private float minScale {get; set;} = 1f;
+        [SerializeField]private float maxScale {get; set;} = 2f;
         [Tooltip("The maximum speed that will affect the pow effect size. Higher speeds will be clamped to this value.")]
-        [SerializeField]private float maxSpeed = 50f;
+        [SerializeField]private float maxSpeed {get; set;} = 50f;
         
         private Coroutine activateRoutine;
 
