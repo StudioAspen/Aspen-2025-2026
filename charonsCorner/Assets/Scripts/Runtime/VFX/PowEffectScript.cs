@@ -7,15 +7,30 @@ namespace CharonsCorner.Runtime
     public class PowEffectScript : MonoBehaviour
     {
 
-        private float growDuration = 0.2f;
+        [SerializeField]private float growDuration = 0.2f;
         public float growTimer = 0.5f;
 
 
-        private float minScale = 1f;
-        private float maxScale = 2f;
-        private float maxSpeed = 50f;
+        [SerializeField]private float minScale = 1f;
+        [SerializeField]private float maxScale = 2f;
+        [Tooltip("The maximum speed that will affect the pow effect size. Higher speeds will be clamped to this value.")]
+        [SerializeField]private float maxSpeed = 50f;
         
         private Coroutine activateRoutine;
+
+
+        private Camera _mainCamera;
+        void Awake()
+        {
+            _mainCamera = Camera.main;
+        }
+
+        void LateUpdate()
+        {   
+            // Make the pow effect always face the camera
+            transform.forward = _mainCamera.transform.forward;
+        }
+
         
         public void growPin(float speedscale, Vector3 position, Transform lookTarget)
         {

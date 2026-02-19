@@ -9,10 +9,7 @@ namespace CharonsCorner.Runtime
         private bool powActive = false;
         private float currentStrength = 0f;
 
-        void Awake()
-        {
-            
-        }
+        
 
         void OnEnable()
         {
