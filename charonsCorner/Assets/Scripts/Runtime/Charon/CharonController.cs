@@ -85,5 +85,42 @@ namespace CharonsCorner.Runtime
             
             _animator.Play(_reactionAnimations[DialogueReaction.Idle], _animatorFadeDuration);
         }
+
+        /// <summary>
+        /// Plays the provided animation clip using Animancer.
+        /// </summary>
+        /// <param name="clip">The clip to play.</param>
+        public void PlayAnimation(ClipTransition clip)
+        {
+            if (clip != null)
+            {
+                _animator.Play(clip, _animatorFadeDuration);
+            }
+        }
+
+        /// <summary>
+        /// Plays an animation based on the provided index.
+        /// The index corresponds to the values in the DialogueReaction enum.
+        /// </summary>
+        /// <param name="index">The index of the DialogueReaction to play.</param>
+        public void PlayAnimationByIndex(int index)
+        {
+            if (System.Enum.IsDefined(typeof(DialogueReaction), index))
+            {
+                DialogueReaction reaction = (DialogueReaction)index;
+                if (_reactionAnimations.ContainsKey(reaction))
+                {
+                    _animator.Play(_reactionAnimations[reaction], _animatorFadeDuration);
+                }
+                else
+                {
+                    Debug.LogWarning($"[CharonController] Reaction '{reaction}' not found in _reactionAnimations dictionary.");
+                }
+            }
+            else
+            {
+                Debug.LogWarning($"[CharonController] Animation index {index} is out of range for DialogueReaction enum.");
+            }
+        }
     }
 }
