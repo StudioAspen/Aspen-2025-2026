@@ -4,6 +4,7 @@ using Unity.Cinemachine;
 using UnityEditor;
 using UnityEngine;
 using MoreMountains.Feedbacks;
+using UnityEngine.Animations;
 
 namespace CharonsCorner.Runtime
 {
@@ -28,9 +29,8 @@ namespace CharonsCorner.Runtime
 
         [Header("References")]
         [field: SerializeField] public Transform Orientation { get; private set; }
-        
         [field: SerializeField] public CinemachineCamera PlayerCamera { get; private set; }
-
+        [field: SerializeField] public FollowTarget CameraTargetFollowTarget { get; private set; }
         [field: SerializeField] public MMFeedbacks DriftFeedbacks { get; private set; }
 
         public Rigidbody Rb { get; private set; }

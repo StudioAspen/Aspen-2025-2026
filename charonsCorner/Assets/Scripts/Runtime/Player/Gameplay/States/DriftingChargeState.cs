@@ -42,6 +42,7 @@ namespace CharonsCorner.Runtime
         private protected override void OnUpdate()
         {
             _context.PlayerCamera.Lens.FieldOfView = Mathf.Lerp(_context.PlayerCamera.Lens.FieldOfView, _driftDesiredFOV, _fovSpeed * Time.unscaledDeltaTime);
+            _context.CameraTargetFollowTarget.SetPositionOffset(new Vector3(0, Mathf.Lerp(_context.CameraTargetFollowTarget.PositionOffset.y, 1, _fovSpeed * Time.unscaledDeltaTime), 0));
             
             _driftDirection.Rotate(InputManager.Instance.MoveDirection.x * _driftDirectionSpeed * Time.unscaledDeltaTime * Vector3.up);
             
