@@ -1,5 +1,5 @@
-using NaughtyAttributes;
 using System;
+using Sirenix.OdinInspector;
 using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -72,9 +72,17 @@ namespace CharonsCorner.Runtime
         /// Changes the current camera and makes it the active one through Cinemachine.
         /// </summary>
         /// <param name="camera">The camera to switch to.</param>
-        public void ChangeActiveCamera(CinemachineCamera camera)
+        public void ChangeActiveCamera(CinemachineCamera camera, CinemachineBlendDefinition.Styles? blendType = null, float blendDuration = 0.5f)
         {
             CurrentCamera = camera;
+
+            // Change blend type optionally
+            if (blendType.HasValue)
+            {
+                if (Camera.main.TryGetComponent(out CinemachineBrain brain))
+                    brain.DefaultBlend = new CinemachineBlendDefinition(blendType.Value, blendDuration);
+            }
+            
             CurrentCamera.Prioritize();
 
             OnActiveCameraChanged.Invoke(CurrentCamera);

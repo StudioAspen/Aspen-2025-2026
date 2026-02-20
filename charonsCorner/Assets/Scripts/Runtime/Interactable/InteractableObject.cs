@@ -1,5 +1,5 @@
 using Cysharp.Threading.Tasks;
-using NaughtyAttributes;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -45,11 +45,13 @@ namespace CharonsCorner.Runtime
             InputManager.Instance.Interact += InputManager_Interact;
             GameManager.Instance.OnGameStateChanged += GameManager_OnGameStateChanged;
 
-            _inputDisplayerCanvasObject.SetActive(false);
+            _inputDisplayerCanvasObject.SetActive(_isOverlapping);
         }
 
         private void OnDisable()
         {
+            _inputDisplayerCanvasObject.SetActive(false);
+            
             if(InputManager.Instance != null)
                 InputManager.Instance.Interact -= InputManager_Interact;
 
@@ -67,6 +69,9 @@ namespace CharonsCorner.Runtime
 
         private void OnTriggerEnter(Collider other)
         {
+            if (!enabled)
+                return;
+            
             _isOverlapping = true; // No need to filter because this object only looks for player layer
             _inputDisplayerCanvasObject.SetActive(GameManager.Instance.CurrentGameState == GameState.Gameplay);
         }

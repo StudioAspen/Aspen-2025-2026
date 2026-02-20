@@ -15,8 +15,11 @@ namespace CharonsCorner.Runtime
         [Header("Jump Settings")]
         [Tooltip("Force applied when jump is initiated")]
         [SerializeField] private float _jumpForce = 10f;
+        [Tooltip("Grace period to jump after not being grounded")]
+        [SerializeField] private float _coyoteTimeDuration = 0.5f;
         [Tooltip("Scale down upward velocity on early release by this value")]
         [SerializeField, Range(0f, 1f)] private float _earlyReleaseMultiplier = 0.5f;
+        private bool _hasJumped;
 
         [Header("Bounce Settings")]
         [SerializeField] private bool _enableBounce = true;
@@ -49,9 +52,12 @@ namespace CharonsCorner.Runtime
 
         private void OnDisable()
         {
-            InputManager.Instance.JumpPressed -= OnJumpPressed;
-            InputManager.Instance.JumpReleased -= OnJumpReleased;
-            InputManager.Instance.Jump -= OnJumpPerformed;
+            if (InputManager.Instance)
+            {
+                InputManager.Instance.JumpPressed -= OnJumpPressed;
+                InputManager.Instance.JumpReleased -= OnJumpReleased;
+                InputManager.Instance.Jump -= OnJumpPerformed;
+            }
         }
 
         private void OnJumpPerformed()
@@ -62,6 +68,18 @@ namespace CharonsCorner.Runtime
 
         private void OnJumpPressed()
         {
+            if (_hasJumped)
+                return;
+            
+            if (_player.StateMachine.CurrentState == _player.AirSuperState)
+            {
+                if (_player.AirSuperState.InAirTime <= _coyoteTimeDuration)
+                {
+                    Jump();
+                    return;
+                }
+            }
+            
             if (_player.StateMachine.CurrentState != _player.GroundSuperState)
                 return;
             
@@ -80,6 +98,8 @@ namespace CharonsCorner.Runtime
 
         private void Jump()
         {
+            _hasJumped = true;
+            
             // Debug.Log("Jump");
             _player.Rb.linearVelocity = new Vector3(_player.Rb.linearVelocity.x, 0f, _player.Rb.linearVelocity.z);
             _player.Rb.AddForce(_player.Orientation.up * _jumpForce, ForceMode.VelocityChange);
@@ -91,6 +111,8 @@ namespace CharonsCorner.Runtime
         {
             if (_player.JustLanded)
             {
+                _hasJumped = false;
+                
                 Vector3 velocity = _player.Rb.linearVelocity;
 
                 if (_player.SlopeSensor.IsOnSlope) // If on slope, do not bounce
