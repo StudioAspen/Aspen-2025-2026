@@ -78,6 +78,8 @@ namespace CharonsCorner.Runtime
                 _rigidbody.useGravity = true;
                 _rigidbody.isKinematic = false;
                 _rigidbody.WakeUp();
+                Animator pinAnim = GetComponent<Animator>();
+                pinAnim.Play("pinsquash");
             }
 
             float speed = GetApproachSpeed(collision);
