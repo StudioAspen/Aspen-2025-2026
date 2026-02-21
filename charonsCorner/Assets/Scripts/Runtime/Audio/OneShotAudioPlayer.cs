@@ -22,6 +22,7 @@ namespace CharonsCorner.Runtime
         /// <summary>
         /// Plays one shot audio using the parameters from the component.
         /// </summary>
+        [Button("Play", ButtonSizes.Large)]
         public void Play()
         {
             AudioManager.Instance.Play(
