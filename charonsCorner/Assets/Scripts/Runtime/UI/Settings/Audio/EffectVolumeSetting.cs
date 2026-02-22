@@ -6,9 +6,9 @@ namespace CharonsCorner.Runtime
     public class EffectVolumeSetting : Setting
     {
         private protected override string SaveKey => "SFXVolume";
-        private static readonly float DefaultValue = 0.5f;
+        private const float DefaultValue = 0.5f;
 
-        public static float CurrentValue { get; private set; }
+        public static float CurrentValue { get; private set; } = DefaultValue;
 
         [SerializeField] private Slider _effectSlider;
 

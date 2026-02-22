@@ -8,7 +8,7 @@ namespace CharonsCorner.Runtime
         private protected override string SaveKey => "UIVolume";
         private static readonly float DefaultValue = 0.5f;
 
-        public static float CurrentValue { get; private set; }
+        public static float CurrentValue { get; private set; } = DefaultValue;
         [SerializeField] private Slider _dialogueSlider;
 
         private void OnEnable()
