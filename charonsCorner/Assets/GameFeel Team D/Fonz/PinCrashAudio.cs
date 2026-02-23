@@ -1,3 +1,4 @@
+using CharonsCorner.Runtime;
 using UnityEngine;
 
 /// <summary>
@@ -8,35 +9,43 @@ using UnityEngine;
 /// Oftentimes, the player will be hitting a half dozen pins very quickly because of how they are placed in the levels. This system should be able to effectively skip Sound A in these cases, having an instant crash for large amount of pin hits.
 /// </summary>
 
-[RequireComponent(typeof(AudioSource))]
 public class PinCrashAudio : MonoBehaviour
 {
     [Header("Audio Settings")]
-    [SerializeField] private AudioSource pinHitAudioSource; // Audio source for individual pin hits
-    [SerializeField] private AudioClip pinHitClip; // Sound A for single pin hit
-    [SerializeField] private AudioClip pinStrikeClip; // Sound B for multiple pins crashing
+    [SerializeField] private AudioClip _pinHitClip; // Sound A for single pin hit
+    [SerializeField] private AudioClip _pinStrikeClip; // Sound B for multiple pins crashing
 
-    [Header("Pin Crash Tracking Script")]
-    [SerializeField] private PinCrashTracker pinCrashTracker; // Reference to the pin crash tracker to determine how many pins have been hit within the timeframe
+    [Header("Script References")]
+    [SerializeField] private PinCrashTracker _pinCrashTracker; // Reference to the pin crash tracker to determine how many pins have been hit within the timeframe
+    [SerializeField] private OneShotAudioPlayer[] _oneShotAudioPlayers;
 
     void Awake()
     {
-        pinHitAudioSource = GetComponent<AudioSource>();
-        pinCrashTracker = GameObject.Find("Player").GetComponent<PinCrashTracker>();
+        _oneShotAudioPlayers = GetComponents<OneShotAudioPlayer>();
+
+        _pinCrashTracker = GameObject.Find("Player").GetComponent<PinCrashTracker>();
+        if (_pinCrashTracker == null)
+            Debug.LogWarning("PinCrashAudio: PinCrashTracker not assigned.", this);
     }
 
     void OnCollisionEnter(Collision collision)
     {
+        if(_pinCrashTracker == null)
+        {
+            Debug.LogError("PinCrashAudio: PinCrashTracker reference is missing. Cannot determine pin hit count.", this);
+            return;
+        }
+
         if (collision.gameObject.CompareTag("Player"))
         {
-            if (pinCrashTracker.GetPinHitCount() < 4)
+            _pinCrashTracker.RegisterPinHit();
+
+            if (_pinCrashTracker.GetPinHitCount() < 4)
             {
-                Debug.Log("Pin hit! Playing pin hit sound.");
                 PlayPinHitSound();
             }
             else
             {
-                Debug.Log("Multiple pins hit! Playing strike sound.");
                 PlayPinStrikeSound();
             }
         }
@@ -44,14 +53,11 @@ public class PinCrashAudio : MonoBehaviour
 
     private void PlayPinHitSound()
     {
-        pinHitAudioSource.clip = pinHitClip;
-        pinHitAudioSource.pitch = Random.Range(0.95f, 1.05f); // Small pitch variation
-        pinHitAudioSource.Play();
+        _oneShotAudioPlayers[0].Play();
     }
 
     private void PlayPinStrikeSound()
     {
-        pinHitAudioSource.clip = pinStrikeClip;
-        pinHitAudioSource.Play();
+        _oneShotAudioPlayers[1].Play();
     }
 }
