@@ -13,7 +13,8 @@ public class PinCrashTracker : MonoBehaviour
 
     private void ResetPinHitCount()
     {
-        _pinHitCount = 0;
+        if (_pinHitCount > 0)
+            _pinHitCount--;
     }
 
     public int GetPinHitCount() => _pinHitCount;
