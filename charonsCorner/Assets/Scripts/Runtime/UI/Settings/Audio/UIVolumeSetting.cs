@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 namespace CharonsCorner.Runtime
 {
-    public class DialogueVolumeSetting : Setting
+    public class UIVolumeSetting : Setting
     {
         private protected override string SaveKey => "UIVolume";
         private static readonly float DefaultValue = 0.5f;
