@@ -9,7 +9,6 @@ namespace CharonsCorner.Runtime
     public class DriftBoostState : State<GameplayPlayerController>
     {
         [Header("Drift Settings")]
-        [SerializeField] private Transform _driftDirection;
         [SerializeField] private float _maxAngle = 90f;
 
         [SerializeField, ReadOnly] private float _boostAmount;
@@ -40,18 +39,20 @@ namespace CharonsCorner.Runtime
             _context.CurrentSubState = GetType().Name; // for debug
             
             _timer = 0f;
+
+            Vector3 driftDir = GetDriftDirection();
             
             Vector3 currentVel = _context.Rb.linearVelocity;
-            Vector3 currentDir = _driftDirection.forward; // if not moving, treat as aligned -> angle 0
+            Vector3 currentDir = driftDir; // if not moving, treat as aligned -> angle 0
             if (currentVel.sqrMagnitude > 0.0001f)
                 currentDir = currentVel.normalized; // if moving use our curr vel
 
-            float angle = Vector3.Angle(currentDir, _driftDirection.forward);
+            float angle = Vector3.Angle(currentDir, driftDir);
             float boostAmountMultiplier = Mathf.Clamp01(angle / Mathf.Max(0.0001f, _maxAngle)); // Fraction of maxAngle (clamped). Do NOT use look direction.
 
             // Boost scales only with angle (plus optional initial dash). Caps at _maxBoostAmount.
             _boostAmount = Mathf.Min(_maxBoostAmount, (_maxBoostAmount * boostAmountMultiplier) + _initialDashSpeed);
-            _context.Rb.AddForce(_driftDirection.forward * _boostAmount, ForceMode.VelocityChange);
+            _context.Rb.AddForce(driftDir * _boostAmount, ForceMode.VelocityChange);
 
             // Juice
             _context.DriftFeedbacks.PlayFeedbacks();
@@ -67,9 +68,6 @@ namespace CharonsCorner.Runtime
         private protected override void OnExit()
         {
             IsComplete = false;
-            
-            _driftDirection.localEulerAngles = Vector3.zero;
-            _driftDirection.gameObject.SetActive(false);
             
             Time.timeScale = 1;
             
@@ -94,6 +92,17 @@ namespace CharonsCorner.Runtime
         private protected override void OnFixedUpdate()
         {
 
+        }
+
+        private Vector3 GetDriftDirection()
+        {
+            // Use camera if kb/mouse
+            if (InputManager.Instance.CurrentControlScheme == InputManager.ControlScheme.KeyboardMouse)
+                return CameraManager.Instance.CurrentCamera.transform.forward.WithY(0).normalized;
+            
+            // Use stick dir if gamepad
+            return CustomUtils.GetCameraBasedMoveInput(CameraManager.Instance.CurrentCamera.transform,
+                InputManager.Instance.MoveDirection);
         }
     }
 }
