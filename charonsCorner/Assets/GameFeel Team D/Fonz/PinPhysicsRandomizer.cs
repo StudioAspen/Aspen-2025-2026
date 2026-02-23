@@ -1,5 +1,4 @@
 using UnityEngine;
-using static Unity.Cinemachine.LensSettings;
 
 /// <summary>
 /// Codecks Card Summary:
@@ -17,22 +16,18 @@ public class PinPhysicsRandomizer : MonoBehaviour
     private bool hasBeenHit = false;
 
     [Header("Randomization Ranges")]
-    [SerializeField] private float minLaunchForce = 5f;
-    [SerializeField] private float maxLaunchForce = 15f;
+    [SerializeField] private float _minLaunchForce = 5f;
+    [SerializeField] private float _maxLaunchForce = 15f;
 
-    [SerializeField] private float minGravityScale = 0.5f;
-    [SerializeField] private float maxGravityScale = 2f;
+    [SerializeField] private float _minGravityScale = 0.5f;
+    [SerializeField] private float _maxGravityScale = 2f;
 
-    [SerializeField] private float minMassMultiplier = 0.8f;
-    [SerializeField] private float maxMassMultiplier = 1.5f;
-
-    [Header("Script References")]
-    [SerializeField] private PinCrashTracker pinCrashTracker;
+    [SerializeField] private float _minMassMultiplier = 0.8f;
+    [SerializeField] private float _maxMassMultiplier = 1.5f;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
-        pinCrashTracker = GameObject.Find("Player").GetComponent<PinCrashTracker>();
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -47,11 +42,6 @@ public class PinPhysicsRandomizer : MonoBehaviour
             Debug.Log(this.name + " hit by player, randomizing physics!");
             RandomizePhysics(collision);
 
-            if(pinCrashTracker != null)
-                pinCrashTracker.RegisterPinHit(); // Register the pin hit with the crash tracker
-            else
-                Debug.LogWarning("PinCrashTracker not found.");
-
             hasBeenHit = true;
         }
     }
@@ -59,11 +49,11 @@ public class PinPhysicsRandomizer : MonoBehaviour
     private void RandomizePhysics(Collision collision)
     {
         // Random launch force
-        float launchForce = Random.Range(minLaunchForce, maxLaunchForce);
+        float launchForce = Random.Range(_minLaunchForce, _maxLaunchForce);
         // Random gravity scale (simulate by adjusting drag)
-        float gravityScale = Random.Range(minGravityScale, maxGravityScale);
+        float gravityScale = Random.Range(_minGravityScale, _maxGravityScale);
         // Random mass multiplier
-        float massMultiplier = Random.Range(minMassMultiplier, maxMassMultiplier);
+        float massMultiplier = Random.Range(_minMassMultiplier, _maxMassMultiplier);
 
         rb.mass *= massMultiplier;
 
