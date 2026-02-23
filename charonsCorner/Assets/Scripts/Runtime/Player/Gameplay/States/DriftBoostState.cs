@@ -12,10 +12,9 @@ namespace CharonsCorner.Runtime
         [SerializeField] private Transform _driftDirection;
         [SerializeField] private float _maxAngle = 90f;
 
-        [SerializeField] private float _boostAmount;
+        [SerializeField, ReadOnly] private float _boostAmount;
         [SerializeField] private float _maxBoostAmount = 50f;
-        [SerializeField, Tooltip("Base initial dash speed added regardless of angle")]
-        private float _initialDashSpeed;
+        [SerializeField, Tooltip("Base initial dash speed added regardless of angle")] private float _initialDashSpeed = 10f;
         
         [Header("Camera FOV")]
         [SerializeField] private float _baseFOV = 75f;
@@ -57,10 +56,11 @@ namespace CharonsCorner.Runtime
             // Juice
             _context.DriftFeedbacks.PlayFeedbacks();
             _boostVFX.SetActive(true);
+            float boostAmountNormalized = _boostAmount / _maxBoostAmount;
             CameraManager.Instance.CameraShaker.ShakeCamera(
-                _maxCameraShakeAmplitude * boostAmountMultiplier,
-                _maxCameraShakeFrequency * boostAmountMultiplier, 
-                _maxCameraShakeDuration * boostAmountMultiplier
+                _maxCameraShakeAmplitude * boostAmountNormalized,
+                _maxCameraShakeFrequency * boostAmountNormalized, 
+                _maxCameraShakeDuration * boostAmountNormalized
                 );
         }
 
