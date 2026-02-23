@@ -9,6 +9,7 @@ namespace CharonsCorner.Runtime
         [Header("Camera FOV")]
         [SerializeField] private float _driftDesiredFOV = 40;
         [SerializeField] private float _fovSpeed = 5;
+        [SerializeField] private float _cameraTargetHeight = 1f;
         
         [SerializeField] private float _slowPlayerStrength = 5f;
 
@@ -34,7 +35,7 @@ namespace CharonsCorner.Runtime
             _timer += Time.deltaTime;
             
             _context.PlayerCamera.Lens.FieldOfView = Mathf.Lerp(_context.PlayerCamera.Lens.FieldOfView, _driftDesiredFOV, _fovSpeed * Time.deltaTime);
-            _context.CameraTargetFollowTarget.SetPositionOffset(new Vector3(0, Mathf.Lerp(_context.CameraTargetFollowTarget.PositionOffset.y, 1, _fovSpeed * Time.deltaTime), 0));
+            _context.CameraTargetFollowTarget.SetPositionOffset(Vector3.zero.WithY(Mathf.Lerp(_context.CameraTargetFollowTarget.PositionOffset.y, _cameraTargetHeight, _fovSpeed * Time.deltaTime)));
 
             Vector3 horizontalVelocity = _context.Rb.linearVelocity.WithY(0f);
 
