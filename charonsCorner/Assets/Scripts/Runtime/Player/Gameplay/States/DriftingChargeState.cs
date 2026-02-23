@@ -21,10 +21,13 @@ namespace CharonsCorner.Runtime
 
         private protected override void OnEnter()
         {
-            _driftDirection.gameObject.SetActive(true);
+            _context.CurrentSubState = GetType().Name; // for debug
+            
             _timer = 0;
-            _context.CurrentSubState = GetType().Name;
+            
             InputManager.Instance.Drift += Drift;
+            
+            _driftDirection.gameObject.SetActive(true);
         }
 
         private protected override void OnExit()
@@ -39,7 +42,7 @@ namespace CharonsCorner.Runtime
             _context.PlayerCamera.Lens.FieldOfView = Mathf.Lerp(_context.PlayerCamera.Lens.FieldOfView, _driftDesiredFOV, _fovSpeed * Time.deltaTime);
             _context.CameraTargetFollowTarget.SetPositionOffset(new Vector3(0, Mathf.Lerp(_context.CameraTargetFollowTarget.PositionOffset.y, 1, _fovSpeed * Time.deltaTime), 0));
             
-            _driftDirection.Rotate(InputManager.Instance.MoveDirection.x * _driftDirectionSpeed * Time.unscaledDeltaTime * Vector3.up);
+            _driftDirection.Rotate(InputManager.Instance.MoveDirection.x * _driftDirectionSpeed * Time.deltaTime * Vector3.up);
 
             Vector3 horizontalVelocity = _context.Rb.linearVelocity.WithY(0f);
 
