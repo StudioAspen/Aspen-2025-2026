@@ -1,55 +1,51 @@
+using System.Collections;
 using UnityEngine;
-
 
 namespace CharonsCorner.Runtime
 {
     public class PowManager : MonoBehaviour
     {
-        [SerializeField] private PowEffectScript powEffect;
-        private bool powActive = false;
-        private float currentStrength = 0f;
+        [SerializeField] private PowEffectScript _powEffect;
+        private bool _powActive = false;
+        private float _currentStrength = 0f;
 
-        
-
-        void OnEnable()
+        private void OnEnable()
         {
-            PinKnockback.OnPinHit += handlePinHit;
+            PinKnockback.OnPinHit += HandlePinHit;
         }
 
-        void OnDisable()
+        private void OnDisable()
         {
-            PinKnockback.OnPinHit -= handlePinHit;
+            PinKnockback.OnPinHit -= HandlePinHit;
         }
 
-
-        void handlePinHit(Vector3 position, float speedScale, Transform lookTarget)
+        private void HandlePinHit(Vector3 position, float speedScale, Transform lookTarget)
         {
-            if (!powActive)
+            if (!_powActive)
             {
-                playPowEffect(position, speedScale, lookTarget);
+                PlayPowEffect(position, speedScale, lookTarget);
                 return;
             }else
                 return;
         }
 
-        void playPowEffect(Vector3 position, float strength, Transform hitter)
+        private void PlayPowEffect(Vector3 position, float strength, Transform hitter)
         {
-            powEffect.gameObject.SetActive(true);
-            currentStrength = strength;
-            powActive = true;
+            _powEffect.gameObject.SetActive(true);
+            _currentStrength = strength;
+            _powActive = true;
 
-            powEffect.growPin(strength, position + Vector3.up * 1.5f, hitter);
+            _powEffect.GrowPin(strength, position + Vector3.up * 1.5f, hitter);
 
-            StartCoroutine(ResetAfterLifetime(powEffect.growTimer));
+            StartCoroutine(ResetAfterLifetime(_powEffect._growTimer));
         }
 
-        System.Collections.IEnumerator ResetAfterLifetime(float time)
+        private IEnumerator ResetAfterLifetime(float time)
         {
             yield return new WaitForSeconds(time);
-            powActive = false;
-            currentStrength = 0f;
+            _powActive = false;
+            _currentStrength = 0f;
         }
-
     }
 }
 

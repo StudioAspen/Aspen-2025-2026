@@ -6,65 +6,60 @@ namespace CharonsCorner.Runtime
 {
     public class PowEffectScript : MonoBehaviour
     {
-
-        [SerializeField]private float growDuration {get; set;} = 0.2f;
-        [SerializeField]public float growTimer {get; set;} = 0.5f;
-
-
-        [SerializeField]private float minScale {get; set;} = 1f;
-        [SerializeField]private float maxScale {get; set;} = 2f;
-        [Tooltip("The maximum speed that will affect the pow effect size. Higher speeds will be clamped to this value.")]
-        [SerializeField]private float maxSpeed {get; set;} = 50f;
+        [SerializeField] private float _growDuration = 0.2f;
+        [SerializeField] public float _growTimer = 0.5f;
         
-        private Coroutine activateRoutine;
-
-
+        [SerializeField] private float _minScale = 1f;
+        [SerializeField] private float _maxScale = 2f;
+        [Tooltip("The maximum speed that will affect the pow effect size. Higher speeds will be clamped to this value.")]
+        [SerializeField] private float _maxSpeed = 50f;
+        
+        private Coroutine _activateRoutine;
+        
         private Camera _mainCamera;
-        void Awake()
+        
+        private void Awake()
         {
             _mainCamera = Camera.main;
         }
 
-        void LateUpdate()
+        private void LateUpdate()
         {   
             // Make the pow effect always face the camera
             transform.forward = _mainCamera.transform.forward;
         }
-
         
-        public void growPin(float speedscale, Vector3 position, Transform lookTarget)
+        public void GrowPin(float speedScale, Vector3 position, Transform lookTarget)
         {
             transform.position = position;
 
             Vector3 direction = transform.position - lookTarget.position;
             transform.rotation = Quaternion.LookRotation(direction);
 
-            float targetScaleValue = Mathf.Lerp(minScale, maxScale, speedscale);
+            float targetScaleValue = Mathf.Lerp(_minScale, _maxScale, speedScale);
             Vector3 targetScale = Vector3.one * targetScaleValue;
 
-            StartCoroutine(growRoutine(targetScale));
+            StartCoroutine(GrowRoutine(targetScale));
         }
 
-        IEnumerator growRoutine(Vector3 targetScale)
+        private IEnumerator GrowRoutine(Vector3 targetScale)
         {
             transform.localScale = Vector3.one;
 
             float time = 0f;
-
-            while (time < growDuration)
+            while (time < _growDuration)
             {
                 time += Time.deltaTime;
-                transform.localScale = Vector3.Lerp(Vector3.one, targetScale, (time / growDuration));
+                transform.localScale = Vector3.Lerp(Vector3.one, targetScale, (time / _growDuration));
                 yield return null;
             }
 
             transform.localScale = targetScale;
 
-            yield return new WaitForSeconds(growTimer - growDuration);
+            yield return new WaitForSeconds(_growTimer - _growDuration);
 
             gameObject.SetActive(false);
         }
-
     }
 }
 
