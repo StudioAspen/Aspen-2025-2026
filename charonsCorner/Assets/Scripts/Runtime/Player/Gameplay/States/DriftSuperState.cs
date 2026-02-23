@@ -13,14 +13,13 @@ namespace CharonsCorner.Runtime
 
         private protected override void InitializeSubStates()
         {
-            
             DriftingChargeState.Init(SubStateMachine, _context);
             DriftingBoostState.Init(SubStateMachine, _context);
         }
 
         private protected override void OnEnter()
         {
-            SubStateMachine.ChangeState(DriftingChargeState);
+            
         }
 
         private protected override void OnExit()
