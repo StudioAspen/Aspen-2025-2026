@@ -1,3 +1,4 @@
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UIElements;
@@ -22,14 +23,16 @@ namespace CharonsCorner.Runtime
         
         [Header("Time Scale")]
         [SerializeField] private float _timeScaleSpeed = 20f;
-        
         [SerializeField] private float _stateDuration = 0.4f;
 
         [Header("Drift Boost VFX")]
-        [SerializeField] private GameObject _boostVFX;
-        // [SerializeField] private GameObject _boostSpeedLines;
-
-
+        [SerializeField, Required] private GameObject _boostVFX;
+        
+        [Header("Camera Shake")]
+        [SerializeField] private float _cameraShakeDuration = 1f;
+        [SerializeField] private float _cameraShakeAmplitude = 1f;
+        [SerializeField] private float _cameraShakeFrequency = 1f;
+        
         public bool IsComplete { get; private set; }
         private float _timer;
 
@@ -56,7 +59,7 @@ namespace CharonsCorner.Runtime
             _context.DriftFeedbacks.PlayFeedbacks();
             _boostVFX.SetActive(true);
             
-            // _boostSpeedLines.SetActive(true);
+            CameraManager.Instance.CameraShaker.ShakeCamera(_cameraShakeAmplitude, _cameraShakeFrequency, _cameraShakeDuration);
         }
 
         private protected override void OnExit()
@@ -67,12 +70,13 @@ namespace CharonsCorner.Runtime
             Time.timeScale = 1;
             IsComplete = false;
             _boostVFX.SetActive(false);
-            // _boostSpeedLines.SetActive(false);
         }
 
         private protected override void OnUpdate()
         {
             _context.PlayerCamera.Lens.FieldOfView = Mathf.Lerp(_context.PlayerCamera.Lens.FieldOfView, _baseFOV, _fovSpeed * Time.unscaledDeltaTime);
+            _context.CameraTargetFollowTarget.SetPositionOffset(new Vector3(0, Mathf.Lerp(_context.CameraTargetFollowTarget.PositionOffset.y, 0, _fovSpeed * Time.unscaledDeltaTime), 0));
+            
             Time.timeScale = Mathf.Lerp(Time.timeScale, 1, _timeScaleSpeed * Time.unscaledDeltaTime);
             _timer += Time.unscaledDeltaTime;
             IsComplete = _timer >= _stateDuration;
