@@ -1,4 +1,6 @@
+using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace CharonsCorner.Runtime
 {
@@ -10,6 +12,9 @@ namespace CharonsCorner.Runtime
     public class CheckpointManager : MonoBehaviour
     {
         private Checkpoint _currentCheckpoint;
+        [ShowInInspector] public Checkpoint CurrentCheckpoint => _currentCheckpoint;
+
+        [field: SerializeField] public UnityEvent<Checkpoint> OnCheckpointProgressed { get; private set; } = new();
 
         private void OnEnable() => Checkpoint.OnCheckpointHit += HandleCheckpoint;
         private void OnDisable() => Checkpoint.OnCheckpointHit -= HandleCheckpoint;
@@ -23,15 +28,16 @@ namespace CharonsCorner.Runtime
             if (_currentCheckpoint == null)
             {
                 _currentCheckpoint = checkpoint;
-                Debug.Log($"checkpoint: {_currentCheckpoint._checkpointIndex}");
+                Debug.Log($"checkpoint: {_currentCheckpoint.CheckpointIndex}");
             }
             else
             {
                 // can only progress forward in checkpoints
-                if (_currentCheckpoint._checkpointIndex < checkpoint._checkpointIndex) 
+                if (_currentCheckpoint.CheckpointIndex < checkpoint.CheckpointIndex) 
                 {
                     _currentCheckpoint = checkpoint;
-                    Debug.Log($"checkpoint: {_currentCheckpoint._checkpointIndex}");
+                    Debug.Log($"checkpoint: {_currentCheckpoint.CheckpointIndex}");
+                    OnCheckpointProgressed?.Invoke(_currentCheckpoint);
                 }
             }
         }
