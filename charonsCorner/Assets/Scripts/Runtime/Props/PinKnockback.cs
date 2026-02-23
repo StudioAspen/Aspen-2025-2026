@@ -28,6 +28,8 @@ namespace CharonsCorner.Runtime
         private bool _hasBeenHit = false;
         private int _pinLayer = 7;
 
+        private CapsuleCollider _capsuleCollider;
+
         // dampen the "infinite" spinning that happens sometimes
         void FixedUpdate()
         {
@@ -35,7 +37,7 @@ namespace CharonsCorner.Runtime
 
             Vector3 av = _rigidbody.angularVelocity;
             
-            // Kill some Y spin every step (0.0–1.0, closer to 0 = stronger damping)
+            // Kill some Y spin every step (0.0ï¿½1.0, closer to 0 = stronger damping)
             float damping = 0.9f;
             av.y *= damping;
 
@@ -46,6 +48,7 @@ namespace CharonsCorner.Runtime
         private void Awake()
         {
             _rigidbody = GetComponent<Rigidbody>();
+            _capsuleCollider = GetComponent<CapsuleCollider>();
             _rigidbody.interpolation = RigidbodyInterpolation.Interpolate;
 
             // disable physics until hit (so doesnt fall over)
@@ -75,6 +78,7 @@ namespace CharonsCorner.Runtime
                 _rigidbody.useGravity = true;
                 _rigidbody.isKinematic = false;
                 _rigidbody.WakeUp();
+                _capsuleCollider.excludeLayers = new LayerMask(); // clear all layer overrides
             }
 
             float speed = GetApproachSpeed(collision);
