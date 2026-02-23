@@ -4,6 +4,7 @@ using Unity.Cinemachine;
 using UnityEditor;
 using UnityEngine;
 using MoreMountains.Feedbacks;
+using UnityEngine.Animations;
 
 namespace CharonsCorner.Runtime
 {
@@ -28,9 +29,8 @@ namespace CharonsCorner.Runtime
 
         [Header("References")]
         [field: SerializeField] public Transform Orientation { get; private set; }
-        
         [field: SerializeField] public CinemachineCamera PlayerCamera { get; private set; }
-
+        [field: SerializeField] public FollowTarget CameraTargetFollowTarget { get; private set; }
         [field: SerializeField] public MMFeedbacks DriftFeedbacks { get; private set; }
 
         public Rigidbody Rb { get; private set; }
@@ -173,20 +173,23 @@ namespace CharonsCorner.Runtime
 
         private void Drift(bool drift)
         {
-            if (_driftCooldownRoutine != null)
-            {
+            // If releasing dont do anything
+            if (!drift)
                 return;
-            }
 
-            if (drift && _canDrift)
-            {
-                StateMachine.ChangeState(DriftSuperState);
-                _canDrift = false;
-                _driftCooldownRoutine = StartCoroutine(DriftCooldown());
-            }
+            if (!_canDrift)
+                return;
+            
+            if (_driftCooldownRoutine != null)
+                return;
+
+            StateMachine.ChangeState(DriftSuperState);
+            
+            _canDrift = false;
+            _driftCooldownRoutine = StartCoroutine(DriftCooldown());
         }
 
-        IEnumerator DriftCooldown()
+        private IEnumerator DriftCooldown()
         {
             yield return new WaitForSeconds(_driftCooldownTime);
             _canDrift = true;
