@@ -1,4 +1,5 @@
 using CharonsCorner.Runtime;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 /// <summary>
@@ -11,19 +12,15 @@ using UnityEngine;
 
 public class PinCrashAudio : MonoBehaviour
 {
-    [Header("Audio Settings")]
-    [SerializeField] private AudioClip _pinHitClip; // Sound A for single pin hit
-    [SerializeField] private AudioClip _pinStrikeClip; // Sound B for multiple pins crashing
-
+    private PinCrashTracker _pinCrashTracker; // Reference to the pin crash tracker to determine how many pins have been hit within the timeframe
+    
     [Header("Script References")]
-    [SerializeField] private PinCrashTracker _pinCrashTracker; // Reference to the pin crash tracker to determine how many pins have been hit within the timeframe
-    [SerializeField] private OneShotAudioPlayer[] _oneShotAudioPlayers;
+    [SerializeField] private OneShotAudioPlayer _pinHitOneShotAudioPlayer;
+    [SerializeField] private OneShotAudioPlayer _pinStrikeOneShotAudioPlayer;
 
     void Awake()
     {
-        _oneShotAudioPlayers = GetComponents<OneShotAudioPlayer>();
-
-        _pinCrashTracker = GameObject.Find("Player").GetComponent<PinCrashTracker>();
+        _pinCrashTracker = FindAnyObjectByType<PinCrashTracker>();
         if (_pinCrashTracker == null)
             Debug.LogWarning("PinCrashAudio: PinCrashTracker not assigned.", this);
     }
@@ -53,11 +50,11 @@ public class PinCrashAudio : MonoBehaviour
 
     private void PlayPinHitSound()
     {
-        _oneShotAudioPlayers[0].Play();
+        _pinHitOneShotAudioPlayer.Play();
     }
 
     private void PlayPinStrikeSound()
     {
-        _oneShotAudioPlayers[1].Play();
+        _pinStrikeOneShotAudioPlayer.Play();
     }
 }

@@ -1,20 +1,34 @@
+using System;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 public class PinCrashTracker : MonoBehaviour
 {
     [SerializeField] private float _pinHitTimeWindow = 2f; // Time window to track pin hits
-    [SerializeField] private int _pinHitCount = 0; // Count of pins hit within the time window
-
+    [SerializeField, ReadOnly] private int _pinHitCount; // Count of pins hit within the time window
+    private float _hitTimer;
+    
     public void RegisterPinHit()
     {
         _pinHitCount++;
-        Invoke(nameof(ResetPinHitCount), _pinHitTimeWindow); // Reset count after the time window
+        _hitTimer = _pinHitTimeWindow;
+    }
+
+    private void Update()
+    {
+        if (_hitTimer > 0)
+        {
+            _hitTimer -= Time.deltaTime;
+            if (_hitTimer <= 0)
+            {
+                ResetPinHitCount();
+            }
+        }
     }
 
     private void ResetPinHitCount()
     {
-        if (_pinHitCount > 0)
-            _pinHitCount--;
+        _pinHitCount = 0;
     }
 
     public int GetPinHitCount() => _pinHitCount;
