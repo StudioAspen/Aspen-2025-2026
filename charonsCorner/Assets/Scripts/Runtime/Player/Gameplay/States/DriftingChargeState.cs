@@ -7,7 +7,7 @@ namespace CharonsCorner.Runtime
     public class DriftingChargeState : State<GameplayPlayerController>
     {
         [Header("Camera FOV")]
-        [SerializeField] private float _driftDesiredFOV = 40;
+        [SerializeField] private float _driftDesiredFOV = 110f;
         [SerializeField] private float _fovSpeed = 5;
         [SerializeField] private float _cameraTargetHeight = 1f;
         

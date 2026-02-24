@@ -4,6 +4,7 @@ using Unity.Cinemachine;
 using UnityEditor;
 using UnityEngine;
 using MoreMountains.Feedbacks;
+using Sirenix.OdinInspector;
 using UnityEngine.Animations;
 
 namespace CharonsCorner.Runtime
@@ -18,13 +19,11 @@ namespace CharonsCorner.Runtime
 
         [Header("Ground Check")]
         [SerializeField] private float _groundCheckLength = 0.5f;
-
         [SerializeField] private LayerMask _groundLayer;
         
         [Header("Drift Settings")]
         [SerializeField] private bool _canDrift = true;
         [SerializeField] private float _driftCooldownTime = 5f;
-
         private Coroutine _driftCooldownRoutine;
 
         [Header("References")]
@@ -50,9 +49,8 @@ namespace CharonsCorner.Runtime
         [field: SerializeField] public AirSuperState AirSuperState { get; private set; } = new();
         [field: SerializeField] public CannonBallSuperState CannonBallSuperState { get; private set; } = new();
         [field: SerializeField] public DriftSuperState DriftSuperState { get; private set; } = new();
-
         
-        [HideInInspector] public String CurrentSubState;
+        [ReadOnly] public String CurrentSubState;
         #endregion
 
         private void Awake()
