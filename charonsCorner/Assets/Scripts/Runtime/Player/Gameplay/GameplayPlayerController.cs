@@ -14,12 +14,11 @@ namespace CharonsCorner.Runtime
     {
         [Header("References")]
         [SerializeField] private SpawnPointManager _spawnPointManager;
-        
-        [SerializeField] private float _gravityAmount = 30f;
 
         [Header("Ground Check")]
         [SerializeField] private float _groundCheckLength = 0.5f;
         [SerializeField] private LayerMask _groundLayer;
+        [field: SerializeField] public float Gravity { get; private set; } = 40f;
         
         [Header("Drift Settings")]
         [SerializeField] private bool _canDrift = true;
@@ -104,7 +103,7 @@ namespace CharonsCorner.Runtime
 
         public void ApplyGravity()
         {
-            Rb.AddForce(Vector3.down * _gravityAmount, ForceMode.Acceleration);
+            Rb.AddForce(Vector3.down * Gravity, ForceMode.Acceleration);
         }
 
         private Collider[] _overlapResults = new Collider[10]; // Reusable buffer
