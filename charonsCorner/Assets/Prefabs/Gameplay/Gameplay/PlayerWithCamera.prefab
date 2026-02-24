@@ -16384,6 +16384,7 @@ GameObject:
   - component: {fileID: 4433884832927502301}
   - component: {fileID: 3901842472502525159}
   - component: {fileID: 5356967847731882458}
+  - component: {fileID: 5103281777317776927}
   m_Layer: 6
   m_Name: Player
   m_TagString: Player
@@ -16498,8 +16499,8 @@ MonoBehaviour:
       _deceleration: 10
   <DriftSuperState>k__BackingField:
     <DriftingChargeState>k__BackingField:
-      _driftDesiredFOV: 110
-      _fovSpeed: 5
+      _driftDesiredDistance: 12.5
+      _cameraDistanceChangeSpeed: 5
       _cameraTargetHeight: 1
       _slowPlayerStrength: 5
       _stateDuration: 0.5
@@ -16508,8 +16509,7 @@ MonoBehaviour:
       _boostAmount: 50
       _maxBoostAmount: 50
       _initialDashSpeed: 10
-      _baseFOV: 75
-      _fovSpeed: 10
+      _cameraChangeDistanceSpeed: 10
       _timeScaleSpeed: 20
       _stateDuration: 0.4
       _boostVFX: {fileID: 1478407803272307108}
@@ -16865,6 +16865,24 @@ MonoBehaviour:
           m_RotationOrder: 4
         RemapIntensityZero: 0
         RemapIntensityOne: 0.5
+--- !u!114 &5103281777317776927
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7899314738565538664}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6bef1357fbec4fabaf0feead4f2bb0c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _playerController: {fileID: 1432432017151033768}
+  _fovRange:
+    Min: 75
+    Max: 100
+  _lerpCurveEase: 8
+  _lerpSpeed: 15
 --- !u!1 &8045945051936887787
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,3 +1,4 @@
+using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -6,9 +7,9 @@ namespace CharonsCorner.Runtime
     [System.Serializable]
     public class DriftingChargeState : State<GameplayPlayerController>
     {
-        [Header("Camera FOV")]
-        [SerializeField] private float _driftDesiredFOV = 110f;
-        [SerializeField] private float _fovSpeed = 5;
+        [Header("Camera Distance")]
+        [SerializeField] private float _driftDesiredDistance = 7.5f;
+        [SerializeField] private float _cameraDistanceChangeSpeed = 5;
         [SerializeField] private float _cameraTargetHeight = 1f;
         
         [SerializeField] private float _slowPlayerStrength = 5f;
@@ -33,9 +34,11 @@ namespace CharonsCorner.Runtime
         private protected override void OnUpdate()
         {
             _timer += Time.deltaTime;
-            
-            _context.PlayerCamera.Lens.FieldOfView = Mathf.Lerp(_context.PlayerCamera.Lens.FieldOfView, _driftDesiredFOV, _fovSpeed * Time.deltaTime);
-            _context.CameraTargetFollowTarget.SetPositionOffset(Vector3.zero.WithY(Mathf.Lerp(_context.CameraTargetFollowTarget.PositionOffset.y, _cameraTargetHeight, _fovSpeed * Time.deltaTime)));
+
+            _context.DriftSuperState.CameraOrbitalFollow.Radius = Mathf.Lerp(
+                _context.DriftSuperState.CameraOrbitalFollow.Radius, _driftDesiredDistance,
+                _cameraDistanceChangeSpeed * Time.deltaTime);
+            _context.CameraTargetFollowTarget.SetPositionOffset(Vector3.zero.WithY(Mathf.Lerp(_context.CameraTargetFollowTarget.PositionOffset.y, _cameraTargetHeight, _cameraDistanceChangeSpeed * Time.deltaTime)));
 
             Vector3 horizontalVelocity = _context.Rb.linearVelocity.WithY(0f);
 

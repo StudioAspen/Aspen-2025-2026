@@ -15,9 +15,8 @@ namespace CharonsCorner.Runtime
         [SerializeField] private float _maxBoostAmount = 50f;
         [SerializeField, Tooltip("Base initial dash speed added regardless of angle")] private float _initialDashSpeed = 10f;
         
-        [Header("Camera FOV")]
-        [SerializeField] private float _baseFOV = 75f;
-        [SerializeField] private float _fovSpeed = 10f;
+        [Header("Camera Distance")]
+        [SerializeField] private float _cameraChangeDistanceSpeed = 10f;
         
         [Header("Time Scale")]
         [SerializeField] private float _timeScaleSpeed = 20f;
@@ -72,15 +71,16 @@ namespace CharonsCorner.Runtime
             Time.timeScale = 1;
             
             // Reset juice
-            _context.PlayerCamera.Lens.FieldOfView = _baseFOV;
+            _context.DriftSuperState.CameraOrbitalFollow.Radius = _context.DriftSuperState.CameraBaseOrbitalDistance;
+            _context.CameraTargetFollowTarget.SetPositionOffset(Vector3.zero);
             _boostVFX.SetActive(false);
         }
 
         private protected override void OnUpdate()
         {
-            _context.PlayerCamera.Lens.FieldOfView = Mathf.Lerp(_context.PlayerCamera.Lens.FieldOfView, _baseFOV, _fovSpeed * Time.unscaledDeltaTime);
+            _context.DriftSuperState.CameraOrbitalFollow.Radius = Mathf.Lerp(_context.DriftSuperState.CameraOrbitalFollow.Radius, _context.DriftSuperState.CameraBaseOrbitalDistance, _cameraChangeDistanceSpeed * Time.unscaledDeltaTime);
             _context.CameraTargetFollowTarget.SetPositionOffset(
-                Vector3.zero.WithY(Mathf.Lerp(_context.CameraTargetFollowTarget.PositionOffset.y, 0, _fovSpeed * Time.unscaledDeltaTime))
+                Vector3.zero.WithY(Mathf.Lerp(_context.CameraTargetFollowTarget.PositionOffset.y, 0, _cameraChangeDistanceSpeed * Time.unscaledDeltaTime))
                 );
             
             Time.timeScale = Mathf.Lerp(Time.timeScale, 1, _timeScaleSpeed * Time.unscaledDeltaTime);
