@@ -1,0 +1,373 @@
+.mm-feedbacks-list { /* feedbacks list */
+
+}
+
+.mm-feedback-foldout-label, 
+    .mm-feedback-foldout-label:hover, 
+    .mm-feedback-foldout-label:focus, 
+    .mm-feedback-foldout-label:active, 
+    .mm-feedback-foldout-label:selected, 
+    .mm-feedback-foldout-label:checked,
+    .mm-feedbacks-list Label:hover, 
+    .mm-feedbacks-list Label:focus, 
+    .mm-feedbacks-list Label:active { /* labels in the list */
+    color: rgba(220, 220, 220, 1);
+}
+
+.mm-mmf-group .mm-foldout Label,
+.mm-mmf-group .mm-foldout Label:hover,
+.mm-mmf-group .mm-foldout Label:focus,
+.mm-mmf-group .mm-foldout Label:active,
+.mm-mmf-group .mm-foldout Label:selected,
+.mm-mmf-group .mm-foldout Label:checked { /* labels in the foldout groups */
+    color: rgba(220, 220, 220, 1);
+}
+
+.mm-feedbacks-list-title, .mm-feedbacks-list-title:hover { /* feedbacks list title */
+    font-size: 12px;
+    -unity-font-style: bold;
+    padding-left: 15px;
+    padding-right: 6px;
+    margin-top: 10px;
+    padding-bottom: 5px;
+    border-bottom-width: 1px;
+    border-color: black;
+    color: rgba(220, 220, 220, 1);
+}
+
+.mm-feedbacks-list #unity-list-view__reorderable-item { /* feedbacks list item, controls the bg color of the feedback header */
+    border-bottom-width: 1px;
+    border-color: black;
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+.mm-feedbacks-list .mm-feedback-reorder-blocker { /* prevents reordering */
+    background-color: red;    
+    height: 500px;
+    flex-grow: 1;
+    position: absolute;
+    top: 20px;
+    left: 0px;
+    width: 100%;
+}
+
+.mm-feedbacks-list #unity-list-view__reorderable-handle { /* repositionable handle icon container on the left */
+    height: 20px;
+    padding-top: 8px;
+}
+
+.mm-feedbacks-list #unity-list-view__reorderable-handle #unity-list-view__reorderable-handle-bar { /* repositionable handle icon horizontal bars */
+    background-color: rgba(220, 220, 220, .3);
+}
+
+.mm-feedback-edit-script-button-container { /* edit script button container */
+    margin-left: -51px;
+    margin-right: -6px;
+    padding-left: 10px;
+    -unity-text-align: upper-left;
+    border-left-width: 0px;
+    margin-top: -1px;
+    background-color: rgba(255, 255, 255, 0.05);
+    padding-top: 5px;
+    border-top-width: 0px;
+    border-bottom-width: 0px;
+    border-color: black;
+    flex-direction: row;
+    margin-bottom: 1px;
+    -unity-text-align: middle-left; 
+    align-items: flex-start;
+}
+
+.mm-feedback-edit-script-button-label {
+    white-space: normal;
+    -unity-font-style: normal;
+    color: rgba(140, 140, 140, 1);
+    padding: 5px;
+    padding-left: 8px;
+    border-bottom-width: 0px;
+    flex-grow: 0.46;
+    min-width: 104px;
+    padding-top: 2px;
+}
+
+.mm-feedback-edit-script-button-box
+{
+    background-color: rgba(0, 0, 0, 0.2);
+    color: rgba(255, 255, 255, 0.5);
+    margin-right: 5px;
+    flex-grow: 1;
+    flex-direction: row;
+}
+
+.mm-feedback-edit-script-button-box .mm-icon {
+    width: 14px;
+    height: 14px;
+    opacity: 0.5;
+    margin-top: 2px;
+    margin-left: 2px;
+    margin-right: 0px;    
+} 
+
+.mm-feedback-edit-script-button-box .unity-object-field__selector {
+    position: absolute;
+    right: 0px;
+    background-color: rgba(0, 0, 0, 0);
+    opacity: 0.5;
+}
+
+.mm-feedback-edit-script-button-box Button {
+    flex-grow: 1;
+    border-width: 0;
+    background-color: rgba(0, 0, 0, 0);
+    color: rgba(255, 255, 255, 0.5);
+    -unity-text-align: middle-left;
+    padding-left: 0px;
+}
+
+.mm-feedback-help-box { /* help box */
+    margin-left: -51px;
+    margin-right: -6px; 
+    padding-left: 10px;
+    -unity-text-align: upper-left; 
+    border-left-width: 0px;
+    margin-top: -1px;
+    background-color: rgba(255, 255, 255, 0.05);
+    padding-top: 5px;
+    border-top-width: 1px;
+    border-color: black;
+}
+
+.mm-feedback-help-box Label, .mm-feedback-help-box Label:hover { /* help box labels */
+    white-space: normal;
+    -unity-font-style: normal;
+    color: rgba(140, 140, 140, 1);
+    padding: 5px;
+    padding-top: 0px;
+    font-size: 11px;
+}
+
+.mm-feedback-setup-required-box { /* setup required box */
+    margin-left: -51px;
+    margin-right: -6px; 
+    padding-left: 0px;
+    -unity-text-align: upper-left;
+    color: rgba(20, 20, 20, 1);
+    border-top-width: 1px;
+    border-color: black;
+}
+
+.mm-feedback-setup-required-box Label, .mm-feedback-setup-required-box Label:hover { /* setup required box labels */
+    white-space: normal;
+    -unity-font-style: bold;
+    color: rgba(20, 20, 20, 1);
+    background-color: rgb(255, 97, 33);
+    padding: 10px;
+    margin-left: 0px;
+    padding-top: 0px;
+    padding: 10px;
+    font-size: 11px;
+}
+
+.mm-mmf-inspector { /* per feedback inspector */
+    margin-left: -51px;
+    margin-right: -6px;
+    border-top-width: 0px;
+    border-color: black;
+    background-color: rgba(255, 255, 255, 0.1);
+    padding-left: 8px;
+    padding-bottom: 10px;
+}
+
+.mm-mmf-inspector .unity-decorator-drawers-container .unity-header-drawer__label,
+.mm-mmf-inspector .unity-decorator-drawers-container .unity-header-drawer__label:hover{ /* Header attributes */
+    background-color: rgba(255,255,255,0.00);
+    border-color: rgba(59,163,196,0.3); 
+    border-bottom-width: 1px;
+    margin-top: 0px;
+    margin-bottom: 4px;
+    padding-left: 0px;
+    padding-bottom: 2px;
+    margin-left: -10px;
+    color: rgba(59,163,196,1);
+
+}
+
+.unity-foldout__content { /* foldout content */
+    padding-left: 0px;
+    padding-right: 0px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
+
+.mm-mmf-group .mm-foldout { /* feedback foldout */
+    background-color: rgba(0, 0, 0, 0.20);
+    margin-top: 3px;
+}
+
+.mm-mmf-group .mm-foldout-toggle { /* feedback foldout toggle */
+    background-color: rgba(0, 0, 0, 0.08);
+    padding-top: 3px;
+    padding-bottom: 3px;
+    margin-top: 0px;
+}
+
+.mm-feedback-foldout-label { /* feedback foldout label */
+    padding-left: 20px;
+}
+
+.mm-feedback-active-checkbox { /* feedback active checkbox */
+    margin-left: 0px;
+    margin-right: 5px;
+    top: 3px;
+    height: 14px;
+    position: absolute;
+    left: 15px;
+}
+
+.mm-mmf-group #unity-content { /* feedback foldout content */
+    padding-bottom: 10px; 
+}
+
+.mm-feedback-left-border { /* feedback left border */
+    width: 6px;
+    margin-right: 2px;
+    height: 20px;
+}
+
+.mm-feedback-control-buttons { /* play and stop buttons at the bottom */
+    flex-direction: row;
+    justify-content: space-between;
+    margin-left: -51px;
+    margin-right: -6px;
+    background-color: rgba(255, 255, 255, 0.1);
+    padding-left: 4px;
+    padding-right: 5px;
+    padding-bottom: 10px;
+}
+
+.mm-feedback-control-buttons Button { /* play and stop buttons per feedback */
+    flex-grow: 1;
+}
+
+.mm-feedback-header-container { /* feedback header container */
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    height: 21px;
+}
+
+.mm-feedback-group-header-extras { /* feedback subgroup header container */
+    position: absolute;
+    top: 3px;
+    left: 0px;
+    right: 0px;
+    height: 22px;
+}
+
+.mm-feedback-background-color { /* background color of the feedback labels (for pauses, loops etc) */
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    height: 21px;
+}
+
+.mm-feedback-required-target-label { /* required target label */
+    position: absolute;
+    top: 2px;
+    right: 90px;
+    height: 21px;
+    color: rgba(255,255,255,0.4);
+}
+
+.mm-feedback-timing-label { /* required timing label */
+    position: absolute;
+    top: 2px;
+    right: 35px;
+    height: 21px;
+    color: rgba(255,255,255,0.4);
+}
+
+.mm-feedback-contextual-menu-button { /* context menu button */
+    position: absolute;
+    right: 0px;
+    background-color: initial;
+    border-width: 0px;
+    padding-top: 1px;
+}
+
+.mm-feedback-direction-icon { /* direction icon */
+    position: absolute;
+    right: 15px;
+    top: 2px;
+    width: 16px;
+    height: 16px;    
+}
+
+.mm-setup-required-icon { /* setup required icon */
+    position: absolute;
+    right: 90px;
+    top: 2px;
+    width: 16px;
+    height: 16px;
+}
+
+.unity-list-view__empty-label { /* native empty list label */
+    display: none;
+}
+
+.mm-feedbacks-list-empty { /* custom empty list label */
+    padding: 10px;    
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.mm-empty-list-image { /* custom empty list image */
+    width: 75px;
+    min-width: 75px;
+    height: 75px;
+    margin: 0 auto;
+    flex-shrink: 0;
+}
+
+.mm-feedbacks-list-empty Label { /* custom empty list label */
+    background-color: rgba(0, 0, 0, 0.2);
+    padding: 10px;
+    flex-grow: 1;
+    white-space: normal;
+    flex-shrink: 1;
+}
+
+.mm-feedback-progress-line-container { /* progress line */
+    position: absolute;
+    top: 19px;
+    left: -45px;
+    right: -6px;
+    height: 2px;
+}
+
+.mm-feedback-progress-line { /* progress line */
+    position: absolute;
+    height: 2px;
+    width: 0%;
+}
+
+.mm-feedback-group-header-extras .mm-setup-required-icon { /* setup required icon */
+    right: 8px;
+}
+
+.mm-feedbacks-inactive-warning { /* inactive warning */    
+    background-color: rgba(255, 90, 0, 1);
+    color: rgba(255, 255, 255, 0.8);
+    padding: 10px;
+    flex-grow: 1;
+    margin-top: 10px;
+}
+
+.mm-feedbacks-inactive-warning Label { /* inactive warning label */
+    white-space: normal;
+    color: rgba(0,0,0,0.8);
+    font-size: 12px;
+    -unity-font-style: bold;
+}

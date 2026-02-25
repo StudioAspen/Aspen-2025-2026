@@ -1,6 +1,6 @@
-﻿using NaughtyAttributes;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -8,7 +8,6 @@ using static CharonsCorner.Runtime.InputActions;
 
 namespace CharonsCorner.Runtime
 {
-
     public class InputManager : Singleton<InputManager>, IPlayerActions, IUIActions
     {
         [Header("References")]
@@ -21,6 +20,9 @@ namespace CharonsCorner.Runtime
         public event Action<Vector2> Move = delegate { };
         public event Action<Vector2> Look = delegate { };
         public event Action Jump = delegate { };
+        public event Action JumpPressed = delegate { };
+        public event Action JumpReleased = delegate { };
+
         /// <summary>
         /// Invoked when start/stop drifting. True for start, false for stop.
         /// </summary>
@@ -68,7 +70,7 @@ namespace CharonsCorner.Runtime
             playerInput.onControlsChanged += PlayerInput_OnControlsChanged;
         }
 
-        private void OnDestroy()
+        private protected override void OnDestroy()
         {
             playerInput.onControlsChanged -= PlayerInput_OnControlsChanged;
         }
@@ -132,7 +134,10 @@ namespace CharonsCorner.Runtime
 
         public void OnMove(InputAction.CallbackContext context)
         {
-            Move.Invoke(context.ReadValue<Vector2>());
+            if (!context.performed)
+                return;
+
+            Move?.Invoke(context.ReadValue<Vector2>());
         }
 
         public void OnLook(InputAction.CallbackContext context)
@@ -142,10 +147,21 @@ namespace CharonsCorner.Runtime
 
         public void OnJump(InputAction.CallbackContext context)
         {
+            if (context.started)
+            {
+                JumpPressed.Invoke();
+            }
             if (context.performed)
+            {
                 Jump.Invoke();
+            }
+            if (context.canceled)
+            {
+                JumpReleased.Invoke();
+            }
+
         }
- 
+
         public void OnInteract(InputAction.CallbackContext context)
         {
             if (context.performed)
@@ -183,7 +199,7 @@ namespace CharonsCorner.Runtime
             if (selectedObject == null)
                 return;
 
-            if (!UIManager.IsUIObjectInteractable(eventSystem, selectedObject))
+            if (!UIPanel.IsUIObjectInteractable(eventSystem, selectedObject))
                 return;
 
             ExecuteEvents.Execute(selectedObject, new BaseEventData(eventSystem), ExecuteEvents.submitHandler);

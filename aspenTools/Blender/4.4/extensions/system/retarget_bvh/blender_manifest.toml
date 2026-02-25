@@ -1,0 +1,29 @@
+schema_version = "1.0.0"
+
+id = "retarget_bvh"
+version = "5.0.0"
+name = "BVH and FBX Retargeter"
+tagline = "Mocap retargeting tool"
+maintainer = "Thomas Larsson <thomas.larsson.01@gmail.com>"
+type = "add-on"
+website = "https://bitbucket.org/Diffeomorphic/retarget_bvh/wiki/Home/"
+tags = ["Animation"]
+blender_version_min = "4.2.0"
+license = [
+  "SPDX:GPL-2.0-or-later",
+]
+copyright = [
+  "2016-2025 Thomas Larsson",
+]
+
+[permissions]
+files = "Import BVH and FBX files from disk"
+
+[build]
+paths_exclude_pattern = [
+  "__pycache__/",
+  ".git*",
+  "/.git/",
+  "runtime/__pycache__/",
+  "runtime/.git/"
+]

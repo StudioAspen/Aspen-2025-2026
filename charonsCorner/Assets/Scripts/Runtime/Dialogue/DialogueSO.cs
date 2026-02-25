@@ -17,7 +17,7 @@ namespace CharonsCorner.Runtime
         [System.Serializable]
         public class DialogueEffectContainer
         {
-            [field: SerializeReference, SubclassSelector] public DialogueEffect Effect { get; private set; }
+            [field: SerializeReference] public DialogueEffect Effect { get; private set; }
         }
 
         public void ApplyEffects()
@@ -29,5 +29,8 @@ namespace CharonsCorner.Runtime
                 container.Effect.ApplyEffect();
             }
         }
+        
+        public void SetSpeakerName(string speakerName) => SpeakerName = speakerName;
+        public void SetText(string text) => Text = text;
     }
 }
