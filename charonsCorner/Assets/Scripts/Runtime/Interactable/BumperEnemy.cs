@@ -30,6 +30,8 @@ namespace CharonsCorner.Runtime
         // Cache movement direction computed in Update, applied in FixedUpdate
         private Vector3 _currentMoveDirection;
 
+        private GameplayPlayerController gameplayPlayerController;
+
         private void Awake()
         {
             _rigidbody = GetComponent<Rigidbody>();
@@ -44,6 +46,8 @@ namespace CharonsCorner.Runtime
                 _meshRenderer = GetComponentInChildren<MeshRenderer>();
 
             _initialScale = (_meshRenderer != null) ? _meshRenderer.transform.localScale : transform.localScale;
+
+            gameplayPlayerController = FindFirstObjectByType<GameplayPlayerController>();
         }
 
         public void SetAggro(bool enabled, Transform player = null)
@@ -154,6 +158,8 @@ namespace CharonsCorner.Runtime
             {
                 if (_meshRenderer != null)
                 {
+                    gameplayPlayerController?.BumperFeedbacks?.PlayFeedbacks();
+
                     Transform meshTransform = _meshRenderer.transform;
                     meshTransform.DOScale(Vector3.Scale(_initialScale, _squashScale), _squashDuration)
                         .OnComplete(() => meshTransform.DOScale(_initialScale, _stretchDuration));
