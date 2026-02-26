@@ -1,5 +1,7 @@
 using UnityEngine;
 using DG.Tweening;
+using Sirenix.OdinInspector;
+using System.Threading;
 
 namespace CharonsCorner.Runtime
 {
@@ -18,6 +20,11 @@ namespace CharonsCorner.Runtime
         [SerializeField] private float _squashDuration = 0.2f;
         [SerializeField] private float _stretchDuration = 0.2f;
         [SerializeField] private Vector3 _squashScale = new Vector3(1.2f, 0.7f, 1.2f);
+
+        [Header("Effect Settings")]
+        [SerializeField] private ParticleSystem _collisionEffect;
+        [SerializeField] private float _collisionEffectCooldown = 0.5f;
+        private float _collisionEffectTimer = 0f;
 
         private Transform _playerTransform;
         private Vector3 _lastPlayerPosition;
@@ -84,6 +91,10 @@ namespace CharonsCorner.Runtime
             {
                 _currentMoveDirection = Vector3.zero;
             }
+
+            if (_collisionEffectTimer > 0f)
+                _collisionEffectTimer -= Time.deltaTime;
+            
         }
 
         private void FixedUpdate()
@@ -153,7 +164,17 @@ namespace CharonsCorner.Runtime
             if (collision.gameObject.CompareTag("Player"))
             {
                 if (_meshRenderer != null)
-                {
+                {   
+
+                    if (_collisionEffectTimer <= 0f)
+                    {
+                        ContactPoint contact = collision.GetContact(0);
+                        _collisionEffect.transform.position = contact.point;
+                        _collisionEffect.transform.rotation = Quaternion.LookRotation(contact.normal);
+                        _collisionEffect.Play(); 
+                        _collisionEffectTimer = _collisionEffectCooldown;
+                    }          
+
                     Transform meshTransform = _meshRenderer.transform;
                     meshTransform.DOScale(Vector3.Scale(_initialScale, _squashScale), _squashDuration)
                         .OnComplete(() => meshTransform.DOScale(_initialScale, _stretchDuration));
