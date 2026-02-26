@@ -24,6 +24,12 @@ namespace CharonsCorner.Runtime
         public float ShotPower => _shotPower;
         public float ShotLoadTime => _shotLoadTime;
 
+        [Header("Cannon Effects")]
+        [SerializeField] private Transform _barrelEnd;
+        [SerializeField] private ParticleSystem _launchEffect;
+        [SerializeField] private float _effectOffset = 0.5f;
+
+
         [Header("Pillar Movement")]
         [SerializeField] private bool _movingPillar = false;
         [SerializeField] private float _shotAngleMin = 20f;
@@ -85,6 +91,19 @@ namespace CharonsCorner.Runtime
                 Gizmos.DrawLine(previousPosition, calculatedPosition);
                 previousPosition = calculatedPosition;
             }
+        }
+
+
+        public void PlayLaunchEffect()
+        {
+            if (_launchEffect == null || _barrelEnd == null) return;
+            // Calculate Effect Position and Rotation to front of the barrel end
+            Vector3 effectPosition = _barrelEnd.position + (_barrelEnd.forward * _effectOffset);
+            // Set Effect Position and Rotation
+            _launchEffect.transform.position = effectPosition;    
+           _launchEffect.transform.rotation = Quaternion.LookRotation(_barrelEnd.forward, Vector3.up);
+           
+            _launchEffect.Play();
         }
     }
 }
