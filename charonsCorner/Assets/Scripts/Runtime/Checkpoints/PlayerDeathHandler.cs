@@ -3,6 +3,10 @@ using UnityEngine;
 
 namespace CharonsCorner.Runtime
 {
+    /// <summary>
+    /// This script should be attached to the player and includes coroutines to handle the player respawn. 
+    /// The player respawns after hitting a DeathBox, which quickly moves the player back to the current checkpoint.
+    /// </summary>
     public class PlayerDeathHandler : MonoBehaviour
     {
         [Header("References")]
@@ -14,7 +18,7 @@ namespace CharonsCorner.Runtime
         [SerializeField] private float _liftHeight = 3f;
         [SerializeField] private float _liftTime = 0.25f;
         [SerializeField] private float _moveTime = 1f;
-        [SerializeField] AnimationCurve ease = AnimationCurve.EaseInOut(0, 0, 1, 1);
+        [SerializeField] AnimationCurve _ease = AnimationCurve.EaseInOut(0, 0, 1, 1);
         [SerializeField] private float _extraRespawnHeight = 7f; // optional
  
         private bool _isRespawning;
@@ -25,12 +29,22 @@ namespace CharonsCorner.Runtime
             _inputManager = InputManager.Instance;
         }
 
+        /// <summary>
+        /// Respawns the rigidbody to the respawn point.
+        /// </summary>
+        /// <param name="respawnPoint"></param>
         public void RespawnTo(Transform respawnPoint)
         {
             if (_isRespawning) return;
             StartCoroutine(RespawnRoutine(respawnPoint.position, respawnPoint.rotation));
         }
 
+        /// <summary>
+        /// Disables player actions, moves the player back to a target transform, then reenables player actions.
+        /// </summary>
+        /// <param name="targetPos"></param>
+        /// <param name="targetRot"></param>
+        /// <returns></returns>
         private IEnumerator RespawnRoutine(Vector3 targetPos, Quaternion targetRot)
         {
             _isRespawning = true;
@@ -67,6 +81,15 @@ namespace CharonsCorner.Runtime
             _isRespawning = false;
         }
 
+        /// <summary>
+        /// A coroutine to move the player to a target transform.
+        /// </summary>
+        /// <param name="fromPos"></param>
+        /// <param name="toPos"></param>
+        /// <param name="fromRot"></param>
+        /// <param name="toRot"></param>
+        /// <param name="time"></param>
+        /// <returns></returns>
         private IEnumerator MoveOverTime(Vector3 fromPos, Vector3 toPos, 
                                          Quaternion fromRot, Quaternion toRot, 
                                          float time)
@@ -81,7 +104,7 @@ namespace CharonsCorner.Runtime
             while (t < 1f)
             {
                 t += Time.deltaTime / time;
-                float e = ease.Evaluate(Mathf.Clamp01(t));
+                float e = _ease.Evaluate(Mathf.Clamp01(t));
                 transform.SetPositionAndRotation(
                     Vector3.Lerp(fromPos, toPos, e),
                     Quaternion.Slerp(fromRot, toRot, e)

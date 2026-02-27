@@ -5,7 +5,8 @@ using UnityEngine;
 namespace CharonsCorner.Runtime
 {
     /// <summary>
-    /// 
+    /// This class for a "death" box that respawns the player by dragging them back to the track.
+    /// This requires a Trigger Collider and works in tandem with the PlayerDeathHandler and Checkpoint system.
     /// </summary>
     [RequireComponent (typeof(Collider))]
     public class DeathBox : MonoBehaviour
