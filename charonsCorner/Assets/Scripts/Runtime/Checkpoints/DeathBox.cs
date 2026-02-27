@@ -10,19 +10,31 @@ namespace CharonsCorner.Runtime
     [RequireComponent (typeof(Collider))]
     public class DeathBox : MonoBehaviour
     {
-        public static event Action<DeathBox> OnPlayerDeath;
+        [Header("References")]
+        [SerializeField] private CheckpointManager _checkpointManager;
+        [SerializeField] private Transform _respawnPoint;
+
+        private void Start()
+        {
+            if (_checkpointManager == null)
+            {
+                _checkpointManager = FindAnyObjectByType<CheckpointManager>();
+            }        
+        }
 
         private void OnTriggerEnter(Collider other)
         {
             // notify player death handler
             if (!other.CompareTag("Player")) return;
-            Activate();
+            var deathHandler = other.GetComponentInParent<PlayerDeathHandler>();
+            if (!deathHandler) return;
+            
+            if (_checkpointManager != null)
+            {
+                _respawnPoint = _checkpointManager.CurrentCheckpoint.RespawnPoint;
+                deathHandler.RespawnTo(_respawnPoint);
+            }
         }
 
-        [Button("Activate", ButtonSizes.Large)]
-        public void Activate()
-        {
-            OnPlayerDeath?.Invoke(this);
-        }
     }
 }
