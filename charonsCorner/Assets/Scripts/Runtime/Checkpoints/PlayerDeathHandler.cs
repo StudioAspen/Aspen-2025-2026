@@ -11,11 +11,11 @@ namespace CharonsCorner.Runtime
         private InputManager _inputManager;
 
         [Header("Respawn Motion")]
-        [SerializeField] private float _liftHeight = 5f;
-        [SerializeField] private float _liftTime = 0.4f;
+        [SerializeField] private float _liftHeight = 3f;
+        [SerializeField] private float _liftTime = 0.25f;
         [SerializeField] private float _moveTime = 1f;
         [SerializeField] AnimationCurve ease = AnimationCurve.EaseInOut(0, 0, 1, 1);
-        [SerializeField] private float _extraRespawnHeight = 5f; // optional
+        [SerializeField] private float _extraRespawnHeight = 7f; // optional
  
         private bool _isRespawning;
 
