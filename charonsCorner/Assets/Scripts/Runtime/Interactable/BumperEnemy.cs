@@ -26,6 +26,15 @@ namespace CharonsCorner.Runtime
         [SerializeField] private float _collisionEffectCooldown = 0.5f;
         private float _collisionEffectTimer = 0f;
 
+        [Header("Shake Settings")]
+        [SerializeField] private float _shakeDuration = 0.2f;
+        [SerializeField] private float _shakeMagnitude = 0.5f;
+        [SerializeField] private float _shakeFrequency = 10f;
+        
+        private Vector3 _originalLocalPosition;
+        private float _shakeTimer = 0f;
+        private bool _isShaking = false; 
+
         private Transform _playerTransform;
         private Vector3 _lastPlayerPosition;
         private bool _isPlayerInRadius = false;
@@ -40,6 +49,7 @@ namespace CharonsCorner.Runtime
         private void Awake()
         {
             _rigidbody = GetComponent<Rigidbody>();
+            _originalLocalPosition = transform.localPosition;
             if (_rigidbody != null)
             {
                 // Smooth physics at varying frame rates in build
@@ -94,6 +104,21 @@ namespace CharonsCorner.Runtime
 
             if (_collisionEffectTimer > 0f)
                 _collisionEffectTimer -= Time.deltaTime;
+
+
+            if (_shakeTimer > 0f && !_isShaking)
+            {
+                _shakeTimer -= Time.deltaTime;
+                float fade = _shakeTimer / _shakeDuration;
+                Vector3 shakeOffset = Random.insideUnitSphere * _shakeMagnitude * fade;
+                transform.localPosition = _originalLocalPosition + shakeOffset;
+
+            }
+            else
+            {
+                _isShaking = false;
+                transform.localPosition = _originalLocalPosition;
+            }
             
         }
 
@@ -165,6 +190,7 @@ namespace CharonsCorner.Runtime
             {
                 if (_meshRenderer != null)
                 {   
+                    shake();
 
                     if (_collisionEffectTimer <= 0f)
                     {
@@ -186,6 +212,12 @@ namespace CharonsCorner.Runtime
         {
             Gizmos.color = Color.yellow;
             Gizmos.DrawWireSphere(transform.position, _detectionRadius);
+        }
+
+        public void shake()
+        {
+            _shakeTimer = _shakeDuration;
+            _isShaking = true;
         }
     }
 }
