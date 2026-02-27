@@ -1,6 +1,6 @@
 ﻿using DG.Tweening;
-using NaughtyAttributes;
 using System;
+using Sirenix.OdinInspector;
 using Unity.Cinemachine;
 using UnityEngine;
 
@@ -29,8 +29,13 @@ namespace CharonsCorner.Runtime
 
         public void StartOpener()
         {
+            StartOpener(_opener);
+        }
+
+        public void StartOpener(DialogueOpenerSO opener)
+        {
             GameManager.Instance.ChangeGameState(GameState.Dialogue);
-            _dialogueManager.StartDialogueOpener(_opener);
+            _dialogueManager.StartDialogueOpener(opener);
 
             _dialogueManager.OnDialogueEnded += DialogueManager_OnDialogueEnded;
 

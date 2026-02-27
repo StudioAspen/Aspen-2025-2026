@@ -1,24 +1,36 @@
 using System;
+using System.Collections;
 using Unity.Cinemachine;
 using UnityEditor;
 using UnityEngine;
+using MoreMountains.Feedbacks;
+using Sirenix.OdinInspector;
+using UnityEngine.Animations;
 
 namespace CharonsCorner.Runtime
 {
     [RequireComponent(typeof(Rigidbody))]
     public class GameplayPlayerController : MonoBehaviour
     {
+        [Header("References")]
+        [SerializeField] private SpawnPointManager _spawnPointManager;
+        
         [SerializeField] private float _gravityAmount = 30f;
 
         [Header("Ground Check")]
         [SerializeField] private float _groundCheckLength = 0.5f;
-
         [SerializeField] private LayerMask _groundLayer;
         
-        [field: SerializeField] public Transform Orientation { get; private set; }
-        
-        [field: SerializeField] public CinemachineCamera PlayerCamera { get; private set; }
+        [Header("Drift Settings")]
+        [SerializeField] private bool _canDrift = true;
+        [SerializeField] private float _driftCooldownTime = 5f;
+        private Coroutine _driftCooldownRoutine;
 
+        [Header("References")]
+        [field: SerializeField] public Transform Orientation { get; private set; }
+        [field: SerializeField] public CinemachineCamera PlayerCamera { get; private set; }
+        [field: SerializeField] public FollowTarget CameraTargetFollowTarget { get; private set; }
+        [field: SerializeField] public MMFeedbacks DriftFeedbacks { get; private set; }
 
         public Rigidbody Rb { get; private set; }
         public SphereCollider Collider { get; private set; }
@@ -26,8 +38,8 @@ namespace CharonsCorner.Runtime
         public bool IsGrounded { get; private set; }
         public bool CannonAir { get; private set; } = false;
         public CannonBall CurrentCannon { get; private set; }
-        public bool IsTeleporting { get; private set; } = false;
-
+        public bool JustLanded { get; set; }
+        private bool _wasGrounded { get; set; }
 
         #region StateMachine Vars
         public StateMachine<GameplayPlayerController> StateMachine { get; private set; }
@@ -37,10 +49,8 @@ namespace CharonsCorner.Runtime
         [field: SerializeField] public AirSuperState AirSuperState { get; private set; } = new();
         [field: SerializeField] public CannonBallSuperState CannonBallSuperState { get; private set; } = new();
         [field: SerializeField] public DriftSuperState DriftSuperState { get; private set; } = new();
-        [field: SerializeField] public TeleportState TeleportState { get; private set; } = new();
-
-
-        [HideInInspector] public String CurrentSubState;
+        
+        [ReadOnly] public String CurrentSubState;
         #endregion
 
         private void Awake()
@@ -48,18 +58,48 @@ namespace CharonsCorner.Runtime
             Rb = GetComponent<Rigidbody>();
             Collider = GetComponent<SphereCollider>();
             SlopeSensor = GetComponentInChildren<SlopeSensor>();
+            DriftFeedbacks?.Initialization();
             SetupStateMachine();
+        }
+
+        private void Start()
+        {
+            if(_spawnPointManager)
+                _spawnPointManager.OnRespawn += Respawn;
+        }
+
+        private void OnDestroy()
+        {
+            if(_spawnPointManager)
+                _spawnPointManager.OnRespawn -= Respawn;
         }
 
         private void Update()
         {
             StateMachine.Update();
+
+            if (!_canDrift && _driftCooldownRoutine == null)
+            {
+                _driftCooldownRoutine = StartCoroutine(DriftCooldown());
+            }
         }
-        
+
         private void FixedUpdate()
         {
             CheckGrounded();
             StateMachine.FixedUpdate();
+        }
+
+        private void OnEnable()
+        {
+            if (InputManager.Instance != null)
+                InputManager.Instance.Drift += Drift;
+        }
+
+        private void OnDisable()
+        {
+            if (InputManager.Instance != null)
+                InputManager.Instance.Drift -= Drift;
         }
 
         public void ApplyGravity()
@@ -91,7 +131,12 @@ namespace CharonsCorner.Runtime
 
         private void CheckGrounded()
         {
-            IsGrounded = Physics.CheckSphere(transform.position + Vector3.down * _groundCheckLength, Collider.radius * 0.9f, _groundLayer);
+            bool grounded = Physics.CheckSphere(transform.position + Vector3.down * _groundCheckLength, Collider.radius * 0.9f, _groundLayer);
+
+            JustLanded = !_wasGrounded && grounded; // true if we were not grounded last frame but are grounded now
+
+            _wasGrounded = grounded;
+            IsGrounded = grounded;
         }
 
         /// <summary>
@@ -107,8 +152,7 @@ namespace CharonsCorner.Runtime
             AirSuperState.Init(StateMachine, this);
             CannonBallSuperState.Init(StateMachine, this);  
             DriftSuperState.Init(StateMachine, this);
-            TeleportState.Init(StateMachine, this);
-        }
+                    }
 
         public void SetCurrentCannon(CannonBall cannon)
         {
@@ -119,7 +163,36 @@ namespace CharonsCorner.Runtime
             CannonAir = t;
         }
 
-        public void SetIsTeleporting(bool val) => IsTeleporting = val;
+        private void Respawn(Vector3 position)
+        {
+            transform.position = position;
+            Rb.linearVelocity = Vector3.zero;
+        }
+
+        private void Drift(bool drift)
+        {
+            // If releasing dont do anything
+            if (!drift)
+                return;
+
+            if (!_canDrift)
+                return;
+            
+            if (_driftCooldownRoutine != null)
+                return;
+
+            StateMachine.ChangeState(DriftSuperState);
+            
+            _canDrift = false;
+            _driftCooldownRoutine = StartCoroutine(DriftCooldown());
+        }
+
+        private IEnumerator DriftCooldown()
+        {
+            yield return new WaitForSeconds(_driftCooldownTime);
+            _canDrift = true;
+            _driftCooldownRoutine = null;
+        }
 
         private void OnDrawGizmos()
         {
@@ -137,6 +210,6 @@ namespace CharonsCorner.Runtime
                     StateMachine.CurrentState.GetType().Name + ">" + CurrentSubState, style);
             }
         #endif
-        }        
+        }
     }
 }
