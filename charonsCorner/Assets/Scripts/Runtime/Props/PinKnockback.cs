@@ -28,6 +28,7 @@ namespace CharonsCorner.Runtime
         private bool _hasBeenHit = false;
         private int _pinLayer = 7;
 
+        private CapsuleCollider _capsuleCollider;
         // position, speedScale, lookTarget
         public static event Action<Vector3, float, Transform> OnPinHit;
 
@@ -49,6 +50,7 @@ namespace CharonsCorner.Runtime
         private void Awake()
         {
             _rigidbody = GetComponent<Rigidbody>();
+            _capsuleCollider = GetComponent<CapsuleCollider>();
             _rigidbody.interpolation = RigidbodyInterpolation.Interpolate;
 
             // disable physics until hit (so doesnt fall over)
@@ -78,6 +80,7 @@ namespace CharonsCorner.Runtime
                 _rigidbody.useGravity = true;
                 _rigidbody.isKinematic = false;
                 _rigidbody.WakeUp();
+                _capsuleCollider.excludeLayers = new LayerMask(); // clear all layer overrides
                 Animator pinAnim = GetComponent<Animator>();
                 pinAnim.Play("pinsquash");
             }

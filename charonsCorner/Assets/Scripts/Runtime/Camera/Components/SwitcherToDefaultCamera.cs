@@ -4,15 +4,15 @@ using UnityEngine;
 
 namespace CharonsCorner.Runtime
 {
-    public class CameraSwitcher : MonoBehaviour
+    public class SwitcherToDefaultCamera : MonoBehaviour
     {
         [SerializeField] private CinemachineBlendDefinition.Styles _blendType = CinemachineBlendDefinition.Styles.EaseOut;
         [SerializeField] private float _blendDuration = 0.5f;
         
         [Button("Switch", ButtonSizes.Large)]
-        public void SwitchCamera(CinemachineCamera targetCamera)
+        public void SwitchToDefaultCamera()
         {
-            CameraManager.Instance.ChangeActiveCamera(targetCamera, _blendType, _blendDuration);
+            CameraManager.Instance.ChangeActiveCamera(CameraManager.Instance.SceneDefaultCamera, _blendType, _blendDuration);
         }
     }
 }

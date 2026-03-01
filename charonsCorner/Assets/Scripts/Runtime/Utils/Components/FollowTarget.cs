@@ -1,17 +1,27 @@
+using System;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace CharonsCorner.Runtime
 {
     public class FollowTarget : MonoBehaviour
     {
-        private Transform _target;
-        private UpdateMode _updateMode;
+        [SerializeField] private Transform _target;
+        [SerializeField] private UpdateMode _updateMode;
+
+        [field: SerializeField, ReadOnly] public Vector3 StartingPositionOffset { get; private set; }
+        [field: SerializeField] public Vector3 PositionOffset { get; private set; }
     
         public enum UpdateMode
         {
             Default,
             Fixed,
             Late
+        }
+
+        private void Awake()
+        {
+            SetStartingPositionOffset(PositionOffset);
         }
 
         public void Init(Transform target, UpdateMode updateMode = default)
@@ -44,12 +54,23 @@ namespace CharonsCorner.Runtime
             Follow();
         }
 
+        [Button("Teleport to Follow Position", ButtonSizes.Large)]
         private void Follow()
         {
             if (_target == null)
                 return;
         
-            transform.position = _target.position;
+            transform.position = _target.position + PositionOffset;
+        }
+
+        public void SetPositionOffset(Vector3 newOffset)
+        {
+            PositionOffset = newOffset;
+        }
+
+        public void SetStartingPositionOffset(Vector3 newStartingPositionOffset)
+        {
+            StartingPositionOffset = newStartingPositionOffset;
         }
     }
 }
