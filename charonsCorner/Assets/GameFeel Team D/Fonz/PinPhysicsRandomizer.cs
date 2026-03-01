@@ -25,9 +25,19 @@ public class PinPhysicsRandomizer : MonoBehaviour
     [SerializeField] private float _minMassMultiplier = 0.8f;
     [SerializeField] private float _maxMassMultiplier = 1.5f;
 
+    [Header("Original Vals")]
+    [SerializeField] private float _originalMass = 1f;
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
+        _originalMass = rb.mass;
+    }
+
+    private void OnDisable()
+    {
+        rb.mass = _originalMass; // Reset mass when disabled to ensure consistent behavior if re-enabled
+        hasBeenHit = false; // Reset hit state when disabled
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -39,7 +49,6 @@ public class PinPhysicsRandomizer : MonoBehaviour
 
         if (collision.gameObject.CompareTag("Player"))
         {
-            Debug.Log(this.name + " hit by player, randomizing physics!");
             RandomizePhysics(collision);
 
             hasBeenHit = true;
