@@ -44,11 +44,17 @@ public class RankingSystem : MonoBehaviour
 
     void FinalRank()
     {
+        if (_rankScore == null)
+        {
+            Debug.LogError("Rank Score has not been assigned");
+            return;
+        }
+
         List<float> times = new List<float>();
         foreach (var time in _rankScore.Ranks) times.Add(time.Key);
         _rankText.gameObject.SetActive(true);
 
-        // Note: Refactor to a cleaner check
+        // Note: Refactor to a cleaner check & elimate boundary error
         // S Rank Check
         if (_timer < times[0])
         {
@@ -84,12 +90,50 @@ public class RankingSystem : MonoBehaviour
     void CheckPlayerStart()
     {
         if (_hasPlayerStarted) return;
-        _hasPlayerStarted = Physics.CheckSphere(_startCheck.transform.position, _radius, _playerLayer);
+
+        if (_playerLayer == LayerMask.NameToLayer("Nothing"))
+        {
+            Debug.LogError("Player Layer has not been assigned");
+            return;
+        }
+
+        if (_startCheck == null)
+        {
+            Debug.LogError("Start Check's gameObject has not been assigned");
+            return;
+        }
+
+        if (_radius <= 0)
+        {
+            Debug.LogError("Start and End check's radius needs to be higher than 0");
+            return;
+        }
+
+            _hasPlayerStarted = Physics.CheckSphere(_startCheck.transform.position, _radius, _playerLayer);
     }
 
     void CheckPlayerEnd()
     {
         if (_hasPlayerFinished) return;
+
+        if (_playerLayer == LayerMask.NameToLayer("Nothing"))
+        {
+            Debug.LogError("Player Layer has not been assigned");
+            return;
+        }
+
+        if (_endCheck == null)
+        {
+            Debug.LogError("End Check's gameObject has not been assigned");
+            return;
+        }
+
+        if (_radius <= 0)
+        {
+            Debug.LogError("Start and End check's radius needs to be higher than 0");
+            return;
+        }
+
         _hasPlayerFinished = Physics.CheckSphere(_endCheck.transform.position, _radius, _playerLayer);
     }
 
@@ -104,6 +148,12 @@ public class RankingSystem : MonoBehaviour
 
     void UpdateTimerText()
     {
+        if (_timerText == null)
+        {
+            Debug.LogError("Timer text has not been assigned");
+            return;
+        }
+
         int minutes = Mathf.FloorToInt(_timer / 60);
         int seconds = Mathf.FloorToInt(_timer % 60);
         _timerText.text = string.Format("{0:00} : {1:00}", minutes, seconds);
@@ -111,6 +161,8 @@ public class RankingSystem : MonoBehaviour
 
     private void OnDrawGizmos()
     {
+        if (_startCheck == null || _endCheck == null) return;
+
         Gizmos.color = _checkColor;
         Gizmos.DrawSphere(_startCheck.transform.position, _radius);
         Gizmos.DrawSphere(_endCheck.transform.position, _radius);

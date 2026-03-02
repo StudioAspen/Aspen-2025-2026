@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class RankPoint : MonoBehaviour
 {
-    [SerializeField] float[] _times;
+    float[] _times;
 
     int _currNumOfItems;
     readonly int MAX_SIZE = 5;
