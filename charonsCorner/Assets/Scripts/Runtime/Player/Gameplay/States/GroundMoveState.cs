@@ -83,11 +83,13 @@ namespace CharonsCorner.Runtime
                     );
                     bonusForce += downhillDir * (SlopeBoost * slopeFactor * downhillDot);
                 }
+                else
+                {
+                    // might need to cancel gravity?
+                    _context.Rb.AddForce(Vector3.up * _context.Gravity, ForceMode.Acceleration);
+                }
                 
                 _context.Rb.AddForce(-hit.normal * GroundStickForce, ForceMode.Acceleration); // ground stick
-                
-                // might need to cancel gravity?
-                _context.Rb.AddForce(Vector3.up * _context.Gravity, ForceMode.Acceleration);
             }
             else
             {

@@ -2505,6 +2505,37 @@ Transform:
   - {fileID: 1558650273396740317}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &756263548 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7899314738565538664, guid: 383ccfd0ba8258e459f97dff7371efec, type: 3}
+  m_PrefabInstance: {fileID: 1370582937}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &756263555 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1432432017151033768, guid: 383ccfd0ba8258e459f97dff7371efec, type: 3}
+  m_PrefabInstance: {fileID: 1370582937}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 756263548}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 12104891ff0149b082aef4a7db66e22b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &756263557
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 756263548}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c75594ed8819479ea2d887b854cc05d5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _playerController: {fileID: 756263555}
+  _driftCooldownDuration: 1
+  _driftCooldownTimer: 0
 --- !u!1 &905605287
 GameObject:
   m_ObjectHideFlags: 0
@@ -4540,7 +4571,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7899314738565538664, guid: 383ccfd0ba8258e459f97dff7371efec, type: 3}
+      insertIndex: 6
+      addedObject: {fileID: 756263557}
   m_SourcePrefab: {fileID: 100100000, guid: 383ccfd0ba8258e459f97dff7371efec, type: 3}
 --- !u!1 &1491599906
 GameObject:

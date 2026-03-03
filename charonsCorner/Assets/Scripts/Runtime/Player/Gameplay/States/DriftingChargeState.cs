@@ -22,13 +22,11 @@ namespace CharonsCorner.Runtime
             _context.CurrentSubState = GetType().Name; // for debug
             
             _timer = 0;
-            
-            InputManager.Instance.Drift += Drift;
         }
 
         private protected override void OnExit()
         {
-            InputManager.Instance.Drift -= Drift;
+            
         }
 
         private protected override void OnUpdate()
@@ -49,15 +47,6 @@ namespace CharonsCorner.Runtime
         private protected override void OnFixedUpdate()
         {
             
-        }
-        
-        private void Drift(bool drift)
-        {
-            // false means releasing
-            if (!drift) 
-            {
-                _context.DriftSuperState.SubStateMachine.ChangeState(_context.DriftSuperState.DriftingBoostState);
-            }
         }
 
         private protected override State<GameplayPlayerController> GetTransition()
