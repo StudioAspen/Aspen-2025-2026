@@ -91,7 +91,7 @@ public class RankingSystem : MonoBehaviour
     {
         if (_hasPlayerStarted) return;
 
-        if (_playerLayer == LayerMask.NameToLayer("Nothing"))
+        if (_playerLayer.value == 0)
         {
             Debug.LogError("Player Layer has not been assigned");
             return;
