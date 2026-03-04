@@ -170,7 +170,7 @@ namespace CharonsCorner.Runtime
                 if (_meshRenderer != null)
                 {
                     gameplayPlayerController?.BumperFeedbacks?.PlayFeedbacks();
-                {   
+                   
 
                     if (_collisionEffectTimer <= 0f)
                     {

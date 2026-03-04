@@ -7,7 +7,7 @@ namespace CharonsCorner.Runtime
     public class PowEffectScript : MonoBehaviour
     {
         [SerializeField] private float _growDuration = 0.2f;
-        [SerializeField] public float _growTimer = 0.5f;
+        public float GrowTimer { get; private set; } = 0.5f;
         
         [SerializeField] private float _minScale = 1f;
         [SerializeField] private float _maxScale = 2f;
@@ -56,7 +56,7 @@ namespace CharonsCorner.Runtime
 
             transform.localScale = targetScale;
 
-            yield return new WaitForSeconds(_growTimer - _growDuration);
+            yield return new WaitForSeconds(GrowTimer - _growDuration);
 
             gameObject.SetActive(false);
         }

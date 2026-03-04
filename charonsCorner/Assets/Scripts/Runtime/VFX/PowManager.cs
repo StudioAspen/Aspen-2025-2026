@@ -25,8 +25,8 @@ namespace CharonsCorner.Runtime
             {
                 PlayPowEffect(position, speedScale, lookTarget);
                 return;
-            }else
-                return;
+            }
+            return;
         }
 
         private void PlayPowEffect(Vector3 position, float strength, Transform hitter)
@@ -37,7 +37,7 @@ namespace CharonsCorner.Runtime
 
             _powEffect.GrowPin(strength, position + Vector3.up * 1.5f, hitter);
 
-            StartCoroutine(ResetAfterLifetime(_powEffect._growTimer));
+            StartCoroutine(ResetAfterLifetime(_powEffect.GrowTimer));
         }
 
         private IEnumerator ResetAfterLifetime(float time)
