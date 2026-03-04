@@ -4,6 +4,8 @@ using Unity.Cinemachine;
 using UnityEditor;
 using UnityEngine;
 using MoreMountains.Feedbacks;
+using Sirenix.OdinInspector;
+using UnityEngine.Animations;
 
 namespace CharonsCorner.Runtime
 {
@@ -17,20 +19,17 @@ namespace CharonsCorner.Runtime
 
         [Header("Ground Check")]
         [SerializeField] private float _groundCheckLength = 0.5f;
-
         [SerializeField] private LayerMask _groundLayer;
         
         [Header("Drift Settings")]
         [SerializeField] private bool _canDrift = true;
         [SerializeField] private float _driftCooldownTime = 5f;
-
         private Coroutine _driftCooldownRoutine;
 
         [Header("References")]
         [field: SerializeField] public Transform Orientation { get; private set; }
-        
         [field: SerializeField] public CinemachineCamera PlayerCamera { get; private set; }
-
+        [field: SerializeField] public FollowTarget CameraTargetFollowTarget { get; private set; }
         [field: SerializeField] public MMFeedbacks DriftFeedbacks { get; private set; }
 
         public Rigidbody Rb { get; private set; }
@@ -50,9 +49,8 @@ namespace CharonsCorner.Runtime
         [field: SerializeField] public AirSuperState AirSuperState { get; private set; } = new();
         [field: SerializeField] public CannonBallSuperState CannonBallSuperState { get; private set; } = new();
         [field: SerializeField] public DriftSuperState DriftSuperState { get; private set; } = new();
-
         
-        [HideInInspector] public String CurrentSubState;
+        [ReadOnly] public String CurrentSubState;
         #endregion
 
         private void Awake()
@@ -173,20 +171,23 @@ namespace CharonsCorner.Runtime
 
         private void Drift(bool drift)
         {
-            if (_driftCooldownRoutine != null)
-            {
+            // If releasing dont do anything
+            if (!drift)
                 return;
-            }
 
-            if (drift && _canDrift)
-            {
-                StateMachine.ChangeState(DriftSuperState);
-                _canDrift = false;
-                _driftCooldownRoutine = StartCoroutine(DriftCooldown());
-            }
+            if (!_canDrift)
+                return;
+            
+            if (_driftCooldownRoutine != null)
+                return;
+
+            StateMachine.ChangeState(DriftSuperState);
+            
+            _canDrift = false;
+            _driftCooldownRoutine = StartCoroutine(DriftCooldown());
         }
 
-        IEnumerator DriftCooldown()
+        private IEnumerator DriftCooldown()
         {
             yield return new WaitForSeconds(_driftCooldownTime);
             _canDrift = true;

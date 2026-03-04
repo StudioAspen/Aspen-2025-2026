@@ -51,8 +51,6 @@ namespace CharonsCorner.Runtime
             Vector3 forwardOriented;
             Vector3 rightOriented;
             Vector3 bonusForce = Vector3.zero;
-            float dot;
-            Vector3 moveDir;
             // Apply movement along slope if we are on a slope
             if (_context.SlopeSensor.IsOnSlope)
             {
@@ -60,29 +58,35 @@ namespace CharonsCorner.Runtime
                 forwardOriented = Vector3.Cross(_context.Orientation.right, hit.normal).normalized;
                 rightOriented = Vector3.Cross(hit.normal, forwardOriented).normalized;
                 
-                // Add additional force down a slope.
-                float slopeFactor = Mathf.Clamp01(_context.SlopeSensor.CurrentSlopeAngle / _context.SlopeSensor.MaxSlopeAngle);
-                bonusForce += Vector3.ProjectOnPlane(Vector3.down, _context.SlopeSensor.Hit.normal) * (SlopeBoost * slopeFactor);
-                    
-                // Ensure that the player is stuck on the slope
-                _context.Rb.AddForce(-_context.SlopeSensor.Hit.normal * GroundStickForce, ForceMode.Acceleration);
+                // Downhill direction along the slope plane
+                Vector3 downhillDir = Vector3.ProjectOnPlane(Vector3.down, hit.normal).normalized;
                 
-                moveDir = Vector3.ProjectOnPlane(_context.Rb.linearVelocity, hit.normal).normalized;
-                dot = Vector3.Dot(inputDirection, moveDir);
+                // Decide if we should get boosted by the slope.
+                // Use inputDirection when there is input, otherwise use current planar velocity direction.
+                Vector3 planarVel = Vector3.ProjectOnPlane(_context.Rb.linearVelocity, hit.normal);
+                Vector3 intentDir = (input != Vector2.zero)
+                    ? Vector3.ProjectOnPlane(inputDirection, hit.normal).normalized
+                    : (planarVel.sqrMagnitude > 0.0001f ? planarVel.normalized : Vector3.zero);
+
+                // +1 = going downhill, -1 = going uphill
+                float downhillDot = (intentDir == Vector3.zero) ? 0f : Vector3.Dot(intentDir, downhillDir);
+
+                // Only add slope boost when moving/intent is downhill (or at least not uphill)
+                if (downhillDot > 0f)
+                {
+                    float slopeFactor = Mathf.Clamp01(
+                        _context.SlopeSensor.CurrentSlopeAngle /
+                        _context.SlopeSensor.MaxSlopeAngle
+                    );
+                    bonusForce += downhillDir * (SlopeBoost * slopeFactor * downhillDot);
+                }
+                
+                _context.Rb.AddForce(-hit.normal * GroundStickForce, ForceMode.Acceleration); // ground stick
             }
             else
             {
                 forwardOriented = _context.Orientation.forward;
                 rightOriented = _context.Orientation.right;
-                moveDir = _context.Rb.linearVelocity.normalized;
-                dot = Vector3.Dot(inputDirection, moveDir);
-            }
-            
-            // Deceleration force if the player is trying to move while on a slope
-            if (dot < 0f)
-            {
-                Vector3 decelerationForce = -moveDir * (Deceleration * Mathf.Abs(dot));
-                _context.Rb.AddForce(decelerationForce, ForceMode.Acceleration);
             }
             
             Vector3 inputForce = forwardOriented * (input.y * Acceleration) + rightOriented * (input.x * Acceleration);
@@ -93,7 +97,6 @@ namespace CharonsCorner.Runtime
             {
                 _context.Rb.linearVelocity = _context.Rb.linearVelocity.normalized * MaxSpeed;
             }
-            
         }
 
         private protected override State<GameplayPlayerController> GetTransition()
