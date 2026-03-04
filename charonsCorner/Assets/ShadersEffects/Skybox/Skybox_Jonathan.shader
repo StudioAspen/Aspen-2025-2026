@@ -1,9 +1,13 @@
+// TODO: I've set the camera background to Skybox, but now the skybox is showing on the level enter transition. 
 Shader "Custom/VoronoiSkybox"
 {
     Properties
     {
-
+        _BorderColor ("Border Color", Color) = (0.4, 0.075, 0.055, 1.0)
+        _BandColor ("Band Color", Color) = (0.694, 0.475, 0.749, 1.0)
+        _DistortionFactor ("Distortion Factor", Float) = 1.0
     }
+
     SubShader
     {
         Tags { 
@@ -21,6 +25,12 @@ Shader "Custom/VoronoiSkybox"
             #pragma fragment frag
 
             #include "UnityCG.cginc"
+
+            CBUFFER_START(UnityPerMaterial)
+                float4 _BorderColor;
+                float4 _BandColor;
+                float _DistortionFactor; 
+            CBUFFER_END
 
             struct appdata
             {
@@ -154,11 +164,11 @@ Shader "Custom/VoronoiSkybox"
 
                 // Check larger neighborhood for border distances
                 [unroll]
-                for (int y = -2; y <= 2; y++)
+                for (int j = -2; j <= 2; j++)
                 [unroll]
-                for (int x = -2; x <= 2; x++)
+                for (int i = -2; i <= 2; i++)
                 {
-                    float2 neighborOffset = closestCellOffset + float2((float)x, (float)y);
+                    float2 neighborOffset = closestCellOffset + float2((float)i, (float)j);
 
                     float2 featureOffset = hash2(cellBase + neighborOffset);
 
@@ -269,12 +279,11 @@ Shader "Custom/VoronoiSkybox"
                 float2 st = i.uv;
 
                 // texcoord distortion
-                float fbm_factor = 1.; // Higher = more complex distortion
                 float2 basic_fbm = float2(fbm(st + float2(23., 38.)),
                                     fbm(st));
                                     
-                float2 basic_fbm_2 = float2(fbm(st + fbm_factor * basic_fbm + float2(133, 100)), 
-                                        fbm(st + fbm_factor * basic_fbm + float2(321, 230)));
+                float2 basic_fbm_2 = float2(fbm(st + _DistortionFactor * basic_fbm + float2(133, 100)), 
+                                        fbm(st + _DistortionFactor * basic_fbm + float2(321, 230)));
                 
                 // voronoi gradients
                 float2 domain =  float2(10.0, 10.0) * basic_fbm_2;
@@ -284,25 +293,23 @@ Shader "Custom/VoronoiSkybox"
                 float edge_distance = base_map.x;
                 float2 to_feature = base_map.yz;
                     
-                float3 border_color = float3(0.4, 0.075, 0.055);
-                float3 band_color = float3(0.694, 0.475, 0.749);
+
                 float band_frequency = 32.0;
                 
                 // color bands
                 float3 col = edge_distance * (2. + 0.5 * sin(band_frequency * edge_distance)) * float3(1.0, 1.0, 1.0); 
                 col = floor((col + .5) * 4.) / 4.; // turn band gradients into hard lines
-                col *= band_color; // base band color
-
+                col *= _BandColor; // base band color
                 
                 // shapes at voronoi feature points    
                 if(random(cell_id) > 0.5) {
                     float b_b = bowling_ball(0.1, to_feature);
                     b_b = floor(b_b);
-                    col = lerp(col, border_color,b_b); 
+                    col = lerp(col, _BorderColor,b_b); 
                 } else {
                     float bp = bowling_pin(.2, to_feature);
                     bp = floor(bp + 0.5);
-                    col = lerp(col, border_color, bp);
+                    col = lerp(col, _BorderColor, bp);
                 }
                 
                 return float4(col, 1.0);
