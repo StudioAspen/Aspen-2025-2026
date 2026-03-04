@@ -20,6 +20,7 @@ Unity Version 6000.0.58f2
 7. [Animancer Pro v8](https://assetstore.unity.com/packages/tools/animation/animancer-pro-v8-293522)
 8. [Odin Inspector](https://odininspector.com/)
 9. [FEEL Asset](https://assetstore.unity.com/packages/tools/particles-effects/feel-183370?srsltid=AfmBOooHa_rwDhJEvoAl4vVXIQqpogJlFllJnpaJ5I5-jwP1xEqtnKd_)
+10. [Text Animator for Unity](https://assetstore.unity.com/packages/tools/gui/text-animator-for-unity-ui-toolkit-and-text-mesh-pro-341308)
 
 # License
 Shield: [![CC BY-NC 4.0][cc-by-nc-shield]][cc-by-nc]

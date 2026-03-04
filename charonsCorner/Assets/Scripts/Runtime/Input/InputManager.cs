@@ -19,7 +19,6 @@ namespace CharonsCorner.Runtime
         // Player
         public event Action<Vector2> Move = delegate { };
         public event Action<Vector2> Look = delegate { };
-        public event Action Jump = delegate { };
         public event Action JumpPressed = delegate { };
         public event Action JumpReleased = delegate { };
 
@@ -28,6 +27,10 @@ namespace CharonsCorner.Runtime
         /// </summary>
         public event Action<bool> Drift = delegate { };
         public event Action Interact = delegate { };
+        /// <summary>
+        /// Invoked when start/stop QuickRestart. True for start, false for stop.
+        /// </summary>
+        public event Action<bool> QuickRestart = delegate { };
 
         public Vector2 MoveDirection => InputActions.Player.Move.ReadValue<Vector2>();
         public Vector2 LookDirection => InputActions.Player.Look.ReadValue<Vector2>();
@@ -151,15 +154,10 @@ namespace CharonsCorner.Runtime
             {
                 JumpPressed.Invoke();
             }
-            if (context.performed)
-            {
-                Jump.Invoke();
-            }
             if (context.canceled)
             {
                 JumpReleased.Invoke();
             }
-
         }
 
         public void OnInteract(InputAction.CallbackContext context)
@@ -180,6 +178,14 @@ namespace CharonsCorner.Runtime
         {
             if (context.performed)
                 GameManager.Instance.ChangeGameState(GameState.Paused);
+        }
+
+        public void OnQuickRestart(InputAction.CallbackContext context)
+        {
+            if (context.started)
+                QuickRestart.Invoke(true);
+            if (context.canceled)
+                QuickRestart.Invoke(false);
         }
 
         // UI Actions

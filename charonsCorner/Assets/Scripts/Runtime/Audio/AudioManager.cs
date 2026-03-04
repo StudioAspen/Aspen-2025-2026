@@ -24,9 +24,9 @@ namespace CharonsCorner.Runtime
     
         [Space]
         [SerializeField, SerializedDictionary("Audio ID", "Audio Clip")]
-        private SerializedDictionary<StringAsset, AudioClip> _soundBank;
+        private AudioBankSO _soundBank;
         [SerializeField, SerializedDictionary("Audio ID", "Audio Clip")]
-        private SerializedDictionary<StringAsset, AudioClip> _musicBank;
+        private AudioBankSO _musicBank;
     
         private readonly Dictionary<StringAsset, int> _lastPlayedFrame = new();
 
@@ -53,7 +53,7 @@ namespace CharonsCorner.Runtime
                 return;
             _lastPlayedFrame[clip] = frame;
             
-            if (_soundBank.TryGetValue(clip, out AudioClip audioClip))
+            if (_soundBank.Bank.TryGetValue(clip, out AudioClip audioClip))
             {
                 GameObject clipObject = new GameObject(clip, typeof(AudioDestroyer));
                 if(persistAcrossScenes)
@@ -85,7 +85,7 @@ namespace CharonsCorner.Runtime
 
         public void PlayAndFollow(StringAsset clip, Transform target, MixerTarget mixerTarget)
         {
-            if (_soundBank.TryGetValue(clip, out AudioClip audioClip))
+            if (_soundBank.Bank.TryGetValue(clip, out AudioClip audioClip))
             {
                 GameObject clipObject = new GameObject(clip, typeof(AudioDestroyer));
                 AudioSource source = clipObject.AddComponent<AudioSource>();
@@ -110,7 +110,7 @@ namespace CharonsCorner.Runtime
             if (music == null)
                 return;
 
-            if (_musicBank.TryGetValue(music, out AudioClip audioClip))
+            if (_musicBank.Bank.TryGetValue(music, out AudioClip audioClip))
             {
                 _musicSource.clip = audioClip;
                 _musicSource.Play();
