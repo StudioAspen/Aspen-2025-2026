@@ -5,43 +5,32 @@ using UnityEngine;
 
 namespace CharonsCorner.Runtime
 {
-    public class ResolutionSetting : Setting
+    public class ResolutionSetting : SettingsToggleIndex
     {
         private protected override string SaveKey => "Resolution";
         private static int DefaultValue => 0; // Default to the first resolution in the list (highest available in this case)
         public static int CurrentIndex { get; private set; }
 
-        [SerializeField] private TMP_Dropdown _resolutionDropdown;
-
         private static List<Resolution> _validResolutions;
-
-        private void OnEnable()
-        {
-            _resolutionDropdown.value = CurrentIndex;
-        }
+        [SerializeField] private List<TMP_Text> _resolutionOptionTexts; //Text components for each toggle option
 
         public override void Load()
         {
             _validResolutions = GetValidResolutions();
 
-            // Clear existing options and add new ones
-            _resolutionDropdown.ClearOptions();
-            foreach (Resolution resolution in _validResolutions)
-                _resolutionDropdown.options.Add(new TMP_Dropdown.OptionData($"{resolution.width}x{resolution.height}"));
+            PopulateTexts();
 
             CurrentIndex = SaveManager.SettingsStore.GetInt(SaveKey, DefaultValue);
             CurrentIndex = Mathf.Clamp(CurrentIndex, 0, _validResolutions.Count - 1); // Ensure index is within bounds
-            _resolutionDropdown.value = CurrentIndex;
-
-            Resolution selectedResolution = _validResolutions[CurrentIndex];
-            SetResolution(selectedResolution);
+            SetTogglesToIndex(CurrentIndex);
         }
 
         public override void Apply()
         {
-            int windowModeIndex = _resolutionDropdown.value;
-            SaveManager.SettingsStore.SetInt(SaveKey, windowModeIndex);
-            CurrentIndex = windowModeIndex;
+            int selectedIndex = GetSelectedIndex(); // Get index of currently selected toggle
+            
+            SaveManager.SettingsStore.SetInt(SaveKey, selectedIndex);
+            CurrentIndex = selectedIndex;
 
             Resolution selectedResolution = _validResolutions[CurrentIndex];
             SetResolution(selectedResolution);
@@ -49,10 +38,10 @@ namespace CharonsCorner.Runtime
 
         public override void Discard()
         {
-            _resolutionDropdown.value = CurrentIndex;
+            SetTogglesToIndex(CurrentIndex); // Revert toggles to the last applied index
         }
 
-        public override bool IsDirty() => _resolutionDropdown.value != CurrentIndex;
+        public override bool IsDirty() => GetSelectedIndex() != CurrentIndex;
 
         /// <summary>
         /// Filter out duplicate resolutions based on width and height,
@@ -87,5 +76,19 @@ namespace CharonsCorner.Runtime
         /// Helper method to set the resolution, considering fullscreen mode.
         /// </summary>
         private void SetResolution(Resolution resolution) => Screen.SetResolution(resolution.width, resolution.height, Screen.fullScreenMode);
+
+        private void PopulateTexts()
+        {
+            for (int i = 0; i < _resolutionOptionTexts.Count; i++)
+            {
+                bool hasResolution = i < _validResolutions.Count;
+                _resolutionOptionTexts[i].text = 
+                    hasResolution ? $"{_validResolutions[i].width} x {_validResolutions[i].height}" : "N/A";
+                
+                if (i < _toggles.Count && _toggles[i] != null)
+                    _toggles[i].interactable = hasResolution; 
+
+            }
+        }
     }
 }
