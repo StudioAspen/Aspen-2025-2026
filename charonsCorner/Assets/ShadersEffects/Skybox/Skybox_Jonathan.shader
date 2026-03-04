@@ -6,6 +6,7 @@ Shader "Custom/VoronoiSkybox"
         _BorderColor ("Border Color", Color) = (0.4, 0.075, 0.055, 1.0)
         _BandColor ("Band Color", Color) = (0.694, 0.475, 0.749, 1.0)
         _DistortionFactor ("Distortion Factor", Float) = 1.0
+        _Scale ("Scale", Float) = 10.0
     }
 
     SubShader
@@ -30,6 +31,7 @@ Shader "Custom/VoronoiSkybox"
                 float4 _BorderColor;
                 float4 _BandColor;
                 float _DistortionFactor; 
+                float _Scale;
             CBUFFER_END
 
             struct appdata
@@ -286,7 +288,7 @@ Shader "Custom/VoronoiSkybox"
                                         fbm(st + _DistortionFactor * basic_fbm + float2(321, 230)));
                 
                 // voronoi gradients
-                float2 domain =  float2(10.0, 10.0) * basic_fbm_2;
+                float2 domain =  float2(_Scale, _Scale) * basic_fbm_2;
                 float2 cell_id = floor(domain + float2(0.5, 0.5));
                 
                 float3 base_map = voronoi(domain); // B&W map from voronoi noise
