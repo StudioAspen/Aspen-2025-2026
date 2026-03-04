@@ -14,17 +14,11 @@ namespace CharonsCorner.Runtime
     {
         [Header("References")]
         [SerializeField] private SpawnPointManager _spawnPointManager;
-        
-        [SerializeField] private float _gravityAmount = 30f;
 
         [Header("Ground Check")]
         [SerializeField] private float _groundCheckLength = 0.5f;
         [SerializeField] private LayerMask _groundLayer;
-        
-        [Header("Drift Settings")]
-        [SerializeField] private bool _canDrift = true;
-        [SerializeField] private float _driftCooldownTime = 5f;
-        private Coroutine _driftCooldownRoutine;
+        [field: SerializeField] public float Gravity { get; private set; } = 40f;
 
         [Header("References")]
         [field: SerializeField] public Transform Orientation { get; private set; }
@@ -77,11 +71,6 @@ namespace CharonsCorner.Runtime
         private void Update()
         {
             StateMachine.Update();
-
-            if (!_canDrift && _driftCooldownRoutine == null)
-            {
-                _driftCooldownRoutine = StartCoroutine(DriftCooldown());
-            }
         }
 
         private void FixedUpdate()
@@ -90,21 +79,9 @@ namespace CharonsCorner.Runtime
             StateMachine.FixedUpdate();
         }
 
-        private void OnEnable()
-        {
-            if (InputManager.Instance != null)
-                InputManager.Instance.Drift += Drift;
-        }
-
-        private void OnDisable()
-        {
-            if (InputManager.Instance != null)
-                InputManager.Instance.Drift -= Drift;
-        }
-
         public void ApplyGravity()
         {
-            Rb.AddForce(Vector3.down * _gravityAmount, ForceMode.Acceleration);
+            Rb.AddForce(Vector3.down * Gravity, ForceMode.Acceleration);
         }
 
         private Collider[] _overlapResults = new Collider[10]; // Reusable buffer
@@ -167,31 +144,6 @@ namespace CharonsCorner.Runtime
         {
             transform.position = position;
             Rb.linearVelocity = Vector3.zero;
-        }
-
-        private void Drift(bool drift)
-        {
-            // If releasing dont do anything
-            if (!drift)
-                return;
-
-            if (!_canDrift)
-                return;
-            
-            if (_driftCooldownRoutine != null)
-                return;
-
-            StateMachine.ChangeState(DriftSuperState);
-            
-            _canDrift = false;
-            _driftCooldownRoutine = StartCoroutine(DriftCooldown());
-        }
-
-        private IEnumerator DriftCooldown()
-        {
-            yield return new WaitForSeconds(_driftCooldownTime);
-            _canDrift = true;
-            _driftCooldownRoutine = null;
         }
 
         private void OnDrawGizmos()
