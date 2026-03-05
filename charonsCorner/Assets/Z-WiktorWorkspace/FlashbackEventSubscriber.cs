@@ -5,6 +5,8 @@ using MoreMountains.Feedbacks;
 using Eflatun.SceneReference;
 using CharonsCorner.Runtime;
 using Cysharp.Threading.Tasks;
+using Unity.Cinemachine;
+
 public class FlashbackEventSubscriber : MonoBehaviour
 {
     [Header("Level Scenes")]
@@ -15,6 +17,9 @@ public class FlashbackEventSubscriber : MonoBehaviour
     [SerializeField] private SceneReference level4;
     [SerializeField] private SceneReference level5;
     [SerializeField] private SceneReference level6;
+    [SerializeField] private CameraSwitcher cameraSwitcher;
+    [SerializeField] private CinemachineCamera camToBowley;
+    [SerializeField] private CinemachineCamera camToCharon;
     
     private void SwitchToLevel(SceneReference scene)
     {
@@ -63,6 +68,12 @@ public class FlashbackEventSubscriber : MonoBehaviour
                 break;
             case "GoToLevel6":
                 SwitchToLevel(level6);
+                break;
+            case "CamToBowley":
+                cameraSwitcher.SwitchCamera(camToBowley);
+                break;
+            case "CamToCharon":
+                cameraSwitcher.SwitchCamera(camToCharon);
                 break;
         }
     }

@@ -13,8 +13,17 @@ namespace CharonsCorner.Runtime
         }
 
         [SerializeField] private FlashbackDialogueData dialogueData;
+        [SerializeField] private bool _triggerOnStart = true;
 
         private void Start()
+        {
+            if (_triggerOnStart)
+            {
+                TriggerDialogue();
+            }
+        }
+
+        public void TriggerDialogue()
         {
             var dataToUse = _pendingDialogueData != null ? _pendingDialogueData : dialogueData;
 
