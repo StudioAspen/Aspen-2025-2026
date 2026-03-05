@@ -91,6 +91,7 @@ namespace CharonsCorner.Runtime
                     break;
                 case GameState.Cutscene:
                     Time.timeScale = 1f;
+                    InputManager.Instance.EnableUIActions();
                     InputManager.Instance.LockCursor(false);
                     break;
             }
