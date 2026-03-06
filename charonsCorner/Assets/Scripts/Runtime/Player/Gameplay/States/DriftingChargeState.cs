@@ -33,9 +33,13 @@ namespace CharonsCorner.Runtime
         {
             _timer += Time.deltaTime;
 
-            _context.DriftSuperState.CameraOrbitalFollow.Radius = Mathf.Lerp(
-                _context.DriftSuperState.CameraOrbitalFollow.Radius, _driftDesiredDistance,
-                _cameraDistanceChangeSpeed * Time.deltaTime);
+            if (_context.DriftSuperState.CameraOrbitalFollow != null)
+            {
+                _context.DriftSuperState.CameraOrbitalFollow.Radius = Mathf.Lerp(
+                    _context.DriftSuperState.CameraOrbitalFollow.Radius, _driftDesiredDistance,
+                    _cameraDistanceChangeSpeed * Time.deltaTime);
+            }
+
             _context.CameraTargetFollowTarget.SetPositionOffset(Vector3.zero.WithY(Mathf.Lerp(_context.CameraTargetFollowTarget.PositionOffset.y, _cameraTargetHeight, _cameraDistanceChangeSpeed * Time.deltaTime)));
 
             Vector3 horizontalVelocity = _context.Rb.linearVelocity.WithY(0f);

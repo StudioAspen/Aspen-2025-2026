@@ -3272,12 +3272,12 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 133959962}
         m_TargetAssemblyTypeName: CharonsCorner.Runtime.ProgressionModifier, CharonsCorner.Runtime
-        m_MethodName: SetChapterIndex
+        m_MethodName: SetChapter
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 6
+          m_IntArgument: 3
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -8292,11 +8292,6 @@ Transform:
   - {fileID: 230673084}
   m_Father: {fileID: 303907031}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1312008429 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3239045656199082840, guid: b9ad386496e658946b9eec54a042476c, type: 3}
-  m_PrefabInstance: {fileID: 4309455093057115008}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1314349400
 GameObject:
   m_ObjectHideFlags: 0
@@ -9323,27 +9318,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4330120544472715104, guid: b9ad386496e658946b9eec54a042476c, type: 3}
   m_PrefabInstance: {fileID: 4309455093057115008}
   m_PrefabAsset: {fileID: 0}
---- !u!65 &1588631161
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1312008429}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 5.131629, y: 7.060705, z: 7.0844235}
-  m_Center: {x: 2.0658145, y: 3.0303526, z: -3.0422127}
 --- !u!1 &1595005658
 GameObject:
   m_ObjectHideFlags: 0
@@ -12512,7 +12486,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3175922925501080842, guid: 6d48529886416864bbaf3c4def9a0ed6, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 3175922925501080842, guid: 6d48529886416864bbaf3c4def9a0ed6, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_Mode
@@ -12529,7 +12503,7 @@ PrefabInstance:
     - target: {fileID: 3175922925501080842, guid: 6d48529886416864bbaf3c4def9a0ed6, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_Target
       value: 
-      objectReference: {fileID: 1905380463}
+      objectReference: {fileID: 133959962}
     - target: {fileID: 3175922925501080842, guid: 6d48529886416864bbaf3c4def9a0ed6, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_CallState
       value: 2
@@ -12543,6 +12517,10 @@ PrefabInstance:
       value: TriggerDialogue
       objectReference: {fileID: 0}
     - target: {fileID: 3175922925501080842, guid: 6d48529886416864bbaf3c4def9a0ed6, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_MethodName
+      value: ResetProgression
+      objectReference: {fileID: 0}
+    - target: {fileID: 3175922925501080842, guid: 6d48529886416864bbaf3c4def9a0ed6, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
       value: MoreMountains.Feedbacks.MMF_Player, MoreMountains.Tools
       objectReference: {fileID: 0}
@@ -12552,10 +12530,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3175922925501080842, guid: 6d48529886416864bbaf3c4def9a0ed6, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_TargetAssemblyTypeName
-      value: MoreMountains.Feedbacks.MMF_Player, MoreMountains.Tools
+      value: CharonsCorner.Runtime.ProgressionModifier, CharonsCorner.Runtime
       objectReference: {fileID: 0}
     - target: {fileID: 3175922925501080842, guid: 6d48529886416864bbaf3c4def9a0ed6, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 3175922925501080842, guid: 6d48529886416864bbaf3c4def9a0ed6, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 3505983813275946986, guid: 6d48529886416864bbaf3c4def9a0ed6, type: 3}
@@ -12639,29 +12621,21 @@ PrefabInstance:
     m_TransformParent: {fileID: 1412849843}
     m_Modifications:
     - target: {fileID: 67755824260414207, guid: b9ad386496e658946b9eec54a042476c, type: 3}
-      propertyPath: <ChapterDialogues>k__BackingField.Array.size
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 67755824260414207, guid: b9ad386496e658946b9eec54a042476c, type: 3}
-      propertyPath: <ChapterDialogues>k__BackingField.Array.data[0].ChapterIndex
+      propertyPath: <SRankDialogues>k__BackingField.Array.data[0].ChapterIndex
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 67755824260414207, guid: b9ad386496e658946b9eec54a042476c, type: 3}
+      propertyPath: <ChapterDialogues>k__BackingField.Array.data[0].ChapterIndex
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 67755824260414207, guid: b9ad386496e658946b9eec54a042476c, type: 3}
       propertyPath: <ChapterDialogues>k__BackingField.Array.data[1].ChapterIndex
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 67755824260414207, guid: b9ad386496e658946b9eec54a042476c, type: 3}
       propertyPath: <ChapterDialogues>k__BackingField.Array.data[2].ChapterIndex
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
-    - target: {fileID: 67755824260414207, guid: b9ad386496e658946b9eec54a042476c, type: 3}
-      propertyPath: <ChapterDialogues>k__BackingField.Array.data[2].DialogueOpener
-      value: 
-      objectReference: {fileID: 11400000, guid: 37fdc8ae466d6a14eb9c505ccc311a05, type: 2}
-    - target: {fileID: 1237692140379531003, guid: b9ad386496e658946b9eec54a042476c, type: 3}
-      propertyPath: _triggerCollider
-      value: 
-      objectReference: {fileID: 1588631161}
     - target: {fileID: 1494239894049392776, guid: b9ad386496e658946b9eec54a042476c, type: 3}
       propertyPath: _targetCamera
       value: 
@@ -12714,30 +12688,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8024124051656696801, guid: b9ad386496e658946b9eec54a042476c, type: 3}
-      propertyPath: m_Radius
-      value: 3.1296835
-      objectReference: {fileID: 0}
-    - target: {fileID: 8024124051656696801, guid: b9ad386496e658946b9eec54a042476c, type: 3}
-      propertyPath: m_Center.x
-      value: 1.5365944
-      objectReference: {fileID: 0}
-    - target: {fileID: 8024124051656696801, guid: b9ad386496e658946b9eec54a042476c, type: 3}
-      propertyPath: m_Center.y
-      value: 1.2326288
-      objectReference: {fileID: 0}
-    - target: {fileID: 8024124051656696801, guid: b9ad386496e658946b9eec54a042476c, type: 3}
-      propertyPath: m_Center.z
-      value: -0.085529804
-      objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 8024124051656696801, guid: b9ad386496e658946b9eec54a042476c, type: 3}
+    m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 3239045656199082840, guid: b9ad386496e658946b9eec54a042476c, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1588631161}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b9ad386496e658946b9eec54a042476c, type: 3}
 --- !u!224 &4888355179610827103 stripped
 RectTransform:
