@@ -1,4 +1,5 @@
 // TODO: I've set the camera background to Skybox, but now the skybox is showing on the level enter transition. 
+// I've started mapping the skybox to spherical coords, but theres a big ass seam.
 Shader "Custom/VoronoiSkybox"
 {
     Properties
@@ -22,6 +23,8 @@ Shader "Custom/VoronoiSkybox"
         Pass
         {
             CGPROGRAM
+
+
             #pragma vertex vert
             #pragma fragment frag
 
@@ -34,28 +37,24 @@ Shader "Custom/VoronoiSkybox"
                 float _Scale;
             CBUFFER_END
 
-            struct appdata
-            {
+            struct appdata {
                 float4 vertex : POSITION;
                 float2 uv : TEXCOORD0;
             };
 
-            struct v2f
-            {
-                float2 uv : TEXCOORD0;
+            struct v2f {
                 float4 vertex : SV_POSITION;
-                float4 localPos : TEXCOORD1;
-
+                float3 viewDir : TEXCOORD0;
             };
-
 
             v2f vert (appdata v)
             {
                 v2f o;
 
-                o.uv = v.uv;
                 o.vertex = UnityObjectToClipPos(v.vertex);
-                o.localPos = v.vertex;
+
+                // For skybox cube, object space position IS direction
+                o.viewDir = normalize(v.vertex.xyz);
 
                 return o;
             }
@@ -101,22 +100,19 @@ Shader "Custom/VoronoiSkybox"
                 return value;
             }
 
-            float2 hash2(float2 p)
-            {
+            float2 hash2(float2 p) {
                 // Procedural white noise
                 return frac(sin(float2(dot(p, float2(127.1, 311.7)), dot(p, float2(269.5, 183.3)))) * 43758.5453);
             }
 
-            float2 offset_voronoi_feature(in float2 feature_position)
-            {
+            float2 offset_voronoi_feature(in float2 feature_position) {
                 float timeScaled = _Time * 0.2;
                 return 0.1 * sin(timeScaled + 6.2831 * feature_position);
             }
 
 
             // This is from Inigo Quilez — just renamed variables to nicer names
-            float3 voronoi(float2 position)
-            {
+            float3 voronoi(float2 position) {
                 // Integer grid cell containing the point
                 float2 cellBase = floor(position);
 
@@ -196,18 +192,15 @@ Shader "Custom/VoronoiSkybox"
                 return float3(minEdgeDistance, minDistSquared, cellId.x);
             }
 
-            float ball(in float radius, in float d)
-            {
+            float ball(in float radius, in float d) {
                 return smoothstep(radius + (radius / 5.0), radius, d);
             }
 
-            float ball_outline(in float radius, in float d)
-            {
+            float ball_outline(in float radius, in float d) {
                 return ball(radius, d) - ball(radius - (radius / 3.5), d);
             }
 
-            float bowling_ball(in float radius, float2 to_feature)
-            {
+            float bowling_ball(in float radius, float2 to_feature) {
                 float d = length(to_feature);
                 float bowling_ball = ball_outline(radius, d);
 
@@ -223,8 +216,7 @@ Shader "Custom/VoronoiSkybox"
                 return bowling_ball;
             }
 
-            float sdEllipse(in float2 p, in float2 ab)
-            {
+            float sdEllipse(in float2 p, in float2 ab) {
                 p = abs(p);
                 if (p.x > p.y) { p = p.yx; ab = ab.yx; }
 
@@ -262,24 +254,28 @@ Shader "Custom/VoronoiSkybox"
                 return length(r - p) * sign(p.y - r.y);
             }
 
-            float ellipse_outline(in float2 p, in float2 ab)
-            {
+            float ellipse_outline(in float2 p, in float2 ab) {
                 return smoothstep(0.02, 0.0, sdEllipse(p, ab))
                     - smoothstep(0.02, 0.0, sdEllipse(p, ab * float2(0.8, 0.8)));
             }
 
-            float bowling_pin(in float radius, float2 to_feature)
-            {
+
+            float bowling_pin(in float radius, float2 to_feature) {
                 float d = ellipse_outline(to_feature, float2(radius, radius / 2.0));
                 d += ball_outline(radius / 2.0, length(to_feature - float2(radius, 0.0)));
                 d += smoothstep(0.01, 0.0, sdEllipse(to_feature - float2(radius - radius / 4.0, 0.0),
                                                     float2(radius / 4.0, radius / 2.0)));
                 return d;
             }
-            float4 frag (v2f i) : SV_Target
-            {
-                float2 st = i.uv;
 
+            float2 cartToPolar(float3 coord) {
+                float u = atan2(coord.x, coord.z) / (UNITY_PI * 2);
+                float v = asin(coord.y) / (UNITY_PI / 2);
+                return float2(u, v);
+            }
+            float4 frag (v2f i) : SV_Target {
+                float2 st = cartToPolar(i.viewDir);
+                
                 // texcoord distortion
                 float2 basic_fbm = float2(fbm(st + float2(23., 38.)),
                                     fbm(st));
@@ -289,6 +285,7 @@ Shader "Custom/VoronoiSkybox"
                 
                 // voronoi gradients
                 float2 domain =  float2(_Scale, _Scale) * basic_fbm_2;
+                // float2 domain =  float2(_Scale, _Scale) * st;
                 float2 cell_id = floor(domain + float2(0.5, 0.5));
                 
                 float3 base_map = voronoi(domain); // B&W map from voronoi noise
@@ -316,6 +313,7 @@ Shader "Custom/VoronoiSkybox"
                 
                 return float4(col, 1.0);
             }
+
             ENDCG
         }
     }
