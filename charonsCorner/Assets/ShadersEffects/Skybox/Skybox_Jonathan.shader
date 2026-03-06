@@ -7,7 +7,7 @@ Shader "Custom/VoronoiSkybox"
         _BorderColor ("Border Color", Color) = (0.4, 0.075, 0.055, 1.0)
         _BandColor ("Band Color", Color) = (0.694, 0.475, 0.749, 1.0)
         _DistortionFactor ("Distortion Factor", Float) = 1.0
-        _Scale ("Scale", Float) = 1.0
+        _Scale ("Scale", Float) = 10.0
     }
 
     SubShader
@@ -121,10 +121,10 @@ Shader "Custom/VoronoiSkybox"
 
             float3 offset_voronoi_feature(in float3 feature_position) {
                 float timeScaled = _Time;
-                return 0.5 * sin(timeScaled + 6.2831 * feature_position);
+                return 0.3 * sin(timeScaled + 6.2831 * feature_position);
             }
 
-            float3 voronoi3d(float3 p)
+            float4 voronoi3d(float3 p)
             {
                 float3 base = floor(p);
                 float3 local = frac(p);
@@ -196,7 +196,7 @@ Shader "Custom/VoronoiSkybox"
                     }
                 }
 
-                return float3(edgeDist, vecToClosest.xy);
+                return float4(edgeDist, vecToClosest);
             }
 
             float ball(in float radius, in float d) {
@@ -207,7 +207,7 @@ Shader "Custom/VoronoiSkybox"
                 return ball(radius, d) - ball(radius - (radius / 3.5), d);
             }
 
-            float bowling_ball(in float radius, float2 to_feature) {
+            float bowling_ball(in float radius, float3 to_feature) {
                 float d = length(to_feature);
                 float bowling_ball = ball_outline(radius, d);
 
@@ -218,8 +218,8 @@ Shader "Custom/VoronoiSkybox"
                 float mini_radius = radius / 5.0;
                 bowling_ball += ball(mini_radius, hole1);
                 bowling_ball += ball(mini_radius, hole2);
-                bowling_ball += ball(mini_radius, hole3);
-
+                bowling_ball += ball(mini_radius, hole3); 
+                               
                 return bowling_ball;
             }
 
@@ -291,19 +291,21 @@ Shader "Custom/VoronoiSkybox"
                 float3 domain = dir * _Scale;
                 float3 cell_id = floor(domain + float3(0.5, 0.5, 0.5));
                 
-                float3 base_map = voronoi3d(domain); // B&W map from voronoi noise
+                float4 base_map = voronoi3d(domain); // B&W map from voronoi noise
                 float edge_distance = base_map.x;
-                float2 to_feature = base_map.yz;
-                    
-
-                float band_frequency = 32.0;
+                float3 to_feature = base_map.yzw;
                 
                 // color bands
+                float band_frequency = 32.0;
                 float3 col = edge_distance * (2. + 0.5 * sin(band_frequency * edge_distance)) * float3(1.0, 1.0, 1.0); 
                 col = floor((col + .5) * 4.) / 4.; // turn band gradients into hard lines
                 col *= _BandColor; // base band color
                 
                 // shapes at voronoi feature points    
+                float b_b = bowling_ball(0.1, to_feature);
+                b_b = floor(b_b);
+                col = lerp(col, _BorderColor, b_b); 
+
                 /*
                 if(random3(cell_id) > 0.5) {
                     float b_b = bowling_ball(0.1, to_feature);
@@ -314,9 +316,9 @@ Shader "Custom/VoronoiSkybox"
                     bp = floor(bp + 0.5);
                     col = lerp(col, _BorderColor, bp);
                 }
-                    */
+                */
                 
-                return float4(base_map, 1.0);
+                return float4(col, 1.0);
             }
 
             ENDCG
