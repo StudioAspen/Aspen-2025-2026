@@ -187,9 +187,10 @@ Shader "Custom/VoronoiSkybox"
                     }
                 }
 
-                // Return: edge distance, cell distance, and a cell ID hash
-                float2 cellId = hash2(cellBase + closestCellOffset);
-                return float3(minEdgeDistance, minDistSquared, cellId.x);
+                // Return:
+                // x = distance to edge
+                // y,z = vector to closest feature point
+                return float3(minEdgeDistance, vectorToClosestPoint);
             }
 
             float ball(in float radius, in float d) {
