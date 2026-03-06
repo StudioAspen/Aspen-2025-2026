@@ -59,44 +59,56 @@ Shader "Custom/VoronoiSkybox"
                 return o;
             }
 
-            float random(in float2 st) {
+            float random3(float3 p)
+            {
                 return frac(
-                    sin(
-                        dot(st.xy, float2(12.9898,78.233))
-                    ) * 43758.5453123
+                    sin(dot(p, float3(12.9898, 78.233, 37.719))) 
+                    * 43758.5453123
                 );
             }
 
-            // Based on Morgan McGuire @morgan3d https://www.shadertoy.com/view/4dS3Wd
-            float noise(in float2 st) {
-                float2 i = floor(st);
-                float2 f = frac(st);
+            float noise3(float3 p)
+            {
+                float3 i = floor(p);
+                float3 f = frac(p);
 
-                // Four corners in 2D of a tile
-                float a = random(i);
-                float b = random(i + float2(1.0, 0.0));
-                float c = random(i + float2(0.0, 1.0));
-                float d = random(i + float2(1.0, 1.0));
+                // smooth interpolation curve
+                float3 u = f * f * (3.0 - 2.0 * f);
 
-                float2 u = f * f * (3.0 - 2.0 * f);
+                // 8 corners of the cube
+                float n000 = random3(i + float3(0,0,0));
+                float n100 = random3(i + float3(1,0,0));
+                float n010 = random3(i + float3(0,1,0));
+                float n110 = random3(i + float3(1,1,0));
+                float n001 = random3(i + float3(0,0,1));
+                float n101 = random3(i + float3(1,0,1));
+                float n011 = random3(i + float3(0,1,1));
+                float n111 = random3(i + float3(1,1,1));
 
-                return lerp(a, b, u.x) +
-                        (c - a)* u.y * (1.0 - u.x) +
-                        (d - b) * u.x * u.y;
+                // trilinear interpolation
+                float nx00 = lerp(n000, n100, u.x);
+                float nx10 = lerp(n010, n110, u.x);
+                float nx01 = lerp(n001, n101, u.x);
+                float nx11 = lerp(n011, n111, u.x);
+
+                float nxy0 = lerp(nx00, nx10, u.y);
+                float nxy1 = lerp(nx01, nx11, u.y);
+
+                return lerp(nxy0, nxy1, u.z);
             }
 
-            float fbm (in float2 st) {
-                // Initial values
+            float fbm3(float3 p)
+            {
                 float value = 0.0;
-                float amplitude = .5;
-                float frequency = 0.;
-                //
-                // Loop of octaves
-                for (int i = 0; i < 4; i++) {
-                    value += amplitude * noise(st);
-                    st *= 2.;
-                    amplitude *= .5;
+                float amplitude = 0.5;
+
+                for(int i = 0; i < 4; i++)
+                {
+                    value += amplitude * noise3(p);
+                    p *= 2.0;
+                    amplitude *= 0.5;
                 }
+
                 return value;
             }
 
@@ -105,94 +117,94 @@ Shader "Custom/VoronoiSkybox"
                 return frac(sin(float2(dot(p, float2(127.1, 311.7)), dot(p, float2(269.5, 183.3)))) * 43758.5453);
             }
 
-            float2 offset_voronoi_feature(in float2 feature_position) {
+            float3 hash3(float3 p)
+            {
+                return frac(sin(float3(
+                    dot(p, float3(127.1,311.7, 74.7)),
+                    dot(p, float3(269.5,183.3,246.1)),
+                    dot(p, float3(113.5,271.9,124.6))
+                )) * 43758.5453);
+            }
+
+            float3 offset_voronoi_feature(in float3 feature_position) {
                 float timeScaled = _Time * 0.2;
                 return 0.1 * sin(timeScaled + 6.2831 * feature_position);
             }
 
-
-            // This is from Inigo Quilez — just renamed variables to nicer names
-            float3 voronoi(float2 position) {
-                // Integer grid cell containing the point
-                float2 cellBase = floor(position);
-
-                // Local coordinates inside the cell (0–1 range)
-                float2 localPos = frac(position);
+            float3 voronoi3d(float3 p)
+            {
+                float3 base = floor(p);
+                float3 local = frac(p);
 
                 //----------------------------------
-                // PASS 1: Find closest feature point
+                // PASS 1: closest feature point
                 //----------------------------------
 
-                float2 closestCellOffset;     // Which neighboring cell had the closest point
-                float2 vectorToClosestPoint;  // Vector from pixel to closest feature point
+                float3 closestCell;
+                float3 vecToClosest;
 
-                float minDistSquared = 8.0;   // Large initial distance
+                float minDist = 10.0;
 
-                // Check 3x3 neighborhood of cells
                 [unroll]
-                for (int y = -1; y <= 1; y++)
+                for(int z=-1; z<=1; z++)
                 [unroll]
-                for (int x = -1; x <= 1; x++)
+                for(int y=-1; y<=1; y++)
+                [unroll]
+                for(int x=-1; x<=1; x++)
                 {
-                    float2 neighborOffset = float2((float)x, (float)y);
+                    float3 cell = float3(x,y,z);
 
-                    // Random feature point inside this neighbor cell
-                    float2 featureOffset = hash2(cellBase + neighborOffset);
+                    float3 feature = hash3(base + cell);
 
-                    featureOffset = offset_voronoi_feature(featureOffset);
+                    feature = offset_voronoi_feature(feature);
 
-                    // Vector from current pixel to feature point
-                    float2 diff = neighborOffset + featureOffset - localPos;
+                    float3 diff = cell + feature - local;
 
-                    float distSquared = dot(diff, diff);
+                    float d = dot(diff,diff);
 
-                    if (distSquared < minDistSquared)
+                    if(d < minDist)
                     {
-                        minDistSquared    = distSquared;
-                        vectorToClosestPoint = diff;
-                        closestCellOffset    = neighborOffset;
+                        minDist = d;
+                        vecToClosest = diff;
+                        closestCell = cell;
                     }
                 }
 
                 //----------------------------------
-                // PASS 2: Distance to Voronoi edge
+                // PASS 2: distance to edge
                 //----------------------------------
 
-                float minEdgeDistance = 8.0;
+                float edgeDist = 10.0;
 
-                // Check larger neighborhood for border distances
                 [unroll]
-                for (int j = -2; j <= 2; j++)
+                for(int k=-2; k<=2; k++)
                 [unroll]
-                for (int i = -2; i <= 2; i++)
+                for(int j=-2; j<=2; j++)
+                [unroll]
+                for(int i=-2; i<=2; i++)
                 {
-                    float2 neighborOffset = closestCellOffset + float2((float)i, (float)j);
+                    float3 cell = closestCell + float3(i,j,k);
 
-                    float2 featureOffset = hash2(cellBase + neighborOffset);
+                    float3 feature = hash3(base + cell);
+                    feature = offset_voronoi_feature(feature);
 
-                    featureOffset = offset_voronoi_feature(featureOffset);
+                    float3 diff = cell + feature - local;
 
-                    float2 diff = neighborOffset + featureOffset - localPos;
+                    float3 delta = vecToClosest - diff;
 
-                    // Ignore the same feature point
-                    float2 delta = vectorToClosestPoint - diff;
-                    if (dot(delta, delta) > 0.00001)
+                    if(dot(delta,delta) > 0.00001)
                     {
-                        // Distance from pixel to border between closest cell and this one
-                        float edgeDistance =
-                            dot(0.5 * (vectorToClosestPoint + diff),
-                                normalize(diff - vectorToClosestPoint));
+                        float d = dot(
+                            0.5 * (vecToClosest + diff),
+                            normalize(diff - vecToClosest)
+                        );
 
-                        minEdgeDistance = min(minEdgeDistance, edgeDistance);
+                        edgeDist = min(edgeDist, d);
                     }
                 }
 
-                // Return:
-                // x = distance to edge
-                // y,z = vector to closest feature point
-                return float3(minEdgeDistance, vectorToClosestPoint);
+                return float3(edgeDist, vecToClosest.xy);
             }
-
             float ball(in float radius, in float d) {
                 return smoothstep(radius + (radius / 5.0), radius, d);
             }
@@ -269,27 +281,24 @@ Shader "Custom/VoronoiSkybox"
                 return d;
             }
 
-            float2 cartToPolar(float3 coord) {
-                float u = atan2(coord.x, coord.z) / (UNITY_PI * 2);
-                float v = asin(coord.y) / (UNITY_PI / 2);
-                return float2(u, v);
-            }
             float4 frag (v2f i) : SV_Target {
-                float2 st = cartToPolar(i.viewDir);
-                
+                float3 dir = normalize(i.viewDir);    
+                float2 st = i.viewDir.xy;
+
                 // texcoord distortion
-                float2 basic_fbm = float2(fbm(st + float2(23., 38.)),
-                                    fbm(st));
+                float3 basic_fbm = float3(fbm3(dir + float3(23., 38., 90)),
+                                    fbm3(dir + float3(-30, 508, 304)),
+                                    fbm3(dir));
                                     
-                float2 basic_fbm_2 = float2(fbm(st + _DistortionFactor * basic_fbm + float2(133, 100)), 
-                                        fbm(st + _DistortionFactor * basic_fbm + float2(321, 230)));
+                float3 basic_fbm_2 = float3(fbm3(dir + _DistortionFactor * basic_fbm + float3(133, 100, 12)), 
+                                       fbm3(dir + _DistortionFactor * basic_fbm + float3(321, 230, -29)),
+                                       fbm3(dir + _DistortionFactor * basic_fbm));
                 
                 // voronoi gradients
-                float2 domain =  float2(_Scale, _Scale) * basic_fbm_2;
-                // float2 domain =  float2(_Scale, _Scale) * st;
-                float2 cell_id = floor(domain + float2(0.5, 0.5));
+                float3 domain = basic_fbm_2 * _Scale;
+                float3 cell_id = floor(domain + float3(0.5, 0.5, 0.5));
                 
-                float3 base_map = voronoi(domain); // B&W map from voronoi noise
+                float3 base_map = voronoi3d(domain); // B&W map from voronoi noise
                 float edge_distance = base_map.x;
                 float2 to_feature = base_map.yz;
                     
@@ -302,7 +311,7 @@ Shader "Custom/VoronoiSkybox"
                 col *= _BandColor; // base band color
                 
                 // shapes at voronoi feature points    
-                if(random(cell_id) > 0.5) {
+                if(random3(cell_id) > 0.5) {
                     float b_b = bowling_ball(0.1, to_feature);
                     b_b = floor(b_b);
                     col = lerp(col, _BorderColor,b_b); 
