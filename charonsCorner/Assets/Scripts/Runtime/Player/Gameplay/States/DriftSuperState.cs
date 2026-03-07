@@ -1,3 +1,4 @@
+using Unity.Cinemachine;
 using UnityEngine;
 
 namespace CharonsCorner.Runtime
@@ -10,17 +11,22 @@ namespace CharonsCorner.Runtime
         [field: SerializeField] public DriftBoostState DriftingBoostState {get; private set;} = new();
 
         public override State<GameplayPlayerController> InitialSubState => DriftingChargeState;
+        
+        public CinemachineOrbitalFollow CameraOrbitalFollow {get; private set;}
+        public float CameraBaseOrbitalDistance {get; private set;}
 
         private protected override void InitializeSubStates()
         {
-            
             DriftingChargeState.Init(SubStateMachine, _context);
             DriftingBoostState.Init(SubStateMachine, _context);
+            
+            CameraOrbitalFollow = _context.PlayerCamera.GetComponent<CinemachineOrbitalFollow>();
+            CameraBaseOrbitalDistance = CameraOrbitalFollow.Radius;
         }
 
         private protected override void OnEnter()
         {
-            SubStateMachine.ChangeState(DriftingChargeState);
+            
         }
 
         private protected override void OnExit()
