@@ -33,12 +33,20 @@ namespace CharonsCorner.Runtime
         public bool IsComplete { get; private set; } // to break out of super state
         private float _timer;
 
+        private CameraRadiusZoomOut _cameraFovZoomOut;
+
         private protected override void OnEnter()
         {
             _context.CurrentSubState = GetType().Name; // for debug
             
             _timer = 0f;
 
+            // ensure we have the optional CameraRadiusZoomOut component and apply the offset
+            if (_cameraFovZoomOut == null && _context.DriftSuperState.CameraOrbitalFollow != null)
+                _cameraFovZoomOut = _context.DriftSuperState.CameraOrbitalFollow.GetComponent<CameraRadiusZoomOut>();
+
+            _cameraFovZoomOut?.ApplyOffset();
+            
             Vector3 driftDir = GetDriftDirection();
             
             Vector3 currentVel = _context.Rb.linearVelocity;
@@ -69,6 +77,9 @@ namespace CharonsCorner.Runtime
             IsComplete = false;
             
             Time.timeScale = 1;
+            
+            // Remove camera offset if we applied it
+            _cameraFovZoomOut?.RemoveOffset();
             
             // Reset juice
             _context.DriftSuperState.CameraOrbitalFollow.Radius = _context.DriftSuperState.CameraBaseOrbitalDistance;
