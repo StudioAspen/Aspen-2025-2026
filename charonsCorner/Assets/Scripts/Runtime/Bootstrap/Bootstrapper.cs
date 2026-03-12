@@ -25,7 +25,13 @@ namespace CharonsCorner.Runtime
             if (_instance != null) return;
 
             var prefab = Resources.Load<GameObject>("Bootstrap");
-            Instantiate(prefab);
+            if (prefab == null)
+            {
+                Debug.LogError("Bootstrap prefab not found in Resources. Place a 'Bootstrap' prefab under a Resources folder.");
+                return;
+            }
+
+            UnityEngine.Object.Instantiate(prefab);
         }
         
 #if UNITY_EDITOR
@@ -37,7 +43,7 @@ namespace CharonsCorner.Runtime
 #if UNITY_EDITOR
             _bootstrapConfig.Initialize();
 #endif
-            if (_instance != null)
+            if (_instance != null && _instance != this)
             {
                 Destroy(gameObject);
                 return;
@@ -49,7 +55,18 @@ namespace CharonsCorner.Runtime
 
         private void Start()
         {
-            GameManager.Instance.ChangeGameState(_bootstrapConfig.GetSceneInitialState(GameManager.Instance.GetCurrentScene()), true);
+#if UNITY_EDITOR
+            if (_bootstrapConfig != null)
+            {
+                var currentScene = GameManager.Instance.GetCurrentScene();
+                var initialState = _bootstrapConfig.GetSceneInitialState(currentScene);
+                GameManager.Instance.ChangeGameState(initialState, true);
+            }
+            else
+            {
+                Debug.LogWarning("BootstrapConfigSO is not assigned on the Bootstrap prefab.", this);
+            }
+#endif
         }
     }
 }

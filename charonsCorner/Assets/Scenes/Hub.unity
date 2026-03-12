@@ -531,11 +531,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d86af994bc9449443bee9ea08f05a1ca, type: 3}
---- !u!23 &117698022 stripped
-MeshRenderer:
-  m_CorrespondingSourceObject: {fileID: -4270464260571245806, guid: d86af994bc9449443bee9ea08f05a1ca, type: 3}
-  m_PrefabInstance: {fileID: 76044347}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &123845544
 GameObject:
   m_ObjectHideFlags: 0
@@ -1451,7 +1446,7 @@ MonoBehaviour:
           ButtonText: 
         Owner: {fileID: 129815839}
         DebugActive: 0
-        TargetGameObject: {fileID: 2115995425}
+        TargetGameObject: {fileID: 0}
         ExtraTargetGameObjects: []
         IgnorePlayDirection: 0
         SetStateOnInit: 0
@@ -1540,7 +1535,7 @@ MonoBehaviour:
           ButtonText: 
         Owner: {fileID: 129815839}
         DebugActive: 0
-        BoundRenderer: {fileID: 117698022}
+        BoundRenderer: {fileID: 0}
         ExtraBoundRenderers: []
         Mode: 1
         PropertyName: _GlowColor
@@ -1792,7 +1787,7 @@ MonoBehaviour:
           ButtonText: 
         Owner: {fileID: 129815839}
         DebugActive: 0
-        BoundRenderer: {fileID: 117698022}
+        BoundRenderer: {fileID: 0}
         ExtraBoundRenderers: []
         Mode: 1
         PropertyName: _GlowColor
@@ -2839,7 +2834,7 @@ MonoBehaviour:
           ButtonText: 
         Owner: {fileID: 210957165}
         DebugActive: 0
-        TargetGameObject: {fileID: 2115995425}
+        TargetGameObject: {fileID: 0}
         ExtraTargetGameObjects: []
         IgnorePlayDirection: 0
         SetStateOnInit: 0
@@ -3010,7 +3005,7 @@ MonoBehaviour:
           ButtonText: 
         Owner: {fileID: 210957165}
         DebugActive: 0
-        BoundRenderer: {fileID: 2115995427}
+        BoundRenderer: {fileID: 0}
         ExtraBoundRenderers: []
         Mode: 1
         PropertyName: _GlowColor
@@ -3795,9 +3790,9 @@ Canvas:
   m_GameObject: {fileID: 401182965}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 0
-  m_Camera: {fileID: 0}
-  m_PlaneDistance: 100
+  m_RenderMode: 1
+  m_Camera: {fileID: 2102514286}
+  m_PlaneDistance: 0.5
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
   m_OverrideSorting: 0
@@ -9199,6 +9194,7 @@ GameObject:
   - component: {fileID: 2102514286}
   - component: {fileID: 2102514289}
   - component: {fileID: 2102514288}
+  - component: {fileID: 2102514290}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -9239,7 +9235,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 35
+  field of view: 60.000004
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -9266,7 +9262,7 @@ Transform:
   m_GameObject: {fileID: 2102514284}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -6.92, y: 2.46, z: -0.4000001}
+  m_LocalPosition: {x: 5.813, y: 3.44, z: 7.427}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -9366,16 +9362,20 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
   CustomBlends: {fileID: 0}
---- !u!1 &2115995425 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5262740352621186761, guid: d86af994bc9449443bee9ea08f05a1ca, type: 3}
-  m_PrefabInstance: {fileID: 76044347}
+--- !u!114 &2102514290
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
---- !u!23 &2115995427 stripped
-MeshRenderer:
-  m_CorrespondingSourceObject: {fileID: 6756640796096615406, guid: d86af994bc9449443bee9ea08f05a1ca, type: 3}
-  m_PrefabInstance: {fileID: 76044347}
-  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2102514284}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ae42c8f78c60684aab6be6c18bd7a9b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Type: 0
+  colorblindShader: {fileID: 4800000, guid: b35b8f7ae8cf168488129d5f5f39ebf4, type: 3}
 --- !u!1 &2127653172
 GameObject:
   m_ObjectHideFlags: 0
@@ -9731,6 +9731,10 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgument
       value: 
       objectReference: {fileID: 7272808341906255171}
+    - target: {fileID: 4592114733707581936, guid: f958f4c5dd2a3bd4b854476ec8b1a93e, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 59.951004
+      objectReference: {fileID: 0}
     - target: {fileID: 6745460993418202878, guid: f958f4c5dd2a3bd4b854476ec8b1a93e, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5

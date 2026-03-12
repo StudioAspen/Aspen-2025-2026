@@ -14,12 +14,12 @@ namespace CharonsCorner.Runtime
     {
         public static readonly List<string> TextureQualityOptions = new List<string>
         {
-            "High",
+            "Low",
             "Medium",
-            "Low"
+            "High"
         };
         private protected override string SaveKey => "TextureQuality";
-        private static int DefaultValue => 0; // Default to the highest quality (first index)
+        private static int DefaultValue => TextureQualityOptions.Count - 1; // Default to the highest quality (last index)
         public static int CurrentIndex { get; private set; }
 
         [SerializeField] private List<TMP_Text> _textureQualityOptionTexts; //Text components for each toggle option
@@ -32,7 +32,7 @@ namespace CharonsCorner.Runtime
             CurrentIndex = Mathf.Clamp(CurrentIndex, 0, TextureQualityOptions.Count - 1);
 
             SetTogglesToIndex(CurrentIndex);
-            QualitySettings.globalTextureMipmapLimit = CurrentIndex; // First load: 0 = Full Res
+            QualitySettings.globalTextureMipmapLimit = (TextureQualityOptions.Count - 1) - CurrentIndex; // First load: 0 = Full Res (High)
         }
 
         public override void Apply()
@@ -40,7 +40,8 @@ namespace CharonsCorner.Runtime
             int qualityLevelIndex = GetSelectedIndex();
             SaveManager.SettingsStore.SetInt(SaveKey, qualityLevelIndex);
             CurrentIndex = qualityLevelIndex;
-            QualitySettings.globalTextureMipmapLimit = qualityLevelIndex;
+            // UI index 0 = Low, last index = High. Invert for Unity's mipmap limit so High => 0.
+            QualitySettings.globalTextureMipmapLimit = (TextureQualityOptions.Count - 1) - qualityLevelIndex;
         }
 
         public override void Discard()

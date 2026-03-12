@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 
 namespace CharonsCorner.Runtime
 {
@@ -9,30 +10,31 @@ namespace CharonsCorner.Runtime
         public static readonly List<(string name, AntiAliasingMode mode)> AntiAliasingOptions = new List<(string, AntiAliasingMode)>
         {
             ("None", AntiAliasingMode.None),
+            ("MSAA", AntiAliasingMode.MSAA),
             ("FXAA", AntiAliasingMode.FXAA),
-            ("SMAA", AntiAliasingMode.SMAA),
             ("TAA", AntiAliasingMode.TAA)
         };
 
         private protected override string SaveKey => "AntiAliasing";
-        private static int DefaultValue => 0; // Default to the first option (None)
+        private static int DefaultValue => 0; // Default to None
         public static int CurrentIndex { get; private set; }
 
         [SerializeField] private List<TMP_Text> _antiAliasingOptionTexts;
-        
+
         [SerializeField] private Camera _targetCamera;
+
+        [SerializeField] private int _msaaSampleCount = 4;
 
         public override void Load()
         {
             PopulateTexts();
 
-            // Restore saved index (visual only). Do not apply until explicit Apply().
+
             CurrentIndex = SaveManager.SettingsStore.GetInt(SaveKey, DefaultValue);
             CurrentIndex = Mathf.Clamp(CurrentIndex, 0, AntiAliasingOptions.Count - 1);
 
             SetTogglesToIndex(CurrentIndex);
 
-            // Ensure runtime reflects last applied AA mode (best-effort).
             ApplyMode(AntiAliasingOptions[CurrentIndex].mode);
         }
 
@@ -74,33 +76,38 @@ namespace CharonsCorner.Runtime
 
         private void ApplyMode(AntiAliasingMode mode)
         {
-            //if (_targetCamera == null)
-            //    return;
+            if (_targetCamera == null)
+                return;
 
-            //var cameraData = _targetCamera.GetUniversalAdditionalCameraData();
-            //if (cameraData == null)
-            //    return;
+            var cameraData = _targetCamera.GetUniversalAdditionalCameraData();
+            if (cameraData == null)
+                return;
 
             switch (mode)
             {
                 case AntiAliasingMode.None:
-                    //cameraData.antialiasing = AntialiasingMode.None;
-                    //QualitySettings.antiAliasing = 0;
+                    cameraData.antialiasing = AntialiasingMode.None;
+                    QualitySettings.antiAliasing = 0;
+                    break;
+
+                case AntiAliasingMode.MSAA:
+                    // MSAA is not a post-process in URP; enable via QualitySettings sample count.
+                    cameraData.antialiasing = AntialiasingMode.None;
+                    int samples = _msaaSampleCount;
+                    // Ensure a supported value (0, 2, 4, 8). Default to 4 if invalid.
+                    if (samples != 0 && samples != 2 && samples != 4 && samples != 8)
+                        samples = 4;
+                    QualitySettings.antiAliasing = samples;
                     break;
 
                 case AntiAliasingMode.FXAA:
-                    //cameraData.antialiasing = Anti.FastApproximateAntialiasing;
-                    //QualitySettings.antiAliasing = 0;
-                    break;
-
-                case AntiAliasingMode.SMAA:
-                    //cameraData.antialiasing = AntialiasingMode.SubpixelMorphologicalAntiAliasing;
-                    //QualitySettings.antiAliasing = 0;
+                    cameraData.antialiasing = AntialiasingMode.FastApproximateAntialiasing;
+                    QualitySettings.antiAliasing = 0;
                     break;
 
                 case AntiAliasingMode.TAA:
-                    //cameraData.antialiasing = AntialiasingMode.TemporalAntiAliasing;
-                    //QualitySettings.antiAliasing = 0;
+                    cameraData.antialiasing = AntialiasingMode.TemporalAntiAliasing;
+                    QualitySettings.antiAliasing = 0;
                     break;
             }
         }
@@ -108,8 +115,8 @@ namespace CharonsCorner.Runtime
         public enum AntiAliasingMode
         {
             None,
+            MSAA,
             FXAA,
-            SMAA,
             TAA
         }
     }
