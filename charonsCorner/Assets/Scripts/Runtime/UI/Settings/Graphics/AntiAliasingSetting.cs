@@ -23,26 +23,20 @@ namespace CharonsCorner.Runtime
 
         [SerializeField] private Camera _targetCamera;
 
-        [SerializeField] private int _msaaSampleCount = 4;
-
         public override void Load()
         {
             PopulateTexts();
 
-
-            CurrentIndex = SaveManager.SettingsStore.GetInt(SaveKey, DefaultValue);
-            CurrentIndex = Mathf.Clamp(CurrentIndex, 0, AntiAliasingOptions.Count - 1);
-
             int maxIndex = AntiAliasingOptions.Count - 1;
-            if (_toggles != null && _toggles.Count > 0) 
+            if (_toggles != null && _toggles.Count > 0)
                 maxIndex = Mathf.Min(maxIndex, _toggles.Count - 1);
             if (_antiAliasingOptionTexts != null && _antiAliasingOptionTexts.Count > 0)
                 maxIndex = Mathf.Min(maxIndex, _antiAliasingOptionTexts.Count - 1);
-            
-            CurrentIndex = Mathf.Clamp(
-            SaveManager.SettingsStore.GetInt(SaveKey, DefaultValue),
-            0,
-            maxIndex);
+
+            CurrentIndex = Mathf.Clamp(SaveManager.SettingsStore.GetInt(SaveKey, DefaultValue), 0, maxIndex);
+
+            SetTogglesToIndex(CurrentIndex);
+            ApplyMode(AntiAliasingOptions[CurrentIndex].mode);
         }
 
         public override void Apply()
@@ -85,27 +79,22 @@ namespace CharonsCorner.Runtime
         private void ApplyMode(AntiAliasingMode mode)
         {
             if (_targetCamera == null)
+            {
+                Debug.LogWarning("Target camera not assigned for AntiAliasingSetting.");
                 return;
-
+            }
+            
             var cameraData = _targetCamera.GetUniversalAdditionalCameraData();
-            if (cameraData == null)
-                return;
-
             switch (mode)
             {
                 case AntiAliasingMode.None:
                     cameraData.antialiasing = AntialiasingMode.None;
-                    QualitySettings.antiAliasing = 0;
+                    QualitySettings.antiAliasing = 0; // Disable MSAA in quality settings
                     break;
 
                 case AntiAliasingMode.MSAA:
-                    // MSAA is not a post-process in URP; enable via QualitySettings sample count.
-                    cameraData.antialiasing = AntialiasingMode.None;
-                    int samples = _msaaSampleCount;
-                    // Ensure a supported value (0, 2, 4, 8). Default to 4 if invalid.
-                    if (samples != 0 && samples != 2 && samples != 4 && samples != 8)
-                        samples = 4;
-                    QualitySettings.antiAliasing = samples;
+                    cameraData.antialiasing = AntialiasingMode.None; // URP handles MSAA via quality settings
+                    QualitySettings.antiAliasing = 4;   // Set to 4x MSAA
                     break;
 
                 case AntiAliasingMode.FXAA:
