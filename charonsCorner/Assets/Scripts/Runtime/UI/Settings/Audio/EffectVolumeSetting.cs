@@ -12,14 +12,24 @@ namespace CharonsCorner.Runtime
 
         [SerializeField] private Slider _effectSlider;
 
+        private bool EnsureSliderReference()
+        {
+            if (_effectSlider != null) return true;
+
+            Debug.LogError($"{nameof(EffectVolumeSetting)} requires {nameof(_effectSlider)} to be assigned.", this);
+            return false;
+        }
+
         private void OnEnable()
         {
+            if (!EnsureSliderReference()) return;
             _effectSlider.value = CurrentValue;
         }
 
         public override void Load()
         {
-            CurrentValue = SaveManager.SettingsStore.GetFloat(SaveKey, DefaultValue);
+            if (!EnsureSliderReference()) return;
+            CurrentValue = Mathf.Clamp01(SaveManager.SettingsStore.GetFloat(SaveKey, DefaultValue));
             _effectSlider.value = CurrentValue;
 
             AudioManager.SetMixerVolume(AudioManager.SfxVolumeParam, CurrentValue);
@@ -27,7 +37,8 @@ namespace CharonsCorner.Runtime
 
         public override void Apply()
         {
-            float effectVolume = _effectSlider.value;
+            if (!EnsureSliderReference()) return;
+            float effectVolume = Mathf.Clamp01(_effectSlider.value);
             SaveManager.SettingsStore.SetFloat(SaveKey, effectVolume);
             CurrentValue = effectVolume;
 
@@ -36,6 +47,7 @@ namespace CharonsCorner.Runtime
 
         public override void Discard()
         {
+            if (!EnsureSliderReference()) return;
             _effectSlider.value = CurrentValue;
         }
 

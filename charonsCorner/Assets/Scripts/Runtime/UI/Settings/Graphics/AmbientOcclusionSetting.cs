@@ -1,9 +1,9 @@
+using System.Linq;
+using System.Reflection;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
-using System.Linq;
-using System.Reflection;
 
 namespace CharonsCorner.Runtime
 {
@@ -70,7 +70,7 @@ namespace CharonsCorner.Runtime
             {
                 if (rendererData is ScriptableRendererData srd)
                 {
-                    var ssaoFeature = srd.rendererFeatures.FirstOrDefault(f => f != null && f.name == "Screen Space Ambient Occlusion");
+                    var ssaoFeature = srd.rendererFeatures.FirstOrDefault(f => f != null && f.name == "ScreenSpaceAmbientOcclusion");
                     if (ssaoFeature != null)
                     {
                         ssaoFeature.SetActive(enabled);

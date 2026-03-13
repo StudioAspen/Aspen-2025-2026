@@ -33,9 +33,16 @@ namespace CharonsCorner.Runtime
             CurrentIndex = SaveManager.SettingsStore.GetInt(SaveKey, DefaultValue);
             CurrentIndex = Mathf.Clamp(CurrentIndex, 0, AntiAliasingOptions.Count - 1);
 
-            SetTogglesToIndex(CurrentIndex);
-
-            ApplyMode(AntiAliasingOptions[CurrentIndex].mode);
+            int maxIndex = AntiAliasingOptions.Count - 1;
+            if (_toggles != null && _toggles.Count > 0) 
+                maxIndex = Mathf.Min(maxIndex, _toggles.Count - 1);
+            if (_antiAliasingOptionTexts != null && _antiAliasingOptionTexts.Count > 0)
+                maxIndex = Mathf.Min(maxIndex, _antiAliasingOptionTexts.Count - 1);
+            
+            CurrentIndex = Mathf.Clamp(
+            SaveManager.SettingsStore.GetInt(SaveKey, DefaultValue),
+            0,
+            maxIndex);
         }
 
         public override void Apply()
@@ -61,6 +68,7 @@ namespace CharonsCorner.Runtime
             if (_antiAliasingOptionTexts == null)
                 return;
 
+            int toggleCount = _toggles?.Count ?? 0;
             for (int i = 0; i < _antiAliasingOptionTexts.Count; i++)
             {
                 if (_antiAliasingOptionTexts[i] == null)
@@ -69,7 +77,7 @@ namespace CharonsCorner.Runtime
                 bool hasOption = i < AntiAliasingOptions.Count;
                 _antiAliasingOptionTexts[i].text = hasOption ? AntiAliasingOptions[i].name : string.Empty;
 
-                if (i < _toggles.Count && _toggles[i] != null)
+                if (i < toggleCount && _toggles[i] != null)
                     _toggles[i].gameObject.SetActive(hasOption);
             }
         }

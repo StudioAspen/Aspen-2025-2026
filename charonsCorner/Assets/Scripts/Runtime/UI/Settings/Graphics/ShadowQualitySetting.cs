@@ -53,15 +53,26 @@ namespace CharonsCorner.Runtime
 
         private void PopulateTexts()
         {
+            if (_shadowQualityOptionTexts == null) return;
+
             for (int i = 0; i < _shadowQualityOptionTexts.Count && i < ShadowQualityOptions.Count; i++)
             {
-                _shadowQualityOptionTexts[i].text = ShadowQualityOptions[i].name;
+                if (_shadowQualityOptionTexts[i] != null)
+                    _shadowQualityOptionTexts[i].text = ShadowQualityOptions[i].name;
             }
         }
 
         private void ApplyQuality(ShadowQualityLevel quality)
         {
-            UniversalRenderPipelineAsset urpAsset = GraphicsSettings.defaultRenderPipeline as UniversalRenderPipelineAsset;
+            UniversalRenderPipelineAsset urpAsset = 
+                QualitySettings.renderPipeline as UniversalRenderPipelineAsset ??
+                GraphicsSettings.defaultRenderPipeline as UniversalRenderPipelineAsset;
+
+            if (urpAsset == null)
+            {
+                Debug.LogWarning("Universal Render Pipeline Asset not found. Shadow quality settings will not be applied.");
+                return;
+            }
 
             switch (quality)
             {

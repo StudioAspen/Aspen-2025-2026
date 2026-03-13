@@ -17,6 +17,11 @@ namespace CharonsCorner.Runtime
         public override void Load()
         {
             _validResolutions = GetValidResolutions();
+            if (_validResolutions == null || _validResolutions.Count == 0)
+            {
+                Debug.LogError("No valid resolutions found. Please ensure your system supports at least one 16:9 resolution of 1280x720 or higher.");
+                return;
+            }
 
             PopulateTexts();
 
@@ -27,8 +32,19 @@ namespace CharonsCorner.Runtime
 
         public override void Apply()
         {
+            if (_validResolutions == null || _validResolutions.Count == 0)
+            {
+                Debug.LogError("Cannot apply resolution setting because no valid resolutions are available.");
+                return;
+            }
+
             int selectedIndex = GetSelectedIndex(); // Get index of currently selected toggle
-            
+            if (selectedIndex < 0 || selectedIndex >= _validResolutions.Count)
+            {
+                Debug.LogError($"Selected index {selectedIndex} is out of bounds for valid resolutions.");
+                return;
+            }
+
             SaveManager.SettingsStore.SetInt(SaveKey, selectedIndex);
             CurrentIndex = selectedIndex;
 
@@ -79,15 +95,30 @@ namespace CharonsCorner.Runtime
 
         private void PopulateTexts()
         {
+            if (_resolutionOptionTexts == null)
+            {
+                Debug.LogError("Resolution option texts are not assigned in the inspector.");
+                return;
+            }
+
+            int toggleCount = _toggles?.Count ?? 0;
             for (int i = 0; i < _resolutionOptionTexts.Count; i++)
             {
-                bool hasResolution = i < _validResolutions.Count;
-                _resolutionOptionTexts[i].text = 
-                    hasResolution ? $"{_validResolutions[i].width} x {_validResolutions[i].height}" : "N/A";
-                
-                if (i < _toggles.Count && _toggles[i] != null)
-                    _toggles[i].interactable = hasResolution; 
+                if (_resolutionOptionTexts[i] == null)
+                {
+                    Debug.LogError($"Resolution option text at index {i} is not assigned.");
+                    continue;
+                }
 
+                bool hasResolution = i < _validResolutions.Count;
+                _resolutionOptionTexts[i].text = hasResolution
+                    ? $"{_validResolutions[i].width} x {_validResolutions[i].height}"
+                    : "N/A"; // Display "N/A" for options that exceed available resolutions
+
+                if (i < toggleCount && _toggles[i] != null)
+                {
+                    _toggles[i].interactable = hasResolution; // Disable toggles that don't have a corresponding resolution
+                }
             }
         }
     }

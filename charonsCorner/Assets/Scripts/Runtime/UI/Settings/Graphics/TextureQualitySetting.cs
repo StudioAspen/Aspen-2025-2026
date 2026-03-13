@@ -1,11 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-using System.Linq;
 using TMPro;
-using Sirenix.Serialization;
-using JetBrains.Annotations;
-using System;
 
 
 namespace CharonsCorner.Runtime
@@ -38,6 +33,12 @@ namespace CharonsCorner.Runtime
         public override void Apply()
         {
             int qualityLevelIndex = GetSelectedIndex();
+            if (qualityLevelIndex < 0 || qualityLevelIndex >= TextureQualityOptions.Count)
+            {
+                Debug.LogWarning($"Selected texture quality index {qualityLevelIndex} is out of range. Defaulting to {DefaultValue}.");
+                return;
+            }
+
             SaveManager.SettingsStore.SetInt(SaveKey, qualityLevelIndex);
             CurrentIndex = qualityLevelIndex;
             // UI index 0 = Low, last index = High. Invert for Unity's mipmap limit so High => 0.
@@ -53,12 +54,17 @@ namespace CharonsCorner.Runtime
 
         private void PopulateTexts()
         {
+            if (_textureQualityOptionTexts == null) return;
+
+            int toggleCount = _toggles?.Count ?? 0;
             for (int i = 0; i < _textureQualityOptionTexts.Count; i++)
             {
+                if (_textureQualityOptionTexts[i] == null) continue;
+
                 bool hasLevel = i < TextureQualityOptions.Count;
                 _textureQualityOptionTexts[i].text = hasLevel ? TextureQualityOptions[i] : string.Empty;
 
-                if (i < _toggles.Count && _toggles[i] != null)
+                if (i < toggleCount && _toggles[i] != null)
                 {
                     _toggles[i].gameObject.SetActive(hasLevel); // Show toggle only if there's a corresponding texture quality option
                     _toggles[i].isOn = false;

@@ -12,13 +12,22 @@ namespace CharonsCorner.Runtime
 
         [SerializeField] private Slider _musicSlider;
 
+        private bool IsSliderBound()
+        {
+            if (_musicSlider != null) return true;
+            Debug.LogError($"{nameof(MusicVolumeSetting)} requires {nameof(_musicSlider)} to be assigned.", this);
+            return false;
+        }
+
         private void OnEnable()
         {
+            if (!IsSliderBound()) return;
             _musicSlider.value = CurrentValue;
         }
 
         public override void Load()
         {
+            if (!IsSliderBound()) return;
             CurrentValue = SaveManager.SettingsStore.GetFloat(SaveKey, DefaultValue);
             _musicSlider.value = CurrentValue;
 
@@ -27,6 +36,7 @@ namespace CharonsCorner.Runtime
 
         public override void Apply()
         {
+            if (!IsSliderBound()) return;
             float musicVolume = _musicSlider.value;
             SaveManager.SettingsStore.SetFloat(SaveKey, musicVolume);
             CurrentValue = musicVolume;
@@ -36,9 +46,10 @@ namespace CharonsCorner.Runtime
 
         public override void Discard()
         {
+            if (!IsSliderBound()) return;
             _musicSlider.value = CurrentValue;
         }
 
-        public override bool IsDirty() => _musicSlider.value != CurrentValue;
+        public override bool IsDirty() => IsSliderBound() && _musicSlider.value != CurrentValue;
     }
 }

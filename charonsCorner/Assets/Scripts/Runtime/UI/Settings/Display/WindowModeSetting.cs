@@ -53,6 +53,9 @@ namespace CharonsCorner.Runtime
 
         private void PopulateTexts()
         {
+            if (_windowModeOptionTexts == null) return;
+
+            int toggleCount = _toggles?.Count ?? 0;
             for (int i = 0; i < _windowModeOptionTexts.Count; i++)
             {
                 if (_windowModeOptionTexts[i] == null)
@@ -62,7 +65,7 @@ namespace CharonsCorner.Runtime
                 _windowModeOptionTexts[i].text =
                     hasOption ? WindowModes[i].name : string.Empty;
 
-                if (i < _toggles.Count && _toggles[i] != null)
+                if (i < toggleCount && _toggles[i] != null)
                     _toggles[i].gameObject.SetActive(hasOption);
             }
         }
