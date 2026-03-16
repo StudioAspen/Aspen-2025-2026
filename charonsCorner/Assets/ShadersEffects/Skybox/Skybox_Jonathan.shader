@@ -288,7 +288,7 @@ Shader "Custom/VoronoiSkybox"
                                             fbm3(dir + _DistortionFactor * basic_fbm));
                 
                 // voronoi gradients
-                float3 domain = dir * _Scale;
+                float3 domain = basic_fbm_2 * _Scale;
                 float3 cell_id = floor(domain + float3(0.5, 0.5, 0.5));
                 
                 float4 base_map = voronoi3d(domain); // B&W map from voronoi noise
