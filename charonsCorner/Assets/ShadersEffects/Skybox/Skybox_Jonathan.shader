@@ -1,5 +1,3 @@
-// TODO: I've set the camera background to Skybox, but now the skybox is showing on the level enter transition. 
-// I've started mapping the skybox to spherical coords, but theres a big ass seam.
 Shader "Custom/VoronoiSkybox"
 {
     Properties
@@ -275,20 +273,25 @@ Shader "Custom/VoronoiSkybox"
                 return d;
             }
 
+            // TODO:
+            // 1. Create greater depth in the skybox (currently: working on shapingn function for depth_scale)
+            // 2. Fix the depth artifacts 
+            // 3. Create sharper colors
             float4 frag (v2f i) : SV_Target {
-                float3 dir = normalize(i.viewDir);    
+                float3 dir = i.viewDir;    
 
                 // texcoord distortion
-                float3 basic_fbm = float3(fbm3(dir + float3(23., 38., 90)),
+                float3 dir_distort = float3(fbm3(dir + float3(23., 38., 90)),
                                           fbm3(dir + float3(-30, 508, 304)),
                                           fbm3(dir));
                                     
-                float3 basic_fbm_2 = float3(fbm3(dir + _DistortionFactor * basic_fbm + float3(133, 100, 12)), 
-                                            fbm3(dir + _DistortionFactor * basic_fbm + float3(321, 230, -29)),
-                                            fbm3(dir + _DistortionFactor * basic_fbm));
+                float3 dir_distort_2 = float3(fbm3(dir + _DistortionFactor * dir_distort + float3(133, 100, 12)), 
+                                            fbm3(dir + _DistortionFactor * dir_distort + float3(321, 230, -29)),
+                                            fbm3(dir + _DistortionFactor * dir_distort));
                 
                 // voronoi gradients
-                float3 domain = basic_fbm_2 * _Scale;
+                float depth_scale = (1.0 - pow(abs(dir.y / 5), 2)) * _Scale;
+                float3 domain = dir_distort_2 * depth_scale;
                 float3 cell_id = floor(domain + float3(0.5, 0.5, 0.5));
                 
                 float4 base_map = voronoi3d(domain); // B&W map from voronoi noise
@@ -297,28 +300,25 @@ Shader "Custom/VoronoiSkybox"
                 
                 // color bands
                 float band_frequency = 32.0;
-                float3 col = edge_distance * (2. + 0.5 * sin(band_frequency * edge_distance)) * float3(1.0, 1.0, 1.0); 
-                col = floor((col + .5) * 4.) / 4.; // turn band gradients into hard lines
-                col *= _BandColor; // base band color
-                
-                // shapes at voronoi feature points    
-                float b_b = bowling_ball(0.1, to_feature);
-                b_b = floor(b_b);
-                col = lerp(col, _BorderColor, b_b); 
+                float3 voronoi_bands = edge_distance * (2. + 0.5 * sin(band_frequency * edge_distance)) * float3(1.0, 1.0, 1.0); 
+                float3 voronoi_hard_bands = floor((voronoi_bands + .5) * 4.) / 4.; // turn band gradients into hard lines
+                float3 outputColor = voronoi_hard_bands * _BandColor; // base band color
 
-                /*
                 if(random3(cell_id) > 0.5) {
-                    float b_b = bowling_ball(0.1, to_feature);
-                    b_b = floor(b_b);
-                    col = lerp(col, _BorderColor,b_b); 
+                    float feature = bowling_ball(0.1, to_feature);
+                    feature = floor(feature); // Flooring creates sharper lines
+                    outputColor = lerp(outputColor, _BorderColor, feature); 
                 } else {
-                    float bp = bowling_pin(.2, to_feature);
-                    bp = floor(bp + 0.5);
-                    col = lerp(col, _BorderColor, bp);
+                    float feature = bowling_pin(.2, to_feature);
+                    feature = floor(feature + 0.5);
+                    outputColor = lerp(outputColor, _BorderColor, feature);
                 }
-                */
-                
-                return float4(col, 1.0);
+
+                // borders	
+                float band_width = 0.05;
+                outputColor = lerp( _BorderColor, outputColor, smoothstep( band_width, band_width + 0.01, edge_distance ) );
+
+                return float4(outputColor, 1.0);
             }
 
             ENDCG
