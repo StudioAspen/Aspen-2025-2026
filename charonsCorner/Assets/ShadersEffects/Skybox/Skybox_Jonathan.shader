@@ -6,6 +6,8 @@ Shader "Custom/VoronoiSkybox"
         _BandColor ("Band Color", Color) = (0.694, 0.475, 0.749, 1.0)
         _DistortionFactor ("Distortion Factor", Float) = 1.0
         _Scale ("Scale", Float) = 10.0
+        _BandFrequency ("Band Frequency", Float) = 32.0
+        _TimeSpeed ("Time Speed", Float) = 1.0
     }
 
     SubShader
@@ -33,6 +35,8 @@ Shader "Custom/VoronoiSkybox"
                 float4 _BandColor;
                 float _DistortionFactor; 
                 float _Scale;
+                float _BandFrequency;
+                float _TimeSpeed;
             CBUFFER_END
 
             struct appdata {
@@ -118,8 +122,7 @@ Shader "Custom/VoronoiSkybox"
             }
 
             float3 offset_voronoi_feature(in float3 feature_position) {
-                float timeScaled = _Time;
-                return 0.3 * sin(timeScaled + 6.2831 * feature_position);
+                return 0.3 * sin(_Time.x * _TimeSpeed + 6.2831 * feature_position);
             }
 
             float4 voronoi3d(float3 p)
@@ -273,14 +276,11 @@ Shader "Custom/VoronoiSkybox"
                 return d;
             }
 
-            // TODO:
-            // 1. Create greater depth in the skybox (currently: working on shapingn function for depth_scale)
-            // 2. Fix the depth artifacts 
-            // 3. Create sharper colors
             float4 frag (v2f i) : SV_Target {
+                // we use the view direction at the pixel as an input to generate noise.
                 float3 dir = i.viewDir;    
 
-                // texcoord distortion
+                // this distorts the texcoord to create the wavey effect. 
                 float3 dir_distort = float3(fbm3(dir + float3(23., 38., 90)),
                                           fbm3(dir + float3(-30, 508, 304)),
                                           fbm3(dir));
@@ -289,18 +289,19 @@ Shader "Custom/VoronoiSkybox"
                                             fbm3(dir + _DistortionFactor * dir_distort + float3(321, 230, -29)),
                                             fbm3(dir + _DistortionFactor * dir_distort));
                 
-                // voronoi gradients
+                // this is an attempt to increase scale near the horizon to create depth, but doesn't work very well.
                 float depth_scale = (1.0 - pow(abs(dir.y / 25), 2)) * _Scale;
                 float3 domain = dir_distort_2 * depth_scale;
-                float3 cell_id = floor(domain + float3(0.5, 0.5, 0.5));
+
+                float3 cell_id = floor(domain + float3(0.5, 0.5, 0.5)); // used later to determine where to place balls/pins
                 
-                float4 base_map = voronoi3d(domain); // B&W map from voronoi noise
+                float4 base_map = voronoi3d(domain); // create voronoi noise from our distorted view dir
+                // extract two variables that were output from voronoi3d
                 float edge_distance = base_map.x;
                 float3 to_feature = base_map.yzw;
                 
-                // color bands
-                float band_frequency = 32.0;
-                float3 voronoi_bands = edge_distance * (2. + 0.5 * sin(band_frequency * edge_distance)) * float3(1.0, 1.0, 1.0); 
+                // this section creates the "bands" of color.
+                float3 voronoi_bands = edge_distance * (2. + 0.5 * sin(_BandFrequency * edge_distance)) * float3(1.0, 1.0, 1.0); 
                 float3 voronoi_hard_bands = floor((voronoi_bands + .5) * 4.) / 4.; // turn band gradients into hard lines
                 float3 outputColor = voronoi_hard_bands * _BandColor; // base band color
 
