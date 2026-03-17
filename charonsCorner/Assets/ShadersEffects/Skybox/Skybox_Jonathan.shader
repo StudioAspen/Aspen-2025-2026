@@ -290,7 +290,7 @@ Shader "Custom/VoronoiSkybox"
                                             fbm3(dir + _DistortionFactor * dir_distort));
                 
                 // voronoi gradients
-                float depth_scale = (1.0 - pow(abs(dir.y / 5), 2)) * _Scale;
+                float depth_scale = (1.0 - pow(abs(dir.y / 25), 2)) * _Scale;
                 float3 domain = dir_distort_2 * depth_scale;
                 float3 cell_id = floor(domain + float3(0.5, 0.5, 0.5));
                 
