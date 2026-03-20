@@ -30,7 +30,18 @@ namespace CharonsCorner.Runtime
                 {
                     Instantiate(obj, spawnDest2.position, spawnDest2.rotation);
                 }
-               
+                if (randNum == 2)
+                {
+                    Instantiate(obj, spawnDest1.position, spawnDest1.rotation);
+                }
+                if (randNum == 3)
+                {
+                    Instantiate(obj, spawnDest2.position, spawnDest2.rotation);
+                }
+                if (randNum == 4)
+                {
+                    Instantiate(obj, spawnDest2.position, spawnDest2.rotation);
+                }
             }
         }
     }
