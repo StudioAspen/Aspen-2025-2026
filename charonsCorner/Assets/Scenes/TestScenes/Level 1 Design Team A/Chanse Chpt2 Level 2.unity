@@ -130330,6 +130330,11 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1130570632}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &1130622097 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1812858393626519745, guid: 383ccfd0ba8258e459f97dff7371efec, type: 3}
+  m_PrefabInstance: {fileID: 311211153}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1130935871
 GameObject:
   m_ObjectHideFlags: 0
@@ -220133,6 +220138,8 @@ GameObject:
   - component: {fileID: 1894181074}
   - component: {fileID: 1894181073}
   - component: {fileID: 1894181077}
+  - component: {fileID: 1894181079}
+  - component: {fileID: 1894181078}
   m_Layer: 0
   m_Name: EXCUbe
   m_TagString: Untagged
@@ -220243,6 +220250,46 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   targetObject: {fileID: 1894181072}
   hideTime: 2
+--- !u!54 &1894181078
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1894181072}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!114 &1894181079
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1894181072}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d2e2576974eceb42a188bc1add8928a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetObj: {fileID: 1130622097}
 --- !u!1 &1894309512
 GameObject:
   m_ObjectHideFlags: 0
