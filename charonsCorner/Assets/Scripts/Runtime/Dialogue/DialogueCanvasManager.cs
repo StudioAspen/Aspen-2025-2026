@@ -3,9 +3,11 @@ using DG.Tweening;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Febucci.TextAnimatorForUnity;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Febucci.TextAnimatorForUnity.TextMeshPro;
 
 namespace CharonsCorner.Runtime
 {
@@ -18,13 +20,8 @@ namespace CharonsCorner.Runtime
 
         [Header("UI Elements")]
         [SerializeField] private TMP_Text _nameText;
-        [SerializeField] private TMP_Text _dialogueText;
+        [SerializeField] private TypewriterComponent _dialogueTextTypewriter;
         [SerializeField] private Transform _optionsContainer;
-
-        [Header("Typing Config")]
-        [SerializeField] private float _typingSpeed = 0.01f;
-        private Coroutine _typingCoroutine;
-        private string _typedOutFullText;
 
         private void Awake()
         {
@@ -49,14 +46,14 @@ namespace CharonsCorner.Runtime
 
         private void DialogueManager_OnDialogueOpenerStarted(DialogueOpenerSO opener)
         {
+            UIPanel.Focus(_dialoguePanel);
+            
             ClearUI();
 
             _nameText.text = opener.SpeakerName;
-            TypeOutText(opener.Text);
+            _dialogueTextTypewriter.ShowText(opener.Text);
 
             ShowOptions(opener.SequenceOptions);
-            
-            UIPanel.Focus(_dialoguePanel);
         }
 
         private void DialogueManager_OnDialogueSequenceStarted(DialogueSequenceSO sequence)
@@ -69,7 +66,7 @@ namespace CharonsCorner.Runtime
             ClearUI();
 
             _nameText.text = dialogue.SpeakerName;
-            TypeOutText(dialogue.Text);
+            _dialogueTextTypewriter.ShowText(dialogue.Text);
 
             ShowNextButton();
         }
@@ -105,43 +102,13 @@ namespace CharonsCorner.Runtime
                     _dialogueManager.CurrentBacklog.CompleteCurrentSRankDialogueSet();
             }
         }
-
-        private void TypeOutText(string text)
-        {
-            if (_typingCoroutine != null)
-                StopCoroutine(_typingCoroutine);
-            _typedOutFullText = text;
-            _typingCoroutine = StartCoroutine(TypeOutTextCoroutine(text));
-        }
-
-        /// <summary>
-        /// Types out the dialogue text character by character with a specified delay.
-        /// </summary>
-        private IEnumerator TypeOutTextCoroutine(string text)
-        {
-            _dialogueText.text = "";
-
-            foreach (char letter in text)
-            {
-                _dialogueText.text += letter;
-                yield return new WaitForSecondsRealtime(_typingSpeed);
-            }
-
-            _typingCoroutine = null;
-        }
-
+        
         /// <summary>
         /// Stops typing and shows the full text immediately.
         /// </summary>
         public void SkipTyping()
         {
-            if (_typingCoroutine != null)
-            {
-                StopCoroutine(_typingCoroutine);
-                _typingCoroutine = null;
-
-                _dialogueText.text = _typedOutFullText;
-            }
+            _dialogueTextTypewriter.SkipTypewriter();
         }
 
         private void ShowOptions(List<DialogueSequenceSO> sequenceOptions, bool willTryShowReturn = false)
@@ -206,8 +173,8 @@ namespace CharonsCorner.Runtime
         private void ClearUI()
         {
             _nameText.text = "";
-            _dialogueText.text = "";
-
+            _dialogueTextTypewriter.TextAnimator.SetText("");
+            
             ClearButtons();
         }
 

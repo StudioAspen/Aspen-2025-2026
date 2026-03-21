@@ -29,6 +29,9 @@ namespace CharonsCorner.Runtime
         [SerializeField] private float _bounceMultiplier = 0.5f; // e.g., bounce back up at 50% of impact velocity
         [Tooltip("Maximum upward velocity after bounce")]
         [SerializeField] private float _maxBounceVelocity = 20f; // cap the maximum bounce velocity
+        
+        [Header("Debug")]
+        [SerializeField] private bool _showDebug = false;
 
         void Awake()
         {
@@ -46,8 +49,6 @@ namespace CharonsCorner.Runtime
         {
             InputManager.Instance.JumpPressed += OnJumpPressed;
             InputManager.Instance.JumpReleased += OnJumpReleased;
-
-            InputManager.Instance.Jump += OnJumpPerformed;
         }
 
         private void OnDisable()
@@ -56,32 +57,41 @@ namespace CharonsCorner.Runtime
             {
                 InputManager.Instance.JumpPressed -= OnJumpPressed;
                 InputManager.Instance.JumpReleased -= OnJumpReleased;
-                InputManager.Instance.Jump -= OnJumpPerformed;
             }
         }
 
-        private void OnJumpPerformed()
+        /*private void OnJumpPerformed()
         {
             // Backwards-compatible call: treat performed as an immediate press
             OnJumpPressed();
-        }
+        }*/
 
         private void OnJumpPressed()
         {
             if (_hasJumped)
+            {
+                if(_showDebug)
+                    Debug.LogWarning($"Jump failed because player has jumped already");
                 return;
+            }
             
             if (_player.StateMachine.CurrentState == _player.AirSuperState)
             {
                 if (_player.AirSuperState.InAirTime <= _coyoteTimeDuration)
                 {
+                    if(_showDebug)
+                        Debug.LogWarning($"Performing coyote jump after in air for {_player.AirSuperState.InAirTime}s/{_coyoteTimeDuration}s");
                     Jump();
                     return;
                 }
             }
-            
+
             if (_player.StateMachine.CurrentState != _player.GroundSuperState)
+            {
+                if(_showDebug)
+                    Debug.LogWarning($"Jump failed because coyote time has passed and player is not grounded");
                 return;
+            }
             
             Jump();
         }
