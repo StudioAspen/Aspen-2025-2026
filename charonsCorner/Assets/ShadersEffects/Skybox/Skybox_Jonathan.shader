@@ -7,7 +7,8 @@ Shader "Custom/VoronoiSkybox"
         _DistortionFactor ("Distortion Factor", Float) = 1.0
         _Scale ("Scale", Float) = 10.0
         _BandFrequency ("Band Frequency", Float) = 32.0
-        _TimeSpeed ("Time Speed", Float) = 1.0
+        _TimeSpeed ("Time Speed", Float) = 1.
+        _BandWidth ("Band Width", Range(0.001, 0.1)) = 0.05
     }
 
     SubShader
@@ -37,6 +38,7 @@ Shader "Custom/VoronoiSkybox"
                 float _Scale;
                 float _BandFrequency;
                 float _TimeSpeed;
+                float _BandWidth;
             CBUFFER_END
 
             struct appdata {
@@ -302,7 +304,7 @@ Shader "Custom/VoronoiSkybox"
                 
                 // this section creates the "bands" of color.
                 float3 voronoi_bands = edge_distance * (2. + 0.5 * sin(_BandFrequency * edge_distance)) * float3(1.0, 1.0, 1.0); 
-                float3 voronoi_hard_bands = floor((voronoi_bands + .5) * 4.) / 4.; // turn band gradients into hard lines
+                float3 voronoi_hard_bands = floor((voronoi_bands + .5) * 4.0) / 4.0; // turn band gradients into hard lines
                 float3 outputColor = voronoi_hard_bands * _BandColor; // base band color
 
                 if(random3(cell_id) > 0.5) {
@@ -316,8 +318,7 @@ Shader "Custom/VoronoiSkybox"
                 }
 
                 // borders	
-                float band_width = 0.05;
-                outputColor = lerp( _BorderColor, outputColor, smoothstep( band_width, band_width + 0.01, edge_distance ) );
+                outputColor = lerp( _BorderColor, outputColor, smoothstep( _BandWidth, _BandWidth * 1.01, edge_distance ) );
 
                 return float4(outputColor, 1.0);
             }
