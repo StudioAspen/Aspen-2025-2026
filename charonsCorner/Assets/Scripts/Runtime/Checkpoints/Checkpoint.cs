@@ -11,6 +11,7 @@ namespace CharonsCorner.Runtime
     public class Checkpoint : MonoBehaviour
     {
         [field: SerializeField] public int CheckpointIndex { get; private set; }
+        [field: SerializeField] public string CheckpointName { get; private set; }
         [field: SerializeField, Required] public Transform RespawnPoint { get; private set; }
 
         public static event Action<Checkpoint> OnCheckpointHit;
