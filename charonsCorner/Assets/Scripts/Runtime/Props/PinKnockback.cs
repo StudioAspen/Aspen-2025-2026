@@ -81,8 +81,10 @@ namespace CharonsCorner.Runtime
                 _rigidbody.isKinematic = false;
                 _rigidbody.WakeUp();
                 _capsuleCollider.excludeLayers = new LayerMask(); // clear all layer overrides
-                Animator pinAnim = GetComponent<Animator>();
-                pinAnim.Play("pinsquash");
+                if (TryGetComponent(out Animator pinAnim))
+                {
+                    pinAnim.Play("pinsquash");
+                }
             }
 
             float speed = GetApproachSpeed(collision);
