@@ -25,6 +25,7 @@ namespace CharonsCorner.Runtime
         [field: SerializeField] public CinemachineCamera PlayerCamera { get; private set; }
         [field: SerializeField] public FollowTarget CameraTargetFollowTarget { get; private set; }
         [field: SerializeField] public MMFeedbacks DriftFeedbacks { get; private set; }
+        [field: SerializeField] public MMFeedbacks BumperFeedbacks { get; private set; }
 
         public Rigidbody Rb { get; private set; }
         public SphereCollider Collider { get; private set; }
@@ -53,6 +54,7 @@ namespace CharonsCorner.Runtime
             Collider = GetComponent<SphereCollider>();
             SlopeSensor = GetComponentInChildren<SlopeSensor>();
             DriftFeedbacks?.Initialization();
+            BumperFeedbacks?.Initialization();
             SetupStateMachine();
         }
 
