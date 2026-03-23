@@ -1,6 +1,7 @@
 using System;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace CharonsCorner.Runtime
 {
@@ -13,6 +14,8 @@ namespace CharonsCorner.Runtime
         [field: SerializeField] public int CheckpointIndex { get; private set; }
         [field: SerializeField] public string CheckpointName { get; private set; }
         [field: SerializeField, Required] public Transform RespawnPoint { get; private set; }
+        
+        [SerializeField] private UnityEvent OnThisCheckpoint;
 
         public static event Action<Checkpoint> OnCheckpointHit;
 
@@ -33,6 +36,7 @@ namespace CharonsCorner.Runtime
         public void Activate()
         {
             OnCheckpointHit?.Invoke(this);
+            OnThisCheckpoint?.Invoke();
         }
     }
 }
