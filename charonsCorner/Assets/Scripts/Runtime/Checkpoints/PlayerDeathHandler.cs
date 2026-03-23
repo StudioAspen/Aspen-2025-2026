@@ -23,6 +23,8 @@ namespace CharonsCorner.Runtime
  
         private bool _isRespawning;
 
+        public static System.Action OnPlayerDeath;
+
         private void Awake()
         {
             rb = GetComponent<Rigidbody>();
@@ -48,6 +50,7 @@ namespace CharonsCorner.Runtime
         private IEnumerator RespawnRoutine(Vector3 targetPos, Quaternion targetRot)
         {
             _isRespawning = true;
+            OnPlayerDeath?.Invoke();
 
             // freeze player
             _inputManager.DisableAllActions();
