@@ -15,6 +15,8 @@ namespace CharonsCorner.Runtime
         [Header("Camera Config")]
         [SerializeField] private bool _useCamera = true;
         [SerializeField, ShowIf("_useCamera")] private CinemachineCamera _cinemachineCamera;
+        [SerializeField, ShowIf("_useCamera")] private CinemachineCamera _endingDialogueCinemachineCamera;
+
 
         private void Awake()
         {
@@ -48,7 +50,7 @@ namespace CharonsCorner.Runtime
             _dialogueManager.OnDialogueEnded -= DialogueManager_OnDialogueEnded;
 
             if(_useCamera)
-                CameraManager.Instance.ResetActiveCamera();
+                CameraManager.Instance.ChangeActiveCamera(_endingDialogueCinemachineCamera);
         }
     }
 }

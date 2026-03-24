@@ -1,6 +1,9 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using MoreMountains.Feedbacks;
+using CharonsCorner.Runtime;
+using UnityEngine.InputSystem;
 
 public class RankingSystem : MonoBehaviour
 {
@@ -18,6 +21,10 @@ public class RankingSystem : MonoBehaviour
 
     [Header("Score Settings")]
     [SerializeField] RankScoreSO _rankScore;
+    [SerializeField] int _chapterIndex;
+
+    [Header("Feedbacks Settings")]
+    [SerializeField] MMF_Player _endLevelSequence;
 
     // Time
     float _timer;
@@ -25,6 +32,30 @@ public class RankingSystem : MonoBehaviour
     // Checks
     bool _hasPlayerStarted;
     bool _hasPlayerFinished;
+
+    private void OnEnable()
+    {
+        if (InputManager.Instance != null)
+        {
+            InputManager.Instance.Interact += HandleInteract;
+        }
+    }
+
+    private void OnDisable()
+    {
+        if (InputManager.Instance != null)
+        {
+            InputManager.Instance.Interact -= HandleInteract;
+        }
+    }
+
+    private void HandleInteract()
+    {
+        if (_hasPlayerFinished)
+        {
+            GameManager.Instance.ReturnToHub();
+        }
+    }
 
     private void Start()
     {
@@ -35,11 +66,31 @@ public class RankingSystem : MonoBehaviour
 
     private void Update()
     {
+        if (Keyboard.current != null && Keyboard.current.pKey.wasPressedThisFrame)
+        {
+            PlayerEnd();
+        }
+
         CheckPlayerStart();
         if (!_hasPlayerFinished) Timer();
         CheckPlayerEnd();
 
         if (_hasPlayerFinished) FinalRank();
+    }
+
+    public void PlayerEnd()
+    {
+        if (_hasPlayerFinished) return;
+        
+        _hasPlayerFinished = true;
+        _hasPlayerStarted = true; // Ensure timer stops if it was running
+
+        UpdateChapterProgression(_chapterIndex);
+
+        if (_endLevelSequence != null)
+        {
+            _endLevelSequence.PlayFeedbacks();
+        }
     }
 
     void FinalRank()
@@ -58,31 +109,31 @@ public class RankingSystem : MonoBehaviour
         // S Rank Check
         if (_timer < times[0])
         {
-            _rankText.text = Ranks.S.ToString();
+            _rankText.text = "S-Rank";
             _rankScore.SetFinalRank(Ranks.S);
         }
         // A Rank Check
         else if (times[0] < _timer && _timer < times[1])
         {
-            _rankText.text = Ranks.A.ToString();
+            _rankText.text = "A-Rank";
             _rankScore.SetFinalRank(Ranks.A);
         }
         // B Rank Check
         else if (times[1] < _timer && _timer < times[2])
         {
-            _rankText.text = Ranks.B.ToString();
+            _rankText.text = "B-Rank";
             _rankScore.SetFinalRank(Ranks.B);
         }
         // C Rank Check
         else if (times[2] < _timer && _timer < times[3])
         {
-            _rankText.text = Ranks.C.ToString();
+            _rankText.text = "C-Rank";
             _rankScore.SetFinalRank(Ranks.C);
         }
         // F Rank Check
         else
         {
-            _rankText.text = Ranks.F.ToString();
+            _rankText.text = "F-Rank";
             _rankScore.SetFinalRank(Ranks.F);
         }
     }
@@ -134,7 +185,19 @@ public class RankingSystem : MonoBehaviour
             return;
         }
 
-        _hasPlayerFinished = Physics.CheckSphere(_endCheck.transform.position, _radius, _playerLayer);
+        if (Physics.CheckSphere(_endCheck.transform.position, _radius, _playerLayer))
+        {
+            PlayerEnd();
+        }
+    }
+
+    public void UpdateChapterProgression(int chapterIndex)
+    {
+        int currentChapter = FlagManager.Get(ProgressFlag.CurrentChapterIndex);
+        if (currentChapter < chapterIndex)
+        {
+            FlagManager.Set(ProgressFlag.CurrentChapterIndex, chapterIndex);
+        }
     }
 
     void Timer()

@@ -57,11 +57,15 @@ namespace CharonsCorner.Runtime
             _context.DriftFeedbacks.PlayFeedbacks();
             _boostVFX.SetActive(true);
             float boostAmountNormalized = _boostAmount / _maxBoostAmount;
-            CameraManager.Instance.CameraShaker.ShakeCamera(
-                _maxCameraShakeAmplitude * boostAmountNormalized,
-                _maxCameraShakeFrequency * boostAmountNormalized, 
-                _maxCameraShakeDuration * boostAmountNormalized
+
+            if (CameraManager.Instance != null && CameraManager.Instance.CameraShaker != null)
+            {
+                CameraManager.Instance.CameraShaker.ShakeCamera(
+                    _maxCameraShakeAmplitude * boostAmountNormalized,
+                    _maxCameraShakeFrequency * boostAmountNormalized,
+                    _maxCameraShakeDuration * boostAmountNormalized
                 );
+            }
         }
 
         private protected override void OnExit()
@@ -71,14 +75,24 @@ namespace CharonsCorner.Runtime
             Time.timeScale = 1;
             
             // Reset juice
-            _context.DriftSuperState.CameraOrbitalFollow.Radius = _context.DriftSuperState.CameraBaseOrbitalDistance;
+            if (_context.DriftSuperState.CameraOrbitalFollow != null)
+            {
+                _context.DriftSuperState.CameraOrbitalFollow.Radius = _context.DriftSuperState.CameraBaseOrbitalDistance;
+            }
+
             _context.CameraTargetFollowTarget.SetPositionOffset(Vector3.zero);
             _boostVFX.SetActive(false);
         }
 
         private protected override void OnUpdate()
         {
-            _context.DriftSuperState.CameraOrbitalFollow.Radius = Mathf.Lerp(_context.DriftSuperState.CameraOrbitalFollow.Radius, _context.DriftSuperState.CameraBaseOrbitalDistance, _cameraChangeDistanceSpeed * Time.unscaledDeltaTime);
+            if (_context.DriftSuperState.CameraOrbitalFollow != null)
+            {
+                _context.DriftSuperState.CameraOrbitalFollow.Radius = Mathf.Lerp(
+                    _context.DriftSuperState.CameraOrbitalFollow.Radius,
+                    _context.DriftSuperState.CameraBaseOrbitalDistance, _cameraChangeDistanceSpeed * Time.unscaledDeltaTime);
+            }
+
             _context.CameraTargetFollowTarget.SetPositionOffset(
                 Vector3.zero.WithY(Mathf.Lerp(_context.CameraTargetFollowTarget.PositionOffset.y, 0, _cameraChangeDistanceSpeed * Time.unscaledDeltaTime))
                 );
@@ -96,12 +110,32 @@ namespace CharonsCorner.Runtime
 
         private Vector3 GetDriftDirection()
         {
+            Transform camTransform = null;
+            if (CameraManager.Instance != null && CameraManager.Instance.CurrentCamera != null)
+            {
+                camTransform = CameraManager.Instance.CurrentCamera.transform;
+            }
+            else if (_context.PlayerCamera != null)
+            {
+                camTransform = _context.PlayerCamera.transform;
+            }
+            else if (Camera.main != null)
+            {
+                camTransform = Camera.main.transform;
+            }
+
+            if (camTransform == null)
+            {
+                Debug.LogWarning("No camera found for drift direction. Falling back to player orientation.");
+                return _context.Orientation.forward;
+            }
+
             // Use camera if kb/mouse
             if (InputManager.Instance.CurrentControlScheme == InputManager.ControlScheme.KeyboardMouse)
-                return CameraManager.Instance.CurrentCamera.transform.forward.WithY(0).normalized;
+                return camTransform.forward.WithY(0).normalized;
             
             // Use stick dir if gamepad
-            return CustomUtils.GetCameraBasedMoveInput(CameraManager.Instance.CurrentCamera.transform,
+            return CustomUtils.GetCameraBasedMoveInput(camTransform,
                 InputManager.Instance.MoveDirection);
         }
     }
