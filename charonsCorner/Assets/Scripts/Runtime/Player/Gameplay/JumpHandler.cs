@@ -4,6 +4,7 @@ using UnityEngine;
 namespace CharonsCorner.Runtime
 {
     [RequireComponent(typeof(GameplayPlayerController))]
+    [RequireComponent(typeof(AudioSource))]
     public class JumpHandler : MonoBehaviour
     {   
         [Header("Landing Particle Setup")]
@@ -11,6 +12,7 @@ namespace CharonsCorner.Runtime
         [SerializeField] private ParticleCloudPlayer _particleCloudPlayer;
 
         private GameplayPlayerController _player;
+        private AudioSource _audioSource;
 
         [Header("Jump Settings")]
         [Tooltip("Force applied when jump is initiated")]
@@ -32,11 +34,16 @@ namespace CharonsCorner.Runtime
         
         [Header("Debug")]
         [SerializeField] private bool _showDebug = false;
+        
+        [Header("Audio Settings")]
+        [SerializeField] private AudioClip _jumpSound;
+        [SerializeField] private AudioClip _bounceSound;
 
         void Awake()
         {
             _player = GetComponent<GameplayPlayerController>();
             _particleCloudPlayer = GetComponent<ParticleCloudPlayer>();
+            _audioSource = GetComponent<AudioSource>();
         }
 
         private void Update()
@@ -115,6 +122,12 @@ namespace CharonsCorner.Runtime
             _player.Rb.AddForce(_player.Orientation.up * _jumpForce, ForceMode.VelocityChange);
             
             _particleCloudPlayer.EnableParticleTrigger(true);
+            
+            if (_audioSource != null && _jumpSound != null)
+            {
+                _audioSource.PlayOneShot(_jumpSound);
+            }
+
         }
 
         private void Bounce()

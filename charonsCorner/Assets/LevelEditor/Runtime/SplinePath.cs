@@ -176,6 +176,22 @@ namespace CharonsCorner.LevelEditor
                     leftVertices.Add(leftPoint);
                     rightVertices.Add(rightPoint); 
                 }
+                
+                // Add front face
+                SplineData<float> frontFaceScaleData = splineContainer.Splines[currentSplineIndex].GetOrCreateFloatData(SplineScale.Y_SCALE_KEY);
+                float frontFaceHeight = frontFaceScaleData.Evaluate(splineContainer.Splines[currentSplineIndex], 0, PathIndexUnit.Normalized, new LerpFloat());
+                Vector3 frontTopRight = rightVertices[0];
+                Vector3 frontBottomRight = rightVertices[0] + Vector3.down * frontFaceHeight;
+                Vector3 frontTopLeft = leftVertices[0];
+                Vector3 frontBottomLeft = leftVertices[0] + Vector3.down * frontFaceHeight;
+                
+                vertices.AddRange(new[] { frontTopRight, frontTopLeft, frontBottomRight, frontBottomLeft });
+                uvs.AddRange(new[] { Vector2.zero, Vector2.zero, Vector2.zero, Vector2.zero });
+                triangles.AddRange(new[] {
+                    offset + 3, offset + 2, offset + 0,
+                    offset + 0, offset + 1, offset + 3
+                });
+                offset += 4;
 
                 // Create faces for each segment
                 for (int i = 0; i < numSegments; i++)
@@ -227,6 +243,23 @@ namespace CharonsCorner.LevelEditor
                     
                     offset += 16;
                 }
+                
+                // Add back face
+                SplineData<float> backFaceScaleData = splineContainer.Splines[currentSplineIndex].GetOrCreateFloatData(SplineScale.Y_SCALE_KEY);
+                float backFaceHeight = backFaceScaleData.Evaluate(splineContainer.Splines[currentSplineIndex], 1, PathIndexUnit.Normalized, new LerpFloat());
+                Vector3 backTopRight = rightVertices[leftVertices.Count - 1];
+                Vector3 backBottomRight = rightVertices[leftVertices.Count - 1] + Vector3.down * backFaceHeight;
+                Vector3 backTopLeft = leftVertices[leftVertices.Count - 1];
+                Vector3 backBottomLeft = leftVertices[leftVertices.Count - 1] + Vector3.down * backFaceHeight;
+                
+                vertices.AddRange(new[] { backTopRight, backTopLeft, backBottomRight, backBottomLeft });
+                uvs.AddRange(new[] { Vector2.zero, Vector2.zero, Vector2.zero, Vector2.zero });
+                triangles.AddRange(new[] {
+                    offset + 0, offset + 2, offset + 3,
+                    offset + 3, offset + 1, offset + 0
+                });
+                offset += 4;
+
             }
             
             // --------------------------------------------------------------------------------
