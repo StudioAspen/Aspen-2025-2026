@@ -1,5 +1,6 @@
 using System;
 using Cysharp.Threading.Tasks;
+using Eflatun.SceneReference;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Events;
@@ -16,6 +17,7 @@ namespace CharonsCorner.Runtime
 
         //Editor references
         [Header("References")]
+        [SerializeField] private SceneReference _flashbackScene;
         [SerializeField, ReadOnly] private LevelDataSO _currentLevelData;
 
         [SerializeField, ReadOnly] private bool _isOpen;
@@ -56,10 +58,19 @@ namespace CharonsCorner.Runtime
                 return;
             }
 
-            Debug.Log($"[HubLevelSelectController] Starting level: {_currentLevelData.LevelScene}");
+            if (_flashbackScene == null)
+            {
+                Debug.LogWarning("[HubLevelSelectController] Flashback scene is not assigned.");
+                return;
+            }
 
-            //Open level scene
-            GameManager.Instance.SwitchScenes(_currentLevelData.LevelScene, GameState.Gameplay).Forget();
+            Debug.Log($"[HubLevelSelectController] Starting flashback for level: {_currentLevelData.LevelTitle}");
+
+            // Set the pending dialogue for the flashback scene
+            FlashbackTrigger.SetPendingDialogue(_currentLevelData.FlashbackDialogue);
+
+            // Open flashback scene
+            GameManager.Instance.SwitchScenes(_flashbackScene, GameState.Gameplay).Forget();
         }
     }
 }
