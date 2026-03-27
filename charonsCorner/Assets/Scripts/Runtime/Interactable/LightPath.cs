@@ -38,6 +38,40 @@ namespace CharonsCorner.Runtime
         private Quaternion _transitionEndRot;
         private float _transitionTimer = 0f;
 
+        private Vector3 _startPosition;
+        private Quaternion _startRotation;
+        private int _initialSplineIndex;
+        private float _initialProgress;
+
+        private void Start()
+        {
+            _startPosition = transform.position;
+            _startRotation = transform.rotation;
+            _initialSplineIndex = _currentSplineIndex;
+            _initialProgress = _progress;
+        }
+
+        private void OnEnable()
+        {
+            PlayerDeathHandler.OnPlayerDeath += ResetToStart;
+        }
+
+        private void OnDisable()
+        {
+            PlayerDeathHandler.OnPlayerDeath -= ResetToStart;
+        }
+
+        private void ResetToStart()
+        {
+            _currentSplineIndex = _initialSplineIndex;
+            _progress = _initialProgress;
+            _cachedSplineLength = 0f;
+            _isTransitioning = false;
+            _transitionTimer = 0f;
+
+            transform.SetPositionAndRotation(_startPosition, _startRotation);
+        }
+
         private void Update()
         {
             float distance = Vector3.Distance(transform.position, Player.position);
