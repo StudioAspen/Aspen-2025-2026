@@ -6,8 +6,10 @@ using System.Collections.Generic;
 using Febucci.TextAnimatorForUnity;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using Febucci.TextAnimatorForUnity.TextMeshPro;
+using System.Numerics;
 
 namespace CharonsCorner.Runtime
 {
@@ -22,6 +24,12 @@ namespace CharonsCorner.Runtime
         [SerializeField] private TMP_Text _nameText;
         [SerializeField] private TypewriterComponent _dialogueTextTypewriter;
         [SerializeField] private Transform _optionsContainer;
+
+        [Header("Arrow Settings")]
+        [SerializeField] private RectTransform _arrowObject;
+        [SerializeField] private AnimationCurve _arrowAnimationCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
+        [SerializeField] private float _arrowAnimationDuration = 0.5f;
+        [SerializeField] private UnityEngine.Vector2 _arrowOffsetX = new UnityEngine.Vector2(-30f, 0f);
 
         private void Awake()
         {
@@ -117,7 +125,7 @@ namespace CharonsCorner.Runtime
 
             foreach (DialogueSequenceSO sequence in sequenceOptions)
             {
-                GameObject buttonObject = Instantiate(_optionButtonPrefab, _optionsContainer);
+                GameObject buttonObject = InstantiateOptionButton(_optionsContainer);
                 buttonObject.name = $"({sequence.SequenceName})Button";
                 TMP_Text buttonText = buttonObject.GetComponentInChildren<TMP_Text>();
                 buttonText.text = sequence.SequenceName;
@@ -127,7 +135,7 @@ namespace CharonsCorner.Runtime
 
             if (willTryShowReturn && _dialogueManager.ReturnAction != null)
             {
-                GameObject returnButtonObject = Instantiate(_optionButtonPrefab, _optionsContainer);
+                GameObject returnButtonObject = InstantiateOptionButton(_optionsContainer);
                 returnButtonObject.name = "ReturnButton";
                 TMP_Text returnButtonText = returnButtonObject.GetComponentInChildren<TMP_Text>();
                 returnButtonText.text = "Return";
@@ -138,7 +146,7 @@ namespace CharonsCorner.Runtime
                 });
             }
             
-            GameObject closeButtonObject = Instantiate(_optionButtonPrefab, _optionsContainer);
+            GameObject closeButtonObject = InstantiateOptionButton(_optionsContainer);
             closeButtonObject.name = "CloseButton";
             TMP_Text closeButtonText = closeButtonObject.GetComponentInChildren<TMP_Text>();
             closeButtonText.text = "Close";
@@ -155,7 +163,7 @@ namespace CharonsCorner.Runtime
         {
             ClearButtons();
 
-            GameObject nextButtonObject = Instantiate(_optionButtonPrefab, _optionsContainer);
+            GameObject nextButtonObject = InstantiateOptionButton(_optionsContainer);
             nextButtonObject.name = "NextButton";
             TMP_Text nextButtonText = nextButtonObject.GetComponentInChildren<TMP_Text>();
             nextButtonText.text = "Next";
@@ -165,6 +173,33 @@ namespace CharonsCorner.Runtime
 
             // _uiManager.ChangeCurrentSelectedObject(nextButtonObject);
         }
+
+        private GameObject InstantiateOptionButton(Transform parent)
+        {
+            GameObject buttonObject = Instantiate(_optionButtonPrefab, parent);
+            
+            EventTrigger trigger = buttonObject.AddComponent<EventTrigger>();
+            EventTrigger.Entry entry = new EventTrigger.Entry { eventID = EventTriggerType.PointerEnter };
+
+            RectTransform buttonRect = buttonObject.GetComponent<RectTransform>();
+            entry.callback.AddListener((data) => MoveArrowToButton(buttonRect));
+            trigger.triggers.Add(entry);
+
+            return buttonObject;
+        }
+
+        private void MoveArrowToButton(RectTransform target)
+        {
+            _arrowObject.gameObject.SetActive(true);
+
+            // UnityEngine.Vector2 targetPosition = new UnityEngine.Vector2(target.anchoredPosition.x + _arrowOffsetX.x, target.anchoredPosition.y);
+
+            DOTween.Kill(_arrowObject);
+            _arrowObject.DOAnchorPosY(target.anchoredPosition.y, _arrowAnimationDuration)
+                .SetEase(_arrowAnimationCurve)
+                .SetUpdate(true);
+        }
+
 
         /// <summary>
         /// Completely clears the UI, including name and dialogue text, and removes all option buttons.
