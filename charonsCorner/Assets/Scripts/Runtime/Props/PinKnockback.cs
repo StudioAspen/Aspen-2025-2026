@@ -29,6 +29,8 @@ namespace CharonsCorner.Runtime
         private int _pinLayer = 7;
 
         private CapsuleCollider _capsuleCollider;
+        // position, speedScale, lookTarget
+        public static event Action<Vector3, float, Transform> OnPinHit;
 
         // dampen the "infinite" spinning that happens sometimes
         void FixedUpdate()
@@ -79,12 +81,17 @@ namespace CharonsCorner.Runtime
                 _rigidbody.isKinematic = false;
                 _rigidbody.WakeUp();
                 _capsuleCollider.excludeLayers = new LayerMask(); // clear all layer overrides
+                if (TryGetComponent(out Animator pinAnim))
+                {
+                    pinAnim.Play("pinsquash");
+                }
             }
 
             float speed = GetApproachSpeed(collision);
             float t = Mathf.InverseLerp(_minSpeedForKnockback, _maxSpeedForKnockback, speed);
             float speedScale = Mathf.Clamp01(_speedCurve.Evaluate(Mathf.Clamp01(t)));
-
+            // going to use already calculated speedScale to determine the size of the pow effect, instead of calculating it again in PowEffectScript  
+            OnPinHit?.Invoke(transform.position, speedScale, collision.transform);
             if (speedScale <= 0f) return;
 
             Vector3 away;

@@ -7,11 +7,11 @@ namespace CharonsCorner.Runtime
     public class GroundMoveState : State<GameplayPlayerController>
     {
         [Header("Speed Settings")]
-        [field:SerializeField] public float MaxSpeed {get; private set;} = 25f;
-        [field:SerializeField] public float Acceleration {get; private set;} = 30f;
-        [field:SerializeField] public float Deceleration {get; private set;} = 10f;
-        [field:SerializeField] public float SlopeBoost {get; private set;} = 10f; // optional slope influence
-        [field:SerializeField] public float GroundStickForce {get; private set;} = 10f;
+        [field:SerializeField] public float MaxSpeed { get; private set; } = 25f;
+        [field:SerializeField] public float Acceleration { get; private set; } = 30f;
+        [field:SerializeField] public float Deceleration { get; private set; } = 10f;
+        [field:SerializeField] public float SlopeBoost { get; private set; } = 10f; // optional slope influence
+        [field:SerializeField] public float GroundStickForce { get; private set; } = 10f;
 
         private protected override void OnEnter()
         {
@@ -51,12 +51,15 @@ namespace CharonsCorner.Runtime
             Vector3 forwardOriented;
             Vector3 rightOriented;
             Vector3 bonusForce = Vector3.zero;
+
+            bool isOnSlope = _context.SlopeSensor.IsOnSlope;
             // Apply movement along slope if we are on a slope
-            if (_context.SlopeSensor.IsOnSlope)
+            if (isOnSlope)
             {
                 RaycastHit hit = _context.SlopeSensor.Hit;
-                forwardOriented = Vector3.Cross(_context.Orientation.right, hit.normal).normalized;
-                rightOriented = Vector3.Cross(hit.normal, forwardOriented).normalized;
+                
+                forwardOriented = Vector3.ProjectOnPlane(_context.Orientation.forward, hit.normal).normalized;
+                rightOriented = Vector3.ProjectOnPlane(_context.Orientation.right, hit.normal).normalized;
                 
                 // Downhill direction along the slope plane
                 Vector3 downhillDir = Vector3.ProjectOnPlane(Vector3.down, hit.normal).normalized;
@@ -80,6 +83,11 @@ namespace CharonsCorner.Runtime
                     );
                     bonusForce += downhillDir * (SlopeBoost * slopeFactor * downhillDot);
                 }
+                else
+                {
+                    // might need to cancel gravity?
+                    _context.Rb.AddForce(Vector3.up * _context.Gravity, ForceMode.Acceleration);
+                }
                 
                 _context.Rb.AddForce(-hit.normal * GroundStickForce, ForceMode.Acceleration); // ground stick
             }
@@ -89,13 +97,37 @@ namespace CharonsCorner.Runtime
                 rightOriented = _context.Orientation.right;
             }
             
-            Vector3 inputForce = forwardOriented * (input.y * Acceleration) + rightOriented * (input.x * Acceleration);
+            Vector3 inputForce =
+                forwardOriented * (input.y * Acceleration) +
+                rightOriented * (input.x * Acceleration);
+
+            Debug.DrawLine(_context.transform.position,
+                _context.transform.position + 100f * inputForce,
+                Color.red, 0.25f);
+
             _context.Rb.AddForce(inputForce + bonusForce, ForceMode.Acceleration);
-            
-            // Clamp max velocity manually
-            if (_context.Rb.linearVelocity.magnitude > MaxSpeed)
+
+            // Clamp max velocity along ground (slope plane) so uphill doesn't slow you
+            Vector3 vel = _context.Rb.linearVelocity;
+            if (isOnSlope)
             {
-                _context.Rb.linearVelocity = _context.Rb.linearVelocity.normalized * MaxSpeed;
+                Vector3 n = _context.SlopeSensor.Hit.normal;
+
+                Vector3 tangentVel = Vector3.ProjectOnPlane(vel, n);
+                float tangentSpeed = tangentVel.magnitude;
+
+                if (tangentSpeed > MaxSpeed)
+                {
+                    Vector3 normalVel = vel - tangentVel;
+                    Vector3 clampedTangent = tangentVel.normalized * MaxSpeed;
+                    _context.Rb.linearVelocity = clampedTangent + normalVel;
+                }
+            }
+            else
+            {
+                float speed = vel.magnitude;
+                if (speed > MaxSpeed)
+                    _context.Rb.linearVelocity = vel.normalized * MaxSpeed;
             }
         }
 
