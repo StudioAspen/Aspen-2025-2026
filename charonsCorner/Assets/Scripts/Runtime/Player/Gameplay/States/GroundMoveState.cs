@@ -109,7 +109,13 @@ namespace CharonsCorner.Runtime
 
             // Clamp max velocity along ground (slope plane) so uphill doesn't slow you
             Vector3 vel = _context.Rb.linearVelocity;
-            if (isOnSlope)
+
+            // If we've just jumped, don't clamp the vertical component of the velocity using the ground speed limit
+            if (_context.JumpHandler != null && _context.JumpHandler.HasJumped && vel.y > 0.01f)
+            {
+                // We let the vertical velocity pass through to AirMoveState or be handled by gravity/vertical clamping
+            }
+            else if (isOnSlope)
             {
                 Vector3 n = _context.SlopeSensor.Hit.normal;
 

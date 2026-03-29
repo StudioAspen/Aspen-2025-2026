@@ -30,6 +30,7 @@ namespace CharonsCorner.Runtime
         public Rigidbody Rb { get; private set; }
         public SphereCollider Collider { get; private set; }
         public SlopeSensor SlopeSensor { get; private set; }
+        public JumpHandler JumpHandler { get; private set; }
         public bool IsGrounded { get; private set; }
         public bool CannonAir { get; private set; } = false;
         public CannonBall CurrentCannon { get; private set; }
@@ -53,6 +54,7 @@ namespace CharonsCorner.Runtime
             Rb = GetComponent<Rigidbody>();
             Collider = GetComponent<SphereCollider>();
             SlopeSensor = GetComponentInChildren<SlopeSensor>();
+            JumpHandler = GetComponent<JumpHandler>();
             DriftFeedbacks?.Initialization();
             BumperFeedbacks?.Initialization();
             SetupStateMachine();
