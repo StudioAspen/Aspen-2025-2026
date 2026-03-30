@@ -12,7 +12,7 @@ namespace CharonsCorner.Runtime
 
         private protected override void OnEnter()
         {
-            
+            _context.CurrentSubState = GetType().Name;
         }
 
         private protected override void OnExit()
@@ -27,6 +27,8 @@ namespace CharonsCorner.Runtime
 
         private protected override void OnFixedUpdate()
         {
+            _context.ApplyGravity();
+
             Vector2 input = InputManager.Instance.MoveDirection;
             Vector3 inputDirection = _context.Orientation.right * input.x + _context.Orientation.forward * input.y;
             

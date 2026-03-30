@@ -8,13 +8,25 @@ _tracer = trace.get_blender_tracer()
 @trace.trace_blender_function()
 def save_textures():
     """Save textures in blend file."""
-    for image in bpy.data.images:
-        # If a FILE, just save
-        if image.source == 'FILE':
-            image.save()
 
+    # Purge unused data
+    bpy.ops.outliner.orphans_purge(do_local_ids=True, do_linked_ids=True, do_recursive=True)
+
+    # Save images
+    for image in bpy.data.images:
+
+        # Check if the image has no users and no source file path
+        if image.has_data == False:
+            bpy.data.images.remove(image)
+            continue
+
+        # If a FILE, just save
+        if image.source == 'FILE' and image.filepath:
+            print(f'FILE')
+            image.save()
         # If generated in blender, save it to blend file directly as a PNG
         elif image.source == 'GENERATED':
+            print(f'{os.path.dirname(bpy.data.filepath)}/{image.name}.png')
             image.filepath_raw = f'{os.path.dirname(bpy.data.filepath)}/{image.name}.png'
             image.file_format = 'PNG'
             image.save()
