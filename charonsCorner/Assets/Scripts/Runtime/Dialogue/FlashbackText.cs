@@ -1,0 +1,136 @@
+using UnityEngine;
+using TMPro;
+using Febucci.TextAnimatorForUnity;
+using CharonsCorner.Runtime;
+
+public class FlashbackText : MonoBehaviour
+{
+    [SerializeField] private TypewriterComponent typewriter;
+    [SerializeField] private TMP_Text textComponent;
+
+    private string[] _lines;
+    private int _currentLineIndex = -1;
+    private bool _isTyping = false;
+    private bool _isActive = false;
+    private bool _skipFirstFrameInput = false;
+
+    public static bool IsDialogueActive { get; private set; }
+
+    public static bool CanStartDialogue => !IsDialogueActive && Time.frameCount > _instanceLastFinishedFrame;
+    private static int _instanceLastFinishedFrame = -1;
+
+    public delegate void DialogueRequestAction(string[] lines);
+    public static event DialogueRequestAction OnDialogueRequested;
+
+    public delegate void DialogueAction();
+    public static event DialogueAction OnDialogueFinished;
+
+    public static void RequestDialogue(string[] lines)
+    {
+        OnDialogueRequested?.Invoke(lines);
+    }
+
+    public static void RequestDialogue(FlashbackDialogueData data)
+    {
+        if (data != null && data.lines != null && data.lines.Length > 0)
+        {
+            RequestDialogue(data.lines);
+        }
+    }
+
+    private void OnEnable()
+    {
+        OnDialogueRequested += ActivateText;
+        if (InputManager.Instance != null)
+        {
+            InputManager.Instance.Interact += HandleInput;
+        }
+    }
+
+    private void OnDisable()
+    {
+        OnDialogueRequested -= ActivateText;
+        if (InputManager.Instance != null)
+        {
+            InputManager.Instance.Interact -= HandleInput;
+        }
+    }
+
+    private void Awake()
+    {
+        if (typewriter == null) typewriter = GetComponent<TypewriterComponent>();
+        if (textComponent == null) textComponent = GetComponent<TMP_Text>();
+
+        if (typewriter != null)
+        {
+            typewriter.onTextShowed.AddListener(OnTextShowed);
+        }
+    }
+
+    private void OnTextShowed()
+    {
+        _isTyping = false;
+    }
+
+    public void ActivateText(string[] lines)
+    {
+        if (lines == null || lines.Length == 0) return;
+
+        _lines = lines;
+        _currentLineIndex = 0;
+        _isActive = true;
+        IsDialogueActive = true;
+        _skipFirstFrameInput = true;
+        
+        DisplayCurrentLine();
+    }
+
+    private void Update()
+    {
+        if (!_isActive) return;
+
+        if (_skipFirstFrameInput)
+        {
+            _skipFirstFrameInput = false;
+        }
+    }
+
+    private void HandleInput()
+    {
+        if (!_isActive || _skipFirstFrameInput) return;
+
+        if (_isTyping)
+        {
+            typewriter.SkipTypewriter();
+        }
+        else
+        {
+            _currentLineIndex++;
+            if (_currentLineIndex < _lines.Length)
+            {
+                DisplayCurrentLine();
+            }
+            else
+            {
+                FinishSequence();
+            }
+        }
+    }
+
+    private void DisplayCurrentLine()
+    {
+        _isTyping = true;
+        string line = _lines[_currentLineIndex];
+        
+        typewriter.ShowText(line);
+    }
+
+    private void FinishSequence()
+    {
+        _isActive = false;
+        IsDialogueActive = false;
+        _instanceLastFinishedFrame = Time.frameCount;
+        if (textComponent != null) textComponent.text = string.Empty;
+        OnDialogueFinished?.Invoke();
+    }
+}
