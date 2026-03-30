@@ -10,6 +10,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using Febucci.TextAnimatorForUnity.TextMeshPro;
 using System.Numerics;
+using UnityEngine.SocialPlatforms;
 
 namespace CharonsCorner.Runtime
 {
@@ -191,11 +192,13 @@ namespace CharonsCorner.Runtime
         private void MoveArrowToButton(RectTransform target)
         {
             _arrowObject.gameObject.SetActive(true);
-
-            // UnityEngine.Vector2 targetPosition = new UnityEngine.Vector2(target.anchoredPosition.x + _arrowOffsetX.x, target.anchoredPosition.y);
+            
+            UnityEngine.Vector2 localPosition = _arrowObject.parent.InverseTransformPoint(target.position);
+            
+            _arrowObject.anchoredPosition = new UnityEngine.Vector2(localPosition.x + _arrowOffsetX.x, localPosition.y);
 
             DOTween.Kill(_arrowObject);
-            _arrowObject.DOAnchorPosY(target.anchoredPosition.y, _arrowAnimationDuration)
+            _arrowObject.DOAnchorPosY(localPosition.y, _arrowAnimationDuration)
                 .SetEase(_arrowAnimationCurve)
                 .SetUpdate(true);
         }
