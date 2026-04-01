@@ -14,7 +14,7 @@ namespace CharonsCorner.Runtime
             DestroyOtherEventSystems();
         }
 
-        private void OnDestroy()
+        private protected override void OnDestroy()
         {
             SceneManager.activeSceneChanged -= SceneManager_ActiveSceneChanged;
         }

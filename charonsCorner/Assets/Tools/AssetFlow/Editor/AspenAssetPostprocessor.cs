@@ -3,6 +3,10 @@ using UnityEditor;
 using UnityEngine;
 using System.IO;
 using System.Reflection;
+using UnityEditor.AssetImporters;
+using System.Collections.Generic;
+using System.Linq;
+using Object = UnityEngine.Object;
 
 namespace Aspen.Tools.Assets
 {
@@ -26,17 +30,19 @@ namespace Aspen.Tools.Assets
 		{
 			foreach (string assetPath in importedAssets)
 			{
+
 				// If asset is FBX and in the models folder
 				if (assetPath.EndsWith(".fbx", System.StringComparison.OrdinalIgnoreCase)
-				    && assetPath.StartsWith("Assets/Art/models"))
+					&& assetPath.StartsWith("Assets/Art/models"))
 				{
 					ModelImporter modelImporter = AssetImporter.GetAtPath(assetPath) as ModelImporter;
-					
-					ExtractTexturesFromFBX(modelImporter, assetPath);
-					
+					modelImporter.materialImportMode = ModelImporterMaterialImportMode.ImportViaMaterialDescription;
+
+					ExtractTexturesAndMaterialsFromFBX(modelImporter, assetPath);
+
 					// Create avatar for characters and actors
 					if (assetPath.StartsWith("Assets/Art/models/characters") ||
-					    assetPath.StartsWith("Assets/Art/models/actors") && modelImporter != null)
+						assetPath.StartsWith("Assets/Art/models/actors") && modelImporter != null)
 					{
 						modelImporter.avatarSetup = ModelImporterAvatarSetup.CreateFromThisModel;
 					}
@@ -46,7 +52,7 @@ namespace Aspen.Tools.Assets
 					{
 						CreatePrefabFromFBX(assetPath);
 					}
-					
+
 					AssetDatabase.SaveAssets();
 					AssetDatabase.Refresh();
 				}
@@ -60,20 +66,20 @@ namespace Aspen.Tools.Assets
 		/// <param name="propNames"></param>
 		/// <param name="values"></param>
 		private void OnPostprocessGameObjectWithUserProperties(GameObject go, string[] propNames, object[] values)
-		{	
+		{
 			// Get Model Importer
 			ModelImporter modelImporter = assetImporter as ModelImporter;
-			
+
 			if (modelImporter != null)
 			{
-				// Importing Animations - Check for property name "avatar_path"
+				// Handle mporting Animations - Check for property name "avatar_path"
 				if (propNames[0].Equals("avatar_path"))
 				{
 					string avatar_path = values[0] as string;
-					
+
 					// Set avatar to copy from other
 					modelImporter.avatarSetup = ModelImporterAvatarSetup.CopyFromOther;
-					
+
 					// Try to set avatar
 					Avatar avatar = AssetDatabase.LoadAssetAtPath<Avatar>(avatar_path);
 					if (avatar != null)
@@ -93,8 +99,10 @@ namespace Aspen.Tools.Assets
 		///    Extract textures from FBX. The textures will be extracted to same folder as FBX.
 		/// </summary>
 		/// <param name="fbxPath">The path of the FBX to extract textures from.</param>
-		private static void ExtractTexturesFromFBX(ModelImporter modelImporter, string fbxPath)
+		private static void ExtractTexturesAndMaterialsFromFBX(ModelImporter modelImporter, string fbxPath)
 		{
+			List<string> assetsToReload = new List<string>();
+			
 			string extractPath = Path.GetDirectoryName(fbxPath);
 
 			// Get model importer
@@ -103,9 +111,27 @@ namespace Aspen.Tools.Assets
 				Debug.LogError("No ModelImporter found at: " + fbxPath);
 				return;
 			}
-					
+
+			modelImporter.SearchAndRemapMaterials(ModelImporterMaterialName.BasedOnMaterialName,
+				ModelImporterMaterialSearch.Local);
+
 			// Extract textures from model
 			modelImporter.ExtractTextures(extractPath);
+			
+			// Extract materials from model
+			Object[] materials = AssetDatabase.LoadAllAssetsAtPath(fbxPath)
+				.Where(asset => asset.GetType() == typeof(Material)).ToArray();
+			foreach (Material material in materials)
+			{
+				string newMaterialPath = Path.Combine(new string[]{extractPath, $"{material.name}.mat"});
+				newMaterialPath = AssetDatabase.GenerateUniqueAssetPath(newMaterialPath);
+				
+				string errorMessage = AssetDatabase.ExtractAsset(material, newMaterialPath);
+				if (String.IsNullOrEmpty(errorMessage))
+				{
+					assetsToReload.Add(fbxPath);
+				}
+			}
 		}
 
 		/// <summary>
@@ -119,26 +145,46 @@ namespace Aspen.Tools.Assets
 			string fileName = Path.GetFileNameWithoutExtension(fbxPath);
 			string prefabPath = $"Assets/Prefabs/Props/{fileName}.prefab";
 			Directory.CreateDirectory(Path.GetFullPath(Path.GetDirectoryName(prefabPath)));
-            
+
 			// If the prefab already exists, don't create one
 			if (AssetDatabase.LoadAssetAtPath<GameObject>(prefabPath) != null)
 				return;
-            
+
 			// Try to load FBX
 			GameObject fbxPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(fbxPath);
 			if (fbxPrefab == null)
 			{
 				Debug.LogError($"No base prefab found at {fbxPath}. Unable to create prefab.");
 			}
+			
+			
 
 			// Create root object for new prefab. FBX is a child object.
 			GameObject root = new GameObject();
 			GameObject tempInstance = (GameObject)PrefabUtility.InstantiatePrefab(fbxPrefab);
 			tempInstance.transform.parent = root.transform;
-            
+
 			PrefabUtility.SaveAsPrefabAsset(root, prefabPath);
 			GameObject.DestroyImmediate(root);
 			Debug.Log($"Created prefab variant: {prefabPath}");
 		}
+
+		public void OnPreprocessMaterialDescription(MaterialDescription description, Material material, AnimationClip[] materialAnimation)
+		{
+			var shader = Shader.Find("Shader Graphs/C_VLighting");
+			if (shader == null)
+				return;
+			material.shader = shader;
+			
+			// Read a texture property from the material description.
+			TexturePropertyDescription textureProperty;
+			if (description.TryGetProperty("DiffuseColor", out textureProperty))
+			{
+				// Assign the texture to the material.
+				material.SetTexture("_BaseTexture", textureProperty.texture);
+			}
+		} 
 	}
+
+
 }

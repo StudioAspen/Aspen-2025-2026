@@ -1,25 +1,38 @@
 ﻿using DG.Tweening;
-using NaughtyAttributes;
 using System;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace CharonsCorner.Runtime
 {
-    public class DialogueManager : MonoBehaviour
+    public class DialogueManager : Singleton<DialogueManager>
     {
-        [field: SerializeField, ReadOnly, Expandable] public DialogueOpenerSO CurrentOpener { get; private set; }
+        [field: SerializeField, ReadOnly] public DialogueOpenerSO CurrentOpener { get; private set; }
         public event Action<DialogueOpenerSO> OnDialogueOpenerStarted = delegate { };
 
-        [field: SerializeField, ReadOnly, Expandable] public DialogueSequenceSO CurrentSequence { get; private set; }
+        [field: SerializeField, ReadOnly] public DialogueSequenceSO CurrentSequence { get; private set; }
         public event Action<DialogueSequenceSO> OnDialogueSequenceStarted = delegate { };
         public event Action<DialogueSequenceSO, DialogueSO> OnDialogueSequenceEndReached = delegate { };
 
         [field: SerializeField, ReadOnly] public int CurrentDialogueIndex { get; private set; }
-        [field: SerializeField, ReadOnly, Expandable] public DialogueSO CurrentDialogue { get; private set; }
+        [field: SerializeField, ReadOnly] public DialogueSO CurrentDialogue { get; private set; }
         public event Action<DialogueSO> OnDialogueStarted = delegate { };
 
         public event Action OnDialogueEnded = delegate { };
+        
+        public MonoBehaviour Owner { get; private set; }
+        public DialogueBacklog CurrentBacklog { get; private set; }
+        public Action ReturnAction { get; private set; }
 
+        public void SetOwner(MonoBehaviour owner) => Owner = owner;
+        
+        public void SetBacklog(DialogueBacklog backlog) => CurrentBacklog = backlog;
+        
+        public void SetReturnAction(Action returnAction)
+        {
+            ReturnAction = returnAction;
+        }
+        
         public void StartDialogueOpener(DialogueOpenerSO opener)
         {
             if (opener == null)
@@ -48,6 +61,9 @@ namespace CharonsCorner.Runtime
 
             CurrentDialogueIndex = 0;
             StartDialogue(sequence.DialogueContainers[CurrentDialogueIndex].Dialogue);
+            
+            if(CurrentDialogueIndex >= CurrentSequence.DialogueContainers.Count - 1)
+                OnDialogueSequenceEndReached.Invoke(CurrentSequence, CurrentDialogue);
         }
 
         public void StartDialogue(DialogueSO dialogue)
@@ -86,11 +102,16 @@ namespace CharonsCorner.Runtime
 
         public void EndDialogue()
         {
+            OnDialogueEnded.Invoke();
+            
             CurrentOpener = null;
             CurrentSequence = null;
             CurrentDialogueIndex = 0;
             CurrentDialogue = null;
-            OnDialogueEnded.Invoke();
+            
+            Owner = null;
+            CurrentBacklog = null;
+            ReturnAction = null;
         }
     }
 }

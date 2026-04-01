@@ -11,16 +11,16 @@ Charon's Corner is a high-speed 3D cart-racing inspired project reimagining Gree
 Unity Version 6000.0.58f2
 
 ## External Packages
-1. [NaughtyAttributes](https://assetstore.unity.com/packages/tools/utilities/naughtyattributes-129996?srsltid=AfmBOoprkHTjWzQvgWzYaUZykCsw4aIkdRD3BAS3deK_-Y97zlyGl3tL)
-2. [Serialized Dictionary](https://assetstore.unity.com/packages/tools/utilities/serialized-dictionary-243052)
-3. [Eflatun.SceneReference](https://github.com/starikcetin/Eflatun.SceneReference)
-4. [UniTask](https://github.com/Cysharp/UniTask)
-5. [DOTween (HOTween v2)](https://assetstore.unity.com/packages/tools/animation/dotween-hotween-v2-27676?srsltid=AfmBOornbZYhlGWV3aDX83vnbNypVHFwMPJIVzroHsUGNM_iLoJVLB93)
-6. [uPalette](https://github.com/Haruma-K/uPalette)
-7. [Steamworks.NET](https://github.com/rlabrecque/Steamworks.NET)
-8. [Unity-SerializeReferenceExtensions](https://github.com/mackysoft/Unity-SerializeReferenceExtensions)
-9. [Animancer Pro v8](https://assetstore.unity.com/packages/tools/animation/animancer-pro-v8-293522)
-10. [Wwise 2024.1.8.8898.3638](https://www.audiokinetic.com/en/public-library/2024.1.8_8898/?source=Unity&id=index.html)
+1. [Serialized Dictionary](https://assetstore.unity.com/packages/tools/utilities/serialized-dictionary-243052)
+2. [Eflatun.SceneReference](https://github.com/starikcetin/Eflatun.SceneReference)
+3. [UniTask](https://github.com/Cysharp/UniTask)
+4. [DOTween (HOTween v2)](https://assetstore.unity.com/packages/tools/animation/dotween-hotween-v2-27676?srsltid=AfmBOornbZYhlGWV3aDX83vnbNypVHFwMPJIVzroHsUGNM_iLoJVLB93)
+5. [uPalette](https://github.com/Haruma-K/uPalette)
+6. [Steamworks.NET](https://github.com/rlabrecque/Steamworks.NET)
+7. [Animancer Pro v8](https://assetstore.unity.com/packages/tools/animation/animancer-pro-v8-293522)
+8. [Odin Inspector](https://odininspector.com/)
+9. [FEEL Asset](https://assetstore.unity.com/packages/tools/particles-effects/feel-183370?srsltid=AfmBOooHa_rwDhJEvoAl4vVXIQqpogJlFllJnpaJ5I5-jwP1xEqtnKd_)
+10. [Text Animator for Unity](https://assetstore.unity.com/packages/tools/gui/text-animator-for-unity-ui-toolkit-and-text-mesh-pro-341308)
 
 # License
 Shield: [![CC BY-NC 4.0][cc-by-nc-shield]][cc-by-nc]

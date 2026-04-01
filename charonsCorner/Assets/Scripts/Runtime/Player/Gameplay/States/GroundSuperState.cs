@@ -15,12 +15,10 @@ namespace CharonsCorner.Runtime
 
         private protected override void OnEnter()
         {
-            
         }
 
         private protected override void OnExit()
         {
-           
         }
 
         private protected override void OnUpdate()
@@ -36,7 +34,7 @@ namespace CharonsCorner.Runtime
         {
             if (!_context.IsGrounded)
             {
-                return _context.AirState;
+                return _context.AirSuperState;
             }
             
             return null;

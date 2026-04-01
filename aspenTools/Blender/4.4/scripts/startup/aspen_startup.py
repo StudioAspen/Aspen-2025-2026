@@ -76,21 +76,24 @@ def prompt_register_user() -> bool:
     from aspen.core.users import api as users
     from PySide6 import QtWidgets
 
-    machine_id = users.get_machine_id()
-    if users.get_machine_id() in users.get_users():
-        return True
-    else:
-        # Register user if not registered yet
-        app = QtWidgets.QApplication(sys.argv)
-        username, success = QtWidgets.QInputDialog.getText(None, 'Set Username', 'FirstnameLastinitial (Ex: MikyleM)')
-        if success:
-            users.add_user(machine_id)
-            users.set_username(machine_id, username)
-
+    try:
+        machine_id = users.get_machine_id()
+        if users.get_machine_id() in users.get_users():
             return True
         else:
-            app.quit()
-            sys.exit(0)
+            # Register user if not registered yet
+            app = QtWidgets.QApplication(sys.argv)
+            username, success = QtWidgets.QInputDialog.getText(None, 'Set Username', 'FirstnameLastinitial (Ex: MikyleM)')
+            if success:
+                users.add_user(machine_id)
+                users.set_username(machine_id, username)
+
+                return True
+            else:
+                app.quit()
+                sys.exit(0)
+    except Exception as e:
+        return False
 
 
 def register_telemetry() -> bool:
