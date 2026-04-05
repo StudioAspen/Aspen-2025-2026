@@ -3,7 +3,7 @@ using UnityEngine;
 public class CreditsController : MonoBehaviour
 {    
     [Header("Settings"), Range(10f, 100f)]
-    [SerializeField] float _scrollSpeed;
+    [SerializeField] float _scrollSpeed = 40f;
 
     RectTransform _rectTransform;
 
