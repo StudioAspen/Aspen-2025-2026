@@ -28,6 +28,7 @@ public class RankingSystem : MonoBehaviour
 
     // Time
     float _timer;
+    public float LevelTimeSeconds => _timer;
     
     // Checks
     bool _hasPlayerStarted;
@@ -39,6 +40,8 @@ public class RankingSystem : MonoBehaviour
         {
             InputManager.Instance.Interact += HandleInteract;
         }
+
+        PinScoring.OnPinScored += SubtractTime;
     }
 
     private void OnDisable()
@@ -47,6 +50,8 @@ public class RankingSystem : MonoBehaviour
         {
             InputManager.Instance.Interact -= HandleInteract;
         }
+
+        PinScoring.OnPinScored -= SubtractTime;
     }
 
     private void HandleInteract()
@@ -198,6 +203,13 @@ public class RankingSystem : MonoBehaviour
         {
             FlagManager.Set(ProgressFlag.CurrentChapterIndex, chapterIndex);
         }
+    }
+
+    public void SubtractTime(float seconds)
+    {
+        _timer -= seconds;
+        if (_timer < 0) _timer = 0;
+        UpdateTimerText();
     }
 
     void Timer()
