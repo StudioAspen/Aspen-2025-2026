@@ -1,12 +1,18 @@
 using UnityEngine;
 using UnityEngine.Splines;
 using Unity.Mathematics;
+using System.Collections.Generic;
+
+#if UNITY_EDITOR
+using Sirenix.OdinInspector;
+#endif
 
 namespace CharonsCorner.LevelEditor
 {
     /// <summary>
     /// Utility for sampling travel direction along a SplinePath.
-    /// Does not track state — poll this from a higher-level script.
+    /// Supports per-spline direction overrides configurable via Odin Inspector.
+    /// Does not track state, poll this from a higher-level script.
     /// </summary>
     [RequireComponent(typeof(SplinePath))]
     public class SplinePathDirection : MonoBehaviour
@@ -17,8 +23,31 @@ namespace CharonsCorner.LevelEditor
             Backward  // Travel in the direction of decreasing t (1 -> 0)
         }
 
+        [System.Serializable]
+        public class SplineDirectionEntry
+        {
+            [HideInInspector]
+            public int SplineIndex;
+
+#if UNITY_EDITOR
+            [HorizontalGroup, LabelWidth(80)]
+            [DisplayAsString, HideLabel]
+            public string Label;
+
+            [HorizontalGroup, HideLabel]
+#endif
+            public RoadDirection Direction = RoadDirection.Forward;
+        }
+
         [Header("Config")]
-        [SerializeField] private RoadDirection _correctDirection = RoadDirection.Forward;
+        [Tooltip("Fallback direction used when no per-spline entry exists.")]
+        [SerializeField] private RoadDirection _defaultDirection = RoadDirection.Forward;
+
+        [Header("Per-Spline Direction Overrides")]
+#if UNITY_EDITOR
+        [ListDrawerSettings(IsReadOnly = true, ShowFoldout = true)]
+#endif
+        [SerializeField] private List<SplineDirectionEntry> _splineDirections = new List<SplineDirectionEntry>();
 
         [Header("Detection")]
         [SerializeField, Range(0f, 1f)] private float _dotThreshold = 0.0f;
@@ -26,20 +55,101 @@ namespace CharonsCorner.LevelEditor
         private SplinePath _splinePath;
         private SplineContainer _splineContainer;
 
-        public RoadDirection CorrectDirection => _correctDirection;
+        public RoadDirection DefaultDirection => _defaultDirection;
+
+#if UNITY_EDITOR
+        [Button("Generate Per-Spline Direction List", ButtonSizes.Large), GUIColor(0.4f, 0.8f, 0.4f)]
+        private void GenerateSplineDirectionList()
+        {
+            EnsureReferences();
+
+            if (_splineContainer == null)
+            {
+                Debug.LogWarning("[SplinePathDirection] No SplineContainer found — cannot generate list.");
+                return;
+            }
+
+            int count = _splineContainer.Splines.Count;
+            var newList = new List<SplineDirectionEntry>(count);
+
+            for (int i = 0; i < count; i++)
+            {
+                // Preserve existing direction if an entry already exists for this index
+                RoadDirection existingDir = _defaultDirection;
+                if (i < _splineDirections.Count)
+                    existingDir = _splineDirections[i].Direction;
+
+                newList.Add(new SplineDirectionEntry
+                {
+                    SplineIndex = i,
+                    Label = $"Spline {i}",
+                    Direction = existingDir
+                });
+            }
+
+            _splineDirections = newList;
+            Debug.Log($"[SplinePathDirection] Generated {count} spline direction entries.");
+
+            UnityEditor.EditorUtility.SetDirty(this);
+        }
+
+        [Button("Validate List", ButtonSizes.Large), GUIColor(0.4f, 0.6f, 1f)]
+        private void ValidateSplineDirectionList()
+        {
+            EnsureReferences();
+
+            if (_splineContainer == null)
+            {
+                Debug.LogWarning("[SplinePathDirection] No SplineContainer found — cannot validate.");
+                return;
+            }
+
+            int splineCount = _splineContainer.Splines.Count;
+            int listCount = _splineDirections.Count;
+
+            if (listCount == splineCount)
+            {
+                Debug.Log($"[SplinePathDirection] ✓ List is valid — {listCount} entries match {splineCount} splines.");
+            }
+            else
+            {
+                Debug.LogWarning(
+                    $"[SplinePathDirection] ✗ Mismatch — list has {listCount} entries but container has {splineCount} splines. " +
+                    $"Press 'Generate Per-Spline Direction List' to rebuild."
+                );
+            }
+        }
+#endif
 
         private void OnValidate()
         {
-            if (_splinePath != null)
-                return;
-            _splinePath = GetComponent<SplinePath>();
-            _splineContainer = _splinePath.splineContainer;
+            EnsureReferences();
         }
 
         private void Awake()
         {
-            _splinePath = GetComponent<SplinePath>();
-            _splineContainer = _splinePath.splineContainer;
+            EnsureReferences();
+        }
+
+        private void EnsureReferences()
+        {
+            if (_splinePath == null)
+                _splinePath = GetComponent<SplinePath>();
+
+            if (_splinePath != null && _splineContainer == null)
+                _splineContainer = _splinePath.splineContainer;
+        }
+
+        /// <summary>
+        /// Returns the configured direction for a given spline index,
+        /// falling back to _defaultDirection if the list is missing or too short.
+        /// </summary>
+        private RoadDirection GetDirectionForSpline(int splineIndex)
+        {
+            if (_splineDirections != null && splineIndex < _splineDirections.Count)
+                return _splineDirections[splineIndex].Direction;
+
+            return _defaultDirection;
         }
 
         /// <summary>
@@ -53,7 +163,7 @@ namespace CharonsCorner.LevelEditor
 
             Vector3 splineForward = SampleSplineForward(splineIndex, t);
 
-            if (_correctDirection == RoadDirection.Backward)
+            if (GetDirectionForSpline(splineIndex) == RoadDirection.Backward)
                 splineForward = -splineForward;
 
             Vector3 flatVelocity = new Vector3(velocity.x, 0f, velocity.z).normalized;
@@ -127,21 +237,23 @@ namespace CharonsCorner.LevelEditor
             int steps = 25;
             for (int splineIndex = 0; splineIndex < _splineContainer.Splines.Count; splineIndex++)
             {
+                RoadDirection dir = GetDirectionForSpline(splineIndex);
+
                 for (int i = 0; i <= steps; i++)
                 {
                     float t = i / (float)steps;
                     _splineContainer.Evaluate(splineIndex, t, out float3 pos, out _, out _);
                     Vector3 worldPos = (Vector3)pos;
 
-                    Vector3 dir = SampleSplineForward(splineIndex, t);
-                    if (_correctDirection == RoadDirection.Backward) dir = -dir;
+                    Vector3 forward = SampleSplineForward(splineIndex, t);
+                    if (dir == RoadDirection.Backward) forward = -forward;
 
                     Gizmos.color = Color.green;
-                    Gizmos.DrawRay(worldPos, dir * 2f);
+                    Gizmos.DrawRay(worldPos, forward * 2f);
 
-                    Vector3 right = Vector3.Cross(dir, Vector3.up).normalized;
-                    Gizmos.DrawRay(worldPos + dir * 2f, (-dir + right) * 0.5f);
-                    Gizmos.DrawRay(worldPos + dir * 2f, (-dir - right) * 0.5f);
+                    Vector3 right = Vector3.Cross(forward, Vector3.up).normalized;
+                    Gizmos.DrawRay(worldPos + forward * 2f, (-forward + right) * 0.5f);
+                    Gizmos.DrawRay(worldPos + forward * 2f, (-forward - right) * 0.5f);
                 }
             }
         }
