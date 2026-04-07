@@ -15,6 +15,9 @@ public class RankingSystem : MonoBehaviour
     [SerializeField] float _radius;
 
     [Header("UI Settings")]
+    [SerializeField] GameObject _RankingPanel;
+    [SerializeField] TextMeshProUGUI _levelText;
+    [SerializeField] TextMeshProUGUI _scoreText;
     [SerializeField] TextMeshProUGUI _timerText;
     // Debug Feature
     [SerializeField] TextMeshProUGUI _rankText;
@@ -100,6 +103,10 @@ public class RankingSystem : MonoBehaviour
             Debug.LogError("Rank Score has not been assigned");
             return;
         }
+
+        _RankingPanel.SetActive(true);
+        _scoreText.text = $"your score: 0";
+        _levelText.text = $"Chapter {_chapterIndex + 1}";
 
         List<float> times = new List<float>();
         foreach (var time in _rankScore.Ranks) times.Add(time.Key);
