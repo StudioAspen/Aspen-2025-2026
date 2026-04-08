@@ -12,9 +12,6 @@ namespace CharonsCorner.Runtime
     [RequireComponent(typeof(Rigidbody))]
     public class GameplayPlayerController : MonoBehaviour
     {
-        [Header("References")]
-        [SerializeField] private SpawnPointManager _spawnPointManager;
-
         [Header("Ground Check")]
         [SerializeField] private float _groundCheckLength = 0.5f;
         [SerializeField] private LayerMask _groundLayer;
@@ -30,6 +27,7 @@ namespace CharonsCorner.Runtime
         public Rigidbody Rb { get; private set; }
         public SphereCollider Collider { get; private set; }
         public SlopeSensor SlopeSensor { get; private set; }
+        public JumpHandler JumpHandler { get; private set; }
         public bool IsGrounded { get; private set; }
         public bool CannonAir { get; private set; } = false;
         public CannonBall CurrentCannon { get; private set; }
@@ -53,21 +51,10 @@ namespace CharonsCorner.Runtime
             Rb = GetComponent<Rigidbody>();
             Collider = GetComponent<SphereCollider>();
             SlopeSensor = GetComponentInChildren<SlopeSensor>();
+            JumpHandler = GetComponent<JumpHandler>();
             DriftFeedbacks?.Initialization();
             BumperFeedbacks?.Initialization();
             SetupStateMachine();
-        }
-
-        private void Start()
-        {
-            if(_spawnPointManager)
-                _spawnPointManager.OnRespawn += Respawn;
-        }
-
-        private void OnDestroy()
-        {
-            if(_spawnPointManager)
-                _spawnPointManager.OnRespawn -= Respawn;
         }
 
         private void Update()
@@ -140,12 +127,6 @@ namespace CharonsCorner.Runtime
         public void SetCannonAir(bool t)
         {
             CannonAir = t;
-        }
-
-        private void Respawn(Vector3 position)
-        {
-            transform.position = position;
-            Rb.linearVelocity = Vector3.zero;
         }
 
         private void OnDrawGizmos()
