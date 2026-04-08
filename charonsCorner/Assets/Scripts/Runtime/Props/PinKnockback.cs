@@ -79,10 +79,11 @@ namespace CharonsCorner.Runtime
             if (!_hasBeenHit)
             {
                 _hasBeenHit = true;
+                _capsuleCollider.excludeLayers = new LayerMask(); // clear all layer overrides
                 _rigidbody.useGravity = true;
                 _rigidbody.isKinematic = false;
                 _rigidbody.WakeUp();
-                _capsuleCollider.excludeLayers = new LayerMask(); // clear all layer overrides
+                
                 if (TryGetComponent(out Animator pinAnim))
                 {
                     pinAnim.Play("pinsquash");
