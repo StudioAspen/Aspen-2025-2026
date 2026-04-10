@@ -12,6 +12,7 @@ public class PinCollision : MonoBehaviour
     [SerializeField] private float _secondsToSubtract = 1f;
     [SerializeField] private float _secondsToSubtractPinHit = 0.5f;
     [SerializeField] private float _playerSpeedBoost = 5f;
+    [SerializeField] private bool _canHitOtherPins = true;
     [SerializeField] private MMF_Player _hitFeedback;
     [SerializeField] private MMF_Player _pinOnPinHitFeedback;
 
@@ -24,9 +25,6 @@ public class PinCollision : MonoBehaviour
     [SerializeField] private float _impactGlow = 5f;
     [SerializeField] private float _impactGlowDuration = 0.5f;
     [SerializeField] private Renderer _renderer;
-
-    [Header("Reset (Testing Only)")]
-    [SerializeField] private Transform _resetTarget;
 
     private Rigidbody _rb;
     private bool _hasBeenHit = false;
@@ -49,58 +47,8 @@ public class PinCollision : MonoBehaviour
         _rb.useGravity = false; // Start without gravity until hit, common for pins
     }
 
-    [Button]
-    public void ResetPin()
-    {
-        if (_resetTarget != null)
-        {
-            transform.position = _resetTarget.position;
-            transform.rotation = _resetTarget.rotation;
-        }
-
-        _hasBeenHit = false;
-        
-        if (_impactGlowCoroutine != null)
-        {
-            StopCoroutine(_impactGlowCoroutine);
-            _impactGlowCoroutine = null;
-        }
-        
-        if (_rb != null)
-        {
-            _rb.useGravity = false;
-            _rb.linearVelocity = Vector3.zero;
-            _rb.angularVelocity = Vector3.zero;
-            _rb.Sleep();
-        }
-
-        if (_hitFeedback != null)
-        {
-            _hitFeedback.StopFeedbacks();
-        }
-
-        if (_pinOnPinHitFeedback != null)
-        {
-            _pinOnPinHitFeedback.StopFeedbacks();
-        }
-
-        // Reset glow
-        if (_renderer != null && _propBlock != null)
-        {
-            _renderer.GetPropertyBlock(_propBlock);
-            _propBlock.SetFloat(_glowPropId, _minGlow);
-            _renderer.SetPropertyBlock(_propBlock);
-        }
-    }
-
     private void Update()
     {
-        // Debug reset via Numpad 1
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            ResetPin();
-        }
-
         if (_hasBeenHit || _player == null) return;
 
         UpdateGlow();
@@ -145,7 +93,7 @@ public class PinCollision : MonoBehaviour
             }
         }
         // Check if hit by another Pin (which must have been hit already to be moving)
-        else if (collision.gameObject.TryGetComponent<PinCollision>(out var otherPin))
+        else if (_canHitOtherPins && collision.gameObject.TryGetComponent<PinCollision>(out var otherPin))
         {
             HandleHit(collision, _secondsToSubtractPinHit, false);
         }
