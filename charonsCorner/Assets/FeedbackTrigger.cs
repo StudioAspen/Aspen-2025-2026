@@ -6,11 +6,17 @@ using CharonsCorner.Runtime;
 public class FeedbackTrigger : MonoBehaviour
 {
     [SerializeField] private List<MMF_Player> _feedbacks;
+    [SerializeField] private bool _playOnce = true;
+
+    private bool _hasPlayed;
 
     private void OnTriggerEnter(Collider other)
     {
+        if (_playOnce && _hasPlayed) return;
+
         if (other.TryGetComponent(out GameplayPlayerController _))
         {
+            _hasPlayed = true;
             foreach (var feedback in _feedbacks)
             {
                 if (feedback != null)
