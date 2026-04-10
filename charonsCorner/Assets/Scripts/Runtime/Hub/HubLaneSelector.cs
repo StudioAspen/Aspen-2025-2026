@@ -1,8 +1,9 @@
-using System;
+using System.Collections;
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.InputSystem;
 
 namespace CharonsCorner.Runtime
 {
@@ -10,8 +11,14 @@ namespace CharonsCorner.Runtime
     {
         [field: SerializeField] public List<LevelDataSO> LaneData { get; private set; } = new List<LevelDataSO>();
         [ShowInInspector, ReadOnly] public int CurrentLaneIndex { get; private set; }
-        
+
+        [Header("Navigation Repeat Settings")]
+        [SerializeField] private float _initialDelay = 0.4f;
+        [SerializeField] private float _repeatDelay = 0.1f;
+
         private InputManager _input;
+        private InputAction _moveAction;
+        private Coroutine _moveCoroutine;
 
         public UnityEvent OnLeave = new();
         public UnityEvent<int> OnLaneSelected = new();
@@ -21,51 +28,93 @@ namespace CharonsCorner.Runtime
         private void Awake()
         {
             _input = InputManager.Instance;
+            _moveAction = _input.InputActions.Player.Move;
         }
 
         private void OnEnable()
         {
+            _moveAction.started += OnMoveStarted;
+            _moveAction.canceled += OnMoveCanceled;
+
             if (_input)
             {
-                _input.Move += OnMove;
+                _input.Exit += OnExit;
                 _input.Interact += OnInteract;
             }
         }
 
         private void OnDisable()
         {
+            _moveAction.started -= OnMoveStarted;
+            _moveAction.canceled -= OnMoveCanceled;
+
             if (_input)
             {
-                _input.Move -= OnMove;
+                _input.Exit -= OnExit;
                 _input.Interact -= OnInteract;
+            }
+
+            StopMoveCoroutine();
+        }
+
+        private void OnMoveStarted(InputAction.CallbackContext ctx)
+        {
+            Vector2 direction = ctx.ReadValue<Vector2>();
+
+            StopMoveCoroutine();
+            _moveCoroutine = StartCoroutine(MoveRoutine(direction));
+        }
+
+        private void OnMoveCanceled(InputAction.CallbackContext ctx)
+        {
+            StopMoveCoroutine();
+        }
+
+        private IEnumerator MoveRoutine(Vector2 direction)
+        {
+            FireMove(direction);
+            yield return new WaitForSeconds(_initialDelay);
+
+            while (true)
+            {
+                FireMove(direction);
+                yield return new WaitForSeconds(_repeatDelay);
             }
         }
 
-        private void OnMove(Vector2 direction)
+        private void FireMove(Vector2 direction)
         {
-            if (direction.y < 0)
-            {
-                OnLeave.Invoke();
-                return;
-            }
-            
             if (direction.x < 0)
-                SelectPreviousLane();   
+                SelectPreviousLane();
             else if (direction.x > 0)
                 SelectNextLane();
+        }
+
+        private void StopMoveCoroutine()
+        {
+            if (_moveCoroutine != null)
+            {
+                StopCoroutine(_moveCoroutine);
+                _moveCoroutine = null;
+            }
+        }
+
+        private void OnExit()
+        {
+            OnLeave.Invoke();
         }
 
         private void OnInteract()
         {
             LevelDataSO selectedLaneData = LaneData[CurrentLaneIndex];
-            
+
             int world1CurrentChapterFlagIndex = FlagManager.Get(ProgressFlag.CurrentChapterIndex);
             if (selectedLaneData.WorldFlagIndex > world1CurrentChapterFlagIndex)
             {
                 Debug.LogWarning($"Current progression is at {world1CurrentChapterFlagIndex}, cannot open level select for {selectedLaneData.LevelTitle} (Flag Index: {selectedLaneData.WorldFlagIndex})");
                 return;
             }
-            
+
             OnLaneInteracted?.Invoke(selectedLaneData);
             OnLaneInteractedIndex?.Invoke(CurrentLaneIndex);
         }
@@ -74,7 +123,7 @@ namespace CharonsCorner.Runtime
         {
             if (index < 0 || index >= LaneData.Count)
                 return;
-            
+
             CurrentLaneIndex = index;
             OnLaneSelected.Invoke(CurrentLaneIndex);
         }
@@ -82,25 +131,19 @@ namespace CharonsCorner.Runtime
         public void SelectNextLane()
         {
             if (CurrentLaneIndex == LaneData.Count - 1)
-            {
-                // SelectLane(0); // Uncomment to get wrapping
                 return;
-            }
-            
+
             SelectLane(CurrentLaneIndex + 1);
         }
 
         public void SelectPreviousLane()
         {
             if (CurrentLaneIndex == 0)
-            {
-                // SelectLane(_lanes.Count - 1); // Uncomment to get wrapping
                 return;
-            }
-            
+
             SelectLane(CurrentLaneIndex - 1);
         }
-        
+
         public LevelDataSO GetCurrentLevelData() => LaneData[CurrentLaneIndex];
     }
 }

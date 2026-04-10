@@ -33,6 +33,6 @@ public class SteamOverlayListener : MonoBehaviour
 
         // If open, pause the game if it's currently in gameplay state
         if (_gameManager.CurrentGameState == GameState.Gameplay)
-            _gameManager.ChangeGameState(GameState.Paused);
+            _gameManager.TryPauseGame();
     }
 }

@@ -80,7 +80,7 @@ namespace CharonsCorner.Runtime
                     InputManager.Instance.EnablePlayerActions();
                     // If the Steam overlay is open, pause the game
                     if(SteamOverlayListener.IsOverlayOpen)
-                        ChangeGameState(GameState.Paused);
+                        TryPauseGame();
                     break;
                 case GameState.Dialogue:
                     Time.timeScale = 1f;
@@ -91,8 +91,7 @@ namespace CharonsCorner.Runtime
                     break;
                 case GameState.Cutscene:
                     Time.timeScale = 1f;
-                    InputManager.Instance.EnableUIActions();
-                    InputManager.Instance.LockCursor(false);
+                    InputManager.Instance.EnablePlayerActions();
                     break;
             }
         }
@@ -142,6 +141,29 @@ namespace CharonsCorner.Runtime
 
         public SceneReference GetCurrentScene() => SceneReference.FromScenePath(SceneManager.GetActiveScene().path);
 
+        public void TryPauseGame()
+        {
+            if (PauseCanvas.IsPauseBlocked)
+            {
+                Debug.LogWarning("Can't pause game because pausing is blocked.");
+                return;
+            }
+
+            if (!LoadingCanvas.Instance.IsLoaded)
+            {
+                Debug.LogWarning("Can't pause game because game is not finished loading.");
+                return;
+            }
+            
+            if (CurrentGameState != GameState.Gameplay)
+            {
+                Debug.LogWarning("Can't pause game because game is not in gameplay state.");
+                return;
+            }
+            
+            ChangeGameState(GameState.Paused);
+        }
+        
         /// <summary>
         /// Quits the game properly based on the platform.
         /// </summary>
