@@ -1,6 +1,7 @@
 using System;
 using CharonsCorner.Runtime;
 using MoreMountains.Feedbacks;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace CharonsCorner.Runtime
@@ -8,10 +9,9 @@ namespace CharonsCorner.Runtime
     public class HubSequenceController : MonoBehaviour
     {
         [Header("Feedbacks")]
-        [SerializeField] private MMF_Player _sequenceTitle;
-        [SerializeField] private MMF_Player _sequenceExitTitle;
-        [SerializeField] private MMF_Player _sequenceToDialogue;
-        [SerializeField] private MMF_Player _sequenceToGameplay;
+        [SerializeField, Required] private MMF_Player _sequenceTitle;
+        [SerializeField, Required] private MMF_Player _sequenceExitTitle;
+        [SerializeField, Required] private MMF_Player _sequenceToGameplay;
         private GameState _previousState;
 
         private void Awake()
@@ -41,15 +41,12 @@ namespace CharonsCorner.Runtime
                     PlayFeedback(_sequenceTitle);
                     break;
                 case GameState.Gameplay:
+                    if (_previousState == GameState.Paused)
+                        break; // returning from pause, do nothing
                     if (_previousState == GameState.Title)
-                    {
                         PlayFeedback(_sequenceExitTitle);
-                    }
-                    else 
+                    else
                         PlayFeedback(_sequenceToGameplay);
-                    break;
-                case GameState.Dialogue:
-                    PlayFeedback(_sequenceToDialogue);
                     break;
             }
 
