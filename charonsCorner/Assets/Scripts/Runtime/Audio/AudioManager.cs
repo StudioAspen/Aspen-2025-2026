@@ -9,6 +9,7 @@ namespace CharonsCorner.Runtime
     public class AudioManager : Singleton<AudioManager>
     {
         [SerializeField] private AudioSource _musicSource;
+        public AudioSource MusicSource => _musicSource;
 
         [field: Header("Mixers")]
         [field: SerializeField] public AudioMixer MasterMixer { get; private set; }
