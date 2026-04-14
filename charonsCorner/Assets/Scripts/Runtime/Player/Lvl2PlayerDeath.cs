@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace CharonsCorner.Runtime
 {
-    public class PlayerDeath : MonoBehaviour
+    public class Lvl2PlayerDeath : MonoBehaviour
     {
         public GameObject myPlayer;
         float positionX;
@@ -11,9 +11,9 @@ namespace CharonsCorner.Runtime
         // Start is called before the first frame update
         void Start()
         {
-            positionX = 995.45f;
-            positionY = 61.77f;
-            positionZ = 39.89f;
+            positionX = 1202.61f;
+            positionY = 64.9f;
+            positionZ = -9.61f;
             myPlayer = GameObject.Find("Player");
         }
 
