@@ -17,6 +17,10 @@ namespace CharonsCorner.Runtime
         [SerializeField] private LayerMask _groundLayer;
         [field: SerializeField] public float Gravity { get; private set; } = 40f;
 
+        [Header("Audio")]
+        [SerializeField] private AudioSource _rollingAudioSource;
+        [SerializeField] private float _movementThreshold = 1f;
+
         [Header("References")]
         [field: SerializeField] public Transform Orientation { get; private set; }
         [field: SerializeField] public CinemachineCamera PlayerCamera { get; private set; }
@@ -60,6 +64,7 @@ namespace CharonsCorner.Runtime
         private void Update()
         {
             StateMachine.Update();
+            HandleRollingAudio(); 
         }
 
         private void FixedUpdate()
@@ -67,7 +72,24 @@ namespace CharonsCorner.Runtime
             CheckGrounded();
             StateMachine.FixedUpdate();
         }
+        private void HandleRollingAudio()
+        {
+            if (_rollingAudioSource == null) return;
 
+            Vector3 horizontalVel = new Vector3(Rb.linearVelocity.x, 0, Rb.linearVelocity.z);
+            bool isMoving = horizontalVel.magnitude > _movementThreshold;
+
+            if (IsGrounded && isMoving)
+            {
+                if (!_rollingAudioSource.isPlaying)
+                    _rollingAudioSource.Play();
+            }
+            else
+            {
+                if (_rollingAudioSource.isPlaying)
+                    _rollingAudioSource.Stop();
+            }
+        }
         public void ApplyGravity()
         {
             Rb.AddForce(Vector3.down * Gravity, ForceMode.Acceleration);
