@@ -157,7 +157,7 @@ namespace CharonsCorner.Runtime
                 _dialogueManager.EndDialogue();
             });
 
-            // _uiManager.ChangeCurrentSelectedObject(_optionsContainer.GetChild(0).gameObject); // Set the first button as selected
+            UIPanel.ChangeCurrentSelectedObject(_optionsContainer.GetChild(0).gameObject); // Set the first button as selected
         }
 
         private void ShowNextButton()
@@ -172,7 +172,7 @@ namespace CharonsCorner.Runtime
             Button nextButton = nextButtonObject.GetComponent<Button>();
             nextButton.onClick.AddListener(() => _dialogueManager.StartNextDialogueInSequence());
 
-            // _uiManager.ChangeCurrentSelectedObject(nextButtonObject);
+            UIPanel.ChangeCurrentSelectedObject(nextButtonObject);
         }
 
         private GameObject InstantiateOptionButton(Transform parent)

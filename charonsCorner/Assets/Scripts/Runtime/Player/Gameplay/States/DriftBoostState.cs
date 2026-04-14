@@ -9,7 +9,7 @@ namespace CharonsCorner.Runtime
     public class DriftBoostState : State<GameplayPlayerController>
     {
         [Header("Drift Settings")]
-        [SerializeField] private float _maxAngle = 90f;
+        [field: SerializeField] public float MaxAngle { get; private set; } = 90f;
 
         [SerializeField, ReadOnly] private float _boostAmount;
         [SerializeField] private float _maxBoostAmount = 50f;
@@ -41,13 +41,13 @@ namespace CharonsCorner.Runtime
 
             Vector3 driftDir = GetDriftDirection();
             
-            Vector3 currentVel = _context.Rb.linearVelocity;
+            Vector3 currentVel = _context.Rb.linearVelocity.WithY(0);
             Vector3 currentDir = driftDir; // if not moving, treat as aligned -> angle 0
             if (currentVel.sqrMagnitude > 0.0001f)
                 currentDir = currentVel.normalized; // if moving use our curr vel
 
             float angle = Vector3.Angle(currentDir, driftDir);
-            float boostAmountMultiplier = Mathf.Clamp01(angle / Mathf.Max(0.0001f, _maxAngle)); // Fraction of maxAngle (clamped). Do NOT use look direction.
+            float boostAmountMultiplier = Mathf.Clamp01(angle / Mathf.Max(0.0001f, MaxAngle)); // Fraction of maxAngle (clamped). Do NOT use look direction.
 
             // Boost scales only with angle (plus optional initial dash). Caps at _maxBoostAmount.
             _boostAmount = Mathf.Min(_maxBoostAmount, (_maxBoostAmount * boostAmountMultiplier) + _initialDashSpeed);
@@ -108,7 +108,7 @@ namespace CharonsCorner.Runtime
 
         }
 
-        private Vector3 GetDriftDirection()
+        public Vector3 GetDriftDirection()
         {
             Transform camTransform = null;
             if (CameraManager.Instance != null && CameraManager.Instance.CurrentCamera != null)
