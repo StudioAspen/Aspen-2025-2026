@@ -16,8 +16,11 @@ public class RankingSystem : MonoBehaviour
 
     [Header("UI Settings")]
     [SerializeField] TextMeshProUGUI _timerText;
-    // Debug Feature
     [SerializeField] TextMeshProUGUI _rankText;
+    [SerializeField] GameObject _pinUIPrefab;
+    [SerializeField] GameObject _minusTextPrefab;
+    [SerializeField] float _uiDestroyDelay = 3f;
+    [SerializeField] Transform _uiParent;
 
     [Header("Score Settings")]
     [SerializeField] RankScoreSO _rankScore;
@@ -25,6 +28,7 @@ public class RankingSystem : MonoBehaviour
 
     [Header("Feedbacks Settings")]
     [SerializeField] MMF_Player _endLevelSequence;
+    [SerializeField] MMF_Player _subtractFeedback;
 
     // Time
     float _timer;
@@ -207,9 +211,53 @@ public class RankingSystem : MonoBehaviour
 
     public void SubtractTime(float seconds)
     {
+        if (_pinUIPrefab != null)
+        {
+            GameObject pinUIObj = Instantiate(_pinUIPrefab, _uiParent != null ? _uiParent : transform);
+            PinUI pinUI = pinUIObj.GetComponentInChildren<PinUI>();
+            if (pinUI != null)
+            {
+                Debug.Log($"[RankingSystem] Found PinUI on instantiated prefab {pinUIObj.name}, setting up action.");
+                pinUI.OnAllowSubtractTime = () =>
+                {
+                    Debug.Log($"[RankingSystem] OnAllowSubtractTime triggered from {pinUI.name}. Calling PerformTimeSubtraction({seconds}).");
+                    PerformTimeSubtraction(seconds);
+                    pinUI.OnAllowSubtractTime = null; // Prevent double trigger
+                };
+            }
+            else
+            {
+                Debug.LogError($"[RankingSystem] PinUI component not found in instantiated prefab {pinUIObj.name}. Ensure PinUI script is on the prefab!");
+            }
+            Destroy(pinUIObj, _uiDestroyDelay);
+        }
+        else
+        {
+            PerformTimeSubtraction(seconds);
+        }
+    }
+
+    private void PerformTimeSubtraction(float seconds)
+    {
         _timer -= seconds;
         if (_timer < 0) _timer = 0;
         UpdateTimerText();
+
+        if (_subtractFeedback != null)
+        {
+            _subtractFeedback.PlayFeedbacks();
+        }
+
+        if (_minusTextPrefab != null)
+        {
+            GameObject minusTextObj = Instantiate(_minusTextPrefab, _uiParent != null ? _uiParent : transform);
+            TextMeshProUGUI tmpText = minusTextObj.GetComponentInChildren<TextMeshProUGUI>();
+            if (tmpText != null)
+            {
+                tmpText.text = $"-{seconds}";
+            }
+            Destroy(minusTextObj, _uiDestroyDelay);
+        }
     }
 
     void Timer()
