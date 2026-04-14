@@ -16,9 +16,10 @@ public class RankingSystem : MonoBehaviour
 
     [Header("UI Settings")]
     [SerializeField] GameObject _RankingPanel;
-    [SerializeField] TextMeshProUGUI _levelText;
-    [SerializeField] TextMeshProUGUI _scoreText;
+    [SerializeField] TextMeshProUGUI _finalScoreText;
+    [SerializeField] TextMeshProUGUI _finalTimerText;
     [SerializeField] TextMeshProUGUI _timerText;
+    [SerializeField] TextMeshProUGUI _levelText;
     // Debug Feature
     [SerializeField] TextMeshProUGUI _rankText;
 
@@ -110,8 +111,8 @@ public class RankingSystem : MonoBehaviour
         }
 
         _RankingPanel.SetActive(true);
-        _scoreText.text = $"your score: 0";
-        _levelText.text = $"Chapter {_chapterIndex + 1}";
+        _finalScoreText.text = $"your score: 0";
+        _levelText.text = $"Chapter {_chapterIndex}";
 
         List<float> times = new List<float>();
         foreach (var time in _rankScore.Ranks) times.Add(time.Key);
