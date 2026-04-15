@@ -3,32 +3,40 @@ using UnityEngine;
 
 namespace CharonsCorner.Runtime
 {
-    public class DestoryGameObject : MonoBehaviour
+    public class RevealGameObject_E : MonoBehaviour
     {
         [SerializeField] GameObject[] TargetObjects;
-        [SerializeField] float hideTime = 10f; // seconds
-        [SerializeField] bool PersistAfterHide = false; // Option to destroy objects after hiding
+        [SerializeField] float RevealTime = 10f; // seconds
+        [SerializeField] bool PersistAfterShow = false; // Option to destroy objects after hiding
+
+        private void Start()
+        {
+            for (int i = 0; i < TargetObjects.Length; i++)
+            {
+                TargetObjects[i].SetActive(false);
+            }
+        }
 
         void OnTriggerEnter(Collider other)
         {
             if (other.CompareTag("Player"))
             {
-                if (PersistAfterHide)
+                if (PersistAfterShow)
                 {
-                    SwitchTargetActiveState(false);
+                    SwitchTargetActiveState(true);
                 }
                 else
                 {
-                    StartCoroutine(HideAndShow());
+                    StartCoroutine(ShowThenHide());
                 }
             }
         }
 
-        IEnumerator HideAndShow()
+        IEnumerator ShowThenHide()
         {
-            SwitchTargetActiveState(false);
-            yield return new WaitForSeconds(hideTime);
             SwitchTargetActiveState(true);
+            yield return new WaitForSeconds(RevealTime);
+            SwitchTargetActiveState(false);
         }
 
         void SwitchTargetActiveState(bool status)
