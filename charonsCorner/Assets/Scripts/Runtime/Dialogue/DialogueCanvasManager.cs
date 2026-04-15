@@ -192,7 +192,8 @@ namespace CharonsCorner.Runtime
         private void MoveArrowToButton(RectTransform target)
         {
             _arrowObject.gameObject.SetActive(true);
-            
+            _arrowObject.GetComponent<Animator>().Play("skull turn 1_0");
+                        
             UnityEngine.Vector2 localPosition = _arrowObject.parent.InverseTransformPoint(target.position);
             
             _arrowObject.anchoredPosition = new UnityEngine.Vector2(localPosition.x + _arrowOffsetX.x, localPosition.y);
