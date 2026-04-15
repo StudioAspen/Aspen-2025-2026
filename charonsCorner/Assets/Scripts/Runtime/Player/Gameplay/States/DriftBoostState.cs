@@ -1,3 +1,4 @@
+using MoreMountains.Feedbacks;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -24,11 +25,15 @@ namespace CharonsCorner.Runtime
 
         [Header("Drift Boost VFX")]
         [SerializeField, Required] private GameObject _boostVFX;
+        [SerializeField] private ParticleSystem _driftClouds;
+        [SerializeField] private ParticleSystem _driftDust;
+        [SerializeField] private float _particleDuration = 1f;
         
         [Header("Camera Shake")]
         [SerializeField] private float _maxCameraShakeDuration = 1f;
         [SerializeField] private float _maxCameraShakeAmplitude = 10f;
         [SerializeField] private float _maxCameraShakeFrequency = 10f;
+        [SerializeField] private MMChannelData _cameraShakeChannel;
         
         public bool IsComplete { get; private set; } // to break out of super state
         private float _timer;
@@ -41,10 +46,22 @@ namespace CharonsCorner.Runtime
 
             Vector3 driftDir = GetDriftDirection();
             
-            Vector3 currentVel = _context.Rb.linearVelocity.WithY(0);
+            // If grounded, project the drift direction onto the ground/slope plane
+            if (_context.IsGrounded)
+            {
+                Vector3 groundNormal = Vector3.up;
+                if (_context.SlopeSensor != null && _context.SlopeSensor.Hit.normal != Vector3.zero)
+                {
+                    groundNormal = _context.SlopeSensor.Hit.normal;
+                }
+                
+                driftDir = Vector3.ProjectOnPlane(driftDir, groundNormal).normalized;
+            }
+            
+            Vector3 initialVel = _context.DriftSuperState.InitialVelocity;
             Vector3 currentDir = driftDir; // if not moving, treat as aligned -> angle 0
-            if (currentVel.sqrMagnitude > 0.0001f)
-                currentDir = currentVel.normalized; // if moving use our curr vel
+            if (initialVel.sqrMagnitude > 0.0001f)
+                currentDir = initialVel.normalized; // if moving use our initial vel
 
             float angle = Vector3.Angle(currentDir, driftDir);
             float boostAmountMultiplier = Mathf.Clamp01(angle / Mathf.Max(0.0001f, MaxAngle)); // Fraction of maxAngle (clamped). Do NOT use look direction.
@@ -56,16 +73,33 @@ namespace CharonsCorner.Runtime
             // Juice
             _context.DriftFeedbacks.PlayFeedbacks();
             _boostVFX.SetActive(true);
+
+            if (_driftClouds != null)
+            {
+                var main = _driftClouds.main;
+                main.stopAction = ParticleSystemStopAction.None;
+                _driftClouds.Play();
+            }
+
+            if (_driftDust != null)
+            {
+                var main = _driftDust.main;
+                main.stopAction = ParticleSystemStopAction.None;
+                _driftDust.Play();
+            }
+            
             float boostAmountNormalized = _boostAmount / _maxBoostAmount;
 
-            if (CameraManager.Instance != null && CameraManager.Instance.CameraShaker != null)
+            if (_context.PlayerSpeedFovChanger != null)
             {
-                CameraManager.Instance.CameraShaker.ShakeCamera(
-                    _maxCameraShakeAmplitude * boostAmountNormalized,
-                    _maxCameraShakeFrequency * boostAmountNormalized,
-                    _maxCameraShakeDuration * boostAmountNormalized
-                );
+                _context.PlayerSpeedFovChanger.TriggerDriftPulse(boostAmountMultiplier);
             }
+
+            MMCameraShakeEvent.Trigger(
+                _maxCameraShakeDuration * boostAmountNormalized,
+                _maxCameraShakeAmplitude * boostAmountNormalized,
+                _maxCameraShakeFrequency * boostAmountNormalized,
+                0f, 0f, 0f, false, _cameraShakeChannel);
         }
 
         private protected override void OnExit()
@@ -82,10 +116,19 @@ namespace CharonsCorner.Runtime
 
             _context.CameraTargetFollowTarget.SetPositionOffset(Vector3.zero);
             _boostVFX.SetActive(false);
+            
+            if (_driftClouds != null) _driftClouds.Stop();
+            if (_driftDust != null) _driftDust.Stop();
         }
 
         private protected override void OnUpdate()
         {
+            if (_timer >= _particleDuration)
+            {
+                if (_driftClouds != null && _driftClouds.isPlaying) _driftClouds.Stop();
+                if (_driftDust != null && _driftDust.isPlaying) _driftDust.Stop();
+            }
+
             if (_context.DriftSuperState.CameraOrbitalFollow != null)
             {
                 _context.DriftSuperState.CameraOrbitalFollow.Radius = Mathf.Lerp(

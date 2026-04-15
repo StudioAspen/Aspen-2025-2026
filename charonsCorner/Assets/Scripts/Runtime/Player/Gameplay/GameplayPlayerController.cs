@@ -28,6 +28,7 @@ namespace CharonsCorner.Runtime
         public SphereCollider Collider { get; private set; }
         public SlopeSensor SlopeSensor { get; private set; }
         public JumpHandler JumpHandler { get; private set; }
+        public PlayerSpeedFovChanger PlayerSpeedFovChanger { get; set; }
         public bool IsGrounded { get; private set; }
         public bool CannonAir { get; private set; } = false;
         public CannonBall CurrentCannon { get; private set; }

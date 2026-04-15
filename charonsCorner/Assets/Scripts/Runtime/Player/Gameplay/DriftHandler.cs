@@ -15,9 +15,20 @@ namespace CharonsCorner.Runtime
 
         [Header("UI")]
         [SerializeField] private TextMeshProUGUI _chargeText;
+        [SerializeField] private float _blinkSpeed = 10f;
+        [SerializeField] private Color _blinkColor = Color.red;
 
-        [ShowInInspector] public bool IsDrifting => _playerController.StateMachine.CurrentState == _playerController.DriftSuperState;
-        [ShowInInspector] public bool IsOffCooldown => _driftCooldownTimer >=  _driftCooldownDuration;
+        [Header("Drift Indicator")]
+        [SerializeField] private LineRenderer _driftIndicatorLine;
+        [SerializeField] private float _minIndicatorLength = 1f;
+        [SerializeField] private float _maxIndicatorLength = 5f;
+        [SerializeField] private float _minIndicatorWidth = 0.05f;
+        [SerializeField] private float _maxIndicatorWidth = 0.2f;
+        [SerializeField] private Color _minChargeColor = Color.white;
+        [SerializeField] private Color _maxChargeColor = Color.red;
+
+        [ShowInInspector] public bool IsDrifting => _playerController != null && _playerController.StateMachine != null && _playerController.StateMachine.CurrentState == _playerController.DriftSuperState;
+        [ShowInInspector] public bool IsOffCooldown => _playerController != null && _driftCooldownTimer >= _driftCooldownDuration;
 
         private void OnValidate()
         {
@@ -31,6 +42,9 @@ namespace CharonsCorner.Runtime
             
             if (_chargeText != null)
                 _chargeText.gameObject.SetActive(false);
+
+            if (_driftIndicatorLine != null)
+                _driftIndicatorLine.gameObject.SetActive(false);
         }
 
         private void OnEnable()
@@ -55,22 +69,89 @@ namespace CharonsCorner.Runtime
                 if (_playerController.DriftSuperState.SubStateMachine.CurrentState == _playerController.DriftSuperState.DriftingChargeState)
                 {
                     UpdateChargeText();
+                    UpdateDriftIndicator();
                 }
                 // If we transition to boost, show the "BOOST" text once.
                 // Since it's no longer updated every frame, it will stay 'locked'.
-                else if (_chargeText != null && !_chargeText.text.StartsWith("BOOST"))
+                else if (_chargeText != null)
                 {
-                    UpdateChargeText();
+                    if (!_chargeText.text.StartsWith("BOOST"))
+                    {
+                        UpdateChargeText();
+                    }
+                    
+                    if (_driftIndicatorLine != null && _driftIndicatorLine.gameObject.activeSelf)
+                        _driftIndicatorLine.gameObject.SetActive(false);
+
+                    BlinkBoostText();
                 }
                 
                 return;
             }
             
             if(_driftCooldownTimer < _driftCooldownDuration)
+            {
                 _driftCooldownTimer += Time.unscaledDeltaTime;
+                
+                // Keep showing boost text and blinking until cooldown is over
+                if (_chargeText != null && _chargeText.gameObject.activeSelf)
+                {
+                    BlinkBoostText();
+                }
+            }
+            else
+            {
+                // Cooldown complete, hide UI
+                if (_chargeText != null && _chargeText.gameObject.activeSelf)
+                    _chargeText.gameObject.SetActive(false);
+                
+                if (_driftIndicatorLine != null && _driftIndicatorLine.gameObject.activeSelf)
+                    _driftIndicatorLine.gameObject.SetActive(false);
+            }
+        }
 
-            if (_chargeText != null && _chargeText.gameObject.activeSelf)
-                _chargeText.gameObject.SetActive(false);
+        private void BlinkBoostText()
+        {
+            if (_chargeText == null) return;
+            
+            float t = Mathf.PingPong(Time.unscaledTime * _blinkSpeed, 1f);
+            _chargeText.color = Color.Lerp(Color.white, _blinkColor, t);
+        }
+
+        private void UpdateDriftIndicator()
+        {
+            if (_driftIndicatorLine == null) return;
+
+            if (!_driftIndicatorLine.gameObject.activeSelf)
+                _driftIndicatorLine.gameObject.SetActive(true);
+
+            float chargeRatio = _playerController.DriftSuperState.GetCurrentChargeRatio();
+            Vector3 driftDir = _playerController.DriftSuperState.DriftingBoostState.GetDriftDirection();
+
+            // If grounded, project the drift direction onto the ground/slope plane
+            if (_playerController.IsGrounded)
+            {
+                Vector3 groundNormal = Vector3.up;
+                if (_playerController.SlopeSensor != null && _playerController.SlopeSensor.Hit.normal != Vector3.zero)
+                {
+                    groundNormal = _playerController.SlopeSensor.Hit.normal;
+                }
+                
+                driftDir = Vector3.ProjectOnPlane(driftDir, groundNormal).normalized;
+            }
+
+            Color currentColor = Color.Lerp(_minChargeColor, _maxChargeColor, chargeRatio);
+            _driftIndicatorLine.startColor = currentColor;
+            _driftIndicatorLine.endColor = currentColor;
+
+            float currentLength = Mathf.Lerp(_minIndicatorLength, _maxIndicatorLength, chargeRatio);
+            float currentWidth = Mathf.Lerp(_minIndicatorWidth, _maxIndicatorWidth, chargeRatio);
+
+            _driftIndicatorLine.startWidth = currentWidth;
+            _driftIndicatorLine.endWidth = currentWidth;
+
+            _driftIndicatorLine.SetPosition(0, transform.position);
+            _driftIndicatorLine.SetPosition(1, transform.position + driftDir * currentLength);
         }
 
         private void UpdateChargeText()
@@ -85,6 +166,7 @@ namespace CharonsCorner.Runtime
             if (_playerController.DriftSuperState.SubStateMachine.CurrentState == _playerController.DriftSuperState.DriftingChargeState)
             {
                 _chargeText.text = $"Charge: {(chargeRatio * 100f):0}%";
+                _chargeText.color = Color.white; // Ensure color is reset when charging
             }
             else
             {
