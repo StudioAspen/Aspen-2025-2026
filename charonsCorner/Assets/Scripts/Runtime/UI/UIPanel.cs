@@ -24,6 +24,7 @@ namespace CharonsCorner.Runtime
         [field: SerializeField] public bool IsAdditive { get; private set; } = false;
 
         [SerializeField] private float _fadeDuration = 1f;
+        [SerializeField] private bool _useFadeTransition = false;
         [ShowInInspector, ReadOnly] public static Selectable TargetSelectedObject { get; private set; }
         /// <summary>
         /// The first object to select when opening this panel.
@@ -152,12 +153,16 @@ namespace CharonsCorner.Runtime
         public void Focus()
         {
             DOTween.Kill(Group);
-            Group.alpha = 0f;
             Group.interactable = true;
             gameObject.SetActive(true);
             ActivePanel = this;
             
-            Group.DOFade(1f, _fadeDuration);
+            if (_useFadeTransition)
+            {
+                Group.alpha = 0f;
+                Group.DOFade(1f, _fadeDuration);
+                
+            }
 
             ChangeCurrentSelectedObject(DefaultSelected);
 
@@ -169,13 +174,22 @@ namespace CharonsCorner.Runtime
         {
             DOTween.Kill(Group);
             Group.interactable = false;
-            Group.blocksRaycasts = false;
-
-            Group.DOFade(0f, _fadeDuration).OnComplete(() =>
+            
+            if (_useFadeTransition)
             {
-                Group.blocksRaycasts = true;
+                Group.blocksRaycasts = false;
+
+                Group.DOFade(0f, _fadeDuration).OnComplete(() =>
+                {
+                    Group.blocksRaycasts = true;
+                    gameObject.SetActive(false);
+                });
+            }
+            else
+            {
                 gameObject.SetActive(false);
-            });
+            }
+
 
 
             OnUnfocused?.Invoke();

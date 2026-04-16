@@ -29,8 +29,9 @@ namespace CharonsCorner.Runtime
         [Header("Arrow Settings")]
         [SerializeField] private RectTransform _arrowObject;
         [SerializeField] private Animator _arrowAnimator;
+        [SerializeField] private Animator _optionsContainerAnimator;
         [SerializeField] private AnimationCurve _arrowAnimationCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
-        [SerializeField] private float _arrowAnimationDuration = 0.5f;
+        [SerializeField] private float _arrowAnimationCurveDuration = 0.5f;
         [SerializeField] private UnityEngine.Vector2 _arrowOffsetX = new UnityEngine.Vector2(-30f, 0f);
 
         private void Awake()
@@ -60,6 +61,7 @@ namespace CharonsCorner.Runtime
             
             ClearUI();
 
+            StartCoroutine(PlayAnimation(_optionsContainerAnimator, "DialogueBoxAnimation"));
             _nameText.text = opener.SpeakerName;
             _dialogueTextTypewriter.ShowText(opener.Text);
 
@@ -192,27 +194,25 @@ namespace CharonsCorner.Runtime
 
         private void MoveArrowToButton(RectTransform target)
         {
-            // _arrowObject.gameObject.SetActive(true);
-            // _arrowAnimator.Play("SkullSpinAnimation", 0, 0f); // Restart the animation
+            _arrowObject.gameObject.SetActive(true);
                         
             UnityEngine.Vector2 localPosition = _arrowObject.parent.InverseTransformPoint(target.position);
             
             _arrowObject.anchoredPosition = new UnityEngine.Vector2(localPosition.x + _arrowOffsetX.x, localPosition.y);
 
             DOTween.Kill(_arrowObject);
-            _arrowObject.DOAnchorPosY(localPosition.y, _arrowAnimationDuration)
+            _arrowObject.DOAnchorPosY(localPosition.y, _arrowAnimationCurveDuration)
                 .SetEase(_arrowAnimationCurve)
                 .SetUpdate(true);
-
-            StartCoroutine(SkullAnimation());
+            StartCoroutine(PlayAnimation(_arrowAnimator, "SkullSpinAnimation"));
         }
 
-        private IEnumerator SkullAnimation()
+        private IEnumerator PlayAnimation(Animator animator, string animationName)
         {
-            _arrowObject.gameObject.SetActive(true);
-            yield return null;
-            _arrowAnimator.Play("SkullSpinAnimation", 0, 0f); // Restart the animation
+            yield return null; // Wait a frame to ensure the animation starts
+            animator.Play(animationName, 0, 0f);
         }
+        
 
 
         /// <summary>
