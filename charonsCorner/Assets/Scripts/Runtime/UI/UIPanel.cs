@@ -235,6 +235,12 @@ namespace CharonsCorner.Runtime
             TargetSelectedObject = selectedObject;
             SetCurrentSelectedObject();
         }
+        
+        public static void ChangeCurrentSelectedObject(GameObject selectedGameObject)
+        {
+            TargetSelectedObject = selectedGameObject.GetComponent<Selectable>();
+            SetCurrentSelectedObject();
+        }
 
         /// <summary>
         /// Helper method to set the currently selected object in the EventSystem based on the current control scheme.

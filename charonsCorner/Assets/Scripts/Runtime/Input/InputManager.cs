@@ -31,6 +31,7 @@ namespace CharonsCorner.Runtime
         /// Invoked when start/stop QuickRestart. True for start, false for stop.
         /// </summary>
         public event Action<bool> QuickRestart = delegate { };
+        public event Action Exit = delegate { };
 
         public Vector2 MoveDirection => InputActions.Player.Move.ReadValue<Vector2>();
         public Vector2 LookDirection => InputActions.Player.Look.ReadValue<Vector2>();
@@ -177,7 +178,7 @@ namespace CharonsCorner.Runtime
         public void OnPause(InputAction.CallbackContext context)
         {
             if (context.performed)
-                GameManager.Instance.ChangeGameState(GameState.Paused);
+                GameManager.Instance.TryPauseGame();
         }
 
         public void OnQuickRestart(InputAction.CallbackContext context)
@@ -186,6 +187,12 @@ namespace CharonsCorner.Runtime
                 QuickRestart.Invoke(true);
             if (context.canceled)
                 QuickRestart.Invoke(false);
+        }
+        
+        public void OnExit(InputAction.CallbackContext context)
+        {
+            if (context.performed)
+                Exit.Invoke();
         }
 
         // UI Actions
