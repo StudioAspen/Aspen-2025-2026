@@ -28,6 +28,7 @@ namespace CharonsCorner.Runtime
 
         [Header("Arrow Settings")]
         [SerializeField] private RectTransform _arrowObject;
+        [SerializeField] private Animator _arrowAnimator;
         [SerializeField] private AnimationCurve _arrowAnimationCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
         [SerializeField] private float _arrowAnimationDuration = 0.5f;
         [SerializeField] private UnityEngine.Vector2 _arrowOffsetX = new UnityEngine.Vector2(-30f, 0f);
@@ -191,8 +192,8 @@ namespace CharonsCorner.Runtime
 
         private void MoveArrowToButton(RectTransform target)
         {
-            _arrowObject.gameObject.SetActive(true);
-            _arrowObject.GetComponent<Animator>().Play("skull turn 1_0");
+            // _arrowObject.gameObject.SetActive(true);
+            // _arrowAnimator.Play("SkullSpinAnimation", 0, 0f); // Restart the animation
                         
             UnityEngine.Vector2 localPosition = _arrowObject.parent.InverseTransformPoint(target.position);
             
@@ -202,6 +203,15 @@ namespace CharonsCorner.Runtime
             _arrowObject.DOAnchorPosY(localPosition.y, _arrowAnimationDuration)
                 .SetEase(_arrowAnimationCurve)
                 .SetUpdate(true);
+
+            StartCoroutine(SkullAnimation());
+        }
+
+        private IEnumerator SkullAnimation()
+        {
+            _arrowObject.gameObject.SetActive(true);
+            yield return null;
+            _arrowAnimator.Play("SkullSpinAnimation", 0, 0f); // Restart the animation
         }
 
 
