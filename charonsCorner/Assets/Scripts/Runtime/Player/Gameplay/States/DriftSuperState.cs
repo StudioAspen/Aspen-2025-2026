@@ -29,6 +29,7 @@ namespace CharonsCorner.Runtime
         private protected override void OnEnter()
         {
             InitialVelocity = _context.Rb.linearVelocity.WithY(0);
+            _context.DriftActivationFeedbacks?.PlayFeedbacks();
         }
 
         private protected override void OnExit()

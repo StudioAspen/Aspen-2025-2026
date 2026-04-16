@@ -23,12 +23,6 @@ namespace CharonsCorner.Runtime
         [SerializeField] private float _timeScaleSpeed = 20f;
         [SerializeField] private float _stateDuration = 0.4f;
 
-        [Header("Drift Boost VFX")]
-        [SerializeField, Required] private GameObject _boostVFX;
-        [SerializeField] private ParticleSystem _driftClouds;
-        [SerializeField] private ParticleSystem _driftDust;
-        [SerializeField] private float _particleDuration = 1f;
-        
         [Header("Camera Shake")]
         [SerializeField] private float _maxCameraShakeDuration = 1f;
         [SerializeField] private float _maxCameraShakeAmplitude = 10f;
@@ -72,20 +66,10 @@ namespace CharonsCorner.Runtime
 
             // Juice
             _context.DriftFeedbacks.PlayFeedbacks();
-            _boostVFX.SetActive(true);
 
-            if (_driftClouds != null)
+            if (_context.DriftHandler != null)
             {
-                var main = _driftClouds.main;
-                main.stopAction = ParticleSystemStopAction.None;
-                _driftClouds.Play();
-            }
-
-            if (_driftDust != null)
-            {
-                var main = _driftDust.main;
-                main.stopAction = ParticleSystemStopAction.None;
-                _driftDust.Play();
+                _context.DriftHandler.PlayPersistentDriftParticles();
             }
             
             float boostAmountNormalized = _boostAmount / _maxBoostAmount;
@@ -115,20 +99,10 @@ namespace CharonsCorner.Runtime
             }
 
             _context.CameraTargetFollowTarget.SetPositionOffset(Vector3.zero);
-            _boostVFX.SetActive(false);
-            
-            if (_driftClouds != null) _driftClouds.Stop();
-            if (_driftDust != null) _driftDust.Stop();
         }
 
         private protected override void OnUpdate()
         {
-            if (_timer >= _particleDuration)
-            {
-                if (_driftClouds != null && _driftClouds.isPlaying) _driftClouds.Stop();
-                if (_driftDust != null && _driftDust.isPlaying) _driftDust.Stop();
-            }
-
             if (_context.DriftSuperState.CameraOrbitalFollow != null)
             {
                 _context.DriftSuperState.CameraOrbitalFollow.Radius = Mathf.Lerp(

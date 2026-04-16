@@ -22,9 +22,18 @@ namespace CharonsCorner.Runtime
         [SerializeField] private FloatRange _brakeDashZRange = new FloatRange(10f, 20f);
         [SerializeField] private float _pulseDuration = 0.5f;
 
+        [Header("Trail")]
+        [SerializeField] private TrailRenderer _trailRenderer;
+        [SerializeField] private FloatRange _trailWidthRange = new FloatRange(0.5f, 1.5f);
+        [SerializeField] private AnimationCurve _trailWidthCurve = AnimationCurve.Linear(0, 0, 1, 1);
+        [SerializeField] private FloatRange _trailLengthRange = new FloatRange(0.1f, 0.5f);
+        [SerializeField] private AnimationCurve _minWidthCurve = AnimationCurve.Linear(0, 1, 1, 0);
+        [SerializeField] private AnimationCurve _maxWidthCurve = AnimationCurve.Linear(0, 1, 1, 0);
+
         private float _pulseTimer;
         private float _pulseIntensity;
         private float _startPulseZ;
+        private AnimationCurve _workingWidthCurve = new AnimationCurve();
 
         private void Start()
         {
@@ -69,6 +78,43 @@ namespace CharonsCorner.Runtime
                 localPos.z = Mathf.Lerp(localPos.z, targetZ, _lerpSpeed * Time.deltaTime);
                 _speedLinesObject.localPosition = localPos;
             }
+
+            if (_trailRenderer != null)
+            {
+                float trailWidth = _trailWidthRange.Lerp(_trailWidthCurve.Evaluate(parameter));
+                _trailRenderer.widthMultiplier = Mathf.Lerp(_trailRenderer.widthMultiplier, trailWidth, _lerpSpeed * Time.deltaTime);
+
+                float trailLength = _trailLengthRange.Lerp(parameter);
+                _trailRenderer.time = Mathf.Lerp(_trailRenderer.time, trailLength, _lerpSpeed * Time.deltaTime);
+
+                LerpAnimationCurve(_minWidthCurve, _maxWidthCurve, parameter, _workingWidthCurve);
+                _trailRenderer.widthCurve = _workingWidthCurve;
+            }
+        }
+
+        private void LerpAnimationCurve(AnimationCurve a, AnimationCurve b, float t, AnimationCurve result)
+        {
+            if (a.length != b.length)
+            {
+                // If they have different number of keys, we can't easily lerp keys.
+                // Fallback: just use one or the other based on threshold, or don't lerp.
+                // But typically users will provide identical structures.
+                // For now, let's just copy one if they differ.
+                result.keys = t < 0.5f ? a.keys : b.keys;
+                return;
+            }
+
+            Keyframe[] keys = a.keys;
+            for (int i = 0; i < keys.Length; i++)
+            {
+                keys[i].time = Mathf.Lerp(a.keys[i].time, b.keys[i].time, t);
+                keys[i].value = Mathf.Lerp(a.keys[i].value, b.keys[i].value, t);
+                keys[i].inTangent = Mathf.Lerp(a.keys[i].inTangent, b.keys[i].inTangent, t);
+                keys[i].outTangent = Mathf.Lerp(a.keys[i].outTangent, b.keys[i].outTangent, t);
+                keys[i].inWeight = Mathf.Lerp(a.keys[i].inWeight, b.keys[i].inWeight, t);
+                keys[i].outWeight = Mathf.Lerp(a.keys[i].outWeight, b.keys[i].outWeight, t);
+            }
+            result.keys = keys;
         }
     }
 }

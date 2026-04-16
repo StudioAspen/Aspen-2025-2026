@@ -27,8 +27,35 @@ namespace CharonsCorner.Runtime
         [SerializeField] private Color _minChargeColor = Color.white;
         [SerializeField] private Color _maxChargeColor = Color.red;
 
+        [Header("Arrowhead")]
+        [SerializeField] private MeshRenderer _arrowheadRenderer;
+        [SerializeField] private float _minArrowheadSize = 0.2f;
+        [SerializeField] private float _maxArrowheadSize = 0.6f;
+
+        [Header("Glow Effect")]
+        [SerializeField] private Renderer[] _glowRenderers;
+        [SerializeField] private string _glowPropertyName = "_Glow";
+        [SerializeField] private float _maxGlowValue = 5f;
+        [SerializeField] private AnimationCurve _glowChargeCurve = AnimationCurve.Linear(0, 0, 1, 1);
+        [SerializeField] private AnimationCurve _glowCooldownCurve = AnimationCurve.EaseInOut(0, 1, 1, 0);
+        [SerializeField] private float _glowCooldownSpeed = 1f;
+
+        [Header("Drift Boost VFX")]
+        [SerializeField] private ParticleSystem _driftClouds;
+        [SerializeField] private ParticleSystem _driftDust;
+        [SerializeField] private float _particleDuration = 1f;
+
         [ShowInInspector] public bool IsDrifting => _playerController != null && _playerController.StateMachine != null && _playerController.StateMachine.CurrentState == _playerController.DriftSuperState;
         [ShowInInspector] public bool IsOffCooldown => _playerController != null && _driftCooldownTimer >= _driftCooldownDuration;
+
+        private float _capturedMinGlow;
+        private float _currentGlow;
+        private float _cooldownTimer;
+        private float _glowAtStartOfCooldown;
+        private bool _wasChargingLastFrame;
+        private int _glowPropertyId;
+
+        private MaterialPropertyBlock _propBlock;
 
         private void OnValidate()
         {
@@ -37,14 +64,32 @@ namespace CharonsCorner.Runtime
         
         private void Awake()
         {
+            _propBlock = new MaterialPropertyBlock();
             _playerController = GetComponent<GameplayPlayerController>();
             _driftCooldownTimer = _driftCooldownDuration; // so we can immediately drift on start without waiting
+            _glowPropertyId = Shader.PropertyToID(_glowPropertyName);
+
+            // Capture initial glow from the first renderer
+            _capturedMinGlow = 0f;
+            if (_glowRenderers != null && _glowRenderers.Length > 0 && _glowRenderers[0] != null)
+            {
+                if (_glowRenderers[0].sharedMaterial.HasProperty(_glowPropertyId))
+                {
+                    _capturedMinGlow = _glowRenderers[0].sharedMaterial.GetFloat(_glowPropertyId);
+                }
+            }
+            
+            _currentGlow = _capturedMinGlow;
+            _glowAtStartOfCooldown = _capturedMinGlow;
             
             if (_chargeText != null)
                 _chargeText.gameObject.SetActive(false);
 
             if (_driftIndicatorLine != null)
                 _driftIndicatorLine.gameObject.SetActive(false);
+
+            if (_arrowheadRenderer != null)
+                _arrowheadRenderer.gameObject.SetActive(false);
         }
 
         private void OnEnable()
@@ -61,6 +106,43 @@ namespace CharonsCorner.Runtime
 
         private void Update()
         {
+            bool isCharging = IsDrifting && _playerController.DriftSuperState.SubStateMachine.CurrentState == _playerController.DriftSuperState.DriftingChargeState;
+
+            if (isCharging)
+            {
+                float chargeRatio = _playerController.DriftSuperState.GetCurrentChargeRatio();
+                float evaluatedCharge = _glowChargeCurve.Evaluate(chargeRatio);
+                _currentGlow = Mathf.Lerp(_capturedMinGlow, _maxGlowValue, evaluatedCharge);
+                _wasChargingLastFrame = true;
+                _cooldownTimer = 0f;
+            }
+            else
+            {
+                if (_wasChargingLastFrame)
+                {
+                    _glowAtStartOfCooldown = _currentGlow;
+                    _wasChargingLastFrame = false;
+                    _cooldownTimer = 0f;
+                }
+
+                _cooldownTimer += Time.deltaTime * _glowCooldownSpeed;
+                float t = _glowCooldownCurve.Evaluate(_cooldownTimer);
+                _currentGlow = Mathf.Lerp(_capturedMinGlow, _glowAtStartOfCooldown, t);
+            }
+
+            if (_glowRenderers != null)
+            {
+                foreach (var r in _glowRenderers)
+                {
+                    if (r != null)
+                    {
+                        r.GetPropertyBlock(_propBlock);
+                        _propBlock.SetFloat(_glowPropertyId, _currentGlow);
+                        r.SetPropertyBlock(_propBlock);
+                    }
+                }
+            }
+
             if (IsDrifting)
             {
                 _driftCooldownTimer = 0f;
@@ -82,6 +164,9 @@ namespace CharonsCorner.Runtime
                     
                     if (_driftIndicatorLine != null && _driftIndicatorLine.gameObject.activeSelf)
                         _driftIndicatorLine.gameObject.SetActive(false);
+
+                    if (_arrowheadRenderer != null && _arrowheadRenderer.gameObject.activeSelf)
+                        _arrowheadRenderer.gameObject.SetActive(false);
 
                     BlinkBoostText();
                 }
@@ -107,6 +192,9 @@ namespace CharonsCorner.Runtime
                 
                 if (_driftIndicatorLine != null && _driftIndicatorLine.gameObject.activeSelf)
                     _driftIndicatorLine.gameObject.SetActive(false);
+
+                if (_arrowheadRenderer != null && _arrowheadRenderer.gameObject.activeSelf)
+                    _arrowheadRenderer.gameObject.SetActive(false);
             }
         }
 
@@ -124,6 +212,9 @@ namespace CharonsCorner.Runtime
 
             if (!_driftIndicatorLine.gameObject.activeSelf)
                 _driftIndicatorLine.gameObject.SetActive(true);
+            
+            if (_arrowheadRenderer != null && !_arrowheadRenderer.gameObject.activeSelf)
+                _arrowheadRenderer.gameObject.SetActive(true);
 
             float chargeRatio = _playerController.DriftSuperState.GetCurrentChargeRatio();
             Vector3 driftDir = _playerController.DriftSuperState.DriftingBoostState.GetDriftDirection();
@@ -151,7 +242,22 @@ namespace CharonsCorner.Runtime
             _driftIndicatorLine.endWidth = currentWidth;
 
             _driftIndicatorLine.SetPosition(0, transform.position);
-            _driftIndicatorLine.SetPosition(1, transform.position + driftDir * currentLength);
+            Vector3 endPosition = transform.position + driftDir * currentLength;
+            _driftIndicatorLine.SetPosition(1, endPosition);
+
+            if (_arrowheadRenderer != null)
+            {
+                _arrowheadRenderer.transform.position = endPosition;
+                _arrowheadRenderer.transform.rotation = Quaternion.LookRotation(driftDir);
+                
+                float currentArrowSize = Mathf.Lerp(_minArrowheadSize, _maxArrowheadSize, chargeRatio);
+                _arrowheadRenderer.transform.localScale = Vector3.one * currentArrowSize;
+                
+                // Color Arrowhead:
+                _propBlock.SetColor("_BaseColor", currentColor); // Common URP property
+                _propBlock.SetColor("_Color", currentColor);     // Fallback for Standard/Legacy
+                _arrowheadRenderer.SetPropertyBlock(_propBlock);
+            }
         }
 
         private void UpdateChargeText()
@@ -199,6 +305,33 @@ namespace CharonsCorner.Runtime
                 _playerController.DriftSuperState.SubStateMachine.ChangeState(
                     _playerController.DriftSuperState.DriftingBoostState, true);
             }
+        }
+
+        public void PlayPersistentDriftParticles()
+        {
+            StartCoroutine(DriftParticlesRoutine());
+        }
+
+        private System.Collections.IEnumerator DriftParticlesRoutine()
+        {
+            if (_driftClouds != null)
+            {
+                var main = _driftClouds.main;
+                main.stopAction = ParticleSystemStopAction.None;
+                _driftClouds.Play();
+            }
+
+            if (_driftDust != null)
+            {
+                var main = _driftDust.main;
+                main.stopAction = ParticleSystemStopAction.None;
+                _driftDust.Play();
+            }
+
+            yield return new WaitForSeconds(_particleDuration);
+
+            if (_driftClouds != null) _driftClouds.Stop();
+            if (_driftDust != null) _driftDust.Stop();
         }
     }
 }
