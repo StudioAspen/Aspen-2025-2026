@@ -156,6 +156,15 @@ namespace CharonsCorner.Runtime
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Exit"",
+                    ""type"": ""Button"",
+                    ""id"": ""840f6959-0d9c-444e-ba59-8bb8c1214447"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -163,17 +172,6 @@ namespace CharonsCorner.Runtime
                     ""name"": """",
                     ""id"": ""978bfe49-cc26-4a3d-ab7b-7d7a29327403"",
                     ""path"": ""<Gamepad>/leftStick"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Gamepad"",
-                    ""action"": ""Move"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""2e0a6d5d-9c8e-4a8f-8d7c-7a6b5c4d3e2f"",
-                    ""path"": ""<Gamepad>/dpad"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Gamepad"",
@@ -409,6 +407,28 @@ namespace CharonsCorner.Runtime
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
                     ""action"": ""Interact"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f013ea57-7a25-4604-a50f-7dd4dca016ae"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Exit"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5d901a5c-a160-4de3-bdc5-7792b754a9b6"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""Exit"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1034,6 +1054,7 @@ namespace CharonsCorner.Runtime
             m_Player_Drift = m_Player.FindAction("Drift", throwIfNotFound: true);
             m_Player_Pause = m_Player.FindAction("Pause", throwIfNotFound: true);
             m_Player_QuickRestart = m_Player.FindAction("QuickRestart", throwIfNotFound: true);
+            m_Player_Exit = m_Player.FindAction("Exit", throwIfNotFound: true);
             // UI
             m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
             m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1135,6 +1156,7 @@ namespace CharonsCorner.Runtime
         private readonly InputAction m_Player_Drift;
         private readonly InputAction m_Player_Pause;
         private readonly InputAction m_Player_QuickRestart;
+        private readonly InputAction m_Player_Exit;
         /// <summary>
         /// Provides access to input actions defined in input action map "Player".
         /// </summary>
@@ -1174,6 +1196,10 @@ namespace CharonsCorner.Runtime
             /// Provides access to the underlying input action "Player/QuickRestart".
             /// </summary>
             public InputAction @QuickRestart => m_Wrapper.m_Player_QuickRestart;
+            /// <summary>
+            /// Provides access to the underlying input action "Player/Exit".
+            /// </summary>
+            public InputAction @Exit => m_Wrapper.m_Player_Exit;
             /// <summary>
             /// Provides access to the underlying input action map instance.
             /// </summary>
@@ -1221,6 +1247,9 @@ namespace CharonsCorner.Runtime
                 @QuickRestart.started += instance.OnQuickRestart;
                 @QuickRestart.performed += instance.OnQuickRestart;
                 @QuickRestart.canceled += instance.OnQuickRestart;
+                @Exit.started += instance.OnExit;
+                @Exit.performed += instance.OnExit;
+                @Exit.canceled += instance.OnExit;
             }
 
             /// <summary>
@@ -1253,6 +1282,9 @@ namespace CharonsCorner.Runtime
                 @QuickRestart.started -= instance.OnQuickRestart;
                 @QuickRestart.performed -= instance.OnQuickRestart;
                 @QuickRestart.canceled -= instance.OnQuickRestart;
+                @Exit.started -= instance.OnExit;
+                @Exit.performed -= instance.OnExit;
+                @Exit.canceled -= instance.OnExit;
             }
 
             /// <summary>
@@ -1613,6 +1645,13 @@ namespace CharonsCorner.Runtime
             /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
             /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
             void OnQuickRestart(InputAction.CallbackContext context);
+            /// <summary>
+            /// Method invoked when associated input action "Exit" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnExit(InputAction.CallbackContext context);
         }
         /// <summary>
         /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "UI" which allows adding and removing callbacks.

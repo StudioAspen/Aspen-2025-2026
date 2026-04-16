@@ -142,6 +142,7 @@ namespace CharonsCorner.Runtime
             _player.Rb.AddForce(Vector3.up * _jumpForce, ForceMode.VelocityChange);
             
             _particleCloudPlayer.EnableParticleTrigger(true);
+            _player.JumpFeedbacks?.PlayFeedbacks();
             
             if (_audioSource != null && _jumpSound != null)
             {
