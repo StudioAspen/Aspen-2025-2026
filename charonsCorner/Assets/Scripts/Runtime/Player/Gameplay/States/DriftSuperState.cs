@@ -14,6 +14,8 @@ namespace CharonsCorner.Runtime
         
         public CinemachineOrbitalFollow CameraOrbitalFollow {get; private set;}
         public float CameraBaseOrbitalDistance {get; private set;}
+        
+        public Vector3 InitialVelocity { get; private set; }
 
         private protected override void InitializeSubStates()
         {
@@ -26,7 +28,8 @@ namespace CharonsCorner.Runtime
 
         private protected override void OnEnter()
         {
-            
+            InitialVelocity = _context.Rb.linearVelocity.WithY(0);
+            _context.DriftActivationFeedbacks?.PlayFeedbacks();
         }
 
         private protected override void OnExit()
@@ -41,10 +44,9 @@ namespace CharonsCorner.Runtime
         {
             Vector3 driftDir = DriftingBoostState.GetDriftDirection();
             
-            Vector3 currentVel = _context.Rb.linearVelocity.WithY(0);
             Vector3 currentDir = driftDir; 
-            if (currentVel.sqrMagnitude > 0.0001f)
-                currentDir = currentVel.normalized; 
+            if (InitialVelocity.sqrMagnitude > 0.0001f)
+                currentDir = InitialVelocity.normalized; 
 
             float angle = Vector3.Angle(currentDir, driftDir);
             float chargeRatio = Mathf.Clamp01(angle / Mathf.Max(0.0001f, DriftingBoostState.MaxAngle));
