@@ -17,6 +17,8 @@ namespace CharonsCorner.Runtime
 
         [Space]
         public UnityEvent OnInteract = new UnityEvent();
+        public UnityEvent OnPlayerEnter = new UnityEvent();
+        public UnityEvent OnPlayerExit = new UnityEvent();
 
         private void OnValidate()
         {
@@ -74,12 +76,14 @@ namespace CharonsCorner.Runtime
             
             _isOverlapping = true; // No need to filter because this object only looks for player layer
             _inputDisplayerCanvasObject.SetActive(GameManager.Instance.CurrentGameState == GameState.Gameplay);
+            OnPlayerEnter.Invoke();
         }
 
         private void OnTriggerExit(Collider other)
         {
             _isOverlapping = false;
             _inputDisplayerCanvasObject.SetActive(false);
+            OnPlayerExit.Invoke();
         }
 
         private void GameManager_OnGameStateChanged(GameState newState)
