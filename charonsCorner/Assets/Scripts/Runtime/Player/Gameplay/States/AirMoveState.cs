@@ -28,6 +28,15 @@ namespace CharonsCorner.Runtime
         private protected override void OnFixedUpdate()
         {
             _context.ApplyGravity();
+            
+            // Variable Jump Height: Apply additional downward force if jump is released early
+            if (_context.JumpHandler != null && _context.JumpHandler.HasJumped && !_context.JumpHandler.JumpIsHeld && _context.Rb.linearVelocity.y > 0)
+            {
+                // Applying extra gravity to fall faster when not holding jump
+                // Using Acceleration mode to be independent of mass
+                float extraGravity = _context.Gravity * (1f / _context.JumpHandler.EarlyReleaseMultiplier - 1f);
+                _context.Rb.AddForce(Vector3.down * extraGravity, ForceMode.Acceleration);
+            }
 
             Vector2 input = InputManager.Instance.MoveDirection;
             Vector3 inputDirection = _context.Orientation.right * input.x + _context.Orientation.forward * input.y;

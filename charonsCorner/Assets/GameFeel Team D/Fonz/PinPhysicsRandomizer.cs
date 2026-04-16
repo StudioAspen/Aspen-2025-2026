@@ -1,3 +1,4 @@
+using CharonsCorner.Runtime;
 using UnityEngine;
 
 /// <summary>
@@ -28,6 +29,9 @@ public class PinPhysicsRandomizer : MonoBehaviour
     [Header("Original Vals")]
     [SerializeField] private float _originalMass = 1f;
 
+    [Header("Scoring & Deletion")]
+    [SerializeField] private float _deletionDelay = 5f;
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
@@ -51,7 +55,14 @@ public class PinPhysicsRandomizer : MonoBehaviour
         {
             RandomizePhysics(collision);
 
+            if (TryGetComponent(out PinScoring pinScoring))
+            {
+                PinScoring.OnPinScored?.Invoke(pinScoring.SecondsToSubtract);
+            }
+
             hasBeenHit = true;
+
+            Destroy(gameObject, _deletionDelay);
         }
     }
 

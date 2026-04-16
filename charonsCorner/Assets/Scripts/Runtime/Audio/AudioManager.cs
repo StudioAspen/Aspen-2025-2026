@@ -9,6 +9,7 @@ namespace CharonsCorner.Runtime
     public class AudioManager : Singleton<AudioManager>
     {
         [SerializeField] private AudioSource _musicSource;
+        public AudioSource MusicSource => _musicSource;
 
         [field: Header("Mixers")]
         [field: SerializeField] public AudioMixer MasterMixer { get; private set; }
@@ -131,7 +132,7 @@ namespace CharonsCorner.Runtime
             _musicSource.clip = null;
         }
         
-        private AudioMixerGroup GetMixerGroup(MixerTarget target)
+        public AudioMixerGroup GetMixerGroup(MixerTarget target)
         {
             if (target == MixerTarget.None) return null;
             if (target == MixerTarget.Default) return GetMixerGroup((MixerTarget)_defaultMixer);
@@ -162,5 +163,8 @@ namespace CharonsCorner.Runtime
         {
             Instance.MasterMixer.SetFloat(mixerParamName, ConvertFloatToDecibels(volumeTarget));
         }
+        
+        public bool TryGetClip(StringAsset id, out AudioClip clip)
+            => _soundBank.Bank.TryGetValue(id, out clip);
     }
 }
