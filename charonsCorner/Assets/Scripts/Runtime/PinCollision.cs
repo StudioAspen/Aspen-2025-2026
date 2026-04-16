@@ -16,6 +16,11 @@ public class PinCollision : MonoBehaviour
     [SerializeField] private MMF_Player _hitFeedback;
     [SerializeField] private MMF_Player _pinOnPinHitFeedback;
 
+    [Header("Destruction")]
+    [SerializeField] private bool _destroyOnHit = true;
+    [SerializeField] private float _destructionDelay = 5f;
+    [SerializeField] private GameObject _objectToDestroy;
+
     [Header("Glow Settings")]
     [SerializeField] private string _glowPropertyName = "_Glow";
     [SerializeField] private float _glowDistanceThreshold = 10f;
@@ -45,6 +50,11 @@ public class PinCollision : MonoBehaviour
         // Ensure Rigidbody is set up for initial state if starting from scratch
         _rb.interpolation = RigidbodyInterpolation.Interpolate;
         _rb.useGravity = false; // Start without gravity until hit, common for pins
+
+        if (_objectToDestroy == null && transform.parent != null)
+        {
+            _objectToDestroy = transform.parent.gameObject;
+        }
     }
 
     private void Update()
@@ -132,6 +142,11 @@ public class PinCollision : MonoBehaviour
 
             // Subtract time from RankingSystem
             PinScoring.OnPinScored?.Invoke(secondsToSubtract);
+
+            if (_destroyOnHit && _objectToDestroy != null)
+            {
+                Destroy(_objectToDestroy, _destructionDelay);
+            }
         }
 
         // Get the first contact point

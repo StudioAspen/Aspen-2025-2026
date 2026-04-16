@@ -5,8 +5,14 @@ public class JackInTheBox : MonoBehaviour
 {
     [SerializeField] private GameObject _rotator;
     [SerializeField] private GameObject _head;
+    [SerializeField] private bool _isStaring = true;
+    [SerializeField] private bool _headRotateX = true;
+    [SerializeField] private bool _headRotateY = true;
+    [SerializeField] private bool _headRotateZ = true;
     
     private GameplayPlayerController _player;
+
+    public void SetIsStaring(bool value) => _isStaring = value;
 
     void Start()
     {
@@ -15,7 +21,7 @@ public class JackInTheBox : MonoBehaviour
 
     void Update()
     {
-        if (_player == null) return;
+        if (_player == null || !_isStaring) return;
 
         UpdateRotator();
         UpdateHead();
@@ -27,7 +33,19 @@ public class JackInTheBox : MonoBehaviour
         Vector3 directionToPlayer = _player.transform.position - _head.transform.position;
         if (directionToPlayer.sqrMagnitude > 0.001f)
         {
-            _head.transform.right = directionToPlayer;
+            Quaternion targetRotation = Quaternion.LookRotation(directionToPlayer, Vector3.up);
+            
+            // Adjust so 'right' axis points towards player (original behavior was transform.right = directionToPlayer)
+            targetRotation *= Quaternion.Euler(0, -90, 0); 
+            
+            Vector3 targetEuler = targetRotation.eulerAngles;
+            Vector3 currentEuler = _head.transform.eulerAngles;
+
+            float newX = _headRotateX ? targetEuler.x : currentEuler.x;
+            float newY = _headRotateY ? targetEuler.y : currentEuler.y;
+            float newZ = _headRotateZ ? targetEuler.z : currentEuler.z;
+
+            _head.transform.rotation = Quaternion.Euler(newX, newY, newZ);
         }
     }
 

@@ -18,11 +18,6 @@ namespace CharonsCorner.Runtime
         [Header("State")]
         [SerializeField] private GameState _currentState = GameState.Title;
 
-        [Header("Title Screen Movement")]
-        [SerializeField] private float _titleScreenIntensity = 0.5f;
-        [SerializeField] private float _titleScreenDuration = 2f;
-        private float _titleScreenTimer;
-
         [Header("Movement Attributes")]
         [SerializeField] private float _maxSpeed = 10f;
         [SerializeField] private float _acceleration = 2f;
@@ -61,19 +56,13 @@ namespace CharonsCorner.Runtime
         {
             float horizontalInput = 0f;
             
-            // Wobble Back and Forth during the TitleScreen, listen to the player input for Gameplay
+            // Listen to the player input for Gameplay
             if (_currentState == GameState.Gameplay)
             {
                 horizontalInput = _input.MoveDirection.x;
             }
-            else if (_currentState == GameState.Title)
-            {
-                _titleScreenTimer += Time.fixedDeltaTime;
-                float omega = Mathf.PI / _titleScreenDuration;
-                horizontalInput = -Mathf.Cos(_titleScreenTimer * omega) * _titleScreenIntensity;
-            }
 
-            if (Mathf.Abs(horizontalInput) > 0.01f || _currentState == GameState.Title)
+            if (Mathf.Abs(horizontalInput) > 0.01f)
             {
                 // Move only along X axis
                 Vector3 desiredDirection = horizontalInput >= 0 ? Vector3.right : Vector3.left;
@@ -138,11 +127,6 @@ namespace CharonsCorner.Runtime
             else
             {
                 gameObject.layer = LayerMask.NameToLayer("Default");
-            }
-
-            if (state == GameState.Title)
-            {
-                _titleScreenTimer = 0f;
             }
         }
 
