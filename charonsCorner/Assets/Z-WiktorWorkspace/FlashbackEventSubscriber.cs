@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Globalization;
 using Febucci.TextAnimatorForUnity;
 using Febucci.TextAnimatorCore.Typing;
 using MoreMountains.Feedbacks;
@@ -6,6 +7,7 @@ using Eflatun.SceneReference;
 using CharonsCorner.Runtime;
 using Cysharp.Threading.Tasks;
 using Unity.Cinemachine;
+using TMPro;
 
 public class FlashbackEventSubscriber : MonoBehaviour
 {
@@ -20,6 +22,19 @@ public class FlashbackEventSubscriber : MonoBehaviour
     [SerializeField] private CameraSwitcher cameraSwitcher;
     [SerializeField] private CinemachineCamera camToBowley;
     [SerializeField] private CinemachineCamera camToCharon;
+    
+    [Header("Camera Shake")]
+    [SerializeField] private float shakeDuration = 0.5f;
+    [SerializeField] private float shakeAmplitude = 1f;
+    [SerializeField] private float shakeFrequency = 1f;
+    [SerializeField] private MMChannelModes shakeChannelMode = MMChannelModes.Int;
+    [SerializeField] private int shakeChannelInt = 0;
+    [SerializeField] private MMChannel shakeChannelDefinition = null;
+
+    [Header("Text Color Settings")]
+    [SerializeField] private TMP_Text flashbackText;
+    [SerializeField] private Color charonColor = Color.white;
+    [SerializeField] private Color bowleyColor = Color.white;
     
     private void SwitchToLevel(SceneReference scene)
     {
@@ -71,9 +86,20 @@ public class FlashbackEventSubscriber : MonoBehaviour
                 break;
             case "CamToBowley":
                 cameraSwitcher.SwitchCamera(camToBowley);
+                if (flashbackText != null) flashbackText.color = bowleyColor;
                 break;
             case "CamToCharon":
                 cameraSwitcher.SwitchCamera(camToCharon);
+                if (flashbackText != null) flashbackText.color = charonColor;
+                break;
+            case "ShakeCamera":
+                MMCameraShakeEvent.Trigger(shakeDuration, shakeAmplitude, shakeFrequency, 0f, 0f, 0f, false, new MMChannelData(shakeChannelMode, shakeChannelInt, shakeChannelDefinition));
+                break;
+            case "CamSwitchSpeed":
+                if (marker.parameters.Length > 0 && float.TryParse(marker.parameters[0], NumberStyles.Float, CultureInfo.InvariantCulture, out float speed))
+                {
+                    cameraSwitcher.BlendDuration = speed;
+                }
                 break;
         }
     }

@@ -13,18 +13,23 @@ MonoBehaviour:
   m_Name: IntroCutscene
   m_EditorClassIdentifier: 
   lines:
-  - "<?CamToBowley>And THAT\u2019S a wrap! [interact-button to progress dialogue]"
+  - "<?CamToBowley>And THAT\u2019S a wrap!"
   - <?CamToCharon>Well that was disappointing.
   - "<?CamToBowley>While I\u2019d normally indulge you in the intricacies of cinematic
     story telling\u2026"
-  - <?CamToBowley>That one was a let down
-  - "<?CamToBowley>...I think I\u2019m done"
+  - <?CamToBowley><wiggle a=.5>That one was a let down
+  - <?CamToCharon>...
+  - "<?CamToCharon>I think I\u2019m done"
   - <?CamToBowley>Turnin in for da night?
-  - <?CamToBowley>No, like forever
-  - <?CamToBowley>WOAH WOAH WOAH
-  - "<?CamToCharon>Also, there\u2019s no night here"
-  - "<?CamToBowley>You\u2019d disappear I guess?"
-  - "<?CamToBowley>WHAT\u2019S GOING TO HAPPEN TO ME?!"
+  - <?CamToCharon><?CamSwitchSpeed=.25>No, like forever
+  - <?CamToBowley><?ShakeCamera><?CamSwitchSpeed=.5><shake a=2>WOAH WOAH WOAH
+  - "<?CamToCharon><?CamSwitchSpeed=.25>Also, there\u2019s no night here"
+  - "<?CamToBowley><?ShakeCamera><?CamSwitchSpeed=.5><shake a=2>WHAT\u2019S GOING
+    TO HAPPEN TO ME?!"
+  - "<?CamToCharon><?CamSwitchSpeed=.25>You\u2019d disappear I guess?"
+  - "<?CamToBowley><?ShakeCamera><?CamSwitchSpeed=.5><shake a=1>YOU\u2019RE NOT EVEN
+    GOING TO SEND ME ON MY WAY?"
   - "<?CamToCharon>I\u2019m just\u2026 tired"
-  - <?CamToBowley>Charon, baby, surely we can work SOMETHING out right??
+  - <?CamToBowley>Charon, baby, surely we can work <?ShakeCamera><shake a=2>SOMETHING</shake>
+    out right??
   - <?GoToLevel0> \n

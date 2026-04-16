@@ -1991,6 +1991,7 @@ GameObject:
   - component: {fileID: 154277549}
   - component: {fileID: 154277551}
   - component: {fileID: 154277550}
+  - component: {fileID: 154277552}
   m_Layer: 0
   m_Name: CharonIntroAngle
   m_TagString: Untagged
@@ -2006,8 +2007,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 154277548}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.064852014, y: 0.2976945, z: 0.020275475, w: 0.9522401}
-  m_LocalPosition: {x: -8.936869, y: 2.5343, z: 2.26643}
+  m_LocalRotation: {x: -0.11634368, y: 0.3150127, z: 0.038947567, w: 0.94112396}
+  m_LocalPosition: {x: -9.031947, y: 2.2677524, z: 2.2140684}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2073,6 +2074,30 @@ MonoBehaviour:
       BarrelClipping: 0.25
       Anamorphism: 0
   BlendHint: 0
+--- !u!114 &154277552
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 154277548}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d66462bf720d28469c8db4b2e52720c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ChannelMode: 1
+  Channel: 0
+  MMChannelDefinition: {fileID: 11400000, guid: 88a69d7473dc12143ac4e4b12a635267, type: 2}
+  DefaultShakeAmplitude: 0.5
+  DefaultShakeFrequency: 10
+  IdleAmplitude: 0
+  IdleFrequency: 1
+  LerpSpeed: 5
+  TestDuration: 0.3
+  TestAmplitude: 2
+  TestFrequency: 20
+  TestShakeButton: 0
 --- !u!4 &197962897 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 3a4dbcaa135e45245b12f04c509cee74, type: 3}
@@ -4068,8 +4093,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd9d37bf1edb4f6384a67759cb9f7ccd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _blendType: 3
-  _blendDuration: 0.5
+  _blendType: 2
+  _blendDuration: 1
 --- !u!114 &461089657
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4087,7 +4112,8 @@ MonoBehaviour:
     defaultEffectsMode: 1
     timeScale: 0
     defaultBehaviorTags: []
-    defaultAppearanceTags: []
+    defaultAppearanceTags:
+    - incr a=0 s=10
     defaultDisappearanceTags: []
     isAnimatingBehaviors: 1
     isAnimatingAppearances: 1
@@ -4117,12 +4143,12 @@ MonoBehaviour:
     startTypewriterMode: -1
     hideAppearancesOnSkip: 0
     hideDisappearancesOnSkip: 0
-    triggerEventsOnSkip: 0
+    triggerEventsOnSkip: 1
     resetTypingSpeedAtStartup: 1
     disappearanceOrientation: 0
     triggerShowedAfterEffectsEnd: 0
     triggerDisappearedAfterEffectsEnd: 0
-  sharedSettings: {fileID: 0}
+  sharedSettings: {fileID: 11400000, guid: e5ebec8b825794584aa9434d686fed6f, type: 2}
   onTextShowed:
     m_PersistentCalls:
       m_Calls: []
@@ -4180,6 +4206,15 @@ MonoBehaviour:
   cameraSwitcher: {fileID: 461089656}
   camToBowley: {fileID: 1983860403}
   camToCharon: {fileID: 154277551}
+  shakeDuration: 0.3
+  shakeAmplitude: 3
+  shakeFrequency: 10
+  shakeChannelMode: 1
+  shakeChannelInt: 0
+  shakeChannelDefinition: {fileID: 11400000, guid: 88a69d7473dc12143ac4e4b12a635267, type: 2}
+  flashbackText: {fileID: 461089661}
+  charonColor: {r: 0.61635214, g: 0.2384003, b: 0.27367577, a: 1}
+  bowleyColor: {r: 0.5334787, g: 0.6792453, b: 0.0021358482, a: 1}
   typewriter: {fileID: 461089658}
 --- !u!114 &461089660
 MonoBehaviour:
@@ -4217,8 +4252,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 1ffb8c3515fb6dc4688eff5a7e48200f, type: 2}
+  m_sharedMaterial: {fileID: 7453642021753212536, guid: 1ffb8c3515fb6dc4688eff5a7e48200f, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -6436,6 +6471,7 @@ GameObject:
   - component: {fileID: 639331580}
   - component: {fileID: 639331579}
   - component: {fileID: 639331578}
+  - component: {fileID: 639331583}
   m_Layer: 0
   m_Name: TitleCinemachineCamera
   m_TagString: Untagged
@@ -6564,6 +6600,30 @@ MonoBehaviour:
       BarrelClipping: 0.25
       Anamorphism: 0
   BlendHint: 0
+--- !u!114 &639331583
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 639331576}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d66462bf720d28469c8db4b2e52720c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ChannelMode: 1
+  Channel: 0
+  MMChannelDefinition: {fileID: 11400000, guid: 88a69d7473dc12143ac4e4b12a635267, type: 2}
+  DefaultShakeAmplitude: 0.5
+  DefaultShakeFrequency: 10
+  IdleAmplitude: 0
+  IdleFrequency: 1
+  LerpSpeed: 5
+  TestDuration: 0.3
+  TestAmplitude: 2
+  TestFrequency: 20
+  TestShakeButton: 0
 --- !u!1 &640947078
 GameObject:
   m_ObjectHideFlags: 0
@@ -9878,6 +9938,7 @@ GameObject:
   - component: {fileID: 1145331270}
   - component: {fileID: 1145331269}
   - component: {fileID: 1145331268}
+  - component: {fileID: 1145331273}
   m_Layer: 0
   m_Name: HubCinemachineCamera
   m_TagString: Untagged
@@ -10006,6 +10067,30 @@ MonoBehaviour:
       BarrelClipping: 0.25
       Anamorphism: 0
   BlendHint: 0
+--- !u!114 &1145331273
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1145331266}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d66462bf720d28469c8db4b2e52720c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ChannelMode: 1
+  Channel: 0
+  MMChannelDefinition: {fileID: 11400000, guid: 88a69d7473dc12143ac4e4b12a635267, type: 2}
+  DefaultShakeAmplitude: 0.5
+  DefaultShakeFrequency: 10
+  IdleAmplitude: 0
+  IdleFrequency: 1
+  LerpSpeed: 5
+  TestDuration: 0.3
+  TestAmplitude: 2
+  TestFrequency: 20
+  TestShakeButton: 0
 --- !u!1 &1151178913
 GameObject:
   m_ObjectHideFlags: 0
@@ -14734,6 +14819,7 @@ GameObject:
   - component: {fileID: 1983860401}
   - component: {fileID: 1983860403}
   - component: {fileID: 1983860402}
+  - component: {fileID: 1983860404}
   m_Layer: 0
   m_Name: BowleyIntroAngle
   m_TagString: Untagged
@@ -14749,8 +14835,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1983860400}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.1709159, y: -0.47787836, z: 0.09537963, w: 0.85634273}
-  m_LocalPosition: {x: -7.3985624, y: 2.853509, z: 3.2762604}
+  m_LocalRotation: {x: 0.12220714, y: -0.45475096, z: 0.06315644, w: 0.8799309}
+  m_LocalPosition: {x: -7.543131, y: 2.3563786, z: 3.2009149}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -14816,6 +14902,30 @@ MonoBehaviour:
       BarrelClipping: 0.25
       Anamorphism: 0
   BlendHint: 0
+--- !u!114 &1983860404
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1983860400}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d66462bf720d28469c8db4b2e52720c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ChannelMode: 1
+  Channel: 0
+  MMChannelDefinition: {fileID: 11400000, guid: 88a69d7473dc12143ac4e4b12a635267, type: 2}
+  DefaultShakeAmplitude: 0.5
+  DefaultShakeFrequency: 10
+  IdleAmplitude: 0
+  IdleFrequency: 1
+  LerpSpeed: 5
+  TestDuration: 0.3
+  TestAmplitude: 2
+  TestFrequency: 20
+  TestShakeButton: 0
 --- !u!1001 &1986788144
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -15137,6 +15247,7 @@ GameObject:
   - component: {fileID: 2059159059}
   - component: {fileID: 2059159060}
   - component: {fileID: 2059159061}
+  - component: {fileID: 2059159062}
   m_Layer: 0
   m_Name: LevelSelectCinemachineCamera
   m_TagString: Untagged
@@ -15219,6 +15330,30 @@ MonoBehaviour:
   AmplitudeGain: 0
   FrequencyGain: 0
   m_NoiseOffsets: {x: 0, y: 0, z: 0}
+--- !u!114 &2059159062
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2059159058}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d66462bf720d28469c8db4b2e52720c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ChannelMode: 1
+  Channel: 0
+  MMChannelDefinition: {fileID: 11400000, guid: 88a69d7473dc12143ac4e4b12a635267, type: 2}
+  DefaultShakeAmplitude: 0.5
+  DefaultShakeFrequency: 10
+  IdleAmplitude: 0
+  IdleFrequency: 1
+  LerpSpeed: 5
+  TestDuration: 0.3
+  TestAmplitude: 2
+  TestFrequency: 20
+  TestShakeButton: 0
 --- !u!1 &2075896822
 GameObject:
   m_ObjectHideFlags: 0
@@ -15428,7 +15563,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 35
+  field of view: 60.000004
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -15454,8 +15589,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2102514284}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.95, y: 2.46, z: -0.4000001}
+  m_LocalRotation: {x: -0.11634368, y: 0.3150127, z: 0.038947567, w: 0.94112396}
+  m_LocalPosition: {x: -9.031947, y: 2.2677524, z: 2.2140684}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
