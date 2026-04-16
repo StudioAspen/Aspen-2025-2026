@@ -65,7 +65,7 @@ namespace CharonsCorner.Runtime
             SceneDefaultCamera = camera;
 
             if (changeToActiveCamera)
-                ChangeActiveCamera(camera);
+                ChangeActiveCamera(camera, CinemachineBlendDefinition.Styles.Linear, 0f);
         }
 
         /// <summary>

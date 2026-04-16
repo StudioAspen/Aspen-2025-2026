@@ -30,6 +30,7 @@ namespace CharonsCorner.Runtime
                 _context.CannonBallSuperState.LaunchFailed = true;
                 return;
             }
+            cannon.PlayLaunchEffect();
 
             //Setup Collision Mask to Ignore Current Cannon Layer:
             int cannonLayer = _context.CurrentCannon.gameObject.layer;
@@ -106,7 +107,7 @@ namespace CharonsCorner.Runtime
             {
                 if (_context.CheckOverlap(_collisionMask, CollisionCheckRadius, out Collider hit))
                 {
-                    Debug.Log($"Cannon Launch Interrupted — Hit: {hit.name}");
+                    Debug.Log($"Cannon Launch Interrupted ï¿½ Hit: {hit.name}");
                     _context.CannonBallSuperState.LaunchCompleted = true;
                     return;
                 }

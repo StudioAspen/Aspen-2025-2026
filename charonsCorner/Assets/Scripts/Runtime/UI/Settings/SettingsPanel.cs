@@ -19,7 +19,6 @@ namespace CharonsCorner.Runtime
         public event Action<SubSettingsUI> OnSettingsUIChanged = delegate { };
 
         [Header("UI Elements")]
-        [SerializeField] private SubSettingsUI _generalSubSettingsUI;
         [SerializeField] private SubSettingsUI _graphicsSubSettingsUI;
         [SerializeField] private SubSettingsUI _audioSubSettingsUI;
         [SerializeField] private SubSettingsUI _controlsSubSettingsUI;
@@ -29,7 +28,6 @@ namespace CharonsCorner.Runtime
             // Initialize the sub-settings UIs
             List<SubSettingsUI> subSettingsUIs = new List<SubSettingsUI>
             {
-                _generalSubSettingsUI,
                 _graphicsSubSettingsUI,
                 _audioSubSettingsUI,
                 _controlsSubSettingsUI
@@ -43,7 +41,7 @@ namespace CharonsCorner.Runtime
 
         private void OnEnable()
         {
-            ChangeSettingsUI(_generalSubSettingsUI);
+            ChangeSettingsUI(_controlsSubSettingsUI);
         }
 
         private void OnDisable()
@@ -76,7 +74,6 @@ namespace CharonsCorner.Runtime
         }
 
         // Called by button UI events
-        public void ChangeToGeneralSettings() => ChangeSettingsUI(_generalSubSettingsUI);
         public void ChangeToGraphicsSettings() => ChangeSettingsUI(_graphicsSubSettingsUI);
         public void ChangeToAudioSettings() => ChangeSettingsUI(_audioSubSettingsUI);
         public void ChangeToControlsSettings() => ChangeSettingsUI(_controlsSubSettingsUI);

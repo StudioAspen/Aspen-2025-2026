@@ -43,6 +43,7 @@ namespace CharonsCorner.Runtime
             _upToNormal = Quaternion.FromToRotation(Vector3.up, normal);
     
             _particleTransform.rotation = _upToNormal * _startRotation;
+            _particleTransform.position = contact.point;
     
             _dustTrailParticles.Play();
     
