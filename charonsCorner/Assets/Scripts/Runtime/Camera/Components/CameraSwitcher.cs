@@ -8,6 +8,12 @@ namespace CharonsCorner.Runtime
     {
         [SerializeField] private CinemachineBlendDefinition.Styles _blendType = CinemachineBlendDefinition.Styles.EaseOut;
         [SerializeField] private float _blendDuration = 0.5f;
+
+        public float BlendDuration
+        {
+            get => _blendDuration;
+            set => _blendDuration = value;
+        }
         
         [Button("Switch", ButtonSizes.Large)]
         public void SwitchCamera(CinemachineCamera targetCamera)
