@@ -55,7 +55,7 @@ namespace CharonsCorner.Runtime
         [SerializeField, Tooltip("Cooldown before _hasJumped can be reset to false after a jump. Prevents double jump if IsGrounded is still true for a frame.")] 
         private float _jumpGroundedResetDelay = 0.15f;
 
-        private void Update()
+        private void FixedUpdate()
         {
             // Reset _hasJumped when grounded and enough time has passed since the last jump.
             // On slopes, the upward velocity might be positive when moving uphill (due to gravity cancellation), 
@@ -142,6 +142,7 @@ namespace CharonsCorner.Runtime
             _player.Rb.AddForce(Vector3.up * _jumpForce, ForceMode.VelocityChange);
             
             _particleCloudPlayer.EnableParticleTrigger(true);
+            _player.JumpFeedbacks?.PlayFeedbacks();
             
             if (_audioSource != null && _jumpSound != null)
             {
