@@ -13,7 +13,40 @@ namespace CharonsCorner.Runtime
     public class TutorialCheckpoint : MonoBehaviour
     {
         [field: SerializeField] public int TutorialIndex { get; private set; }
+        [field: SerializeField] public string TutorialTitle { get; private set; }
         [field: SerializeField, TextArea(2, 5)] public string TutorialText { get; private set; }
+
+        [Header("Alternative Dialogue")]
+        [SerializeField] private string xboxTitle;
+        [SerializeField, TextArea(2, 5)] private string xboxText;
+        [SerializeField] private string psTitle;
+        [SerializeField, TextArea(2, 5)] private string psText;
+
+        public string GetTitle(InputManager.ControlScheme controlScheme)
+        {
+            switch (controlScheme)
+            {
+                case InputManager.ControlScheme.Xbox:
+                    return !string.IsNullOrEmpty(xboxTitle) ? xboxTitle : TutorialTitle;
+                case InputManager.ControlScheme.PS:
+                    return !string.IsNullOrEmpty(psTitle) ? psTitle : TutorialTitle;
+                default:
+                    return TutorialTitle;
+            }
+        }
+
+        public string GetText(InputManager.ControlScheme controlScheme)
+        {
+            switch (controlScheme)
+            {
+                case InputManager.ControlScheme.Xbox:
+                    return !string.IsNullOrEmpty(xboxText) ? xboxText : TutorialText;
+                case InputManager.ControlScheme.PS:
+                    return !string.IsNullOrEmpty(psText) ? psText : TutorialText;
+                default:
+                    return TutorialText;
+            }
+        }
 
         public static event Action<TutorialCheckpoint> OnTutorialCheckpointHit;
 
