@@ -1,21 +1,15 @@
 using UnityEngine;
-using UnityEngine.Rendering.PostProcessing;
+using UnityEngine.Rendering;
 
 public class PauseBlur : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
+    public Volume volume;
 
-    // Update is called once per frame
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
-        { 
-            PostProcessVolume ppVolume = Camera.main.GetComponent<PostProcessVolume>(); 
-            ppVolume.enabled = !ppVolume.enabled; 
+        {
+            volume.enabled = !volume.enabled;
         }
     }
 }
