@@ -115,7 +115,11 @@ public class RankingSystem : MonoBehaviour
             return;
         }
         _RankingPanel.SetActive(true);
-        _finalScoreText.text = $"your score: 0";
+        _finalScoreText.text = $"";
+        /*int minutes = Mathf.FloorToInt(_timer / 60);
+        int seconds = Mathf.FloorToInt(_timer % 60);
+        _finalTimerText.text = $"Time: {string.Format("{0:00} : {1:00}", minutes, seconds)}";*/
+        _finalTimerText.text = $"";
         _levelText.text = $"Chapter {_chapterIndex}";
         
         List<float> times = new List<float>();
@@ -126,31 +130,31 @@ public class RankingSystem : MonoBehaviour
         // S Rank Check
         if (_timer < times[0])
         {
-            _rankText.text = "S-Rank";
+            _rankText.text = "S";
             _rankScore.SetFinalRank(Ranks.S);
         }
         // A Rank Check
         else if (times[0] < _timer && _timer < times[1])
         {
-            _rankText.text = "A-Rank";
+            _rankText.text = "A";
             _rankScore.SetFinalRank(Ranks.A);
         }
         // B Rank Check
         else if (times[1] < _timer && _timer < times[2])
         {
-            _rankText.text = "B-Rank";
+            _rankText.text = "B";
             _rankScore.SetFinalRank(Ranks.B);
         }
         // C Rank Check
         else if (times[2] < _timer && _timer < times[3])
         {
-            _rankText.text = "C-Rank";
+            _rankText.text = "C";
             _rankScore.SetFinalRank(Ranks.C);
         }
         // F Rank Check
         else
         {
-            _rankText.text = "F-Rank";
+            _rankText.text = "F";
             _rankScore.SetFinalRank(Ranks.F);
         }
     }
@@ -177,7 +181,7 @@ public class RankingSystem : MonoBehaviour
             return;
         }
 
-            _hasPlayerStarted = Physics.CheckSphere(_startCheck.transform.position, _radius, _playerLayer);
+        _hasPlayerStarted = Physics.CheckSphere(_startCheck.transform.position, _radius, _playerLayer);
     }
 
     void CheckPlayerEnd()
