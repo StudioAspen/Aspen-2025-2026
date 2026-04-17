@@ -12,24 +12,30 @@ namespace CharonsCorner.Runtime
     [RequireComponent(typeof(Rigidbody))]
     public class GameplayPlayerController : MonoBehaviour
     {
-        [Header("References")]
-        [SerializeField] private SpawnPointManager _spawnPointManager;
-
         [Header("Ground Check")]
         [SerializeField] private float _groundCheckLength = 0.5f;
         [SerializeField] private LayerMask _groundLayer;
         [field: SerializeField] public float Gravity { get; private set; } = 40f;
+
+        [Header("Audio")]
+        [SerializeField] private AudioSource _rollingAudioSource;
+        [SerializeField] private float _movementThreshold = 1f;
 
         [Header("References")]
         [field: SerializeField] public Transform Orientation { get; private set; }
         [field: SerializeField] public CinemachineCamera PlayerCamera { get; private set; }
         [field: SerializeField] public FollowTarget CameraTargetFollowTarget { get; private set; }
         [field: SerializeField] public MMFeedbacks DriftFeedbacks { get; private set; }
+        [field: SerializeField] public MMFeedbacks DriftActivationFeedbacks { get; private set; }
         [field: SerializeField] public MMFeedbacks BumperFeedbacks { get; private set; }
+        [field: SerializeField] public MMFeedbacks JumpFeedbacks { get; private set; }
 
         public Rigidbody Rb { get; private set; }
         public SphereCollider Collider { get; private set; }
         public SlopeSensor SlopeSensor { get; private set; }
+        public JumpHandler JumpHandler { get; private set; }
+        public DriftHandler DriftHandler { get; private set; }
+        public PlayerSpeedFovChanger PlayerSpeedFovChanger { get; set; }
         public bool IsGrounded { get; private set; }
         public bool CannonAir { get; private set; } = false;
         public CannonBall CurrentCannon { get; private set; }
@@ -53,26 +59,19 @@ namespace CharonsCorner.Runtime
             Rb = GetComponent<Rigidbody>();
             Collider = GetComponent<SphereCollider>();
             SlopeSensor = GetComponentInChildren<SlopeSensor>();
+            JumpHandler = GetComponent<JumpHandler>();
+            DriftHandler = GetComponent<DriftHandler>();
             DriftFeedbacks?.Initialization();
+            DriftActivationFeedbacks?.Initialization();
             BumperFeedbacks?.Initialization();
+            JumpFeedbacks?.Initialization();
             SetupStateMachine();
-        }
-
-        private void Start()
-        {
-            if(_spawnPointManager)
-                _spawnPointManager.OnRespawn += Respawn;
-        }
-
-        private void OnDestroy()
-        {
-            if(_spawnPointManager)
-                _spawnPointManager.OnRespawn -= Respawn;
         }
 
         private void Update()
         {
             StateMachine.Update();
+            HandleRollingAudio(); 
         }
 
         private void FixedUpdate()
@@ -80,7 +79,24 @@ namespace CharonsCorner.Runtime
             CheckGrounded();
             StateMachine.FixedUpdate();
         }
+        private void HandleRollingAudio()
+        {
+            if (_rollingAudioSource == null) return;
 
+            Vector3 horizontalVel = new Vector3(Rb.linearVelocity.x, 0, Rb.linearVelocity.z);
+            bool isMoving = horizontalVel.magnitude > _movementThreshold;
+
+            if (IsGrounded && isMoving)
+            {
+                if (!_rollingAudioSource.isPlaying)
+                    _rollingAudioSource.Play();
+            }
+            else
+            {
+                if (_rollingAudioSource.isPlaying)
+                    _rollingAudioSource.Stop();
+            }
+        }
         public void ApplyGravity()
         {
             Rb.AddForce(Vector3.down * Gravity, ForceMode.Acceleration);
@@ -140,12 +156,6 @@ namespace CharonsCorner.Runtime
         public void SetCannonAir(bool t)
         {
             CannonAir = t;
-        }
-
-        private void Respawn(Vector3 position)
-        {
-            transform.position = position;
-            Rb.linearVelocity = Vector3.zero;
         }
 
         private void OnDrawGizmos()

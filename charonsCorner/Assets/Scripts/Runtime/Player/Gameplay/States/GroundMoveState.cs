@@ -77,19 +77,26 @@ namespace CharonsCorner.Runtime
                 // Only add slope boost when moving/intent is downhill (or at least not uphill)
                 if (downhillDot > 0f)
                 {
-                    float slopeFactor = Mathf.Clamp01(
-                        _context.SlopeSensor.CurrentSlopeAngle /
-                        _context.SlopeSensor.MaxSlopeAngle
-                    );
-                    bonusForce += downhillDir * (SlopeBoost * slopeFactor * downhillDot);
+                    // Do not apply slope boost if the player has just jumped
+                    if (_context.JumpHandler == null || !_context.JumpHandler.HasJumped)
+                    {
+                        float slopeFactor = Mathf.Clamp01(
+                            _context.SlopeSensor.CurrentSlopeAngle /
+                            _context.SlopeSensor.MaxSlopeAngle
+                        );
+                        bonusForce += downhillDir * (SlopeBoost * slopeFactor * downhillDot);
+                    }
                 }
-                else
+                else if (_context.JumpHandler == null || !_context.JumpHandler.HasJumped)
                 {
                     // might need to cancel gravity?
                     _context.Rb.AddForce(Vector3.up * _context.Gravity, ForceMode.Acceleration);
                 }
                 
-                _context.Rb.AddForce(-hit.normal * GroundStickForce, ForceMode.Acceleration); // ground stick
+                if (_context.JumpHandler == null || !_context.JumpHandler.HasJumped)
+                {
+                    _context.Rb.AddForce(-hit.normal * GroundStickForce, ForceMode.Acceleration); // ground stick
+                }
             }
             else
             {
@@ -105,11 +112,26 @@ namespace CharonsCorner.Runtime
                 _context.transform.position + 100f * inputForce,
                 Color.red, 0.25f);
 
-            _context.Rb.AddForce(inputForce + bonusForce, ForceMode.Acceleration);
+            if (_context.JumpHandler == null || !_context.JumpHandler.HasJumped)
+            {
+                _context.Rb.AddForce(inputForce + bonusForce, ForceMode.Acceleration);
+            }
+            else
+            {
+                // If jumping, we only apply the input force (horizontal movement) to avoid slope-related vertical boosts
+                // The vertical jump force was already applied in JumpHandler.Jump()
+                _context.Rb.AddForce(inputForce, ForceMode.Acceleration);
+            }
 
             // Clamp max velocity along ground (slope plane) so uphill doesn't slow you
             Vector3 vel = _context.Rb.linearVelocity;
-            if (isOnSlope)
+
+            // If we've just jumped, don't clamp the vertical component of the velocity using the ground speed limit
+            if (_context.JumpHandler != null && _context.JumpHandler.HasJumped && vel.y > 0.01f)
+            {
+                // We let the vertical velocity pass through to AirMoveState or be handled by gravity/vertical clamping
+            }
+            else if (isOnSlope)
             {
                 Vector3 n = _context.SlopeSensor.Hit.normal;
 
