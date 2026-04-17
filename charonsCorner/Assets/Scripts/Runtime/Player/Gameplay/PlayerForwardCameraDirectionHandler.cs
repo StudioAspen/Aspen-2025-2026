@@ -1,4 +1,5 @@
 using CharonsCorner.LevelEditor;
+using DG.Tweening;
 using Sirenix.OdinInspector;
 using Unity.Cinemachine;
 using UnityEngine;
@@ -16,7 +17,10 @@ namespace CharonsCorner.Runtime
         [SerializeField, Required] private SplinePathDirection _splinePathDirection;
         
         [Header("Animation Settings")]
+        [SerializeField] private bool _willDisablePlayerInput = true;
         [SerializeField] private float _duration = 0.5f;
+        [SerializeField] private Ease _easeType = Ease.OutCubic;
+        private Sequence _animationSequence;
 
         [Button("Set Camera Direction", ButtonSizes.Large)]
         public void SetCameraDirection()
@@ -34,8 +38,38 @@ namespace CharonsCorner.Runtime
             // Compute the world-space yaw (degrees) of the spline's travel direction.
             float targetYaw = Mathf.Atan2(splineTravelDirection.x, splineTravelDirection.z) * Mathf.Rad2Deg;
 
-            _orbitalFollow.HorizontalAxis.Value = targetYaw;
-            _orbitalFollow.VerticalAxis.Value = 0f;
+            if(_willDisablePlayerInput)
+                InputManager.Instance.DisableAllActions();
+            
+            if(_animationSequence != null)
+                _animationSequence.Kill();
+            
+            _animationSequence = DOTween.Sequence();
+            // Horizontal
+            _animationSequence.Join(
+                DOVirtual.Float(
+                    _orbitalFollow.HorizontalAxis.Value, 
+                    targetYaw, 
+                    _duration, 
+                    newYaw => _orbitalFollow.HorizontalAxis.Value = newYaw).SetEase(_easeType)
+            );
+            // Vertical
+            _animationSequence.Join(
+                DOVirtual.Float(
+                    _orbitalFollow.VerticalAxis.Value, 
+                    0, 
+                    _duration, 
+                    newYaw => _orbitalFollow.VerticalAxis.Value = newYaw).SetEase(_easeType)
+            );
+
+            _animationSequence.OnComplete(() =>
+            {
+                if (GameManager.Instance.CurrentGameState != GameState.Gameplay)
+                    return;
+                
+                if(_willDisablePlayerInput)
+                    InputManager.Instance.EnablePlayerActions();
+            });
         }
     }
 }
