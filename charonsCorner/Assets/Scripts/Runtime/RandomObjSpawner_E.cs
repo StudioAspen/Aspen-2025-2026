@@ -10,21 +10,24 @@ namespace CharonsCorner.Runtime
         [SerializeField] GameObject TargetPosition;
 
         [Tooltip("How long spawner is turned off and not spawning before it starts to spawn objects")]
-        [SerializeField] float TimeBeforeSpawn;
+        [SerializeField] float TimeBeforeSpawn = 5f;
         float timebeforeSpawn;
 
         [Tooltip("How long spawning happens")]
-        [SerializeField] float SpawnDuration;
+        [SerializeField] float SpawnDuration = 5f;
         float spawnDuration;
 
         [Tooltip("Minimum time before another object spawns")]
-        [SerializeField] float minSpawnInterval;
+        [SerializeField] float minSpawnInterval = 1.35f;
         [Tooltip("Maximum time before another object spawns")]
-        [SerializeField] float maxSpawnInterval;
+        [SerializeField] float maxSpawnInterval = 1.7f;
         float spawnInterval;
 
         [Tooltip("If true, spawner never turns off and will spawn continuously without end")]
         [SerializeField] bool SpawnInfinitely = false;
+
+        [Tooltip("How long object stays before getting destroyed")]
+        [SerializeField] float ObjectLifeTime = 5f;
 
         Transform spawnDest;
         bool Spawning = false;
@@ -83,7 +86,7 @@ namespace CharonsCorner.Runtime
                     obj.GetComponent<TrackTarget_E>().enabled = true;
                     //Give script the target position to move towards (the player)
                     obj.GetComponent<TrackTarget_E>().TargetObject = TargetPosition.transform;
-                    Destroy(obj, 5f);
+                    Destroy(obj, ObjectLifeTime);
                 }
 
                 spawnInterval = Random.Range(minSpawnInterval, maxSpawnInterval);
