@@ -114,6 +114,7 @@ public class FlashbackEventSubscriber : MonoBehaviour
             case "CamToCharon":
                 cameraSwitcher.SwitchCamera(camToCharon);
                 if (flashbackText != null) flashbackText.color = charonColor;
+                MMGameEvent.Trigger("CharonTalk");
                 break;
             case "ShakeCamera":
                 MMCameraShakeEvent.Trigger(shakeDuration, shakeAmplitude, shakeFrequency, 0f, 0f, 0f, false, new MMChannelData(shakeChannelMode, shakeChannelInt, shakeChannelDefinition));
