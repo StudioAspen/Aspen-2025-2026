@@ -4,6 +4,7 @@ using UnityEngine;
 namespace CharonsCorner.Runtime
 {
     [RequireComponent(typeof(GameplayPlayerController))]
+    [RequireComponent(typeof(AudioSource))]
     public class JumpHandler : MonoBehaviour
     {   
         [Header("Landing Particle Setup")]
@@ -11,6 +12,7 @@ namespace CharonsCorner.Runtime
         [SerializeField] private ParticleCloudPlayer _particleCloudPlayer;
 
         private GameplayPlayerController _player;
+        private AudioSource _audioSource;
 
         [Header("Jump Settings")]
         [Tooltip("Force applied when jump is initiated")]
@@ -20,6 +22,7 @@ namespace CharonsCorner.Runtime
         [Tooltip("Scale down upward velocity on early release by this value")]
         [SerializeField, Range(0f, 1f)] private float _earlyReleaseMultiplier = 0.5f;
         private bool _hasJumped;
+        private bool _jumpIsHeld;
 
         [Header("Bounce Settings")]
         [SerializeField] private bool _enableBounce = true;
@@ -32,15 +35,38 @@ namespace CharonsCorner.Runtime
         
         [Header("Debug")]
         [SerializeField] private bool _showDebug = false;
+        
+        [Header("Audio Settings")]
+        [SerializeField] private AudioClip _jumpSound;
+        [SerializeField] private AudioClip _bounceSound;
 
+        public bool HasJumped => _hasJumped;
+        public bool JumpIsHeld => _jumpIsHeld;
+        public float EarlyReleaseMultiplier => _earlyReleaseMultiplier;
+        
         void Awake()
         {
             _player = GetComponent<GameplayPlayerController>();
             _particleCloudPlayer = GetComponent<ParticleCloudPlayer>();
+            _audioSource = GetComponent<AudioSource>();
         }
 
-        private void Update()
+        private float _lastJumpTime;
+        [SerializeField, Tooltip("Cooldown before _hasJumped can be reset to false after a jump. Prevents double jump if IsGrounded is still true for a frame.")] 
+        private float _jumpGroundedResetDelay = 0.15f;
+
+        private void FixedUpdate()
         {
+            // Reset _hasJumped when grounded and enough time has passed since the last jump.
+            // On slopes, the upward velocity might be positive when moving uphill (due to gravity cancellation), 
+            // so we don't strictly check for negative/zero vertical velocity if we are on a slope.
+            bool velocityCondition = _player.Rb.linearVelocity.y <= 0.01f || _player.SlopeSensor.IsOnSlope;
+            
+            if (_player.IsGrounded && velocityCondition && Time.time > _lastJumpTime + _jumpGroundedResetDelay)
+            {
+                _hasJumped = false;
+            }
+
             if (_enableBounce)
                 Bounce();
         }
@@ -68,6 +94,7 @@ namespace CharonsCorner.Runtime
 
         private void OnJumpPressed()
         {
+            _jumpIsHeld = true;
             if (_hasJumped)
             {
                 if(_showDebug)
@@ -84,12 +111,16 @@ namespace CharonsCorner.Runtime
                     Jump();
                     return;
                 }
+                
+                if(_showDebug)
+                    Debug.LogWarning($"Jump failed because coyote time has passed and player is in air");
+                return;
             }
 
             if (_player.StateMachine.CurrentState != _player.GroundSuperState)
             {
                 if(_showDebug)
-                    Debug.LogWarning($"Jump failed because coyote time has passed and player is not grounded");
+                    Debug.LogWarning($"Jump failed because player is not in Ground State and not in Coyote window");
                 return;
             }
             
@@ -98,31 +129,32 @@ namespace CharonsCorner.Runtime
 
         private void OnJumpReleased()
         {
-            // if player released early while still moving upwards, reduce upward velocity so player falls earlier
-            var lv = _player.Rb.linearVelocity;
-            if (lv.y > 0f)
-            {
-                _player.Rb.linearVelocity = new Vector3(lv.x, lv.y * _earlyReleaseMultiplier, lv.z);
-            }
+            _jumpIsHeld = false;
         }
 
         private void Jump()
         {
             _hasJumped = true;
+            _lastJumpTime = Time.time;
             
             // Debug.Log("Jump");
             _player.Rb.linearVelocity = new Vector3(_player.Rb.linearVelocity.x, 0f, _player.Rb.linearVelocity.z);
-            _player.Rb.AddForce(_player.Orientation.up * _jumpForce, ForceMode.VelocityChange);
+            _player.Rb.AddForce(Vector3.up * _jumpForce, ForceMode.VelocityChange);
             
             _particleCloudPlayer.EnableParticleTrigger(true);
+            _player.JumpFeedbacks?.PlayFeedbacks();
+            
+            if (_audioSource != null && _jumpSound != null)
+            {
+                _audioSource.PlayOneShot(_jumpSound);
+            }
+
         }
 
         private void Bounce()
         {
             if (_player.JustLanded)
             {
-                _hasJumped = false;
-                
                 Vector3 velocity = _player.Rb.linearVelocity;
 
                 if (_player.SlopeSensor.IsOnSlope) // If on slope, do not bounce

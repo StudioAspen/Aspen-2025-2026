@@ -47,9 +47,11 @@ namespace CharonsCorner.Runtime
             DontDestroyOnLoad(gameObject);
         }
 
+#if UNITY_EDITOR
         private void Start()
         {
             GameManager.Instance.ChangeGameState(_bootstrapConfig.GetSceneInitialState(GameManager.Instance.GetCurrentScene()), true);
         }
+#endif
     }
 }

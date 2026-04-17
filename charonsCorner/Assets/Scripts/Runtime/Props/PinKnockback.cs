@@ -28,6 +28,10 @@ namespace CharonsCorner.Runtime
         private bool _hasBeenHit = false;
         private int _pinLayer = 7;
 
+        private CapsuleCollider _capsuleCollider;
+        // position, speedScale, lookTarget
+        public static event Action<Vector3, float, Transform> OnPinHit;
+
         // dampen the "infinite" spinning that happens sometimes
         void FixedUpdate()
         {
@@ -35,7 +39,7 @@ namespace CharonsCorner.Runtime
 
             Vector3 av = _rigidbody.angularVelocity;
             
-            // Kill some Y spin every step (0.0–1.0, closer to 0 = stronger damping)
+            // Kill some Y spin every step (0.0ï¿½1.0, closer to 0 = stronger damping)
             float damping = 0.9f;
             av.y *= damping;
 
@@ -46,10 +50,13 @@ namespace CharonsCorner.Runtime
         private void Awake()
         {
             _rigidbody = GetComponent<Rigidbody>();
+            _capsuleCollider = GetComponent<CapsuleCollider>();
             _rigidbody.interpolation = RigidbodyInterpolation.Interpolate;
 
             // disable physics until hit (so doesnt fall over)
             _rigidbody.useGravity = false;
+            LayerMask groundMask = LayerMask.GetMask("Ground");
+            _capsuleCollider.excludeLayers = groundMask;
 
             _rigidbody.centerOfMass = new Vector3(0f, -0.2f, 0f);
         }
@@ -72,15 +79,22 @@ namespace CharonsCorner.Runtime
             if (!_hasBeenHit)
             {
                 _hasBeenHit = true;
+                _capsuleCollider.excludeLayers = new LayerMask(); // clear all layer overrides
                 _rigidbody.useGravity = true;
                 _rigidbody.isKinematic = false;
                 _rigidbody.WakeUp();
+                
+                if (TryGetComponent(out Animator pinAnim))
+                {
+                    pinAnim.Play("pinsquash");
+                }
             }
 
             float speed = GetApproachSpeed(collision);
             float t = Mathf.InverseLerp(_minSpeedForKnockback, _maxSpeedForKnockback, speed);
             float speedScale = Mathf.Clamp01(_speedCurve.Evaluate(Mathf.Clamp01(t)));
-
+            // going to use already calculated speedScale to determine the size of the pow effect, instead of calculating it again in PowEffectScript  
+            OnPinHit?.Invoke(transform.position, speedScale, collision.transform);
             if (speedScale <= 0f) return;
 
             Vector3 away;
