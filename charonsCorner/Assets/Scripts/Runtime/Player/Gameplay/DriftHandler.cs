@@ -47,6 +47,7 @@ namespace CharonsCorner.Runtime
 
         [Header("Audio")]
         [SerializeField] private AudioSource _chargingAudioSource;
+        [SerializeField] private AudioSource _boostReleaseAudioSource; 
  
         [ShowInInspector] public bool IsDrifting => _playerController != null && _playerController.StateMachine != null && _playerController.StateMachine.CurrentState == _playerController.DriftSuperState;
         [ShowInInspector] public bool IsOffCooldown => _playerController != null && _driftCooldownTimer >= _driftCooldownDuration;
@@ -323,7 +324,12 @@ namespace CharonsCorner.Runtime
                 _playerController.DriftSuperState.SubStateMachine.ChangeState(
                     _playerController.DriftSuperState.DriftingBoostState, true);
             }
+            if(_boostReleaseAudioSource !=null)
+            {
+                _boostReleaseAudioSource.Play();
+            }
         }
+
 
         public void PlayPersistentDriftParticles()
         {
