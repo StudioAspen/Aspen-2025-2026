@@ -20,6 +20,7 @@ public class FlashbackEventSubscriber : MonoBehaviour
     [SerializeField] private SceneReference level4;
     [SerializeField] private SceneReference level5;
     [SerializeField] private SceneReference level6;
+    [SerializeField] private SceneReference hubScene;
     [SerializeField] private CameraSwitcher cameraSwitcher;
     [SerializeField] private CinemachineCamera camToBowley;
     [SerializeField] private CinemachineCamera camToBowlingAlley;
@@ -45,13 +46,14 @@ public class FlashbackEventSubscriber : MonoBehaviour
     [SerializeField] private MMF_Player playerScaredFeedback;
     [SerializeField] private MMF_Player bowlingLightsFeedback;
     [SerializeField] private MMF_Player bowlingPanFeedback;
+    [SerializeField] private MMF_Player startBowlingAnimationFeedback;
 
     [Header("Text Color Settings")]
     [SerializeField] private TMP_Text flashbackText;
     [SerializeField] private Color charonColor = Color.white;
     [SerializeField] private Color bowleyColor = Color.white;
     
-    private void SwitchToLevel(SceneReference scene)
+    public void SwitchToLevel(SceneReference scene)
     {
         if (scene != null && !string.IsNullOrEmpty(scene.Name))
         {
@@ -117,6 +119,9 @@ public class FlashbackEventSubscriber : MonoBehaviour
             case "GoToLevel6":
                 SwitchToLevel(level6);
                 break;
+            case "GoToHubScene":
+                SwitchToLevel(hubScene);
+                break;
             case "CamToBowley":
                 cameraSwitcher.SwitchCamera(camToBowley);
                 if (flashbackText != null) flashbackText.color = bowleyColor;
@@ -158,6 +163,9 @@ public class FlashbackEventSubscriber : MonoBehaviour
                 break;
             case "BowlingPan":
                 if (bowlingPanFeedback != null) bowlingPanFeedback.PlayFeedbacks();
+                break;
+            case "StartBowlingAnimation":
+                if (startBowlingAnimationFeedback != null) startBowlingAnimationFeedback.PlayFeedbacks();
                 break;
             case "BowleyStartShaking":
             {
