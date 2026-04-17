@@ -3,6 +3,7 @@ using System.Globalization;
 using Febucci.TextAnimatorForUnity;
 using Febucci.TextAnimatorCore.Typing;
 using MoreMountains.Feedbacks;
+using MoreMountains.Tools;
 using Eflatun.SceneReference;
 using CharonsCorner.Runtime;
 using Cysharp.Threading.Tasks;
@@ -31,6 +32,9 @@ public class FlashbackEventSubscriber : MonoBehaviour
     [SerializeField] private int shakeChannelInt = 0;
     [SerializeField] private MMChannel shakeChannelDefinition = null;
 
+    [Header("Bowley Shake")]
+    [SerializeField] private MMRotationShaker bowleyRotationShaker;
+
     [Header("Text Color Settings")]
     [SerializeField] private TMP_Text flashbackText;
     [SerializeField] private Color charonColor = Color.white;
@@ -51,9 +55,27 @@ public class FlashbackEventSubscriber : MonoBehaviour
 // inside your script
     [SerializeField] TypewriterComponent typewriter;
 
-// adds and removes callbacks
-    void OnEnable() => typewriter.onMessage.AddListener(OnMessage);
-    void OnDisable() => typewriter.onMessage.RemoveListener(OnMessage);
+    void OnEnable()
+    {
+        typewriter.onMessage.AddListener(OnMessage);
+        FlashbackText.OnNextLineRequested += StopBowleyShaking;
+        FlashbackText.OnDialogueFinished += StopBowleyShaking;
+    }
+
+    void OnDisable()
+    {
+        typewriter.onMessage.RemoveListener(OnMessage);
+        FlashbackText.OnNextLineRequested -= StopBowleyShaking;
+        FlashbackText.OnDialogueFinished -= StopBowleyShaking;
+    }
+
+    private void StopBowleyShaking()
+    {
+        if (bowleyRotationShaker != null)
+        {
+            bowleyRotationShaker.Stop();
+        }
+    }
 
 // does stuff based on the received marker
     void OnMessage(EventMarker marker)
@@ -87,13 +109,42 @@ public class FlashbackEventSubscriber : MonoBehaviour
             case "CamToBowley":
                 cameraSwitcher.SwitchCamera(camToBowley);
                 if (flashbackText != null) flashbackText.color = bowleyColor;
+                MMGameEvent.Trigger("BowleyTalk");
                 break;
             case "CamToCharon":
                 cameraSwitcher.SwitchCamera(camToCharon);
                 if (flashbackText != null) flashbackText.color = charonColor;
+                MMGameEvent.Trigger("CharonTalk");
                 break;
             case "ShakeCamera":
                 MMCameraShakeEvent.Trigger(shakeDuration, shakeAmplitude, shakeFrequency, 0f, 0f, 0f, false, new MMChannelData(shakeChannelMode, shakeChannelInt, shakeChannelDefinition));
+                break;
+            case "BowleyStartShaking":
+            {
+                StopBowleyShaking();
+                float shakeSpeed = 0f;
+                float range = 0f;
+                int direction = 0;
+                if (marker.parameters.Length > 0) float.TryParse(marker.parameters[0], NumberStyles.Float, CultureInfo.InvariantCulture, out shakeSpeed);
+                if (marker.parameters.Length > 1) float.TryParse(marker.parameters[1], NumberStyles.Float, CultureInfo.InvariantCulture, out range);
+                if (marker.parameters.Length > 2) int.TryParse(marker.parameters[2], out direction);
+
+                Vector3 mainDirection = Vector3.zero;
+                if (direction == 1) mainDirection = Vector3.right;
+                else if (direction == 2) mainDirection = Vector3.up;
+                else if (direction == 3) mainDirection = Vector3.forward;
+
+                if (bowleyRotationShaker != null)
+                {
+                    bowleyRotationShaker.ShakeSpeed = shakeSpeed;
+                    bowleyRotationShaker.ShakeRange = range;
+                    bowleyRotationShaker.ShakeMainDirection = mainDirection;
+                    bowleyRotationShaker.Play();
+                }
+                break;
+            }
+            case "BowleyStopShaking":
+                StopBowleyShaking();
                 break;
             case "CamSwitchSpeed":
                 if (marker.parameters.Length > 0 && float.TryParse(marker.parameters[0], NumberStyles.Float, CultureInfo.InvariantCulture, out float speed))

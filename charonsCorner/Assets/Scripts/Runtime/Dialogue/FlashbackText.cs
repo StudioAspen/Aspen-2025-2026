@@ -2,11 +2,18 @@ using UnityEngine;
 using TMPro;
 using Febucci.TextAnimatorForUnity;
 using CharonsCorner.Runtime;
+using UnityEngine.InputSystem;
+using MoreMountains.Tools;
 
 public class FlashbackText : MonoBehaviour
 {
     [SerializeField] private TypewriterComponent typewriter;
     [SerializeField] private TMP_Text textComponent;
+
+    [Header("Input Prompt")]
+    [SerializeField] private GameObject inputPromptObject;
+    [SerializeField] private TMP_Text inputPromptText;
+    [SerializeField] private InputActionReference interactAction;
 
     private string[] _lines;
     private int _currentLineIndex = -1;
@@ -24,6 +31,7 @@ public class FlashbackText : MonoBehaviour
 
     public delegate void DialogueAction();
     public static event DialogueAction OnDialogueFinished;
+    public static event DialogueAction OnNextLineRequested;
 
     public static void RequestDialogue(string[] lines)
     {
@@ -44,6 +52,7 @@ public class FlashbackText : MonoBehaviour
         if (InputManager.Instance != null)
         {
             InputManager.Instance.Interact += HandleInput;
+            InputManager.Instance.OnControlSchemeChanged += UpdateInputPrompt;
         }
     }
 
@@ -53,6 +62,7 @@ public class FlashbackText : MonoBehaviour
         if (InputManager.Instance != null)
         {
             InputManager.Instance.Interact -= HandleInput;
+            InputManager.Instance.OnControlSchemeChanged -= UpdateInputPrompt;
         }
     }
 
@@ -65,11 +75,18 @@ public class FlashbackText : MonoBehaviour
         {
             typewriter.onTextShowed.AddListener(OnTextShowed);
         }
+
+        if (inputPromptObject != null)
+        {
+            inputPromptObject.SetActive(false);
+        }
     }
 
     private void OnTextShowed()
     {
         _isTyping = false;
+        MMGameEvent.Trigger("StopTalk");
+        ShowInputPrompt();
     }
 
     public void ActivateText(string[] lines)
@@ -105,6 +122,7 @@ public class FlashbackText : MonoBehaviour
         }
         else
         {
+            OnNextLineRequested?.Invoke();
             _currentLineIndex++;
             if (_currentLineIndex < _lines.Length)
             {
@@ -120,6 +138,7 @@ public class FlashbackText : MonoBehaviour
     private void DisplayCurrentLine()
     {
         _isTyping = true;
+        HideInputPrompt();
         string line = _lines[_currentLineIndex];
         
         typewriter.ShowText(line);
@@ -131,6 +150,32 @@ public class FlashbackText : MonoBehaviour
         IsDialogueActive = false;
         _instanceLastFinishedFrame = Time.frameCount;
         if (textComponent != null) textComponent.text = string.Empty;
+        HideInputPrompt();
         OnDialogueFinished?.Invoke();
+    }
+
+    private void ShowInputPrompt()
+    {
+        if (inputPromptObject != null)
+        {
+            UpdateInputPrompt(InputManager.Instance.CurrentControlScheme);
+            inputPromptObject.SetActive(true);
+        }
+    }
+
+    private void HideInputPrompt()
+    {
+        if (inputPromptObject != null)
+        {
+            inputPromptObject.SetActive(false);
+        }
+    }
+
+    private void UpdateInputPrompt(InputManager.ControlScheme controlScheme)
+    {
+        if (inputPromptText != null && interactAction != null)
+        {
+            inputPromptText.text = InputDisplayer.GetInputDisplayString(interactAction, controlScheme);
+        }
     }
 }
