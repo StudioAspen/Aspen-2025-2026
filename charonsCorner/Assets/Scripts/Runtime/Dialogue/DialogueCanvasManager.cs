@@ -6,8 +6,11 @@ using System.Collections.Generic;
 using Febucci.TextAnimatorForUnity;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using Febucci.TextAnimatorForUnity.TextMeshPro;
+using System.Numerics;
+using UnityEngine.SocialPlatforms;
 
 namespace CharonsCorner.Runtime
 {
@@ -22,6 +25,14 @@ namespace CharonsCorner.Runtime
         [SerializeField] private TMP_Text _nameText;
         [SerializeField] private TypewriterComponent _dialogueTextTypewriter;
         [SerializeField] private Transform _optionsContainer;
+
+        [Header("Arrow Settings")]
+        [SerializeField] private RectTransform _arrowObject;
+        [SerializeField] private Animator _arrowAnimator;
+        [SerializeField] private Animator _optionsContainerAnimator;
+        [SerializeField] private AnimationCurve _arrowAnimationCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
+        [SerializeField] private float _arrowAnimationCurveDuration = 0.5f;
+        [SerializeField] private UnityEngine.Vector2 _arrowOffsetX = new UnityEngine.Vector2(-30f, 0f);
 
         private void Awake()
         {
@@ -50,6 +61,7 @@ namespace CharonsCorner.Runtime
             
             ClearUI();
 
+            StartCoroutine(PlayAnimation(_optionsContainerAnimator, "DialogueBoxAnimation"));
             _nameText.text = opener.SpeakerName;
             _dialogueTextTypewriter.ShowText(opener.Text);
 
@@ -117,7 +129,7 @@ namespace CharonsCorner.Runtime
 
             foreach (DialogueSequenceSO sequence in sequenceOptions)
             {
-                GameObject buttonObject = Instantiate(_optionButtonPrefab, _optionsContainer);
+                GameObject buttonObject = InstantiateOptionButton(_optionsContainer);
                 buttonObject.name = $"({sequence.SequenceName})Button";
                 TMP_Text buttonText = buttonObject.GetComponentInChildren<TMP_Text>();
                 buttonText.text = sequence.SequenceName;
@@ -127,7 +139,7 @@ namespace CharonsCorner.Runtime
 
             if (willTryShowReturn && _dialogueManager.ReturnAction != null)
             {
-                GameObject returnButtonObject = Instantiate(_optionButtonPrefab, _optionsContainer);
+                GameObject returnButtonObject = InstantiateOptionButton(_optionsContainer);
                 returnButtonObject.name = "ReturnButton";
                 TMP_Text returnButtonText = returnButtonObject.GetComponentInChildren<TMP_Text>();
                 returnButtonText.text = "Return";
@@ -138,7 +150,7 @@ namespace CharonsCorner.Runtime
                 });
             }
             
-            GameObject closeButtonObject = Instantiate(_optionButtonPrefab, _optionsContainer);
+            GameObject closeButtonObject = InstantiateOptionButton(_optionsContainer);
             closeButtonObject.name = "CloseButton";
             TMP_Text closeButtonText = closeButtonObject.GetComponentInChildren<TMP_Text>();
             closeButtonText.text = "Close";
@@ -155,7 +167,7 @@ namespace CharonsCorner.Runtime
         {
             ClearButtons();
 
-            GameObject nextButtonObject = Instantiate(_optionButtonPrefab, _optionsContainer);
+            GameObject nextButtonObject = InstantiateOptionButton(_optionsContainer);
             nextButtonObject.name = "NextButton";
             TMP_Text nextButtonText = nextButtonObject.GetComponentInChildren<TMP_Text>();
             nextButtonText.text = "Next";
@@ -165,6 +177,43 @@ namespace CharonsCorner.Runtime
 
             UIPanel.ChangeCurrentSelectedObject(nextButtonObject);
         }
+
+        private GameObject InstantiateOptionButton(Transform parent)
+        {
+            GameObject buttonObject = Instantiate(_optionButtonPrefab, parent);
+            
+            EventTrigger trigger = buttonObject.AddComponent<EventTrigger>();
+            EventTrigger.Entry entry = new EventTrigger.Entry { eventID = EventTriggerType.PointerEnter };
+
+            RectTransform buttonRect = buttonObject.GetComponent<RectTransform>();
+            entry.callback.AddListener((data) => MoveArrowToButton(buttonRect));
+            trigger.triggers.Add(entry);
+
+            return buttonObject;
+        }
+
+        private void MoveArrowToButton(RectTransform target)
+        {
+            _arrowObject.gameObject.SetActive(true);
+                        
+            UnityEngine.Vector2 localPosition = _arrowObject.parent.InverseTransformPoint(target.position);
+            
+            _arrowObject.anchoredPosition = new UnityEngine.Vector2(localPosition.x + _arrowOffsetX.x, localPosition.y);
+
+            DOTween.Kill(_arrowObject);
+            _arrowObject.DOAnchorPosY(localPosition.y, _arrowAnimationCurveDuration)
+                .SetEase(_arrowAnimationCurve)
+                .SetUpdate(true);
+            StartCoroutine(PlayAnimation(_arrowAnimator, "SkullSpinAnimation"));
+        }
+
+        private IEnumerator PlayAnimation(Animator animator, string animationName)
+        {
+            yield return null; // Wait a frame to ensure the animation starts
+            animator.Play(animationName, 0, 0f);
+        }
+        
+
 
         /// <summary>
         /// Completely clears the UI, including name and dialogue text, and removes all option buttons.
