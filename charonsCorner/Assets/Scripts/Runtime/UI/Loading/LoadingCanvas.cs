@@ -19,8 +19,12 @@ namespace CharonsCorner.Runtime
         [SerializeField] private float _fadeOutDuration = 1f;
         [SerializeField] private Ease _fadeOutEase = Ease.Linear;
 
+        public bool IsLoaded { get; private set; } = true;
+
         public async UniTask FadeIn()
         {
+            IsLoaded = false;
+
             if (!DOTween.IsTweening(_image))
                 _image.SetImageAlpha(0f);
 
@@ -35,6 +39,8 @@ namespace CharonsCorner.Runtime
 
         public async UniTask FadeOut(UIPanel nextPanel)
         {
+            IsLoaded = false;
+
             if (!DOTween.IsTweening(_image))
                 _image.SetImageAlpha(1f);
 
@@ -44,15 +50,12 @@ namespace CharonsCorner.Runtime
 
             await _image.DOFade(0f, _fadeOutDuration).SetEase(_fadeOutEase).SetUpdate(true).OnComplete(() => { 
                 _image.SetImageAlpha(0f);
-                
+                IsLoaded = true;
+        
                 if (nextPanel == null)
-                {
                     UIPanel.CloseAll();
-                }
                 else
-                {
                     UIPanel.Focus(nextPanel);
-                }
             });
         }
         

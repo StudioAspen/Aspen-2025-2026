@@ -14,6 +14,7 @@ namespace CharonsCorner.Runtime
     {
         public UnityEvent<LevelDataSO> OnLevelSelectOpen = new();
         public UnityEvent OnLevelSelectClose = new();
+        public UnityEvent OnLevelStarted = new();
 
         //Editor references
         [Header("References")]
@@ -65,12 +66,14 @@ namespace CharonsCorner.Runtime
             }
 
             Debug.Log($"[HubLevelSelectController] Starting flashback for level: {_currentLevelData.LevelTitle}");
-
+            
             // Set the pending dialogue for the flashback scene
             FlashbackTrigger.SetPendingDialogue(_currentLevelData.FlashbackDialogue);
 
             // Open flashback scene
-            GameManager.Instance.SwitchScenes(_flashbackScene, GameState.Gameplay).Forget();
+            GameManager.Instance.SwitchScenes(_flashbackScene, GameState.Cutscene).Forget();
+            
+            OnLevelStarted?.Invoke();
         }
     }
 }

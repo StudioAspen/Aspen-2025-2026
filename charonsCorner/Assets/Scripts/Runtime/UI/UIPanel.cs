@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using DG.Tweening;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Events;
@@ -21,6 +22,9 @@ namespace CharonsCorner.Runtime
         /// Think of popup UI.
         /// </summary>
         [field: SerializeField] public bool IsAdditive { get; private set; } = false;
+
+        [SerializeField] private float _fadeDuration = 1f;
+        [SerializeField] private bool _useFadeTransition = false;
         [ShowInInspector, ReadOnly] public static Selectable TargetSelectedObject { get; private set; }
         /// <summary>
         /// The first object to select when opening this panel.
@@ -148,10 +152,18 @@ namespace CharonsCorner.Runtime
 
         public void Focus()
         {
+            DOTween.Kill(Group);
             Group.interactable = true;
             gameObject.SetActive(true);
             ActivePanel = this;
             
+            if (_useFadeTransition)
+            {
+                Group.alpha = 0f;
+                Group.DOFade(1f, _fadeDuration);
+                
+            }
+
             ChangeCurrentSelectedObject(DefaultSelected);
 
             OnFocused?.Invoke();
@@ -160,7 +172,26 @@ namespace CharonsCorner.Runtime
 
         public void Unfocus()
         {
-            gameObject.SetActive(false);
+            DOTween.Kill(Group);
+            Group.interactable = false;
+            
+            if (_useFadeTransition)
+            {
+                Group.blocksRaycasts = false;
+
+                Group.DOFade(0f, _fadeDuration).OnComplete(() =>
+                {
+                    Group.blocksRaycasts = true;
+                    gameObject.SetActive(false);
+                });
+            }
+            else
+            {
+                gameObject.SetActive(false);
+            }
+
+
+
             OnUnfocused?.Invoke();
         }
 
@@ -233,6 +264,12 @@ namespace CharonsCorner.Runtime
         public static void ChangeCurrentSelectedObject(Selectable selectedObject)
         {
             TargetSelectedObject = selectedObject;
+            SetCurrentSelectedObject();
+        }
+        
+        public static void ChangeCurrentSelectedObject(GameObject selectedGameObject)
+        {
+            TargetSelectedObject = selectedGameObject.GetComponent<Selectable>();
             SetCurrentSelectedObject();
         }
 
