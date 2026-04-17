@@ -22,7 +22,11 @@ public class FlashbackEventSubscriber : MonoBehaviour
     [SerializeField] private SceneReference level6;
     [SerializeField] private CameraSwitcher cameraSwitcher;
     [SerializeField] private CinemachineCamera camToBowley;
+    [SerializeField] private CinemachineCamera camToBowlingAlley;
+    [SerializeField] private CinemachineCamera camToBowlingAlleyPan;
     [SerializeField] private CinemachineCamera camToCharon;
+    [SerializeField] private CinemachineCamera camCharonLooksAtPlayer;
+    [SerializeField] private CinemachineCamera camPlayerCloseup;
     [SerializeField] private CinemachineCamera camToFadeOut;
     
     [Header("Camera Shake")]
@@ -35,6 +39,12 @@ public class FlashbackEventSubscriber : MonoBehaviour
 
     [Header("Bowley Shake")]
     [SerializeField] private MMRotationShaker bowleyRotationShaker;
+
+    [Header("Feedbacks")]
+    [SerializeField] private MMF_Player movePlayerFeedback;
+    [SerializeField] private MMF_Player playerScaredFeedback;
+    [SerializeField] private MMF_Player bowlingLightsFeedback;
+    [SerializeField] private MMF_Player bowlingPanFeedback;
 
     [Header("Text Color Settings")]
     [SerializeField] private TMP_Text flashbackText;
@@ -112,16 +122,42 @@ public class FlashbackEventSubscriber : MonoBehaviour
                 if (flashbackText != null) flashbackText.color = bowleyColor;
                 MMGameEvent.Trigger("BowleyTalk");
                 break;
+            case "CamToBowlingAlley":
+                cameraSwitcher.SwitchCamera(camToBowlingAlley);
+                break;
+            case "CameraToBowlingAlleyPan":
+                cameraSwitcher.SwitchCamera(camToBowlingAlleyPan);
+                break;
             case "CamToCharon":
                 cameraSwitcher.SwitchCamera(camToCharon);
                 if (flashbackText != null) flashbackText.color = charonColor;
                 MMGameEvent.Trigger("CharonTalk");
+                break;
+            case "CharonLooksAtPlayer":
+                cameraSwitcher.SwitchCamera(camCharonLooksAtPlayer);
+                if (flashbackText != null) flashbackText.color = charonColor;
+                MMGameEvent.Trigger("CharonTalk");
+                break;
+            case "CameraPlayerCloseup":
+                cameraSwitcher.SwitchCamera(camPlayerCloseup);
                 break;
             case "CamToFadeOut":
                 cameraSwitcher.SwitchCamera(camToFadeOut);
                 break;
             case "ShakeCamera":
                 MMCameraShakeEvent.Trigger(shakeDuration, shakeAmplitude, shakeFrequency, 0f, 0f, 0f, false, new MMChannelData(shakeChannelMode, shakeChannelInt, shakeChannelDefinition));
+                break;
+            case "MovePlayerFeedback":
+                if (movePlayerFeedback != null) movePlayerFeedback.PlayFeedbacks();
+                break;
+            case "PlayerScaredFeedback":
+                if (playerScaredFeedback != null) playerScaredFeedback.PlayFeedbacks();
+                break;
+            case "BowlingLights":
+                if (bowlingLightsFeedback != null) bowlingLightsFeedback.PlayFeedbacks();
+                break;
+            case "BowlingPan":
+                if (bowlingPanFeedback != null) bowlingPanFeedback.PlayFeedbacks();
                 break;
             case "BowleyStartShaking":
             {
