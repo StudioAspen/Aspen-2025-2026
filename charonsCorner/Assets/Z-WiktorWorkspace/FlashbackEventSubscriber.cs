@@ -23,6 +23,7 @@ public class FlashbackEventSubscriber : MonoBehaviour
     [SerializeField] private CameraSwitcher cameraSwitcher;
     [SerializeField] private CinemachineCamera camToBowley;
     [SerializeField] private CinemachineCamera camToCharon;
+    [SerializeField] private CinemachineCamera camToFadeOut;
     
     [Header("Camera Shake")]
     [SerializeField] private float shakeDuration = 0.5f;
@@ -115,6 +116,9 @@ public class FlashbackEventSubscriber : MonoBehaviour
                 cameraSwitcher.SwitchCamera(camToCharon);
                 if (flashbackText != null) flashbackText.color = charonColor;
                 MMGameEvent.Trigger("CharonTalk");
+                break;
+            case "CamToFadeOut":
+                cameraSwitcher.SwitchCamera(camToFadeOut);
                 break;
             case "ShakeCamera":
                 MMCameraShakeEvent.Trigger(shakeDuration, shakeAmplitude, shakeFrequency, 0f, 0f, 0f, false, new MMChannelData(shakeChannelMode, shakeChannelInt, shakeChannelDefinition));
