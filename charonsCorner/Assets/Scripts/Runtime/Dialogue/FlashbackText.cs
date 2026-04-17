@@ -3,6 +3,7 @@ using TMPro;
 using Febucci.TextAnimatorForUnity;
 using CharonsCorner.Runtime;
 using UnityEngine.InputSystem;
+using MoreMountains.Tools;
 
 public class FlashbackText : MonoBehaviour
 {
@@ -30,6 +31,7 @@ public class FlashbackText : MonoBehaviour
 
     public delegate void DialogueAction();
     public static event DialogueAction OnDialogueFinished;
+    public static event DialogueAction OnNextLineRequested;
 
     public static void RequestDialogue(string[] lines)
     {
@@ -83,6 +85,7 @@ public class FlashbackText : MonoBehaviour
     private void OnTextShowed()
     {
         _isTyping = false;
+        MMGameEvent.Trigger("StopTalk");
         ShowInputPrompt();
     }
 
@@ -119,6 +122,7 @@ public class FlashbackText : MonoBehaviour
         }
         else
         {
+            OnNextLineRequested?.Invoke();
             _currentLineIndex++;
             if (_currentLineIndex < _lines.Length)
             {
