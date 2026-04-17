@@ -13,6 +13,7 @@ namespace CharonsCorner.Runtime
         [SerializeField] private float _cameraTargetHeight = 1f;
         
         [SerializeField] private float _slowPlayerStrength = 5f;
+        [SerializeField] private float _groundStickForce = 10f;
 
         [SerializeField] private float _stateDuration = 0.5f;  
         private float _timer;
@@ -41,16 +42,32 @@ namespace CharonsCorner.Runtime
             }
 
             _context.CameraTargetFollowTarget.SetPositionOffset(Vector3.zero.WithY(Mathf.Lerp(_context.CameraTargetFollowTarget.PositionOffset.y, _cameraTargetHeight, _cameraDistanceChangeSpeed * Time.deltaTime)));
-
-            Vector3 horizontalVelocity = _context.Rb.linearVelocity.WithY(0f);
-
-            Vector3 counterforce = -horizontalVelocity * _slowPlayerStrength;
-            _context.Rb.AddForce(counterforce, ForceMode.Acceleration);
         }
 
         private protected override void OnFixedUpdate()
         {
+            Vector3 velocity = _context.Rb.linearVelocity;
+            Vector3 groundNormal = Vector3.up;
+            bool isOnSlope = false;
             
+            if (_context.IsGrounded && _context.SlopeSensor != null && _context.SlopeSensor.Hit.normal != Vector3.zero)
+            {
+                groundNormal = _context.SlopeSensor.Hit.normal;
+                isOnSlope = true;
+            }
+
+            // Calculate "planar" velocity relative to the ground normal
+            Vector3 planarVelocity = Vector3.ProjectOnPlane(velocity, groundNormal);
+
+            // Apply counterforce (braking) along the ground plane
+            Vector3 counterforce = -planarVelocity * _slowPlayerStrength;
+            _context.Rb.AddForce(counterforce, ForceMode.Acceleration);
+
+            // Apply ground stick force if grounded to prevent floating during charge
+            if (_context.IsGrounded)
+            {
+                _context.Rb.AddForce(-groundNormal * _groundStickForce, ForceMode.Acceleration);
+            }
         }
 
         private protected override State<GameplayPlayerController> GetTransition()

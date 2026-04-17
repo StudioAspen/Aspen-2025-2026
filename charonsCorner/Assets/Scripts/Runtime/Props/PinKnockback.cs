@@ -55,6 +55,8 @@ namespace CharonsCorner.Runtime
 
             // disable physics until hit (so doesnt fall over)
             _rigidbody.useGravity = false;
+            LayerMask groundMask = LayerMask.GetMask("Ground");
+            _capsuleCollider.excludeLayers = groundMask;
 
             _rigidbody.centerOfMass = new Vector3(0f, -0.2f, 0f);
         }
@@ -77,10 +79,11 @@ namespace CharonsCorner.Runtime
             if (!_hasBeenHit)
             {
                 _hasBeenHit = true;
+                _capsuleCollider.excludeLayers = new LayerMask(); // clear all layer overrides
                 _rigidbody.useGravity = true;
                 _rigidbody.isKinematic = false;
                 _rigidbody.WakeUp();
-                _capsuleCollider.excludeLayers = new LayerMask(); // clear all layer overrides
+                
                 if (TryGetComponent(out Animator pinAnim))
                 {
                     pinAnim.Play("pinsquash");

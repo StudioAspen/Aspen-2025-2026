@@ -106,13 +106,13 @@ namespace CharonsCorner.Runtime
             float t = 0f;
             while (t < 1f)
             {
-                t += Time.deltaTime / time;
+                t += Time.fixedDeltaTime / time;
                 float e = _ease.Evaluate(Mathf.Clamp01(t));
                 transform.SetPositionAndRotation(
                     Vector3.Lerp(fromPos, toPos, e),
                     Quaternion.Slerp(fromRot, toRot, e)
                     );
-                yield return null;
+                yield return new WaitForFixedUpdate();
             }
         }
     }
