@@ -19,12 +19,14 @@ public class RankingSystem : MonoBehaviour
 
     [Header("UI Settings")]
     [SerializeField] GameObject _RankingPanel;
+    [SerializeField] GameObject _interactIcon;
     [SerializeField] TextMeshProUGUI _finalScoreText;
     [SerializeField] TextMeshProUGUI _finalTimerText;
     [SerializeField] TextMeshProUGUI _timerText;
     [SerializeField] TextMeshProUGUI _levelText;
     // Debug Feature
     [SerializeField] TextMeshProUGUI _rankText;
+    [SerializeField] TextMeshProUGUI _nextRankText;
     [SerializeField] GameObject _pinUIPrefab;
     [SerializeField] GameObject _minusTextPrefab;
     [SerializeField] float _uiDestroyDelay = 3f;
@@ -86,6 +88,11 @@ public class RankingSystem : MonoBehaviour
         _timer = 0f;
         _hasPlayerStarted = false;
         _hasPlayerFinished = false;
+
+        if (_interactIcon != null)
+        {
+            _interactIcon.SetActive(false);
+        }
     }
 
     private void Update()
@@ -115,6 +122,11 @@ public class RankingSystem : MonoBehaviour
         {
             _endLevelSequence.PlayFeedbacks();
         }
+
+        if (_interactIcon != null)
+        {
+            _interactIcon.SetActive(true);
+        }
     }
 
     void FinalRank()
@@ -138,35 +150,55 @@ public class RankingSystem : MonoBehaviour
 
         // Note: Refactor to a cleaner check & elimate boundary error
         // S Rank Check
-        if (_timer < times[0])
+        if (_timer <= times[0])
         {
-            _rankText.text = "S";
+            _rankText.text = "S-Rank";
             _rankScore.SetFinalRank(Ranks.S);
+            SetNextRankText("", 0); // No next rank
         }
         // A Rank Check
-        else if (times[0] < _timer && _timer < times[1])
+        else if (_timer > times[0] && _timer <= times[1])
         {
-            _rankText.text = "A";
+            _rankText.text = "A-Rank";
             _rankScore.SetFinalRank(Ranks.A);
+            SetNextRankText("S", times[0]);
         }
         // B Rank Check
-        else if (times[1] < _timer && _timer < times[2])
+        else if (_timer > times[1] && _timer <= times[2])
         {
-            _rankText.text = "B";
+            _rankText.text = "B-Rank";
             _rankScore.SetFinalRank(Ranks.B);
+            SetNextRankText("A", times[1]);
         }
         // C Rank Check
-        else if (times[2] < _timer && _timer < times[3])
+        else if (_timer > times[2] && _timer <= times[3])
         {
-            _rankText.text = "C";
+            _rankText.text = "C-Rank";
             _rankScore.SetFinalRank(Ranks.C);
+            SetNextRankText("B", times[2]);
         }
         // F Rank Check
         else
         {
-            _rankText.text = "F";
+            _rankText.text = "F-Rank";
             _rankScore.SetFinalRank(Ranks.F);
+            SetNextRankText("C", times[3]);
         }
+    }
+
+    void SetNextRankText(string rankName, float timeThreshold)
+    {
+        if (_nextRankText == null) return;
+
+        if (string.IsNullOrEmpty(rankName))
+        {
+            _nextRankText.text = "";
+            return;
+        }
+
+        int minutes = Mathf.FloorToInt(timeThreshold / 60);
+        int seconds = Mathf.FloorToInt(timeThreshold % 60);
+        _nextRankText.text = $"Get {string.Format("{0:0}:{1:00}", minutes, seconds)} to get an {rankName}-rank!";
     }
 
     void CheckPlayerStart()

@@ -22,6 +22,7 @@ public class FlashbackEventSubscriber : MonoBehaviour
     [SerializeField] private SceneReference level5;
     [SerializeField] private SceneReference level6;
     [SerializeField] private SceneReference hubScene;
+    [SerializeField] private SceneReference creditsScene;
     [SerializeField] private CameraSwitcher cameraSwitcher;
     [SerializeField] private CinemachineCamera camToBowley;
     [SerializeField] private CinemachineCamera camToBowlingAlley;
@@ -125,6 +126,9 @@ public class FlashbackEventSubscriber : MonoBehaviour
                 break;
             case "GoToHubScene":
                 SwitchToLevel(hubScene);
+                break;
+            case "GoToCredits":
+                SwitchToLevel(creditsScene);
                 break;
             case "CamToBowley":
                 cameraSwitcher.SwitchCamera(camToBowley);
