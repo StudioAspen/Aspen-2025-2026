@@ -43,7 +43,9 @@ namespace CharonsCorner.Runtime
         public enum ControlScheme
         {
             KeyboardMouse,
-            Gamepad
+            Gamepad,
+            Xbox,
+            PS
         }
         [field: Header("Control Scheme")]
         [field: SerializeField, ReadOnly] public ControlScheme CurrentControlScheme { get; private set; }
@@ -59,7 +61,9 @@ namespace CharonsCorner.Runtime
         public static readonly Dictionary<ControlScheme, string> ControlSchemeInternalNames = new Dictionary<ControlScheme, string>
         {
             { ControlScheme.KeyboardMouse, "Keyboard&Mouse" },
-            { ControlScheme.Gamepad, "Gamepad" }
+            { ControlScheme.Gamepad, "Gamepad" },
+            { ControlScheme.Xbox, "Gamepad" },
+            { ControlScheme.PS, "Gamepad" }
         };
         #endregion
 
@@ -233,7 +237,26 @@ namespace CharonsCorner.Runtime
         /// <param name="device"></param>
         private void PlayerInput_OnControlsChanged(PlayerInput input)
         {
-            ControlScheme newScheme = input.currentControlScheme == "Gamepad" ? ControlScheme.Gamepad : ControlScheme.KeyboardMouse;
+            ControlScheme newScheme = ControlScheme.KeyboardMouse;
+            
+            if (input.currentControlScheme == "Gamepad")
+            {
+                newScheme = ControlScheme.Gamepad;
+                
+                // Try to detect specific gamepad type
+                if (Gamepad.current != null)
+                {
+                    string deviceName = Gamepad.current.name.ToLower();
+                    if (deviceName.Contains("dualshock") || deviceName.Contains("dualsense") || deviceName.Contains("playstation") || deviceName.Contains("ps4") || deviceName.Contains("ps5"))
+                    {
+                        newScheme = ControlScheme.PS;
+                    }
+                    else if (deviceName.Contains("xbox") || deviceName.Contains("xinput"))
+                    {
+                        newScheme = ControlScheme.Xbox;
+                    }
+                }
+            }
 
             if (newScheme != CurrentControlScheme)
             {

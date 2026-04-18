@@ -3078,6 +3078,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _spotlight: {fileID: 252271054}
   _inputDisplayCanvas: {fileID: 1537828383}
+  _lockedDisplayCanvas: {fileID: 0}
   _lockedColor: {r: 1, g: 0, b: 0, a: 1}
   _unlockedColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!114 &252271057
@@ -3689,6 +3690,12 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  OnPlayerEnter:
+    m_PersistentCalls:
+      m_Calls: []
+  OnPlayerExit:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &393331874
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4305,7 +4312,26 @@ MonoBehaviour:
     guid: 00000000000000000000000000000000
   cameraSwitcher: {fileID: 461089656}
   camToBowley: {fileID: 1983860403}
+  camToBowlingAlley: {fileID: 0}
+  camToBowlingAlleyPan: {fileID: 0}
   camToCharon: {fileID: 154277551}
+  camCharonLooksAtPlayer: {fileID: 0}
+  camPlayerCloseup: {fileID: 0}
+  camToFadeOut: {fileID: 0}
+  shakeDuration: 0.5
+  shakeAmplitude: 1
+  shakeFrequency: 1
+  shakeChannelMode: 0
+  shakeChannelInt: 0
+  shakeChannelDefinition: {fileID: 0}
+  bowleyRotationShaker: {fileID: 0}
+  movePlayerFeedback: {fileID: 0}
+  playerScaredFeedback: {fileID: 0}
+  bowlingLightsFeedback: {fileID: 0}
+  bowlingPanFeedback: {fileID: 0}
+  flashbackText: {fileID: 0}
+  charonColor: {r: 1, g: 1, b: 1, a: 1}
+  bowleyColor: {r: 1, g: 1, b: 1, a: 1}
   typewriter: {fileID: 461089658}
 --- !u!114 &461089660
 MonoBehaviour:
@@ -4321,6 +4347,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   typewriter: {fileID: 461089658}
   textComponent: {fileID: 461089661}
+  inputPromptObject: {fileID: 0}
+  inputPromptText: {fileID: 0}
+  interactAction: {fileID: 0}
 --- !u!114 &461089661
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7155,6 +7184,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _spotlight: {fileID: 992223849}
   _inputDisplayCanvas: {fileID: 230673086}
+  _lockedDisplayCanvas: {fileID: 0}
   _lockedColor: {r: 1, g: 0, b: 0, a: 1}
   _unlockedColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!114 &992223852
@@ -7940,6 +7970,12 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  OnPlayerEnter:
+    m_PersistentCalls:
+      m_Calls: []
+  OnPlayerExit:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &1161058703
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9091,7 +9127,7 @@ Animator:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1397572412}
   m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: e5417a72d65590047a0b33abe379649c, type: 3}
+  m_Avatar: {fileID: 9000000, guid: 49e1acb32053f2d4c8ea26e8f270a026, type: 3}
   m_Controller: {fileID: 9100000, guid: 00364f17417cec54082f458bc557ee63, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
@@ -11434,6 +11470,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _spotlight: {fileID: 1953512977}
   _inputDisplayCanvas: {fileID: 4254654}
+  _lockedDisplayCanvas: {fileID: 0}
   _lockedColor: {r: 1, g: 0, b: 0, a: 1}
   _unlockedColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!114 &1953512980
@@ -16782,6 +16819,12 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  OnPlayerEnter:
+    m_PersistentCalls:
+      m_Calls: []
+  OnPlayerExit:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!4 &6798106632454852026
 Transform:
   m_ObjectHideFlags: 0
@@ -18424,6 +18467,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3fe57f71c5b54dc18872d4c62faa0efb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!225 &8889980787770305557
+CanvasGroup:
+  m_ObjectHideFlags: 8
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!114 &8892546197862460296
 MonoBehaviour:
   m_ObjectHideFlags: 0
