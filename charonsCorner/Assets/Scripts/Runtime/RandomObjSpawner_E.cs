@@ -1,3 +1,4 @@
+using NUnit.Framework.Internal;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,27 +10,28 @@ namespace CharonsCorner.Runtime
         [SerializeField] GameObject[] ObjectsToSpawn;
         [SerializeField] GameObject TargetPosition;
 
+        [Header("Spawner Settings")]
         [Tooltip("How long spawner is turned off and not spawning before it starts to spawn objects")]
         [SerializeField] float TimeBeforeSpawn = 5f;
-        float timebeforeSpawn;
-
         [Tooltip("How long spawning happens")]
         [SerializeField] float SpawnDuration = 5f;
-        float spawnDuration;
-
         [Tooltip("Minimum time before another object spawns")]
         [SerializeField] float minSpawnInterval = 1.35f;
         [Tooltip("Maximum time before another object spawns")]
         [SerializeField] float maxSpawnInterval = 1.7f;
-        float spawnInterval;
-
         [Tooltip("If true, spawner never turns off and will spawn continuously without end")]
         [SerializeField] bool SpawnInfinitely = false;
 
+        [Header("Spawned Object Settings")]
         [Tooltip("How long object stays before getting destroyed")]
         [SerializeField] float ObjectLifeTime = 5f;
+        [Tooltip("Speed of Spawned Object")]
+        [SerializeField] float ObjectSpeed = 25f;
 
         Transform spawnDest;
+        float timebeforeSpawn;
+        float spawnDuration;
+        float spawnInterval;
         bool Spawning = false;
 
         void Start()
@@ -86,6 +88,9 @@ namespace CharonsCorner.Runtime
                     obj.GetComponent<TrackTarget_E>().enabled = true;
                     //Give script the target position to move towards (the player)
                     obj.GetComponent<TrackTarget_E>().TargetObject = TargetPosition.transform;
+                    //Set speed of object
+                    obj.GetComponent<TrackTarget_E>().Speed = ObjectSpeed;
+                    
                     Destroy(obj, ObjectLifeTime);
                 }
 

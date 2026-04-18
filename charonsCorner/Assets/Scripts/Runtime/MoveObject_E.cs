@@ -2,10 +2,10 @@ using UnityEngine;
 
 namespace CharonsCorner.Runtime
 {
-    public class TrackTarget_E : MonoBehaviour
+    public class MoveObject_E : MonoBehaviour
     {
         [HideInInspector] public Transform TargetObject;
-        [HideInInspector] public float Speed = 25f;
+        [SerializeField] float Speed = 10f;
 
         // Update is called once per frame
         void Update()
