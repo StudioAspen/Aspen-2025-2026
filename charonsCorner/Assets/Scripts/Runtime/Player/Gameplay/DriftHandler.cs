@@ -45,6 +45,10 @@ namespace CharonsCorner.Runtime
         [SerializeField] private ParticleSystem _driftDust;
         [SerializeField] private float _particleDuration = 1f;
 
+        [Header("Audio")]
+        [SerializeField] private AudioSource _chargingAudioSource;
+        [SerializeField] private AudioSource _boostReleaseAudioSource; 
+ 
         [ShowInInspector] public bool IsDrifting => _playerController != null && _playerController.StateMachine != null && _playerController.StateMachine.CurrentState == _playerController.DriftSuperState;
         [ShowInInspector] public bool IsOffCooldown => _playerController != null && _driftCooldownTimer >= _driftCooldownDuration;
 
@@ -54,6 +58,7 @@ namespace CharonsCorner.Runtime
         private float _glowAtStartOfCooldown;
         private bool _wasChargingLastFrame;
         private int _glowPropertyId;
+        private bool _isSoundPlaying;
 
         private MaterialPropertyBlock _propBlock;
 
@@ -107,6 +112,20 @@ namespace CharonsCorner.Runtime
         private void Update()
         {
             bool isCharging = IsDrifting && _playerController.DriftSuperState.SubStateMachine.CurrentState == _playerController.DriftSuperState.DriftingChargeState;
+           
+             if (_chargingAudioSource != null)
+            {
+                if (_chargingAudioSource && !_isSoundPlaying)
+                {
+                    _chargingAudioSource.Play();
+                    _isSoundPlaying = true; 
+                }
+                else if (!isCharging && _isSoundPlaying)
+                {
+                    _chargingAudioSource.Stop();
+                    _isSoundPlaying = false;
+                }
+            }
 
             if (isCharging)
             {
@@ -305,7 +324,12 @@ namespace CharonsCorner.Runtime
                 _playerController.DriftSuperState.SubStateMachine.ChangeState(
                     _playerController.DriftSuperState.DriftingBoostState, true);
             }
+            if(_boostReleaseAudioSource !=null)
+            {
+                _boostReleaseAudioSource.Play();
+            }
         }
+
 
         public void PlayPersistentDriftParticles()
         {
