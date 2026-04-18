@@ -21,6 +21,10 @@ namespace CharonsCorner.Runtime
         [SerializeField] private AudioSource _rollingAudioSource;
         [SerializeField] private float _movementThreshold = 1f;
         [SerializeField] private AudioSource _crashAudioSource;
+        [SerializeField]
+        private float _crashVelocityThreshold = 10f;
+
+
 
         [Header("References")]
         [field: SerializeField] public Transform Orientation { get; private set; }
@@ -69,6 +73,22 @@ namespace CharonsCorner.Runtime
             SetupStateMachine();
         }
 
+        private void OnCollisionEnter(Collision collision)
+        {
+            if ((_groundLayer.value & (1 << collision.gameObject.layer)) != 0) { return; }
+
+            
+                
+           
+
+            if (collision.relativeVelocity.magnitude > _crashVelocityThreshold)
+            {
+                _crashAudioSource?.Play();
+            }
+            
+                
+            
+        }
         private void Update()
         {
             StateMachine.Update();
