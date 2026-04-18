@@ -20,6 +20,7 @@ namespace CharonsCorner.Runtime
         [Header("Audio")]
         [SerializeField] private AudioSource _rollingAudioSource;
         [SerializeField] private float _movementThreshold = 1f;
+        [SerializeField] private AudioSource _crashAudioSource;
 
         [Header("References")]
         [field: SerializeField] public Transform Orientation { get; private set; }
