@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 using System.Globalization;
 using Febucci.TextAnimatorForUnity;
 using Febucci.TextAnimatorCore.Typing;
@@ -29,6 +30,9 @@ public class FlashbackEventSubscriber : MonoBehaviour
     [SerializeField] private CinemachineCamera camCharonLooksAtPlayer;
     [SerializeField] private CinemachineCamera camPlayerCloseup;
     [SerializeField] private CinemachineCamera camToFadeOut;
+    
+    [Header("Fade Settings")]
+    [SerializeField] private Image fadeImage;
     
     [Header("Camera Shake")]
     [SerializeField] private float shakeDuration = 0.5f;
@@ -200,6 +204,36 @@ public class FlashbackEventSubscriber : MonoBehaviour
                     cameraSwitcher.BlendDuration = speed;
                 }
                 break;
+            case "FadeToBlack":
+                if (marker.parameters.Length > 0 && float.TryParse(marker.parameters[0], NumberStyles.Float, CultureInfo.InvariantCulture, out float duration))
+                {
+                    FadeToBlack(duration).Forget();
+                }
+                break;
         }
+    }
+
+    private async UniTask FadeToBlack(float duration)
+    {
+        if (fadeImage == null)
+        {
+            Debug.LogWarning("[FlashbackEventSubscriber] fadeImage is not assigned.");
+            return;
+        }
+
+        float elapsedTime = 0f;
+        Color color = fadeImage.color;
+        float startAlpha = color.a;
+
+        while (elapsedTime < duration)
+        {
+            elapsedTime += Time.deltaTime;
+            color.a = Mathf.Lerp(startAlpha, 1f, elapsedTime / duration);
+            fadeImage.color = color;
+            await UniTask.Yield();
+        }
+
+        color.a = 1f;
+        fadeImage.color = color;
     }
 }

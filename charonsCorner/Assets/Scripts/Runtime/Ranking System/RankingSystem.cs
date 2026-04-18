@@ -4,6 +4,7 @@ using UnityEngine;
 using MoreMountains.Feedbacks;
 using CharonsCorner.Runtime;
 using UnityEngine.InputSystem;
+using Cysharp.Threading.Tasks;
 
 public class RankingSystem : MonoBehaviour
 {
@@ -13,6 +14,8 @@ public class RankingSystem : MonoBehaviour
     [SerializeField] GameObject _startCheck;
     [SerializeField] GameObject _endCheck;
     [SerializeField] float _radius;
+    [SerializeField] bool _useAlternativeEndScene;
+    [SerializeField] Eflatun.SceneReference.SceneReference _alternativeEndScene;
 
     [Header("UI Settings")]
     [SerializeField] GameObject _RankingPanel;
@@ -67,7 +70,14 @@ public class RankingSystem : MonoBehaviour
     {
         if (_hasPlayerFinished)
         {
-            GameManager.Instance.ReturnToHub();
+            if (_useAlternativeEndScene && _alternativeEndScene != null && !string.IsNullOrEmpty(_alternativeEndScene.Name))
+            {
+                GameManager.Instance.SwitchScenes(_alternativeEndScene, GameState.Gameplay).Forget();
+            }
+            else
+            {
+                GameManager.Instance.ReturnToHub();
+            }
         }
     }
 

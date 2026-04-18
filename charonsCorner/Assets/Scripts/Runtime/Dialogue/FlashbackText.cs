@@ -1,6 +1,7 @@
 using UnityEngine;
 using TMPro;
 using Febucci.TextAnimatorForUnity;
+using Febucci.TextAnimatorCore.Typing;
 using CharonsCorner.Runtime;
 using UnityEngine.InputSystem;
 using MoreMountains.Tools;
@@ -20,6 +21,7 @@ public class FlashbackText : MonoBehaviour
     private bool _isTyping = false;
     private bool _isActive = false;
     private bool _skipFirstFrameInput = false;
+    private bool _isUnskippable = false;
 
     public static bool IsDialogueActive { get; private set; }
 
@@ -74,6 +76,7 @@ public class FlashbackText : MonoBehaviour
         if (typewriter != null)
         {
             typewriter.onTextShowed.AddListener(OnTextShowed);
+            typewriter.onMessage.AddListener(OnMessage);
         }
 
         if (inputPromptObject != null)
@@ -87,6 +90,14 @@ public class FlashbackText : MonoBehaviour
         _isTyping = false;
         MMGameEvent.Trigger("StopTalk");
         ShowInputPrompt();
+    }
+
+    private void OnMessage(EventMarker marker)
+    {
+        if (marker.name == "unskippable")
+        {
+            _isUnskippable = true;
+        }
     }
 
     public void ActivateText(string[] lines)
@@ -118,10 +129,12 @@ public class FlashbackText : MonoBehaviour
 
         if (_isTyping)
         {
+            if (_isUnskippable) return;
             typewriter.SkipTypewriter();
         }
         else
         {
+            if (_isUnskippable) return;
             OnNextLineRequested?.Invoke();
             _currentLineIndex++;
             if (_currentLineIndex < _lines.Length)
@@ -138,6 +151,7 @@ public class FlashbackText : MonoBehaviour
     private void DisplayCurrentLine()
     {
         _isTyping = true;
+        _isUnskippable = false;
         HideInputPrompt();
         string line = _lines[_currentLineIndex];
         
