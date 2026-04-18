@@ -108,9 +108,11 @@ namespace CharonsCorner.Runtime
                 forwardOriented * (input.y * Acceleration) +
                 rightOriented * (input.x * Acceleration);
 
+            /*
             Debug.DrawLine(_context.transform.position,
                 _context.transform.position + 100f * inputForce,
                 Color.red, 0.25f);
+                */
 
             if (_context.JumpHandler == null || !_context.JumpHandler.HasJumped)
             {

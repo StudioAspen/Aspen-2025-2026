@@ -229,6 +229,46 @@ namespace CharonsCorner.LevelEditor
             return flat.normalized;
         }
 
+        /// <summary>
+        /// Returns the configured travel direction vector (flat, normalized) for the
+        /// spline closest to <paramref name="worldPosition"/>.
+        /// </summary>
+        public Vector3 GetTravelDirectionAtPosition(Vector3 worldPosition)
+        {
+            if (_splineContainer == null) return Vector3.zero;
+
+            float3 localPosition = _splineContainer.transform.InverseTransformPoint(worldPosition);
+
+            float nearestDist = float.MaxValue;
+            int nearestSplineIndex = 0;
+            float nearestT = 0f;
+
+            for (int i = 0; i < _splineContainer.Splines.Count; i++)
+            {
+                SplineUtility.GetNearestPoint(
+                    _splineContainer.Splines[i],
+                    localPosition,
+                    out float3 nearestPoint,
+                    out float t
+                );
+
+                float dist = math.distancesq(localPosition, nearestPoint);
+                if (dist < nearestDist)
+                {
+                    nearestDist = dist;
+                    nearestSplineIndex = i;
+                    nearestT = t;
+                }
+            }
+
+            Vector3 forward = SampleSplineForward(nearestSplineIndex, nearestT);
+
+            if (GetDirectionForSpline(nearestSplineIndex) == RoadDirection.Backward)
+                forward = -forward;
+
+            return forward;
+        }
+        
 #if UNITY_EDITOR
         private void OnDrawGizmosSelected()
         {

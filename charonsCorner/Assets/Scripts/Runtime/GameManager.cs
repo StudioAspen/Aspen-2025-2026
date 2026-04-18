@@ -2,6 +2,7 @@ using Eflatun.SceneReference;
 using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.InputSystem;
 using Cysharp.Threading.Tasks;
 using Sirenix.OdinInspector;
 
@@ -34,6 +35,14 @@ namespace CharonsCorner.Runtime
         [SerializeField] private SceneReference _titleScene;
         [SerializeField] private SceneReference _hubScene;
         [SerializeField] private SceneReference _tutorialScene;
+
+        private void Update()
+        {
+            if (Keyboard.current != null && Keyboard.current.minusKey.wasPressedThisFrame)
+            {
+                RestartGameFromScratch();
+            }
+        }
 
         private protected override void Awake()
         {
@@ -138,6 +147,15 @@ namespace CharonsCorner.Runtime
         /// Helper method to switch back to the hub scene and set the game state to Gameplay.
         /// </summary>
         public void ReturnToHub() => SwitchScenes(_hubScene, GameState.Gameplay).Forget();
+
+        /// <summary>
+        /// Resets all progression and returns the player to the hub scene.
+        /// </summary>
+        public void RestartGameFromScratch()
+        {
+            FlagManager.ResetAll();
+            SwitchScenes(_hubScene, GameState.Title).Forget();
+        }
 
         public SceneReference GetCurrentScene() => SceneReference.FromScenePath(SceneManager.GetActiveScene().path);
 
