@@ -2710,7 +2710,11 @@ MonoBehaviour:
     guid: 00000000000000000000000000000000
   cameraSwitcher: {fileID: 221769705}
   camToBowley: {fileID: 1983860403}
+  camToBowlingAlley: {fileID: 0}
+  camToBowlingAlleyPan: {fileID: 0}
   camToCharon: {fileID: 154277551}
+  camCharonLooksAtPlayer: {fileID: 0}
+  camPlayerCloseup: {fileID: 0}
   camToFadeOut: {fileID: 845287703}
   shakeDuration: 0.3
   shakeAmplitude: 3
@@ -2719,6 +2723,10 @@ MonoBehaviour:
   shakeChannelInt: 0
   shakeChannelDefinition: {fileID: 11400000, guid: 88a69d7473dc12143ac4e4b12a635267, type: 2}
   bowleyRotationShaker: {fileID: 5866666021466987859}
+  movePlayerFeedback: {fileID: 0}
+  playerScaredFeedback: {fileID: 0}
+  bowlingLightsFeedback: {fileID: 0}
+  bowlingPanFeedback: {fileID: 0}
   flashbackText: {fileID: 221769710}
   charonColor: {r: 0.61635214, g: 0.2384003, b: 0.27367577, a: 1}
   bowleyColor: {r: 0.5334787, g: 0.6792453, b: 0.0021358482, a: 1}
@@ -4567,7 +4575,11 @@ MonoBehaviour:
     guid: 00000000000000000000000000000000
   cameraSwitcher: {fileID: 461089656}
   camToBowley: {fileID: 1983860403}
+  camToBowlingAlley: {fileID: 0}
+  camToBowlingAlleyPan: {fileID: 0}
   camToCharon: {fileID: 154277551}
+  camCharonLooksAtPlayer: {fileID: 0}
+  camPlayerCloseup: {fileID: 0}
   camToFadeOut: {fileID: 845287703}
   shakeDuration: 0.3
   shakeAmplitude: 3
@@ -4576,6 +4588,10 @@ MonoBehaviour:
   shakeChannelInt: 0
   shakeChannelDefinition: {fileID: 11400000, guid: 88a69d7473dc12143ac4e4b12a635267, type: 2}
   bowleyRotationShaker: {fileID: 5866666021466987859}
+  movePlayerFeedback: {fileID: 0}
+  playerScaredFeedback: {fileID: 0}
+  bowlingLightsFeedback: {fileID: 0}
+  bowlingPanFeedback: {fileID: 0}
   flashbackText: {fileID: 461089661}
   charonColor: {r: 0.61635214, g: 0.2384003, b: 0.27367577, a: 1}
   bowleyColor: {r: 0.5334787, g: 0.6792453, b: 0.0021358482, a: 1}
@@ -25243,6 +25259,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: LevelDetailsPanel
       objectReference: {fileID: 0}
+    - target: {fileID: 7152811101840474329, guid: 5b57c189f155c7742a6d3d30022f50a4, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 8644922937846399519}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
