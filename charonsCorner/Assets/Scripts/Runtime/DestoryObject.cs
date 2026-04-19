@@ -5,22 +5,13 @@ namespace CharonsCorner.Runtime
 {
     public class DestoryObject : MonoBehaviour
     {
-        public GameObject targetObject;
-        public float hideTime = 2f; // seconds
-
-        void OnTriggerEnter(Collider other)
+        
+        void OnCollisionEnter(Collision collision)
+     {
+        if (collision.gameObject.CompareTag("PlayerDeathCollider")) 
         {
-            if (other.CompareTag("Player"))
-            {
-                StartCoroutine(HideAndShow());
-            }
+            Destroy(gameObject);
         }
-
-        IEnumerator HideAndShow()
-        {
-            targetObject.SetActive(false);
-            yield return new WaitForSeconds(hideTime);
-            targetObject.SetActive(true);
-        }
+      }
     }
 }

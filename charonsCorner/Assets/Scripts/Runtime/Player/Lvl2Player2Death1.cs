@@ -11,9 +11,9 @@ namespace CharonsCorner.Runtime
         // Start is called before the first frame update
         void Start()
         {
-            positionX = 1001.12f;
-            positionY = 62.19f;
-            positionZ = 51.09f;
+            positionX = -805.7f;
+            positionY = 223.19f;
+            positionZ = -888.2f;
             myPlayer = GameObject.Find("Player");
         }
 
