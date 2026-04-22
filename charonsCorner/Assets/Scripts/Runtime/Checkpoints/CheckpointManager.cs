@@ -1,3 +1,4 @@
+using Animancer;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Events;
@@ -14,6 +15,8 @@ namespace CharonsCorner.Runtime
         private Checkpoint _currentCheckpoint;
         [ShowInInspector] public Checkpoint CurrentCheckpoint => _currentCheckpoint;
 
+        [SerializeField] private StringAsset _partyPopperSfx;
+
         [field: SerializeField] public UnityEvent<Checkpoint> OnCheckpointProgressed { get; private set; } = new();
 
         private void OnEnable() => Checkpoint.OnCheckpointHit += HandleCheckpoint;
@@ -29,6 +32,7 @@ namespace CharonsCorner.Runtime
             {
                 _currentCheckpoint = checkpoint;
                 Debug.Log($"checkpoint: {_currentCheckpoint.CheckpointIndex}");
+                PlayPartyPopperSfx();
             }
             else
             {
@@ -38,7 +42,16 @@ namespace CharonsCorner.Runtime
                     _currentCheckpoint = checkpoint;
                     Debug.Log($"checkpoint: {_currentCheckpoint.CheckpointIndex}");
                     OnCheckpointProgressed?.Invoke(_currentCheckpoint);
+                    PlayPartyPopperSfx();
                 }
+            }
+        }
+
+        private void PlayPartyPopperSfx()
+        {
+            if (_partyPopperSfx != null)
+            {
+                AudioManager.Instance.Play(_partyPopperSfx, AudioManager.MixerTarget.SFX);
             }
         }
     }

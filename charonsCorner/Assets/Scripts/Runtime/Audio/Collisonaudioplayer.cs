@@ -10,7 +10,7 @@ namespace CharonsCorner.Runtime
         [SerializeField] private bool playOnce = false;
 
         [Header("Collision Settings")]
-        [SerializeField] private string targetTag = "Ground";
+        [SerializeField] private LayerMask targetLayer = -1;
         [SerializeField] private float minCollisionForce = 0.1f;
 
         private AudioSource audioSource;
@@ -38,7 +38,7 @@ namespace CharonsCorner.Runtime
                 return;
 
             // Check if we collided with the target object
-            if (collision.gameObject.CompareTag(targetTag))
+            if (((1 << collision.gameObject.layer) & targetLayer) != 0)
             {
                 // Check if collision force is strong enough
                 if (collision.relativeVelocity.magnitude >= minCollisionForce)
