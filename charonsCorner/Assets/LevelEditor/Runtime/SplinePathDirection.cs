@@ -50,7 +50,13 @@ namespace CharonsCorner.LevelEditor
         [SerializeField] private List<SplineDirectionEntry> _splineDirections = new List<SplineDirectionEntry>();
 
         [Header("Detection")]
-        [SerializeField, Range(0f, 1f)] private float _dotThreshold = 0.0f;
+        [SerializeField, Range(-1f, 1f)] private float _dotThreshold = -0.15f;
+
+        [Tooltip("If enabled, compares full 3D velocity/tangent. Disable to compare on XZ plane only.")]
+        [SerializeField] private bool _useFull3D = false;
+
+        [Tooltip("Higher value prefers splines whose tangent aligns with movement at crossings/loops.")]
+        [SerializeField, Min(0f)] private float _directionMatchWeight = 2f;
 
         private SplinePath _splinePath;
         private SplineContainer _splineContainer;
@@ -166,9 +172,9 @@ namespace CharonsCorner.LevelEditor
             if (GetDirectionForSpline(splineIndex) == RoadDirection.Backward)
                 splineForward = -splineForward;
 
-            Vector3 flatVelocity = new Vector3(velocity.x, 0f, velocity.z).normalized;
+            Vector3 compareVelocity = NormalizeForMode(velocity);
 
-            return Vector3.Dot(flatVelocity, splineForward) < _dotThreshold;
+            return Vector3.Dot(compareVelocity, splineForward) < _dotThreshold;
         }
 
         /// <summary>
@@ -177,14 +183,30 @@ namespace CharonsCorner.LevelEditor
         /// </summary>
         public bool CheckWrongWayFromPosition(Vector3 worldPosition, Vector3 velocity)
         {
-            if (_splineContainer == null)
+            if (!TryGetNearestSpline(worldPosition, velocity, out int nearestSplineIndex, out float nearestT, out _))
+                return false;
+
+            return CheckWrongWay(nearestSplineIndex, nearestT, velocity);
+        }
+
+        public bool TryGetNearestDistanceSqr(Vector3 worldPosition, out float nearestDistanceSqr)
+        {
+            // Distance-only variant for external systems
+            return TryGetNearestSpline(worldPosition, Vector3.zero, out _, out _, out nearestDistanceSqr);
+        }
+
+        private bool TryGetNearestSpline(Vector3 worldPosition, Vector3 velocity, out int nearestSplineIndex, out float nearestT, out float nearestDist)
+        {
+            nearestSplineIndex = 0;
+            nearestT = 0f;
+            nearestDist = float.MaxValue;
+
+            if (_splineContainer == null || _splineContainer.Splines.Count == 0)
                 return false;
 
             float3 localPosition = _splineContainer.transform.InverseTransformPoint(worldPosition);
-
-            float nearestDist = float.MaxValue;
-            int nearestSplineIndex = 0;
-            float nearestT = 0f;
+            Vector3 compareVelocity = NormalizeForMode(velocity);
+            bool useDirectionBias = compareVelocity.sqrMagnitude > 0.0001f && _directionMatchWeight > 0f;
 
             for (int i = 0; i < _splineContainer.Splines.Count; i++)
             {
@@ -195,16 +217,29 @@ namespace CharonsCorner.LevelEditor
                     out float t
                 );
 
-                float dist = math.distancesq(localPosition, nearestPoint);
-                if (dist < nearestDist)
+                float distSqr = math.distancesq(localPosition, nearestPoint);
+                float score = distSqr;
+
+                if (useDirectionBias)
                 {
-                    nearestDist = dist;
+                    Vector3 forward = SampleSplineForward(i, t);
+                    if (GetDirectionForSpline(i) == RoadDirection.Backward)
+                        forward = -forward;
+
+                    float absDot = Mathf.Abs(Vector3.Dot(compareVelocity, forward));
+                    float directionPenalty = 1f - absDot; // 0 is best, 1 is worst
+                    score += directionPenalty * _directionMatchWeight;
+                }
+
+                if (score < nearestDist)
+                {
+                    nearestDist = score;
                     nearestSplineIndex = i;
                     nearestT = t;
                 }
             }
 
-            return CheckWrongWay(nearestSplineIndex, nearestT, velocity);
+            return true;
         }
 
         /// <summary>
@@ -225,7 +260,15 @@ namespace CharonsCorner.LevelEditor
                 forward = math.normalize(p1 - p0);
             }
 
-            Vector3 flat = new Vector3(forward.x, 0f, forward.z);
+            return NormalizeForMode((Vector3)forward);
+        }
+
+        private Vector3 NormalizeForMode(Vector3 v)
+        {
+            if (_useFull3D)
+                return v.normalized;
+
+            Vector3 flat = new Vector3(v.x, 0f, v.z);
             return flat.normalized;
         }
 
@@ -235,31 +278,8 @@ namespace CharonsCorner.LevelEditor
         /// </summary>
         public Vector3 GetTravelDirectionAtPosition(Vector3 worldPosition)
         {
-            if (_splineContainer == null) return Vector3.zero;
-
-            float3 localPosition = _splineContainer.transform.InverseTransformPoint(worldPosition);
-
-            float nearestDist = float.MaxValue;
-            int nearestSplineIndex = 0;
-            float nearestT = 0f;
-
-            for (int i = 0; i < _splineContainer.Splines.Count; i++)
-            {
-                SplineUtility.GetNearestPoint(
-                    _splineContainer.Splines[i],
-                    localPosition,
-                    out float3 nearestPoint,
-                    out float t
-                );
-
-                float dist = math.distancesq(localPosition, nearestPoint);
-                if (dist < nearestDist)
-                {
-                    nearestDist = dist;
-                    nearestSplineIndex = i;
-                    nearestT = t;
-                }
-            }
+            if (!TryGetNearestSpline(worldPosition, Vector3.zero, out int nearestSplineIndex, out float nearestT, out _))
+                return Vector3.zero;
 
             Vector3 forward = SampleSplineForward(nearestSplineIndex, nearestT);
 
@@ -268,7 +288,7 @@ namespace CharonsCorner.LevelEditor
 
             return forward;
         }
-        
+
 #if UNITY_EDITOR
         private void OnDrawGizmosSelected()
         {
