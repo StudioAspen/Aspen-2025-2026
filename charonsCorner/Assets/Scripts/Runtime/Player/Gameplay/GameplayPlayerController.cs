@@ -55,6 +55,7 @@ namespace CharonsCorner.Runtime
         [field: SerializeField] public AirSuperState AirSuperState { get; private set; } = new();
         [field: SerializeField] public CannonBallSuperState CannonBallSuperState { get; private set; } = new();
         [field: SerializeField] public DriftSuperState DriftSuperState { get; private set; } = new();
+        [field: SerializeField] public SplineLaunchState SplineLaunchState { get; private set; } = new();
         
         [ReadOnly] public String CurrentSubState;
         #endregion
@@ -168,7 +169,8 @@ namespace CharonsCorner.Runtime
             AirSuperState.Init(StateMachine, this);
             CannonBallSuperState.Init(StateMachine, this);  
             DriftSuperState.Init(StateMachine, this);
-                    }
+            SplineLaunchState.Init(StateMachine, this);
+        }
 
         public void SetCurrentCannon(CannonBall cannon)
         {
