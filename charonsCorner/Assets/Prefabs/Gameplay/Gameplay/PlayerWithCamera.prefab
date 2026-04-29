@@ -78,7 +78,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5360042695875271744}
-  - {fileID: 2713216611211429153}
   m_Father: {fileID: 1812858393626519745}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &807493791540418257
@@ -10296,8 +10295,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2232719215322164839}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.22493385, y: -0.09256908, z: 0.02147189, w: 0.9697292}
-  m_LocalPosition: {x: 0.55857897, y: 2.1680012, z: 1.4207721}
+  m_LocalRotation: {x: 0.19541015, y: 0.15813717, z: -0.031949896, w: 0.96736073}
+  m_LocalPosition: {x: -34.601913, y: 54.897297, z: -24.699387}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -10337,7 +10336,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 75
+  field of view: 60.000004
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -11625,6 +11624,7 @@ MonoBehaviour:
   - rid: 2821658355442909276
   - rid: 2821658363316666448
   - rid: 2821658363316666449
+  - rid: 2821658625288437944
   KeepPlayModeChanges: 0
   PerformanceMode: 0
   RestoreInitialValuesOnDisable: 0
@@ -12037,6 +12037,182 @@ MonoBehaviour:
         MoveToRotationMax: {x: 90, y: 0, z: 0}
         BumpRotationMin: {x: 0, y: 0, z: -1000}
         BumpRotationMax: {x: 0, y: 0, z: -1000}
+    - rid: 2821658625288437944
+      type: {class: MMF_LensDistortion_URP, ns: MoreMountains.FeedbacksForThirdParty, asm: MoreMountains.Tools}
+      data:
+        Active: 1
+        UniqueID: -1481060447
+        Label: Lens Distortion URP
+        OriginalLabel: Lens Distortion URP
+        ChannelMode: 0
+        Channel: 0
+        MMChannelDefinition: {fileID: 0}
+        Chance: 100
+        Timing:
+          TimescaleMode: 0
+          ExcludeFromHoldingPauses: 0
+          ContributeToTotalDuration: 1
+          InitialDelay: 0
+          CooldownDuration: 0
+          InterruptsOnStop: 1
+          NumberOfRepeats: 0
+          RepeatForever: 0
+          DelayBetweenRepeats: 1
+          PlayCount: 0
+          LimitPlayCount: 0
+          MaxPlayCount: 3
+          SetPlayCountToZeroOnReset: 0
+          MMFeedbacksDirectionCondition: 0
+          PlayDirection: 0
+          ConstantIntensity: 0
+          UseIntensityInterval: 0
+          IntensityIntervalMin: 0
+          IntensityIntervalMax: 0
+          Sequence: {fileID: 0}
+          TrackID: 0
+          Quantized: 0
+          TargetBPM: 120
+        AutomatedTargetAcquisition:
+          Mode: 0
+          ChildIndex: 0
+        RandomizeOutput: 0
+        RandomMultiplier: {x: 0.8, y: 1}
+        RandomizeDuration: 0
+        RandomDurationMultiplier: {x: 0.5, y: 2}
+        UseRange: 0
+        RangeDistance: 5
+        UseRangeFalloff: 0
+        RangeFalloff:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          - serializedVersion: 3
+            time: 1
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        RemapRangeFalloff: {x: 0, y: 1}
+        AutomaticShakerSetupButton:
+          ButtonText: Automatic Shaker Setup
+        Owner: {fileID: 6402623938694698903}
+        DebugActive: 0
+        Duration: 0.3
+        ResetShakerValuesAfterShake: 1
+        ResetTargetValuesAfterShake: 1
+        RelativeIntensity: 0
+        Intensity:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          - serializedVersion: 3
+            time: 0.2
+            value: 1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          - serializedVersion: 3
+            time: 0.25
+            value: -1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          - serializedVersion: 3
+            time: 0.35
+            value: 0.7
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          - serializedVersion: 3
+            time: 0.4
+            value: -0.7
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          - serializedVersion: 3
+            time: 0.6
+            value: 0.3
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          - serializedVersion: 3
+            time: 0.65
+            value: -0.3
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          - serializedVersion: 3
+            time: 0.8
+            value: 0.1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          - serializedVersion: 3
+            time: 0.85
+            value: -0.1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          - serializedVersion: 3
+            time: 1
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        RemapIntensityZero: 0
+        RemapIntensityOne: 0.75
 --- !u!1 &3501621645065928819
 GameObject:
   m_ObjectHideFlags: 0
@@ -17399,180 +17575,6 @@ Transform:
   - {fileID: 7427458907744607157}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &4484181984522811088
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2713216611211429153}
-  - component: {fileID: 1383015569132996437}
-  - component: {fileID: 4249257936318428327}
-  m_Layer: 6
-  m_Name: MMDefaultURPVolume(Clone)
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &2713216611211429153
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4484181984522811088}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.16053773, y: -3.435417, z: 4.8788056}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 5034304562909065611}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1383015569132996437
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4484181984522811088}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_IsGlobal: 1
-  priority: 0
-  blendDistance: 0
-  weight: 1
-  sharedProfile: {fileID: 11400000, guid: 57d94797548149846b6fb7aec61488f2, type: 2}
---- !u!114 &4249257936318428327
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4484181984522811088}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bbf0ffd851dbe2d4fb5d79335529e131, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ChannelMode: 0
-  Channel: 0
-  MMChannelDefinition: {fileID: 0}
-  ShakeDuration: 0.8
-  PlayOnAwake: 0
-  PermanentShake: 0
-  Interruptible: 1
-  AlwaysResetTargetValuesAfterShake: 0
-  OnlyUseShakerValues: 0
-  CooldownBetweenShakes: 0
-  Shaking: 0
-  ForwardDirection: 1
-  TimescaleMode: 0
-  RelativeIntensity: 0
-  ShakeIntensity:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 0.2
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 0.25
-      value: -1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 0.35
-      value: 0.7
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 0.4
-      value: -0.7
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 0.6
-      value: 0.3
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 0.65
-      value: -0.3
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 0.8
-      value: 0.1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 0.85
-      value: -0.1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  RemapIntensityZero: 0
-  RemapIntensityOne: 0.5
 --- !u!1 &4702108462953677606
 GameObject:
   m_ObjectHideFlags: 0
@@ -33849,7 +33851,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7899314738565538664}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ec491f3f00254f4aad032431f3fffcd9, type: 3}
   m_Name: 
@@ -39006,7 +39008,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4309236162557638298, guid: fe195e5f19e31904988d84b793e7ab7e, type: 3}
       propertyPath: Priority.Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4309236162557638298, guid: fe195e5f19e31904988d84b793e7ab7e, type: 3}
       propertyPath: Priority.m_Value
@@ -39030,19 +39032,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4769553812181494271, guid: fe195e5f19e31904988d84b793e7ab7e, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.96972924
+      value: 0.96972996
       objectReference: {fileID: 0}
     - target: {fileID: 4769553812181494271, guid: fe195e5f19e31904988d84b793e7ab7e, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.22493383
+      value: 0.22493157
       objectReference: {fileID: 0}
     - target: {fileID: 4769553812181494271, guid: fe195e5f19e31904988d84b793e7ab7e, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.09256907
+      value: -0.09256716
       objectReference: {fileID: 0}
     - target: {fileID: 4769553812181494271, guid: fe195e5f19e31904988d84b793e7ab7e, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.021471884
+      value: 0.021471215
       objectReference: {fileID: 0}
     - target: {fileID: 4769553812181494271, guid: fe195e5f19e31904988d84b793e7ab7e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -39082,7 +39084,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8446799887837855137, guid: fe195e5f19e31904988d84b793e7ab7e, type: 3}
       propertyPath: _changeToActiveCamera
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9194331922620406372, guid: fe195e5f19e31904988d84b793e7ab7e, type: 3}
       propertyPath: Composition.ScreenPosition.x

@@ -141,12 +141,12 @@ namespace CharonsCorner.Runtime
         /// <summary>
         /// Helper method to switch back to the title scene and set the game state to Title.
         /// </summary>
-        public void ReturnToMenu() => SwitchScenes(_titleScene, GameState.Title).Forget();
+        public void ReturnToMenu() => SwitchScenes(_hubScene, GameState.Title).Forget();
 
         /// <summary>
         /// Helper method to switch back to the hub scene and set the game state to Gameplay.
         /// </summary>
-        public void ReturnToHub() => SwitchScenes(_hubScene, GameState.Gameplay).Forget();
+        public void ReturnToHub() => SwitchScenes(_hubScene, GameState.Title).Forget();
 
         /// <summary>
         /// Resets all progression and returns the player to the hub scene.

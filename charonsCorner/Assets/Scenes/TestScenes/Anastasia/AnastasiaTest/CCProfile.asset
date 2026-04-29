@@ -138,22 +138,6 @@ MonoBehaviour:
   worldOffset:
     m_OverrideState: 1
     m_Value: {x: 0, y: 0, z: 0}
---- !u!114 &-5483541604482650911
-MonoBehaviour:
-  m_ObjectHideFlags: 3
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 583d3fee9c995ff408788790e1ed4e04, type: 3}
-  m_Name: PostProcessVolumeComponent
-  m_EditorClassIdentifier: 
-  active: 1
-  intensity:
-    m_OverrideState: 1
-    m_Value: 1
 --- !u!114 &-4277162767031948455
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -392,7 +376,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d7fd9488000d3734a9e00ee676215985, type: 3}
-  m_Name: PostProcessing Profile
+  m_Name: CCProfile
   m_EditorClassIdentifier: 
   components:
   - {fileID: 7032380296289065362}
@@ -414,7 +398,7 @@ MonoBehaviour:
   - {fileID: -456370308447290072}
   - {fileID: 3106073387514982033}
   - {fileID: -5574224623945563277}
-  - {fileID: -5483541604482650911}
+  - {fileID: 5806128688063538308}
 --- !u!114 &601405974388868449
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -436,7 +420,7 @@ MonoBehaviour:
     m_Value: {x: 1, y: 1, z: 1, w: 0}
   gain:
     m_OverrideState: 1
-    m_Value: {x: 1, y: 1, z: 1, w: 0}
+    m_Value: {x: 0.73544616, y: 0.80301195, z: 1, w: 0}
 --- !u!114 &1083949755717287248
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -574,6 +558,22 @@ MonoBehaviour:
   clamp:
     m_OverrideState: 1
     m_Value: 0.05
+--- !u!114 &5806128688063538308
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 583d3fee9c995ff408788790e1ed4e04, type: 3}
+  m_Name: PostProcessVolumeComponent
+  m_EditorClassIdentifier: 
+  active: 1
+  intensity:
+    m_OverrideState: 1
+    m_Value: 0
 --- !u!114 &7032380296289065362
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -598,13 +598,13 @@ MonoBehaviour:
     m_Value: 1
   scatter:
     m_OverrideState: 1
-    m_Value: 0.56
+    m_Value: 0.555
   clamp:
     m_OverrideState: 1
     m_Value: 66073
   tint:
     m_OverrideState: 1
-    m_Value: {r: 1, g: 0.5779401, b: 0, a: 1}
+    m_Value: {r: 1, g: 0.5764706, b: 0, a: 1}
   highQualityFiltering:
     m_OverrideState: 1
     m_Value: 0
