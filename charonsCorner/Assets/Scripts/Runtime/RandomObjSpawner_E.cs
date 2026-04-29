@@ -23,6 +23,8 @@ namespace CharonsCorner.Runtime
         [SerializeField] bool SpawnInfinitely = false;
 
         [Header("Spawned Object Settings")]
+        [Tooltip("If true, will destroy itself after set time")]
+        [SerializeField] bool HasLifeTime = true;
         [Tooltip("How long object stays before getting destroyed")]
         [SerializeField] float ObjectLifeTime = 5f;
         [Tooltip("Speed of Spawned Object")]
@@ -91,7 +93,7 @@ namespace CharonsCorner.Runtime
                     //Set speed of object
                     obj.GetComponent<TrackTarget_E>().Speed = ObjectSpeed;
                     
-                    Destroy(obj, ObjectLifeTime);
+                    if (HasLifeTime) Destroy(obj, ObjectLifeTime);
                 }
 
                 spawnInterval = Random.Range(minSpawnInterval, maxSpawnInterval);
