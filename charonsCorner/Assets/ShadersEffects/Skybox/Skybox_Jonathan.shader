@@ -9,6 +9,8 @@ Shader "Custom/VoronoiSkybox"
         _BandFrequency ("Band Frequency", Float) = 32.0
         _TimeSpeed ("Time Speed", Float) = 1.
         _BandWidth ("Band Width", Range(0.001, 0.1)) = 0.05
+        [Toggle] _UseUnscaledTime ("Use Unscaled Time", Float) = 0
+        _UnscaledTime ("Unscaled Time", Float) = 0.0
     }
 
     SubShader
@@ -39,6 +41,8 @@ Shader "Custom/VoronoiSkybox"
                 float _BandFrequency;
                 float _TimeSpeed;
                 float _BandWidth;
+                float _UseUnscaledTime;
+                float _UnscaledTime;
             CBUFFER_END
 
             struct appdata {
@@ -124,7 +128,8 @@ Shader "Custom/VoronoiSkybox"
             }
 
             float3 offset_voronoi_feature(in float3 feature_position) {
-                return 0.3 * sin(_Time.x * _TimeSpeed + 6.2831 * feature_position);
+                float t = lerp(_Time.x, _UnscaledTime, _UseUnscaledTime);
+                return 0.3 * sin(t * _TimeSpeed + 6.2831 * feature_position);
             }
 
             float4 voronoi3d(float3 p)
