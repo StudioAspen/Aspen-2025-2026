@@ -54,7 +54,8 @@ public class HubCameraTilt : MonoBehaviour
             }
         }
 
-        Quaternion targetRotation = Quaternion.Euler(0f, 0f, targetAngle);
+        Vector3 currentRotation = transform.localEulerAngles;
+        Quaternion targetRotation = Quaternion.Euler(currentRotation.x, currentRotation.y, targetAngle);
         transform.localRotation = Quaternion.Slerp(transform.localRotation, targetRotation, Time.fixedDeltaTime * _tiltSpeed);
     }
 }
