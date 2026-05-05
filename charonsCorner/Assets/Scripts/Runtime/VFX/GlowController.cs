@@ -14,7 +14,7 @@ namespace CharonsCorner.Runtime
 
         private struct RendererData
         {
-            public MeshRenderer Renderer;
+            public Renderer Renderer;
             public List<float> InitialGlowValues;
         }
 
@@ -49,14 +49,16 @@ namespace CharonsCorner.Runtime
         private void InitializeGlowData()
         {
             _renderers.Clear();
-            var meshRenderers = _parentObject.GetComponentsInChildren<MeshRenderer>(true);
+            var allRenderers = _parentObject.GetComponentsInChildren<Renderer>(true);
 
-            foreach (var meshRenderer in meshRenderers)
+            foreach (var renderer in allRenderers)
             {
+                if (!(renderer is MeshRenderer) && !(renderer is SkinnedMeshRenderer)) continue;
+                
                 var initialValues = new List<float>();
                 bool hasGlow = false;
 
-                foreach (var mat in meshRenderer.sharedMaterials)
+                foreach (var mat in renderer.sharedMaterials)
                 {
                     if (mat != null && mat.HasProperty(GlowPropertyId))
                     {
@@ -73,7 +75,7 @@ namespace CharonsCorner.Runtime
                 {
                     _renderers.Add(new RendererData
                     {
-                        Renderer = meshRenderer,
+                        Renderer = renderer,
                         InitialGlowValues = initialValues
                     });
                 }
