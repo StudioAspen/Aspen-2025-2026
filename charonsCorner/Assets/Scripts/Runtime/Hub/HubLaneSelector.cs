@@ -52,6 +52,12 @@ namespace CharonsCorner.Runtime
                 _input.Interact += OnInteract;
             }
 
+            if (_spinRight != null)
+                _spinRight.PlayFeedbacks();
+
+            if (_skyboxRotator != null)
+                _skyboxRotator.Rotate(1f);
+
             OnEnter.Invoke();
         }
 
