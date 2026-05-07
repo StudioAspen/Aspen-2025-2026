@@ -14,11 +14,18 @@ public class SplineModelFactoryLine : MonoBehaviour
     [SerializeField] private float scale = 1f;
     [SerializeField] private MMTweenType moveTween = new MMTweenType(MMTween.MMTweenCurve.LinearTween);
     [SerializeField] private bool startPopulated = false;
+    [Range(0f, 1f)] [SerializeField] private float startPopulationPercentage = 1f;
+    
+    [Header("Speed Populate From Scratch")]
+    [SerializeField] private bool _speedPopulateFromScratch = false;
+    [SerializeField] private float _speedMultiplier = 5f;
+    [SerializeField] private AnimationCurve _speedPopulateCurve = AnimationCurve.Linear(0, 0, 1, 1);
 
     public void Activate() => isActive = true;
     public void Deactivate() => isActive = false;
 
     private float _spawnTimer;
+    private bool _isSpeedPopulating;
 
     private class MovingObject
     {
@@ -30,9 +37,16 @@ public class SplineModelFactoryLine : MonoBehaviour
 
     void Start()
     {
-        if (startPopulated && isActive)
+        if (isActive)
         {
-            PopulateSpline();
+            if (_speedPopulateFromScratch)
+            {
+                _isSpeedPopulating = true;
+            }
+            else if (startPopulated)
+            {
+                PopulateSpline();
+            }
         }
     }
 
@@ -40,14 +54,44 @@ public class SplineModelFactoryLine : MonoBehaviour
     {
         if (!isActive) return;
 
-        UpdateSpawning();
-        UpdateMovement();
+        float currentSpeedMultiplier = 1f;
+        if (_isSpeedPopulating)
+        {
+            float splineLength = splineContainer.CalculateLength();
+            float targetDistance = splineLength * startPopulationPercentage;
+            
+            // Get the distance of the first object (the one furthest along)
+            float leadDistance = 0f;
+            if (_activeObjects.Count > 0)
+            {
+                leadDistance = _activeObjects[0].Distance;
+            }
+
+            float progress = Mathf.Clamp01(leadDistance / targetDistance);
+            
+            // If we have reached the target percentage, end the speed populate phase
+            if (progress >= 1f && leadDistance > 0)
+            {
+                _isSpeedPopulating = false;
+            }
+            else
+            {
+                // Animation curve evaluates progress from start (0) to end (1)
+                // 0 on the curve corresponds to max speed boost, 1 corresponds to normal speed
+                float curveValue = _speedPopulateCurve.Evaluate(progress);
+                currentSpeedMultiplier = Mathf.Lerp(_speedMultiplier, 1f, curveValue);
+            }
+        }
+
+        UpdateSpawning(currentSpeedMultiplier);
+        UpdateMovement(currentSpeedMultiplier);
     }
 
-    private void UpdateSpawning()
+    private void UpdateSpawning(float multiplier)
     {
         _spawnTimer += Time.deltaTime;
-        if (_spawnTimer >= spawnInterval)
+        float adjustedInterval = spawnInterval / multiplier;
+        if (_spawnTimer >= adjustedInterval)
         {
             _spawnTimer = 0f;
             Spawn();
@@ -66,8 +110,9 @@ public class SplineModelFactoryLine : MonoBehaviour
         float distanceBetweenObjects = speed * spawnInterval;
         if (distanceBetweenObjects <= 0) return;
 
+        float maxDistance = splineLength * startPopulationPercentage;
         float currentDistance = 0f;
-        while (currentDistance < splineLength)
+        while (currentDistance < maxDistance)
         {
             SpawnAt(currentDistance);
             currentDistance += distanceBetweenObjects;
@@ -96,15 +141,17 @@ public class SplineModelFactoryLine : MonoBehaviour
         SpawnAt(0f);
     }
 
-    private void UpdateMovement()
+    private void UpdateMovement(float multiplier)
     {
         float splineLength = splineContainer.CalculateLength();
         if (splineLength <= 0) return;
 
+        float currentSpeed = speed * multiplier;
+
         for (int i = _activeObjects.Count - 1; i >= 0; i--)
         {
             var obj = _activeObjects[i];
-            obj.Distance += speed * Time.deltaTime;
+            obj.Distance += currentSpeed * Time.deltaTime;
 
             if (obj.Distance >= splineLength)
             {

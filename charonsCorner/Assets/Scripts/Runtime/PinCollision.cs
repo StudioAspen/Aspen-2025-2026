@@ -31,6 +31,11 @@ public class PinCollision : MonoBehaviour
     [SerializeField] private float _impactGlowDuration = 0.5f;
     [SerializeField] private Renderer _renderer;
 
+    [Header("Ground Alignment")]
+    [SerializeField] private LayerMask _groundLayer;
+    [SerializeField] private float _alignmentRayLength = 2f;
+    [SerializeField] private float _snapOffset = 0.01f;
+
     private Rigidbody _rb;
     private bool _hasBeenHit = false;
     private MaterialPropertyBlock _propBlock;
@@ -47,13 +52,26 @@ public class PinCollision : MonoBehaviour
         // Find player - assuming one exists in the scene
         _player = Object.FindAnyObjectByType<GameplayPlayerController>();
 
-        // Ensure Rigidbody is set up for initial state if starting from scratch
-        _rb.interpolation = RigidbodyInterpolation.Interpolate;
-        _rb.useGravity = false; // Start without gravity until hit, common for pins
-
         if (_objectToDestroy == null && transform.parent != null)
         {
             _objectToDestroy = transform.parent.gameObject;
+        }
+    }
+
+    private void Start()
+    {
+        AlignToGround();
+    }
+
+    private void AlignToGround()
+    {
+        if (Physics.Raycast(transform.position + Vector3.up * 0.5f, Vector3.down, out RaycastHit hit, _alignmentRayLength, _groundLayer))
+        {
+            // Position the pin exactly on the ground
+            transform.position = hit.point + hit.normal * _snapOffset;
+
+            // Align the pin's local Z-axis (forward) with the ground normal
+            transform.rotation = Quaternion.FromToRotation(transform.forward, hit.normal) * transform.rotation;
         }
     }
 
