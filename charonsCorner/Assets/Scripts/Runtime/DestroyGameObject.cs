@@ -7,13 +7,13 @@ namespace CharonsCorner.Runtime
     {
         [SerializeField] GameObject[] TargetObjects;
         [SerializeField] float hideTime = 10f; // seconds
-        [SerializeField] bool PersistAfterHide = false; // Option to destroy objects after hiding
+        [SerializeField] bool StayHidden = false; // Option to destroy objects after hiding
 
         void OnTriggerEnter(Collider other)
         {
-            if (other.CompareTag("Player"))
+            if (other.CompareTag("Player") && TargetObjects != null)
             {
-                if (PersistAfterHide)
+                if (StayHidden)
                 {
                     SwitchTargetActiveState(false);
                 }
