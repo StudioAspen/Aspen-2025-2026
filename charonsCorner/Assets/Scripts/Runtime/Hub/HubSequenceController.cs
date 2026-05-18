@@ -21,7 +21,9 @@ namespace CharonsCorner.Runtime
                 GameManager.Instance.OnGameStateChanged += HandleGameStateChanged;
 
                 _previousState = GameManager.Instance.CurrentGameState;
-                HandleGameStateChanged(GameManager.Instance.CurrentGameState);
+                
+                // Explicitly handle the initial state without it being a transition from itself
+                ExecuteTransition(GameState.Loading, _previousState); 
             }
         }
 
@@ -35,22 +37,40 @@ namespace CharonsCorner.Runtime
 
         private void HandleGameStateChanged(GameState newState)
         {
-            switch (newState)
+            if (_previousState == newState) return;
+
+            ExecuteTransition(_previousState, newState);
+
+            _previousState = newState;
+        }
+
+        private void ExecuteTransition(GameState from, GameState to)
+        {
+            switch (to)
             {
                 case GameState.Title:
                     PlayFeedback(_sequenceTitle);
                     break;
+
                 case GameState.Gameplay:
-                    if (_previousState == GameState.Paused)
-                        break; // returning from pause, do nothing
-                    if (_previousState == GameState.Title)
-                        PlayFeedback(_sequenceExitTitle);
-                    else
-                        PlayFeedback(_sequenceToGameplay);
+                    HandleGameplayEntry(from);
                     break;
             }
+        }
 
-            _previousState = newState;
+        private void HandleGameplayEntry(GameState from)
+        {
+            // We don't play any sequences when returning from pause
+            if (from == GameState.Paused) return;
+
+            if (from == GameState.Title)
+            {
+                PlayFeedback(_sequenceExitTitle);
+            }
+            else
+            {
+                PlayFeedback(_sequenceToGameplay);
+            }
         }
 
         private void PlayFeedback(MMF_Player feedback)

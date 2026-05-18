@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.InputSystem;
 using Cysharp.Threading.Tasks;
 using Sirenix.OdinInspector;
+using TMPro;
 
 namespace CharonsCorner.Runtime
 {
@@ -35,6 +36,7 @@ namespace CharonsCorner.Runtime
         [SerializeField] private SceneReference _titleScene;
         [SerializeField] private SceneReference _hubScene;
         [SerializeField] private SceneReference _tutorialScene;
+        [SerializeField] private TMP_Text _gameStateDisplayText;
 
         private void Update()
         {
@@ -46,11 +48,27 @@ namespace CharonsCorner.Runtime
             {
                 ReturnToMenu();
             }
+            if (Keyboard.current != null && Keyboard.current.commaKey.wasPressedThisFrame)
+            {
+                SwitchScenes(_hubScene, GameState.Gameplay).Forget();
+            }
         }
 
         private protected override void Awake()
         {
             base.Awake();
+            UpdateGameStateDisplay();
+            UIPanel.OnPanelChanged += HandlePanelChanged;
+        }
+
+        private void OnDestroy()
+        {
+            UIPanel.OnPanelChanged -= HandlePanelChanged;
+        }
+
+        private void HandlePanelChanged(UIPanel panel)
+        {
+            UpdateGameStateDisplay();
         }
 
         /// <summary>
@@ -68,6 +86,16 @@ namespace CharonsCorner.Runtime
             OnGameStateEnter(newState);
 
             OnGameStateChanged.Invoke(newState);
+            UpdateGameStateDisplay();
+        }
+
+        private void UpdateGameStateDisplay()
+        {
+            if (_gameStateDisplayText != null)
+            {
+                string panelName = UIPanel.ActivePanel != null ? UIPanel.ActivePanel.name : "None";
+                _gameStateDisplayText.text = $"State: {CurrentGameState} | UI: {panelName}";
+            }
         }
 
         /// <summary>
@@ -125,6 +153,12 @@ namespace CharonsCorner.Runtime
             UIPanel.CloseAll(false);
 
             await SceneManager.LoadSceneAsync(scene.Name);
+            
+            // Re-ensure UI is closed after scene load if we are in gameplay
+            if (afterState == GameState.Gameplay)
+            {
+                UIPanel.CloseAll(false);
+            }
 
             ChangeGameState(afterState);
 

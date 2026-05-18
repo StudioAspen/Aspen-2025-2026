@@ -102,6 +102,7 @@ public class FlashbackText : MonoBehaviour
 
     public void ActivateText(string[] lines)
     {
+        Debug.Log("Activating text");
         if (lines == null || lines.Length == 0) return;
 
         _lines = lines;

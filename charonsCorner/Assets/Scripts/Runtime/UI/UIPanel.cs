@@ -112,6 +112,20 @@ namespace CharonsCorner.Runtime
                 return;
             }
             
+            // If we are starting with Loading and not including it, we might have panels behind it.
+            // We clear those out to ensure a clean state for the next scene.
+            if (!includeLoading && ActivePanel.name.Contains("Loading") && ActivePanel.PreviousPanel != null)
+            {
+                UIPanel current = ActivePanel.PreviousPanel;
+                ActivePanel.SetPreviousPanel(null);
+                while (current != null)
+                {
+                    UIPanel next = current.PreviousPanel;
+                    current.Unfocus();
+                    current = next;
+                }
+            }
+
             int safety = 0;
             while(ActivePanel && safety < 100)
             {

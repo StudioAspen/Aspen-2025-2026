@@ -30,6 +30,12 @@ namespace CharonsCorner.Runtime
 
             // Debug.Log($"[DefaultSceneUIPanelSetter] {name} post-loading check. ActivePanel: {(UIPanel.ActivePanel != null ? UIPanel.ActivePanel.name : "null")}");
 
+            // If we are in Gameplay state, we generally don't want to auto-focus a panel (like Title Screen)
+            if (GameManager.Instance != null && GameManager.Instance.CurrentGameState == GameState.Gameplay)
+            {
+                return;
+            }
+
             if (UIPanel.ActivePanel == null)
             {
                 // Debug.Log($"[DefaultSceneUIPanelSetter] {name} focusing panel.");
