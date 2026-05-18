@@ -42,6 +42,10 @@ namespace CharonsCorner.Runtime
             {
                 RestartGameFromScratch();
             }
+            if (Keyboard.current != null && Keyboard.current.equalsKey.wasPressedThisFrame)
+            {
+                ReturnToMenu();
+            }
         }
 
         private protected override void Awake()
@@ -117,6 +121,9 @@ namespace CharonsCorner.Runtime
             ChangeGameState(GameState.Loading);
             await LoadingCanvas.Instance.FadeIn();
             
+            Debug.Log($"[GameManager] Switching to scene: {scene.Name}. Clearing UIPanel.ActivePanel (excluding Loading).");
+            UIPanel.CloseAll(false);
+
             await SceneManager.LoadSceneAsync(scene.Name);
 
             ChangeGameState(afterState);
