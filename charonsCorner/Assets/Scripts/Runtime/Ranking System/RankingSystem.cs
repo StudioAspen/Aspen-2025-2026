@@ -55,6 +55,11 @@ public class RankingSystem : MonoBehaviour
             InputManager.Instance.Interact += HandleInteract;
         }
 
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.OnGameStateChanged += HandleGameStateChanged;
+        }
+
         PinScoring.OnPinScored += SubtractTime;
     }
 
@@ -65,7 +70,25 @@ public class RankingSystem : MonoBehaviour
             InputManager.Instance.Interact -= HandleInteract;
         }
 
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.OnGameStateChanged -= HandleGameStateChanged;
+        }
+
         PinScoring.OnPinScored -= SubtractTime;
+    }
+
+    private void HandleGameStateChanged(GameState newState)
+    {
+        UpdateUIVisibility(newState);
+    }
+
+    private void UpdateUIVisibility(GameState state)
+    {
+        if (_timerText != null)
+        {
+            _timerText.gameObject.SetActive(state != GameState.Cutscene);
+        }
     }
 
     private void HandleInteract()
@@ -92,6 +115,11 @@ public class RankingSystem : MonoBehaviour
         if (_interactIcon != null)
         {
             _interactIcon.SetActive(false);
+        }
+
+        if (GameManager.Instance != null)
+        {
+            UpdateUIVisibility(GameManager.Instance.CurrentGameState);
         }
     }
 

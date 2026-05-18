@@ -58,11 +58,11 @@ public class FlashbackEventSubscriber : MonoBehaviour
     [SerializeField] private Color charonColor = Color.white;
     [SerializeField] private Color bowleyColor = Color.white;
     
-    public void SwitchToLevel(SceneReference scene)
+    public void SwitchToLevel(SceneReference scene, GameState state = GameState.Gameplay)
     {
         if (scene != null && !string.IsNullOrEmpty(scene.Name))
         {
-            GameManager.Instance.SwitchScenes(scene, GameState.Gameplay).Forget();
+            GameManager.Instance.SwitchScenes(scene, state).Forget();
         }
         else
         {
@@ -104,7 +104,7 @@ public class FlashbackEventSubscriber : MonoBehaviour
         
             case "GoToLevel0":
                 Debug.Log("GoToLevel0");
-                SwitchToLevel(level0);
+                SwitchToLevel(level0, GameState.Cutscene);
                 break;
             case "GoToLevel1":
                 SwitchToLevel(level1);
