@@ -206,7 +206,7 @@ MonoBehaviour:
   _blinkColor: {r: 1, g: 0.7568697, b: 0, a: 1}
   _driftIndicatorLine: {fileID: 5112379298121367019}
   _minIndicatorLength: 1
-  _maxIndicatorLength: 10
+  _maxIndicatorLength: 5
   _minIndicatorWidth: 0.1
   _maxIndicatorWidth: 0.2
   _minChargeColor: {r: 1, g: 1, b: 1, a: 1}
@@ -10706,8 +10706,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2232719215322164839}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.021924762, y: 0.72138697, z: 0.022862196, w: 0.69180745}
-  m_LocalPosition: {x: -173.88303, y: -147.91048, z: 152.66765}
+  m_LocalRotation: {x: 0.2249316, y: -0.09256716, z: 0.021471212, w: 0.9697299}
+  m_LocalPosition: {x: 0.55859375, y: 2.1680012, z: 1.4207721}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -33892,6 +33892,7 @@ MonoBehaviour:
       _driftDesiredDistance: 12.5
       _cameraDistanceChangeSpeed: 5
       _cameraTargetHeight: 1
+      _cameraRealignSpeed: 5
       _slowPlayerStrength: 5
       _groundStickForce: 10
       _stateDuration: 0.5
@@ -39208,7 +39209,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 723.4231, y: -70}
+  m_AnchoredPosition: {x: 723.4231, y: -152.6}
   m_SizeDelta: {x: 453.77, y: 201.7599}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6203185712737144726
@@ -39239,7 +39240,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Charge: 100%'
+  m_text: "Charge: \n100%"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: b1a7874cd5436d54cb5cd73aada6dc22, type: 2}
   m_sharedMaterial: {fileID: 9217806192126503333, guid: b1a7874cd5436d54cb5cd73aada6dc22, type: 2}
@@ -39266,8 +39267,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 100
-  m_fontSizeBase: 100
+  m_fontSize: 50
+  m_fontSizeBase: 50
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -39278,7 +39279,7 @@ MonoBehaviour:
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_wordSpacing: 0
-  m_lineSpacing: 0
+  m_lineSpacing: -21.75
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0

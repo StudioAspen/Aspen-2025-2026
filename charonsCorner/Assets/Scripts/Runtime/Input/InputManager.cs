@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -13,6 +14,12 @@ namespace CharonsCorner.Runtime
         [Header("References")]
         [SerializeField] private PlayerInput playerInput; // We are using C# generated inputs, so this is just a dummy playerInput to detect controlScheme changes
         [SerializeField] private EventSystem eventSystem;
+
+        [Header("Icon Fonts")]
+        [SerializeField] private TMP_FontAsset mainFont;
+        [SerializeField] private TMP_FontAsset xboxFont;
+        [SerializeField] private TMP_FontAsset playstationFont;
+        [SerializeField] private TMP_FontAsset keyboardFont;
 
         public InputActions InputActions { get; private set; }
 
@@ -76,6 +83,9 @@ namespace CharonsCorner.Runtime
             CreatePlayerActions();
 
             playerInput.onControlsChanged += PlayerInput_OnControlsChanged;
+
+            // Initialize icon font based on starting control scheme
+            SwapIconFont(CurrentControlScheme);
         }
 
         private protected override void OnDestroy()
@@ -263,8 +273,28 @@ namespace CharonsCorner.Runtime
                 CurrentControlScheme = newScheme;
                 OnControlSchemeChanged.Invoke(CurrentControlScheme);
 
+                SwapIconFont(CurrentControlScheme);
+
                 ApplyCursorLockState();
             }
+        }
+
+        private void SwapIconFont(ControlScheme controlScheme)
+        {
+            if (mainFont == null) return;
+
+            TMP_FontAsset iconFont = controlScheme switch
+            {
+                ControlScheme.PS => playstationFont,
+                ControlScheme.Xbox => xboxFont,
+                ControlScheme.Gamepad => xboxFont,
+                _ => keyboardFont
+            };
+
+            if (iconFont == null) return;
+
+            mainFont.fallbackFontAssetTable.Clear();
+            mainFont.fallbackFontAssetTable.Add(iconFont);
         }
 
         /// <summary>
