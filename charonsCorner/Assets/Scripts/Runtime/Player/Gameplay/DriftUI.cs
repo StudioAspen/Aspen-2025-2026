@@ -396,12 +396,12 @@ namespace CharonsCorner.Runtime
 
             if (_playerController.DriftSuperState.SubStateMachine.CurrentState == _playerController.DriftSuperState.DriftingChargeState)
             {
-                _chargeText.text = $"Charge: {(chargeRatio * 100f):0}%";
+                _chargeText.text = $"Charge:\n{(chargeRatio * 100f):0}%";
                 _chargeText.color = Color.white; // Ensure color is reset when charging
             }
             else
             {
-                _chargeText.text = $"BOOST: {(chargeRatio * 100f):0}%";
+                _chargeText.text = $"BOOST:\n{(chargeRatio * 100f):0}%";
             }
         }
     }
