@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using CharonsCorner.Runtime;
 
@@ -11,12 +12,54 @@ public class JackInTheBox : MonoBehaviour
     [SerializeField] private bool _headRotateZ = true;
     
     private GameplayPlayerController _player;
+    private Coroutine _recheckCoroutine;
 
     public void SetIsStaring(bool value) => _isStaring = value;
 
-    void Start()
+    private void OnEnable()
+    {
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.OnGameStateChanged += HandleGameStateChanged;
+        }
+    }
+
+    private void OnDisable()
+    {
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.OnGameStateChanged -= HandleGameStateChanged;
+        }
+    }
+
+    private void HandleGameStateChanged(GameState newState)
+    {
+        if (newState == GameState.Gameplay || newState == GameState.Dialogue || newState == GameState.Cutscene)
+        {
+            if (_recheckCoroutine != null) StopCoroutine(_recheckCoroutine);
+            _recheckCoroutine = StartCoroutine(RecheckPlayerCoroutine());
+        }
+    }
+
+    private IEnumerator RecheckPlayerCoroutine()
+    {
+        for (int i = 0; i < 5; i++)
+        {
+            FindPlayer();
+            if (_player != null) break;
+            yield return new WaitForSeconds(0.2f);
+        }
+        _recheckCoroutine = null;
+    }
+
+    private void FindPlayer()
     {
         _player = Object.FindFirstObjectByType<GameplayPlayerController>();
+    }
+
+    void Start()
+    {
+        FindPlayer();
     }
 
     void Update()

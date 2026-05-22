@@ -30,6 +30,7 @@ namespace CharonsCorner.Runtime
         [SerializeField] private float _maxArrowheadSize = 0.6f;
 
         [Header("Skull Indicator")]
+        [SerializeField] private RectTransform _skullParent;
         [SerializeField] private RectTransform _skullImage;
         [SerializeField] private RectTransform _centerImage;
         [SerializeField] private UnityEngine.UI.Image _radialFillImage;
@@ -42,6 +43,21 @@ namespace CharonsCorner.Runtime
         [SerializeField] private Color _skullEndColor = Color.red;
         [SerializeField] private Color _radialStartColor = Color.white;
         [SerializeField] private Color _radialEndColor = Color.red;
+        [SerializeField] private Vector3 _minSkullScale = Vector3.one;
+        [SerializeField] private Vector3 _maxSkullScale = Vector3.one * 1.5f;
+
+        [Header("Identical Skull Indicator (360 degrees)")]
+        [SerializeField] private RectTransform _identicalSkullParent;
+        [SerializeField] private RectTransform _identicalSkullImage;
+        [SerializeField] private RectTransform _identicalSkullLine;
+        [SerializeField] private float _identicalSkullLineWidth = 2f;
+        [SerializeField] private float _identicalRotationRadius = 100f;
+        [SerializeField] private Vector3 _identicalMinSkullScale = Vector3.one;
+        [SerializeField] private Vector3 _identicalMaxSkullScale = Vector3.one * 1.5f;
+
+        [Header("Identical Springs")]
+        [SerializeField] private MMSpringScale _identicalSkullSpringScale;
+        [SerializeField] private MMSpringRectTransformPosition _identicalSkullSpringPosition;
 
         [Header("Springs")]
         [SerializeField] private MMSpringScale _skullSpringScale;
@@ -55,6 +71,8 @@ namespace CharonsCorner.Runtime
         private MaterialPropertyBlock _propBlock;
         private float _currentSkullAngle;
         private float _lastTargetAngle;
+        private float _currentIdenticalSkullAngle;
+        private float _lastIdenticalTargetAngle;
         private float _launchedChargeRatio;
         private bool _isSkullActive;
         private bool _hasBumped;
@@ -72,7 +90,16 @@ namespace CharonsCorner.Runtime
             if (_arrowheadRenderer != null)
                 _arrowheadRenderer.gameObject.SetActive(false);
 
-            if (_skullImage != null)
+            if (_skullParent != null)
+            {
+                _skullParent.gameObject.SetActive(true);
+                _skullParent.localScale = Vector3.zero;
+                if (_centerImage != null)
+                {
+                    _skullParent.localPosition = _centerImage.localPosition;
+                }
+            }
+            else if (_skullImage != null)
             {
                 _skullImage.gameObject.SetActive(true); // Keep it active for springs
                 _skullImage.localScale = Vector3.zero;
@@ -104,10 +131,43 @@ namespace CharonsCorner.Runtime
                     img.color = _skullLineColor;
                 }
             }
+
+            if (_identicalSkullParent != null)
+            {
+                _identicalSkullParent.gameObject.SetActive(true);
+                _identicalSkullParent.localScale = Vector3.zero;
+                if (_centerImage != null)
+                {
+                    _identicalSkullParent.localPosition = _centerImage.localPosition;
+                }
+            }
+            else if (_identicalSkullImage != null)
+            {
+                _identicalSkullImage.gameObject.SetActive(true);
+                _identicalSkullImage.localScale = Vector3.zero;
+                if (_centerImage != null)
+                {
+                    _identicalSkullImage.localPosition = _centerImage.localPosition;
+                }
+            }
+
+            if (_identicalSkullLine != null)
+            {
+                _identicalSkullLine.gameObject.SetActive(false);
+                if (_identicalSkullLine.TryGetComponent<UnityEngine.UI.Image>(out var img))
+                {
+                    img.color = _skullLineColor;
+                }
+            }
         }
 
         private void HideSkullUI()
         {
+            if (_skullParent != null)
+            {
+                _skullParent.localScale = Vector3.zero;
+            }
+
             if (_skullSpringScale != null)
                 _skullSpringScale.MoveTo(Vector3.zero);
             if (_skullSpringPosition != null && _centerImage != null)
@@ -122,6 +182,19 @@ namespace CharonsCorner.Runtime
 
             if (_skullLine != null && _skullLine.gameObject.activeSelf)
                 _skullLine.gameObject.SetActive(false);
+
+            if (_identicalSkullParent != null)
+            {
+                _identicalSkullParent.localScale = Vector3.zero;
+            }
+
+            if (_identicalSkullSpringScale != null)
+                _identicalSkullSpringScale.MoveTo(Vector3.zero);
+            if (_identicalSkullSpringPosition != null && _centerImage != null)
+                _identicalSkullSpringPosition.MoveTo(_centerImage.localPosition);
+
+            if (_identicalSkullLine != null && _identicalSkullLine.gameObject.activeSelf)
+                _identicalSkullLine.gameObject.SetActive(false);
         }
 
         private void Update()
@@ -141,7 +214,7 @@ namespace CharonsCorner.Runtime
                 // If we transition to boost, show the "BOOST" text once.
                 else if (_chargeText != null)
                 {
-                    if (!_chargeText.text.StartsWith("BOOST"))
+                    if (!_hasBumped)
                     {
                         _launchedChargeRatio = _playerController.DriftSuperState.GetCurrentChargeRatio();
                         UpdateChargeText();
@@ -265,15 +338,19 @@ namespace CharonsCorner.Runtime
 
         private void UpdateSkullIndicator()
         {
-            if (_skullImage == null || _centerImage == null) return;
+            if (_centerImage == null) return;
+            RectTransform skullTarget = _skullParent != null ? _skullParent : _skullImage;
+            if (skullTarget == null) return;
 
             if (!_isSkullActive)
             {
-                if (!_skullImage.gameObject.activeSelf)
-                    _skullImage.gameObject.SetActive(true);
+                if (!skullTarget.gameObject.activeSelf)
+                    skullTarget.gameObject.SetActive(true);
                 
                 if (_skullSpringScale != null)
                     _skullSpringScale.MoveTo(Vector3.one);
+                else
+                    skullTarget.localScale = Vector3.one;
 
                 if (_centerSpringScale != null)
                     _centerSpringScale.MoveTo(Vector3.one);
@@ -284,6 +361,15 @@ namespace CharonsCorner.Runtime
                 _isSkullActive = true;
                 _currentSkullAngle = 0f; // Start at due north
                 _lastTargetAngle = 0f;
+                _currentIdenticalSkullAngle = 0f;
+                _lastIdenticalTargetAngle = 0f;
+            }
+
+            float chargeRatio = _playerController.DriftSuperState.GetCurrentChargeRatio();
+
+            if (_skullParent != null)
+            {
+                _skullParent.localScale = Vector3.Lerp(_minSkullScale, _maxSkullScale, chargeRatio);
             }
 
             if (_radialFillImage != null)
@@ -294,13 +380,11 @@ namespace CharonsCorner.Runtime
                 _radialFillImage.fillAmount = fillRatio;
                 _radialFillImage.fillClockwise = _currentSkullAngle <= 0;
 
-                float chargeRatio = _playerController.DriftSuperState.GetCurrentChargeRatio();
                 _radialFillImage.color = Color.Lerp(_radialStartColor, _radialEndColor, chargeRatio);
             }
 
             if (_skullImage != null && _skullImage.TryGetComponent<UnityEngine.UI.Image>(out var skullImg))
             {
-                float chargeRatio = _playerController.DriftSuperState.GetCurrentChargeRatio();
                 skullImg.color = Color.Lerp(_skullStartColor, _skullEndColor, chargeRatio);
             }
 
@@ -320,6 +404,20 @@ namespace CharonsCorner.Runtime
                 // Calculate signed angle between initial velocity and current drift direction
                 float rawAngle = Vector2.SignedAngle(initialDir2D, driftDir2D);
                 
+                // --- Identical (Unclamped) logic first ---
+                float rawIdenticalAngle = rawAngle;
+                // To prevent flipping sides when crossing the 180-degree mark behind the player for identical:
+                if (Vector2.Dot(initialDir2D, driftDir2D) < -0.1f)
+                {
+                    if (Mathf.Abs(rawIdenticalAngle - _lastIdenticalTargetAngle) > 180f)
+                    {
+                        rawIdenticalAngle = _lastIdenticalTargetAngle > 0 ? 180f : -180f;
+                    }
+                }
+                _lastIdenticalTargetAngle = rawIdenticalAngle;
+                float identicalTargetAngle = rawIdenticalAngle;
+
+                // --- Original Clamped logic ---
                 // To prevent flipping sides when crossing the 180-degree mark behind the player:
                 // If the player is pointing "backwards" (Dot < 0), we check if the angle jumped significantly.
                 // If it did, we force it to stay on the previous side.
@@ -338,10 +436,17 @@ namespace CharonsCorner.Runtime
                 // Clamp the target angle to respect the maximum drift angle (usually 90 degrees)
                 float maxAngle = _playerController.DriftSuperState.DriftingBoostState.MaxAngle;
                 targetAngle = Mathf.Clamp(targetAngle, -maxAngle, maxAngle);
-            }
 
-            // Lerp current angle towards target angle for smooth correction from due north
-            _currentSkullAngle = Mathf.LerpAngle(_currentSkullAngle, targetAngle, _skullLerpSpeed * Time.deltaTime);
+                // Now use both angles for lerping
+                _currentSkullAngle = Mathf.LerpAngle(_currentSkullAngle, targetAngle, _skullLerpSpeed * Time.deltaTime);
+                _currentIdenticalSkullAngle = Mathf.LerpAngle(_currentIdenticalSkullAngle, identicalTargetAngle, _skullLerpSpeed * Time.deltaTime);
+            }
+            else
+            {
+                // Smoothly return both to zero if no initial velocity (shouldn't happen during drift usually)
+                _currentSkullAngle = Mathf.LerpAngle(_currentSkullAngle, 0f, _skullLerpSpeed * Time.deltaTime);
+                _currentIdenticalSkullAngle = Mathf.LerpAngle(_currentIdenticalSkullAngle, 0f, _skullLerpSpeed * Time.deltaTime);
+            }
 
             // The user wants: "if they are staring forward while drifting in their initial velocity, 
             // it will be rotating it at due north".
@@ -358,24 +463,90 @@ namespace CharonsCorner.Runtime
             }
             else
             {
-                _skullImage.localPosition = targetPosition;
+                skullTarget.localPosition = targetPosition;
             }
             
             // Optional: Rotate the skull itself to face away from center or follow direction
-            _skullImage.localRotation = Quaternion.Euler(0, 0, _currentSkullAngle);
+            skullTarget.localRotation = Quaternion.Euler(0, 0, _currentSkullAngle);
 
+            UpdateIdenticalSkullIndicator();
             UpdateSkullLine();
+        }
+
+        private void UpdateIdenticalSkullIndicator()
+        {
+            RectTransform identicalTarget = _identicalSkullParent != null ? _identicalSkullParent : _identicalSkullImage;
+            if (identicalTarget == null || _centerImage == null) return;
+
+            if (_isSkullActive && !identicalTarget.gameObject.activeSelf)
+            {
+                identicalTarget.gameObject.SetActive(true);
+                if (_identicalSkullSpringScale != null)
+                    _identicalSkullSpringScale.MoveTo(Vector3.one);
+                else
+                    identicalTarget.localScale = Vector3.one;
+            }
+
+            float chargeRatio = _playerController.DriftSuperState.GetCurrentChargeRatio();
+
+            if (_identicalSkullParent != null)
+            {
+                _identicalSkullParent.localScale = Vector3.Lerp(_identicalMinSkullScale, _identicalMaxSkullScale, chargeRatio);
+            }
+
+            if (_identicalSkullImage != null && _identicalSkullImage.TryGetComponent<UnityEngine.UI.Image>(out var skullImg))
+            {
+                skullImg.color = Color.Lerp(_skullStartColor, _skullEndColor, chargeRatio);
+            }
+
+            float uiAngle = 90f + _currentIdenticalSkullAngle;
+            float radians = uiAngle * Mathf.Deg2Rad;
+            Vector3 offset = new Vector3(Mathf.Cos(radians), Mathf.Sin(radians), 0) * _identicalRotationRadius;
+
+            Vector3 targetPosition = _centerImage.localPosition + offset;
+            if (_identicalSkullSpringPosition != null)
+            {
+                _identicalSkullSpringPosition.MoveTo(targetPosition);
+            }
+            else
+            {
+                identicalTarget.localPosition = targetPosition;
+            }
+
+            identicalTarget.localRotation = Quaternion.Euler(0, 0, _currentIdenticalSkullAngle);
+
+            UpdateIdenticalSkullLine();
+        }
+
+        private void UpdateIdenticalSkullLine()
+        {
+            RectTransform identicalTarget = _identicalSkullParent != null ? _identicalSkullParent : _identicalSkullImage;
+            if (_identicalSkullLine == null || identicalTarget == null || _centerImage == null) return;
+
+            if (!_identicalSkullLine.gameObject.activeSelf)
+                _identicalSkullLine.gameObject.SetActive(true);
+
+            Vector3 startPos = _centerImage.localPosition;
+            Vector3 endPos = identicalTarget.localPosition;
+            Vector3 diff = endPos - startPos;
+            float distance = diff.magnitude;
+            float angle = Mathf.Atan2(diff.y, diff.x) * Mathf.Rad2Deg;
+
+            _identicalSkullLine.localPosition = startPos + diff * 0.5f;
+            _identicalSkullLine.localRotation = Quaternion.Euler(0, 0, angle);
+            _identicalSkullLine.sizeDelta = new Vector2(distance, _identicalSkullLineWidth);
         }
 
         private void UpdateSkullLine()
         {
-            if (_skullLine == null || _skullImage == null || _centerImage == null) return;
+            RectTransform skullTarget = _skullParent != null ? _skullParent : _skullImage;
+            if (_skullLine == null || skullTarget == null || _centerImage == null) return;
 
             if (!_skullLine.gameObject.activeSelf)
                 _skullLine.gameObject.SetActive(true);
 
             Vector3 startPos = _centerImage.localPosition;
-            Vector3 endPos = _skullImage.localPosition;
+            Vector3 endPos = skullTarget.localPosition;
             Vector3 diff = endPos - startPos;
             float distance = diff.magnitude;
             float angle = Mathf.Atan2(diff.y, diff.x) * Mathf.Rad2Deg;
@@ -392,16 +563,18 @@ namespace CharonsCorner.Runtime
             if (!_chargeText.gameObject.activeSelf)
                 _chargeText.gameObject.SetActive(true);
 
-            float chargeRatio = _playerController.DriftSuperState.GetCurrentChargeRatio();
+            float chargeRatio;
 
             if (_playerController.DriftSuperState.SubStateMachine.CurrentState == _playerController.DriftSuperState.DriftingChargeState)
             {
-                _chargeText.text = $"Charge:\n{(chargeRatio * 100f):0}%";
+                chargeRatio = _playerController.DriftSuperState.GetCurrentChargeRatio();
+                _chargeText.text = $"{(chargeRatio * 100f):0}%";
                 _chargeText.color = Color.white; // Ensure color is reset when charging
             }
             else
             {
-                _chargeText.text = $"BOOST:\n{(chargeRatio * 100f):0}%";
+                chargeRatio = _launchedChargeRatio;
+                _chargeText.text = $"{(chargeRatio * 100f):0}%";
             }
         }
     }

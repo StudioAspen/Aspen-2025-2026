@@ -103,10 +103,10 @@ namespace CharonsCorner.Runtime
         /// <summary>
         /// Gets the display string for the given input action based on the specified control scheme.
         /// </summary>
-        public static string GetInputDisplayString(InputActionReference inputAction, InputManager.ControlScheme controlScheme, InputBinding.DisplayStringOptions displayOptions = InputBinding.DisplayStringOptions.DontIncludeInteractions)
+        public static string GetInputDisplayString(InputAction action, InputManager.ControlScheme controlScheme, InputBinding.DisplayStringOptions displayOptions = InputBinding.DisplayStringOptions.DontIncludeInteractions)
         {
-            int bindingIndex = inputAction.action.bindings.IndexOf(binding => binding.groups.Contains($"{InputManager.ControlSchemeInternalNames[controlScheme]}"));
-            string displayString = inputAction.action.GetBindingDisplayString(bindingIndex, displayOptions);
+            int bindingIndex = action.bindings.IndexOf(binding => binding.groups.Contains($"{InputManager.ControlSchemeInternalNames[controlScheme]}"));
+            string displayString = action.GetBindingDisplayString(bindingIndex, displayOptions);
 
             Dictionary<string, string> currentMap = controlScheme switch
             {
@@ -123,6 +123,14 @@ namespace CharonsCorner.Runtime
             }
 
             return displayString;
+        }
+
+        /// <summary>
+        /// Gets the display string for the given input action based on the specified control scheme.
+        /// </summary>
+        public static string GetInputDisplayString(InputActionReference inputAction, InputManager.ControlScheme controlScheme, InputBinding.DisplayStringOptions displayOptions = InputBinding.DisplayStringOptions.DontIncludeInteractions)
+        {
+            return GetInputDisplayString(inputAction.action, controlScheme, displayOptions);
         }
     }
 }
