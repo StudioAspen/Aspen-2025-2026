@@ -9,6 +9,9 @@ Shader "Custom/VoronoiSkybox"
         _BandFrequency ("Band Frequency", Float) = 32.0
         _TimeSpeed ("Time Speed", Float) = 1.
         _BandWidth ("Band Width", Range(0.001, 0.1)) = 0.05
+        _Rotation ("Rotation", Vector) = (0,0,0,0)
+        [Toggle] _UseUnscaledTime ("Use Unscaled Time", Float) = 0
+        _UnscaledTime ("Unscaled Time", Float) = 0.0
     }
 
     SubShader
@@ -39,6 +42,9 @@ Shader "Custom/VoronoiSkybox"
                 float _BandFrequency;
                 float _TimeSpeed;
                 float _BandWidth;
+                float4 _Rotation;
+                float _UseUnscaledTime;
+                float _UnscaledTime;
             CBUFFER_END
 
             struct appdata {
@@ -124,7 +130,8 @@ Shader "Custom/VoronoiSkybox"
             }
 
             float3 offset_voronoi_feature(in float3 feature_position) {
-                return 0.3 * sin(_Time.x * _TimeSpeed + 6.2831 * feature_position);
+                float t = lerp(_Time.x, _UnscaledTime, _UseUnscaledTime);
+                return 0.3 * sin(t * _TimeSpeed + 6.2831 * feature_position);
             }
 
             float4 voronoi3d(float3 p)
@@ -281,6 +288,17 @@ Shader "Custom/VoronoiSkybox"
             float4 frag (v2f i) : SV_Target {
                 // we use the view direction at the pixel as an input to generate noise.
                 float3 dir = i.viewDir;    
+
+                // Rotate dir
+                float3 rad = _Rotation.xyz * 0.01745329251; // degrees to radians
+                float3 s, c;
+                sincos(rad, s, c);
+
+                float3x3 rotX = float3x3(1, 0, 0, 0, c.x, -s.x, 0, s.x, c.x);
+                float3x3 rotY = float3x3(c.y, 0, s.y, 0, 1, 0, -s.y, 0, c.y);
+                float3x3 rotZ = float3x3(c.z, -s.z, 0, s.z, c.z, 0, 0, 0, 1);
+
+                dir = mul(rotX, mul(rotY, mul(rotZ, dir)));
 
                 // this distorts the texcoord to create the wavey effect. 
                 float3 dir_distort = float3(fbm3(dir + float3(23., 38., 90)),

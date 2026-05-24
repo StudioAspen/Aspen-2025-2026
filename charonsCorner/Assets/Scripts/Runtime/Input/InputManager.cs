@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -13,6 +14,12 @@ namespace CharonsCorner.Runtime
         [Header("References")]
         [SerializeField] private PlayerInput playerInput; // We are using C# generated inputs, so this is just a dummy playerInput to detect controlScheme changes
         [SerializeField] private EventSystem eventSystem;
+
+        [Header("Icon Fonts")]
+        [SerializeField] private TMP_FontAsset mainFont;
+        [SerializeField] private TMP_FontAsset xboxFont;
+        [SerializeField] private TMP_FontAsset playstationFont;
+        [SerializeField] private TMP_FontAsset keyboardFont;
 
         public InputActions InputActions { get; private set; }
 
@@ -43,7 +50,9 @@ namespace CharonsCorner.Runtime
         public enum ControlScheme
         {
             KeyboardMouse,
-            Gamepad
+            Gamepad,
+            Xbox,
+            PS
         }
         [field: Header("Control Scheme")]
         [field: SerializeField, ReadOnly] public ControlScheme CurrentControlScheme { get; private set; }
@@ -59,7 +68,9 @@ namespace CharonsCorner.Runtime
         public static readonly Dictionary<ControlScheme, string> ControlSchemeInternalNames = new Dictionary<ControlScheme, string>
         {
             { ControlScheme.KeyboardMouse, "Keyboard&Mouse" },
-            { ControlScheme.Gamepad, "Gamepad" }
+            { ControlScheme.Gamepad, "Gamepad" },
+            { ControlScheme.Xbox, "Gamepad" },
+            { ControlScheme.PS, "Gamepad" }
         };
         #endregion
 
@@ -72,6 +83,9 @@ namespace CharonsCorner.Runtime
             CreatePlayerActions();
 
             playerInput.onControlsChanged += PlayerInput_OnControlsChanged;
+
+            // Initialize icon font based on starting control scheme
+            SwapIconFont(CurrentControlScheme);
         }
 
         private protected override void OnDestroy()
@@ -233,15 +247,54 @@ namespace CharonsCorner.Runtime
         /// <param name="device"></param>
         private void PlayerInput_OnControlsChanged(PlayerInput input)
         {
-            ControlScheme newScheme = input.currentControlScheme == "Gamepad" ? ControlScheme.Gamepad : ControlScheme.KeyboardMouse;
+            ControlScheme newScheme = ControlScheme.KeyboardMouse;
+            
+            if (input.currentControlScheme == "Gamepad")
+            {
+                newScheme = ControlScheme.Gamepad;
+                
+                // Try to detect specific gamepad type
+                if (Gamepad.current != null)
+                {
+                    string deviceName = Gamepad.current.name.ToLower();
+                    if (deviceName.Contains("dualshock") || deviceName.Contains("dualsense") || deviceName.Contains("playstation") || deviceName.Contains("ps4") || deviceName.Contains("ps5"))
+                    {
+                        newScheme = ControlScheme.PS;
+                    }
+                    else if (deviceName.Contains("xbox") || deviceName.Contains("xinput"))
+                    {
+                        newScheme = ControlScheme.Xbox;
+                    }
+                }
+            }
 
             if (newScheme != CurrentControlScheme)
             {
                 CurrentControlScheme = newScheme;
                 OnControlSchemeChanged.Invoke(CurrentControlScheme);
 
+                SwapIconFont(CurrentControlScheme);
+
                 ApplyCursorLockState();
             }
+        }
+
+        private void SwapIconFont(ControlScheme controlScheme)
+        {
+            if (mainFont == null) return;
+
+            TMP_FontAsset iconFont = controlScheme switch
+            {
+                ControlScheme.PS => playstationFont,
+                ControlScheme.Xbox => xboxFont,
+                ControlScheme.Gamepad => xboxFont,
+                _ => keyboardFont
+            };
+
+            if (iconFont == null) return;
+
+            mainFont.fallbackFontAssetTable.Clear();
+            mainFont.fallbackFontAssetTable.Add(iconFont);
         }
 
         /// <summary>

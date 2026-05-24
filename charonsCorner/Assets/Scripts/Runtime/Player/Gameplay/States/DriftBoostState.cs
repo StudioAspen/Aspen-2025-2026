@@ -29,14 +29,20 @@ namespace CharonsCorner.Runtime
         [SerializeField] private float _maxCameraShakeFrequency = 10f;
         [SerializeField] private MMChannelData _cameraShakeChannel;
         
+        [Header("Camera Realignment")]
+        [SerializeField] private float _cameraLerpSpeed = 5f;
+
         public bool IsComplete { get; private set; } // to break out of super state
         private float _timer;
+        private float _targetYaw;
+        private bool _isLerpingCamera;
 
         private protected override void OnEnter()
         {
             _context.CurrentSubState = GetType().Name; // for debug
             
             _timer = 0f;
+            _isLerpingCamera = false;
 
             Vector3 driftDir = GetDriftDirection();
             
@@ -84,6 +90,13 @@ namespace CharonsCorner.Runtime
                 _maxCameraShakeAmplitude * boostAmountNormalized,
                 _maxCameraShakeFrequency * boostAmountNormalized,
                 0f, 0f, 0f, false, _cameraShakeChannel);
+
+            // Realign camera behind drift direction for controllers
+            if (InputManager.Instance.CurrentControlScheme != InputManager.ControlScheme.KeyboardMouse && _context.DriftSuperState.CameraOrbitalFollow != null)
+            {
+                _targetYaw = Quaternion.LookRotation(driftDir).eulerAngles.y;
+                _isLerpingCamera = true;
+            }
         }
 
         private protected override void OnExit()
@@ -108,6 +121,18 @@ namespace CharonsCorner.Runtime
                 _context.DriftSuperState.CameraOrbitalFollow.Radius = Mathf.Lerp(
                     _context.DriftSuperState.CameraOrbitalFollow.Radius,
                     _context.DriftSuperState.CameraBaseOrbitalDistance, _cameraChangeDistanceSpeed * Time.unscaledDeltaTime);
+
+                if (_isLerpingCamera)
+                {
+                    float currentYaw = _context.DriftSuperState.CameraOrbitalFollow.HorizontalAxis.Value;
+                    float newYaw = Mathf.LerpAngle(currentYaw, _targetYaw, _cameraLerpSpeed * Time.unscaledDeltaTime);
+                    _context.DriftSuperState.CameraOrbitalFollow.HorizontalAxis.Value = newYaw;
+
+                    if (Mathf.Abs(Mathf.DeltaAngle(newYaw, _targetYaw)) < 0.1f)
+                    {
+                        _isLerpingCamera = false;
+                    }
+                }
             }
 
             _context.CameraTargetFollowTarget.SetPositionOffset(

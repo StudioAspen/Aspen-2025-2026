@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 8730617017274691078}
   - component: {fileID: 573634015020855248}
   - component: {fileID: 3066369299629099235}
+  - component: {fileID: 6174160785739741760}
   m_Layer: 0
   m_Name: HubLevelSelectController
   m_TagString: Untagged
@@ -65,20 +66,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
       - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: CharonsCorner.Runtime.HubLevelSelectPreviewPanel,
-          CharonsCorner.Runtime
-        m_MethodName: SetData
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: CharonsCorner.Runtime.HubLevelSelectPreviewPanel,
+        m_TargetAssemblyTypeName: CharonsCorner.Runtime.HubLevelSelectDetailsPanel,
           CharonsCorner.Runtime
         m_MethodName: FocusPanel
         m_Mode: 2
@@ -105,6 +93,24 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
+  OnLevelStarted:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6174160785739741760}
+        m_TargetAssemblyTypeName: CharonsCorner.Runtime.PauseBlocker, CharonsCorner.Runtime
+        m_MethodName: EnablePausing
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  _flashbackScene:
+    asset: {fileID: 102900000, guid: d0c883d916a920541b36f3821becabb2, type: 3}
+    guid: d0c883d916a920541b36f3821becabb2
   _currentLevelData: {fileID: 0}
   _isOpen: 0
 --- !u!114 &6131826958377703313
@@ -219,6 +225,30 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: UnityEngine.Light, UnityEngine
+        m_MethodName: set_enabled
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 6174160785739741760}
+        m_TargetAssemblyTypeName: CharonsCorner.Runtime.PauseBlocker, CharonsCorner.Runtime
+        m_MethodName: BlockPausing
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
   OnLevelSelectEnded:
     m_PersistentCalls:
       m_Calls:
@@ -308,6 +338,30 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: UnityEngine.Light, UnityEngine
+        m_MethodName: set_enabled
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 6174160785739741760}
+        m_TargetAssemblyTypeName: CharonsCorner.Runtime.PauseBlocker, CharonsCorner.Runtime
+        m_MethodName: EnablePausing
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &8730617017274691078
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -335,9 +389,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <LaneData>k__BackingField:
-  - {fileID: 11400000, guid: fbe141a7c66e6d24f89ae702b9f1cf46, type: 2}
+  - {fileID: 11400000, guid: bbf1f045ad1b0394ba0ca9b3b123ee5d, type: 2}
   - {fileID: 11400000, guid: 5962af86fd6f08b4e90e21a61638fd66, type: 2}
   - {fileID: 11400000, guid: d7cadaaae1d43614bb32af7376bb533e, type: 2}
+  _initialDelay: 0.4
+  _repeatDelay: 0.1
   OnLeave:
     m_PersistentCalls:
       m_Calls:
@@ -428,3 +484,15 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &6174160785739741760
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7227862289874109081}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 855baeba3fd342c1a015c21278049e08, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

@@ -20,6 +20,11 @@ namespace CharonsCorner.Runtime
         [Header("Audio")]
         [SerializeField] private AudioSource _rollingAudioSource;
         [SerializeField] private float _movementThreshold = 1f;
+        [SerializeField] private AudioSource _crashAudioSource;
+        [SerializeField]
+        private float _crashVelocityThreshold = 10f;
+
+
 
         [Header("References")]
         [field: SerializeField] public Transform Orientation { get; private set; }
@@ -50,6 +55,7 @@ namespace CharonsCorner.Runtime
         [field: SerializeField] public AirSuperState AirSuperState { get; private set; } = new();
         [field: SerializeField] public CannonBallSuperState CannonBallSuperState { get; private set; } = new();
         [field: SerializeField] public DriftSuperState DriftSuperState { get; private set; } = new();
+        [field: SerializeField] public SplineLaunchState SplineLaunchState { get; private set; } = new();
         
         [ReadOnly] public String CurrentSubState;
         #endregion
@@ -68,6 +74,22 @@ namespace CharonsCorner.Runtime
             SetupStateMachine();
         }
 
+        private void OnCollisionEnter(Collision collision)
+        {
+            if ((_groundLayer.value & (1 << collision.gameObject.layer)) != 0) { return; }
+
+            
+                
+           
+
+            if (collision.relativeVelocity.magnitude > _crashVelocityThreshold)
+            {
+                _crashAudioSource?.Play();
+            }
+            
+                
+            
+        }
         private void Update()
         {
             StateMachine.Update();
@@ -147,7 +169,8 @@ namespace CharonsCorner.Runtime
             AirSuperState.Init(StateMachine, this);
             CannonBallSuperState.Init(StateMachine, this);  
             DriftSuperState.Init(StateMachine, this);
-                    }
+            SplineLaunchState.Init(StateMachine, this);
+        }
 
         public void SetCurrentCannon(CannonBall cannon)
         {

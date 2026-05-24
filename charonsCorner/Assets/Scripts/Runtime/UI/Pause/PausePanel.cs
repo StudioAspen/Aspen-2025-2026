@@ -1,6 +1,7 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
-using DG.Tweening;
+using MoreMountains.Feedbacks;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,15 +10,16 @@ namespace CharonsCorner.Runtime
     public class PausePanel : UIPanel
     {
         private RectTransform _rectTransform;
+        private Coroutine _deactivationCoroutine;
+        private Action _pendingSceneTransition;
 
         [Header("References")]
         [SerializeField] private List<Button> _buttons;
 
         [Header("Animation")]
-        [SerializeField] private float _openingAnimationDuration = 1f;
-        [SerializeField] private float _closingAnimationDuration = 1f;
-        [SerializeField] private Ease _openingAnimationEaseType = Ease.OutBack;
-        [SerializeField] private Ease _closingAnimationEaseType = Ease.Linear;
+        [SerializeField] private MMF_Player _openPlayer;
+        [SerializeField] private MMF_Player _closePlayer;
+        [SerializeField] private float _deactivationDelay = 0.5f;
 
         private bool _isAnimating = false;    
 
@@ -27,6 +29,44 @@ namespace CharonsCorner.Runtime
             if (_rectTransform == null)
             {
                 Debug.LogError("PauseUI: RectTransform component not found.");
+            }
+
+            OnFocused.AddListener(HandleFocused);
+        }
+
+        private void HandleFocused()
+        {
+            // If we are already active and animating (likely closing), interrupt it.
+            if (_isAnimating || _deactivationCoroutine != null)
+            {
+                InterruptDeactivation();
+                PlayOpenAnimation();
+            }
+        }
+
+        private void InterruptDeactivation()
+        {
+            if (_deactivationCoroutine != null)
+            {
+                StopCoroutine(_deactivationCoroutine);
+                _deactivationCoroutine = null;
+            }
+
+            if (_closePlayer != null && _closePlayer.IsPlaying)
+            {
+                _closePlayer.StopFeedbacks();
+            }
+
+            _pendingSceneTransition = null;
+            _isAnimating = false;
+        }
+
+        private void Start()
+        {
+            // Ensure the panel is disabled at the start of the scene if we are not in Paused state.
+            if (GameManager.Instance != null && GameManager.Instance.CurrentGameState != GameState.Paused)
+            {
+                gameObject.SetActive(false);
             }
         }
 
@@ -38,28 +78,48 @@ namespace CharonsCorner.Runtime
         /// </remarks>
         private void OnEnable()
         {
-            _rectTransform.DOKill(); // Kill any existing animations from this RectTransform
+            // Only play animation and setup if the game is actually paused.
+            // This prevents the animation from playing if the panel is active on scene start.
+            if (GameManager.Instance != null && GameManager.Instance.CurrentGameState != GameState.Paused)
+            {
+                return;
+            }
 
-            _isAnimating = true;
+            // Ensure any pending deactivation is cleared if we are enabling.
+            InterruptDeactivation();
 
             InputManager.Instance.Unpause += InputManager_Unpause;
+
+            PlayOpenAnimation();
+        }
+
+        private void PlayOpenAnimation()
+        {
+            _isAnimating = true;
 
             //Disable all buttons (so player can't click while animation is playing)
             EnableButtons(false);
 
-            //Set the starting position off screen
-            _rectTransform.anchoredPosition = new Vector2(_rectTransform.anchoredPosition.x, Screen.height);
+            if (_openPlayer != null)
+            {
+                _openPlayer.Events.OnComplete.RemoveListener(OnOpenAnimationComplete);
+                _openPlayer.Events.OnComplete.AddListener(OnOpenAnimationComplete);
+                _openPlayer.PlayFeedbacks();
+            }
+            else
+            {
+                OnOpenAnimationComplete();
+            }
+        }
 
-            //Animate the UI Menu into view
-            _rectTransform
-                .DOAnchorPosY(0, _openingAnimationDuration)
-                .SetUpdate(true)
-                .SetEase(_openingAnimationEaseType)
-                .OnComplete(() =>
-                {
-                    EnableButtons(true);
-                    _isAnimating = false;
-                });
+        private void OnOpenAnimationComplete()
+        {
+            EnableButtons(true);
+            _isAnimating = false;
+            if (_openPlayer != null)
+            {
+                _openPlayer.Events.OnComplete.RemoveListener(OnOpenAnimationComplete);
+            }
         }
 
         /// <summary>
@@ -71,20 +131,43 @@ namespace CharonsCorner.Runtime
                 InputManager.Instance.Unpause -= InputManager_Unpause;
             
             _isAnimating = false;
-            _rectTransform.DOKill(); // Cancel any in-progress animation
+
+            if (_openPlayer != null)
+            {
+                _openPlayer.Events.OnComplete.RemoveListener(OnOpenAnimationComplete);
+                _openPlayer.StopFeedbacks();
+            }
+
+            if (_closePlayer != null)
+            {
+                _closePlayer.Events.OnComplete.RemoveListener(OnCloseAnimationComplete);
+                _closePlayer.StopFeedbacks();
+            }
         }
 
         // Called by button UI event
-        public void Restart() => GameManager.Instance.ReloadScene(GameState.Gameplay);
+        public void Restart()
+        {
+            _pendingSceneTransition = () => GameManager.Instance.ReloadScene(GameState.Gameplay);
+            CloseUI();
+        }
 
         // Called by button UI event
         public void ShowSettingsPanel() => SettingsCanvas.ShowSettings();
 
         // Called by button UI event
-        public void GoBackToMenu() => GameManager.Instance.ReturnToMenu();
+        public void GoBackToMenu()
+        {
+            _pendingSceneTransition = () => GameManager.Instance.ReturnToMenu();
+            CloseUI();
+        }
 
         // Called by button UI event
-        public void GoBackToHub() => GameManager.Instance.ReturnToHub();
+        public void GoBackToHub()
+        {
+            _pendingSceneTransition = () => GameManager.Instance.ReturnToHub();
+            CloseUI();
+        }
 
         /// <summary>
         /// Closes the pause UI by animating the panel out of view and returning the game to gameplay.
@@ -100,20 +183,51 @@ namespace CharonsCorner.Runtime
             //Disabling all buttons
             EnableButtons(false);
 
-            //Kill any existing animations from this RectTransform
-            _rectTransform.DOKill();
+            if (_closePlayer != null)
+            {
+                _closePlayer.Events.OnComplete.RemoveListener(OnCloseAnimationComplete);
+                _closePlayer.Events.OnComplete.AddListener(OnCloseAnimationComplete);
+                _closePlayer.PlayFeedbacks();
+            }
+            else
+            {
+                OnCloseAnimationComplete();
+            }
+        }
 
-            //Animate the UI Menu out of view
-            _rectTransform
-                .DOAnchorPosY(Screen.height, _closingAnimationDuration)
-                .SetUpdate(true)
-                .SetEase(_closingAnimationEaseType)
-                .OnComplete(() =>
-                {
-                    BackOrClose();
-                    GameManager.Instance.ChangeGameState(GameState.Gameplay);
-                    _isAnimating = false;
-                });
+        private void OnCloseAnimationComplete()
+        {
+            // Only unpause if we're not about to transition to a different scene.
+            if (_pendingSceneTransition == null)
+            {
+                GameManager.Instance.ChangeGameState(GameState.Gameplay);
+            }
+            
+            _deactivationCoroutine = StartCoroutine(WaitAndDeactivate());
+        }
+
+        private IEnumerator WaitAndDeactivate()
+        {
+            if (_deactivationDelay > 0)
+            {
+                yield return new WaitForSecondsRealtime(_deactivationDelay);
+            }
+
+            _deactivationCoroutine = null;
+            
+            if (_pendingSceneTransition != null)
+            {
+                _pendingSceneTransition.Invoke();
+                _pendingSceneTransition = null;
+            }
+
+            BackOrClose();
+            _isAnimating = false;
+
+            if (_closePlayer != null)
+            {
+                _closePlayer.Events.OnComplete.RemoveListener(OnCloseAnimationComplete);
+            }
         }
 
         /// <summary>

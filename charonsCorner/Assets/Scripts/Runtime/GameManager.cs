@@ -2,8 +2,10 @@ using Eflatun.SceneReference;
 using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.InputSystem;
 using Cysharp.Threading.Tasks;
 using Sirenix.OdinInspector;
+using TMPro;
 
 namespace CharonsCorner.Runtime
 {
@@ -34,10 +36,39 @@ namespace CharonsCorner.Runtime
         [SerializeField] private SceneReference _titleScene;
         [SerializeField] private SceneReference _hubScene;
         [SerializeField] private SceneReference _tutorialScene;
+        [SerializeField] private TMP_Text _gameStateDisplayText;
+
+        private void Update()
+        {
+            if (Keyboard.current != null && Keyboard.current.minusKey.wasPressedThisFrame)
+            {
+                RestartGameFromScratch();
+            }
+            if (Keyboard.current != null && Keyboard.current.equalsKey.wasPressedThisFrame)
+            {
+                ReturnToMenu();
+            }
+            if (Keyboard.current != null && Keyboard.current.commaKey.wasPressedThisFrame)
+            {
+                SwitchScenes(_hubScene, GameState.Gameplay).Forget();
+            }
+        }
 
         private protected override void Awake()
         {
             base.Awake();
+            UpdateGameStateDisplay();
+            UIPanel.OnPanelChanged += HandlePanelChanged;
+        }
+
+        private void OnDestroy()
+        {
+            UIPanel.OnPanelChanged -= HandlePanelChanged;
+        }
+
+        private void HandlePanelChanged(UIPanel panel)
+        {
+            UpdateGameStateDisplay();
         }
 
         /// <summary>
@@ -55,6 +86,16 @@ namespace CharonsCorner.Runtime
             OnGameStateEnter(newState);
 
             OnGameStateChanged.Invoke(newState);
+            UpdateGameStateDisplay();
+        }
+
+        private void UpdateGameStateDisplay()
+        {
+            if (_gameStateDisplayText != null)
+            {
+                string panelName = UIPanel.ActivePanel != null ? UIPanel.ActivePanel.name : "None";
+                _gameStateDisplayText.text = $"State: {CurrentGameState} | UI: {panelName}";
+            }
         }
 
         /// <summary>
@@ -108,7 +149,16 @@ namespace CharonsCorner.Runtime
             ChangeGameState(GameState.Loading);
             await LoadingCanvas.Instance.FadeIn();
             
+            Debug.Log($"[GameManager] Switching to scene: {scene.Name}. Clearing UIPanel.ActivePanel (excluding Loading).");
+            UIPanel.CloseAll(false);
+
             await SceneManager.LoadSceneAsync(scene.Name);
+            
+            // Re-ensure UI is closed after scene load if we are in gameplay
+            if (afterState == GameState.Gameplay)
+            {
+                UIPanel.CloseAll(false);
+            }
 
             ChangeGameState(afterState);
 
@@ -132,12 +182,21 @@ namespace CharonsCorner.Runtime
         /// <summary>
         /// Helper method to switch back to the title scene and set the game state to Title.
         /// </summary>
-        public void ReturnToMenu() => SwitchScenes(_titleScene, GameState.Title).Forget();
+        public void ReturnToMenu() => SwitchScenes(_hubScene, GameState.Title).Forget();
 
         /// <summary>
         /// Helper method to switch back to the hub scene and set the game state to Gameplay.
         /// </summary>
-        public void ReturnToHub() => SwitchScenes(_hubScene, GameState.Gameplay).Forget();
+        public void ReturnToHub() => SwitchScenes(_hubScene, GameState.Title).Forget();
+
+        /// <summary>
+        /// Resets all progression and returns the player to the hub scene.
+        /// </summary>
+        public void RestartGameFromScratch()
+        {
+            FlagManager.ResetAll();
+            SwitchScenes(_hubScene, GameState.Title).Forget();
+        }
 
         public SceneReference GetCurrentScene() => SceneReference.FromScenePath(SceneManager.GetActiveScene().path);
 

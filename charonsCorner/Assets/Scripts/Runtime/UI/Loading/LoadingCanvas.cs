@@ -50,12 +50,21 @@ namespace CharonsCorner.Runtime
 
             await _image.DOFade(0f, _fadeOutDuration).SetEase(_fadeOutEase).SetUpdate(true).OnComplete(() => { 
                 _image.SetImageAlpha(0f);
-                IsLoaded = true;
         
                 if (nextPanel == null)
-                    UIPanel.CloseAll();
+                {
+                    // If we're finishing loading and no specific next panel was requested,
+                    // we should clear all and let DefaultSceneUIPanelSetter handle it
+                    // Debug.Log("[LoadingCanvas] FadeOut complete. nextPanel is null, calling CloseAll()");
+                    UIPanel.CloseAll(true);
+                }
                 else
+                {
+                    // Debug.Log($"[LoadingCanvas] FadeOut complete. Focusing {nextPanel.name}");
                     UIPanel.Focus(nextPanel);
+                }
+                
+                IsLoaded = true;
             });
         }
         

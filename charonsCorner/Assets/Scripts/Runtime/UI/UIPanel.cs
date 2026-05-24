@@ -58,6 +58,11 @@ namespace CharonsCorner.Runtime
         public static UIPanel ActivePanel { get; private set; }
         public static event Action<UIPanel> OnPanelChanged = delegate { };
 
+        private void OnEnable()
+        {
+            Debug.Log($"[UIPanel] {name} Enabled. ActivePanel: {(ActivePanel != null ? ActivePanel.name : "null")}");
+        }
+
         /// <summary>
         /// Helper to hide the active panel.
         /// Good for temporarily hiding and showing again later.
@@ -78,6 +83,7 @@ namespace CharonsCorner.Runtime
 
         public static void Focus(UIPanel panel)
         {
+            Debug.Log($"[UIPanel] Static Focus called for {panel?.name}. ActivePanel: {(ActivePanel != null ? ActivePanel.name : "null")}");
             if (ActivePanel != null)
                 ActivePanel.FocusPanel(panel);
             else
@@ -97,20 +103,60 @@ namespace CharonsCorner.Runtime
         /// <summary>
         /// Closes everything and clears the stack.
         /// </summary>
-        public static void CloseAll()
+        public static void CloseAll(bool includeLoading = false)
         {
+            // Debug.Log($"[UIPanel] CloseAll called. ActivePanel: {(ActivePanel != null ? ActivePanel.name : "null")}");
             if (ActivePanel == null)
             {
                 OnPanelChanged?.Invoke(null);
                 return;
             }
             
-            while(ActivePanel)
+            // If we are starting with Loading and not including it, we might have panels behind it.
+            // We clear those out to ensure a clean state for the next scene.
+            if (!includeLoading && ActivePanel.name.Contains("Loading") && ActivePanel.PreviousPanel != null)
+            {
+                UIPanel current = ActivePanel.PreviousPanel;
+                ActivePanel.SetPreviousPanel(null);
+                while (current != null)
+                {
+                    UIPanel next = current.PreviousPanel;
+                    current.Unfocus();
+                    current = next;
+                }
+            }
+
+            int safety = 0;
+            while(ActivePanel && safety < 100)
+            {
+                if (!includeLoading && ActivePanel.name.Contains("Loading"))
+                {
+                    // If the loading panel is the only one left or we shouldn't close it, we stop.
+                    // But we should also make sure it's not masking other panels if we want a clean state.
+                    // However, in our system, Loading is usually focused on top.
+                    break;
+                }
+
+                UIPanel toClose = ActivePanel;
                 ActivePanel.BackOrClose();
+                
+                // If BackOrClose didn't change ActivePanel (e.g. it was already null or didn't move), 
+                // and it was the loading panel we were skipping, we'd be stuck.
+                // But the name check above handles it.
+                
+                if (ActivePanel == toClose)
+                {
+                    // Force break if it didn't change to avoid infinite loop
+                    break;
+                }
+                
+                safety++;
+            }
         }
         
         private protected virtual void OnDestroy()
         {
+            // Debug.Log($"[UIPanel] {name} OnDestroy. ActivePanel is {(ActivePanel != null ? ActivePanel.name : "null")}");
             // Safely cleans up the ActivePanel static variable
             if (ActivePanel == this)
             {
@@ -124,6 +170,16 @@ namespace CharonsCorner.Runtime
                     OnPanelChanged?.Invoke(null);
                     return;
                 }
+                
+                // If the scene is changing, don't try to go back, just clear the reference
+                if (!gameObject.scene.isLoaded)
+                {
+                    // Debug.Log($"[UIPanel] {name} OnDestroy while scene is NOT loaded. Clearing ActivePanel.");
+                    ActivePanel = null;
+                    OnPanelChanged?.Invoke(null);
+                    return;
+                }
+
                 Debug.LogWarning($"Active UIScreen {this} is being destroyed");
                 Back();
             }
@@ -143,17 +199,20 @@ namespace CharonsCorner.Runtime
             }
             
             panel.SetPreviousPanel(this);
-            panel.Focus();
             if(!panel.IsAdditive)
                 Unfocus();
             else
                 Group.interactable = false;
+
+            panel.Focus();
         }
 
         public void Focus()
         {
+            // Debug.Log($"[UIPanel] {name} Focus called. interactable before: {Group.interactable}, blocksRaycasts before: {Group.blocksRaycasts}");
             DOTween.Kill(Group);
             Group.interactable = true;
+            Group.blocksRaycasts = true; // Ensure raycasts are enabled when focused
             gameObject.SetActive(true);
             ActivePanel = this;
             
@@ -162,6 +221,10 @@ namespace CharonsCorner.Runtime
                 Group.alpha = 0f;
                 Group.DOFade(1f, _fadeDuration);
                 
+            }
+            else
+            {
+                Group.alpha = 1f; // Ensure alpha is 1 if not using fade
             }
 
             ChangeCurrentSelectedObject(DefaultSelected);
@@ -172,9 +235,15 @@ namespace CharonsCorner.Runtime
 
         public void Unfocus()
         {
+            // Debug.Log($"[UIPanel] {name} Unfocus called. interactable before: {Group.interactable}");
             DOTween.Kill(Group);
             Group.interactable = false;
             
+            if (ActivePanel == this)
+            {
+                ActivePanel = null;
+            }
+
             if (_useFadeTransition)
             {
                 Group.blocksRaycasts = false;
@@ -219,11 +288,13 @@ namespace CharonsCorner.Runtime
         /// </summary>
         public void Back()
         {
+            // Debug.Log($"[UIPanel] {name} Back called. PreviousPanel: {(PreviousPanel != null ? PreviousPanel.name : "null")}");
             if (PreviousPanel)
             {
-                Unfocus();
-                PreviousPanel.Focus();
+                UIPanel target = PreviousPanel;
                 PreviousPanel = null;
+                Unfocus();
+                target.Focus();
             }
         }
 
@@ -232,14 +303,15 @@ namespace CharonsCorner.Runtime
         /// </summary>
         public void BackOrClose()
         {
-            Unfocus();
+            // Debug.Log($"[UIPanel] {name} BackOrClose called. PreviousPanel: {(PreviousPanel != null ? PreviousPanel.name : "null")}");
             if (PreviousPanel)
             {
+                Unfocus();
                 Back();
             }
             else
             {
-                ActivePanel = null;
+                Unfocus();
                 OnPanelChanged?.Invoke(null);
             }
         }
@@ -254,7 +326,11 @@ namespace CharonsCorner.Runtime
             SetPreviousPanel(null);
         }
         
-        public void SetPreviousPanel(UIPanel previous) => PreviousPanel = previous;
+        public void SetPreviousPanel(UIPanel previous)
+        {
+            Debug.Log($"[UIPanel] {name} SetPreviousPanel to {(previous != null ? previous.name : "null")}");
+            PreviousPanel = previous;
+        }
         
         /// <summary>
         /// Changes the currently selected object in the UI.
@@ -278,6 +354,12 @@ namespace CharonsCorner.Runtime
         /// </summary>
         public static void SetCurrentSelectedObject()
         {
+            if (EventSystem.current == null)
+            {
+                Debug.LogWarning("[UIPanel] SetCurrentSelectedObject: EventSystem.current is null.");
+                return;
+            }
+
             if (InputManager.Instance.CurrentControlScheme == InputManager.ControlScheme.KeyboardMouse)
                 EventSystem.current.SetSelectedGameObject(null);
             else

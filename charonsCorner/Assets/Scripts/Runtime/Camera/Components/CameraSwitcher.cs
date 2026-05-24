@@ -20,5 +20,11 @@ namespace CharonsCorner.Runtime
         {
             CameraManager.Instance.ChangeActiveCamera(targetCamera, _blendType, _blendDuration);
         }
+
+        [Button("Return To Default Camera", ButtonSizes.Large)]
+        public void ReturnToDefaultCamera()
+        {
+            CameraManager.Instance.ResetActiveCamera();
+        }
     }
 }

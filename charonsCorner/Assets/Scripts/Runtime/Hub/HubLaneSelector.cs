@@ -4,6 +4,7 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
+using MoreMountains.Feedbacks;
 
 namespace CharonsCorner.Runtime
 {
@@ -16,10 +17,19 @@ namespace CharonsCorner.Runtime
         [SerializeField] private float _initialDelay = 0.4f;
         [SerializeField] private float _repeatDelay = 0.1f;
 
+        [Header("Feedbacks")]
+        [SerializeField] private MMF_Player _spinRight;
+        [SerializeField] private MMF_Player _spinLeft;
+
+        [Header("Skybox Rotation")]
+        [SerializeField] private SkyboxRotator _skyboxRotator;
+        [SerializeField] private Material _baseSkybox;
+
         private InputManager _input;
         private InputAction _moveAction;
         private Coroutine _moveCoroutine;
 
+        public UnityEvent OnEnter = new();
         public UnityEvent OnLeave = new();
         public UnityEvent<int> OnLaneSelected = new();
         public UnityEvent<LevelDataSO> OnLaneInteracted = new();
@@ -41,6 +51,14 @@ namespace CharonsCorner.Runtime
                 _input.Exit += OnExit;
                 _input.Interact += OnInteract;
             }
+
+            if (_spinRight != null)
+                _spinRight.PlayFeedbacks();
+
+            if (_skyboxRotator != null)
+                _skyboxRotator.Rotate(1f);
+
+            OnEnter.Invoke();
         }
 
         private void OnDisable()
@@ -101,6 +119,10 @@ namespace CharonsCorner.Runtime
 
         private void OnExit()
         {
+            if (_baseSkybox != null)
+            {
+                RenderSettings.skybox = _baseSkybox;
+            }
             OnLeave.Invoke();
         }
 
@@ -134,6 +156,11 @@ namespace CharonsCorner.Runtime
                 return;
 
             SelectLane(CurrentLaneIndex + 1);
+            if (_spinRight != null)
+                _spinRight.PlayFeedbacks();
+
+            if (_skyboxRotator != null)
+                _skyboxRotator.Rotate(1f);
         }
 
         public void SelectPreviousLane()
@@ -142,6 +169,11 @@ namespace CharonsCorner.Runtime
                 return;
 
             SelectLane(CurrentLaneIndex - 1);
+            if (_spinLeft != null)
+                _spinLeft.PlayFeedbacks();
+
+            if (_skyboxRotator != null)
+                _skyboxRotator.Rotate(-1f);
         }
 
         public LevelDataSO GetCurrentLevelData() => LaneData[CurrentLaneIndex];

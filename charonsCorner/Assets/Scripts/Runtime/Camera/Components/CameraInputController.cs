@@ -22,11 +22,15 @@ namespace CharonsCorner.Runtime
         {
             public float GetValue(UnityEngine.Object context, IInputAxisOwner.AxisDescriptor.Hints hint)
             {
+                var inputManager = InputManager.Instance;
+                if (inputManager == null || inputManager.InputActions == null)
+                    return 0f;
+
                 if (hint == IInputAxisOwner.AxisDescriptor.Hints.X)
-                    return InputManager.Instance.LookDirection.x * SensitivitySetting.CurrentValue;
+                    return inputManager.LookDirection.x * SensitivitySetting.CurrentValue;
 
                 if (hint == IInputAxisOwner.AxisDescriptor.Hints.Y)
-                    return -InputManager.Instance.LookDirection.y * SensitivitySetting.CurrentValue;
+                    return -inputManager.LookDirection.y * SensitivitySetting.CurrentValue;
 
                 return 0f;
             }
