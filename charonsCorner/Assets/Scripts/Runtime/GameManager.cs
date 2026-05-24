@@ -36,6 +36,7 @@ namespace CharonsCorner.Runtime
         [SerializeField] private SceneReference _titleScene;
         [SerializeField] private SceneReference _hubScene;
         [SerializeField] private SceneReference _tutorialScene;
+        [SerializeField] private SceneReference _numkey1Scene;
         [SerializeField] private TMP_Text _gameStateDisplayText;
 
         private void Update()
@@ -51,6 +52,10 @@ namespace CharonsCorner.Runtime
             if (Keyboard.current != null && Keyboard.current.commaKey.wasPressedThisFrame)
             {
                 SwitchScenes(_hubScene, GameState.Gameplay).Forget();
+            }
+            if (Keyboard.current != null && Keyboard.current.digit1Key.wasPressedThisFrame)
+            {
+                SwitchScenes(_numkey1Scene, GameState.Gameplay).Forget();
             }
         }
 
