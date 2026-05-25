@@ -16,7 +16,7 @@ namespace CharonsCorner.Runtime
         [SerializeField] private EventSystem eventSystem;
 
         [Header("Icon Fonts")]
-        [SerializeField] private TMP_FontAsset mainFont;
+        [SerializeField] private List<TMP_FontAsset> mainFonts;
         [SerializeField] private TMP_FontAsset xboxFont;
         [SerializeField] private TMP_FontAsset playstationFont;
         [SerializeField] private TMP_FontAsset keyboardFont;
@@ -281,7 +281,7 @@ namespace CharonsCorner.Runtime
 
         private void SwapIconFont(ControlScheme controlScheme)
         {
-            if (mainFont == null) return;
+            if (mainFonts == null || mainFonts.Count == 0) return;
 
             TMP_FontAsset iconFont = controlScheme switch
             {
@@ -293,8 +293,12 @@ namespace CharonsCorner.Runtime
 
             if (iconFont == null) return;
 
-            mainFont.fallbackFontAssetTable.Clear();
-            mainFont.fallbackFontAssetTable.Add(iconFont);
+            foreach (var font in mainFonts)
+            {
+                if (font == null) continue;
+                font.fallbackFontAssetTable.Clear();
+                font.fallbackFontAssetTable.Add(iconFont);
+            }
         }
 
         /// <summary>
