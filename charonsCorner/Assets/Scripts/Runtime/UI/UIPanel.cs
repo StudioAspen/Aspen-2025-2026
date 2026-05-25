@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
+using MoreMountains.Feedbacks;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Events;
@@ -25,6 +26,7 @@ namespace CharonsCorner.Runtime
 
         [SerializeField] private float _fadeDuration = 1f;
         [SerializeField] private bool _useFadeTransition = false;
+        [SerializeField] private MMF_Player _closeUIFeedback;
         [ShowInInspector, ReadOnly] public static Selectable TargetSelectedObject { get; private set; }
         /// <summary>
         /// The first object to select when opening this panel.
@@ -105,6 +107,11 @@ namespace CharonsCorner.Runtime
         /// </summary>
         public static void CloseAll(bool includeLoading = false)
         {
+            CloseAllAsync(includeLoading).Forget();
+        }
+
+        public static async UniTask CloseAllAsync(bool includeLoading = false)
+        {
             // Debug.Log($"[UIPanel] CloseAll called. ActivePanel: {(ActivePanel != null ? ActivePanel.name : "null")}");
             if (ActivePanel == null)
             {
@@ -121,7 +128,7 @@ namespace CharonsCorner.Runtime
                 while (current != null)
                 {
                     UIPanel next = current.PreviousPanel;
-                    current.Unfocus();
+                    await current.Unfocus();
                     current = next;
                 }
             }
@@ -138,7 +145,7 @@ namespace CharonsCorner.Runtime
                 }
 
                 UIPanel toClose = ActivePanel;
-                ActivePanel.BackOrClose();
+                await ActivePanel.BackOrCloseAsync();
                 
                 // If BackOrClose didn't change ActivePanel (e.g. it was already null or didn't move), 
                 // and it was the loading panel we were skipping, we'd be stuck.
@@ -200,7 +207,7 @@ namespace CharonsCorner.Runtime
             
             panel.SetPreviousPanel(this);
             if(!panel.IsAdditive)
-                Unfocus();
+                Unfocus().Forget();
             else
                 Group.interactable = false;
 
@@ -233,7 +240,7 @@ namespace CharonsCorner.Runtime
             OnPanelChanged?.Invoke(this);
         }
 
-        public void Unfocus()
+        public async UniTask Unfocus()
         {
             // Debug.Log($"[UIPanel] {name} Unfocus called. interactable before: {Group.interactable}");
             DOTween.Kill(Group);
@@ -244,22 +251,25 @@ namespace CharonsCorner.Runtime
                 ActivePanel = null;
             }
 
+            if (_closeUIFeedback != null)
+            {
+                _closeUIFeedback.PlayFeedbacks();
+                await UniTask.WaitUntil(() => !_closeUIFeedback.IsPlaying);
+            }
+
             if (_useFadeTransition)
             {
                 Group.blocksRaycasts = false;
 
-                Group.DOFade(0f, _fadeDuration).OnComplete(() =>
-                {
-                    Group.blocksRaycasts = true;
-                    gameObject.SetActive(false);
-                });
+                await Group.DOFade(0f, _fadeDuration).AsyncWaitForCompletion();
+                
+                Group.blocksRaycasts = true;
+                gameObject.SetActive(false);
             }
             else
             {
                 gameObject.SetActive(false);
             }
-
-
 
             OnUnfocused?.Invoke();
         }
@@ -270,7 +280,12 @@ namespace CharonsCorner.Runtime
         /// </summary>
         public void Close()
         {
-            Unfocus();
+            CloseAsync().Forget();
+        }
+
+        public async UniTask CloseAsync()
+        {
+            await Unfocus();
             if (PreviousPanel)
             {
                 ActivePanel = PreviousPanel;
@@ -288,12 +303,17 @@ namespace CharonsCorner.Runtime
         /// </summary>
         public void Back()
         {
+            BackAsync().Forget();
+        }
+
+        public async UniTask BackAsync()
+        {
             // Debug.Log($"[UIPanel] {name} Back called. PreviousPanel: {(PreviousPanel != null ? PreviousPanel.name : "null")}");
             if (PreviousPanel)
             {
                 UIPanel target = PreviousPanel;
                 PreviousPanel = null;
-                Unfocus();
+                await Unfocus();
                 target.Focus();
             }
         }
@@ -303,15 +323,19 @@ namespace CharonsCorner.Runtime
         /// </summary>
         public void BackOrClose()
         {
+            BackOrCloseAsync().Forget();
+        }
+
+        public async UniTask BackOrCloseAsync()
+        {
             // Debug.Log($"[UIPanel] {name} BackOrClose called. PreviousPanel: {(PreviousPanel != null ? PreviousPanel.name : "null")}");
             if (PreviousPanel)
             {
-                Unfocus();
-                Back();
+                await BackAsync();
             }
             else
             {
-                Unfocus();
+                await Unfocus();
                 OnPanelChanged?.Invoke(null);
             }
         }

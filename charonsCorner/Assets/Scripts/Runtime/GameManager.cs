@@ -155,14 +155,14 @@ namespace CharonsCorner.Runtime
             await LoadingCanvas.Instance.FadeIn();
             
             Debug.Log($"[GameManager] Switching to scene: {scene.Name}. Clearing UIPanel.ActivePanel (excluding Loading).");
-            UIPanel.CloseAll(false);
+            await UIPanel.CloseAllAsync(false);
 
             await SceneManager.LoadSceneAsync(scene.Name);
             
             // Re-ensure UI is closed after scene load if we are in gameplay
             if (afterState == GameState.Gameplay)
             {
-                UIPanel.CloseAll(false);
+                await UIPanel.CloseAllAsync(false);
             }
 
             ChangeGameState(afterState);

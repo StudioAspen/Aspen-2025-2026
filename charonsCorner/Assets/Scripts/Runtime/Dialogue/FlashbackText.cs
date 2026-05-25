@@ -13,6 +13,7 @@ public class FlashbackText : MonoBehaviour
 
     [Header("Input Prompt")]
     [SerializeField] private GameObject inputPromptObject;
+    [SerializeField] private InputInteraction inputInteraction;
     [SerializeField] private TMP_Text inputPromptText;
     [SerializeField] private InputActionReference interactAction;
 
@@ -79,7 +80,7 @@ public class FlashbackText : MonoBehaviour
             typewriter.onMessage.AddListener(OnMessage);
         }
 
-        if (inputPromptObject != null)
+        if (inputInteraction == null && inputPromptObject != null)
         {
             inputPromptObject.SetActive(false);
         }
@@ -171,7 +172,12 @@ public class FlashbackText : MonoBehaviour
 
     private void ShowInputPrompt()
     {
-        if (inputPromptObject != null)
+        if (inputInteraction != null)
+        {
+            UpdateInputPrompt(InputManager.Instance.CurrentControlScheme);
+            inputInteraction.Appear();
+        }
+        else if (inputPromptObject != null)
         {
             UpdateInputPrompt(InputManager.Instance.CurrentControlScheme);
             inputPromptObject.SetActive(true);
@@ -180,7 +186,11 @@ public class FlashbackText : MonoBehaviour
 
     private void HideInputPrompt()
     {
-        if (inputPromptObject != null)
+        if (inputInteraction != null)
+        {
+            inputInteraction.Disappear();
+        }
+        else if (inputPromptObject != null)
         {
             inputPromptObject.SetActive(false);
         }
