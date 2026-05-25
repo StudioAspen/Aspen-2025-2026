@@ -38,6 +38,10 @@ namespace CharonsCorner.Runtime
         [SerializeField] private SceneReference _tutorialScene;
         [SerializeField] private SceneReference _numkey1Scene;
         [SerializeField] private TMP_Text _gameStateDisplayText;
+        
+        public static bool IsScreenspaceUIHidden { get; private set; }
+        
+        private bool _debugUIHidden = false;
 
         private void Update()
         {
@@ -57,6 +61,34 @@ namespace CharonsCorner.Runtime
             {
                 SwitchScenes(_numkey1Scene, GameState.Gameplay).Forget();
             }
+
+            if (Keyboard.current != null && Keyboard.current.rightBracketKey.wasPressedThisFrame)
+            {
+                ToggleDebugUI();
+            }
+        }
+
+        private void ToggleDebugUI()
+        {
+            _debugUIHidden = !_debugUIHidden;
+            IsScreenspaceUIHidden = _debugUIHidden;
+
+            // Hide/Show DriftUI (Actually we don't deactivate the object anymore, DriftUI handles its own sub-elements)
+            var driftUIs = FindObjectsByType<DriftUI>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+            foreach (var driftUI in driftUIs)
+            {
+                // Trigger an update in DriftUI to reflect the change
+                driftUI.RefreshUIVisibility();
+            }
+
+            // Hide/Show InputInteraction
+            var inputInteractions = FindObjectsByType<InputInteraction>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+            foreach (var interaction in inputInteractions)
+            {
+                interaction.gameObject.SetActive(!_debugUIHidden);
+            }
+
+            Debug.Log($"[Debug] UI Hidden: {_debugUIHidden}");
         }
 
         private protected override void Awake()

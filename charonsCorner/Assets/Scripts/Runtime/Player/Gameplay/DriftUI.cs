@@ -179,6 +179,7 @@ namespace CharonsCorner.Runtime
                 _radialSpringScale.MoveTo(Vector3.zero);
             
             _isSkullActive = false;
+            _hasBumped = false;
 
             if (_skullLine != null && _skullLine.gameObject.activeSelf)
                 _skullLine.gameObject.SetActive(false);
@@ -201,23 +202,53 @@ namespace CharonsCorner.Runtime
         {
             if (_driftHandler == null || _playerController == null) return;
 
+            bool screenUIEnabled = !GameManager.IsScreenspaceUIHidden;
+
             if (_driftHandler.IsDrifting)
             {
                 // If we're in the charge phase, update normally.
                 if (_playerController.DriftSuperState.SubStateMachine.CurrentState == _playerController.DriftSuperState.DriftingChargeState)
                 {
-                    UpdateChargeText();
+                    if (screenUIEnabled)
+                    {
+                        UpdateChargeText();
+                        UpdateSkullIndicator();
+                    }
+                    else
+                    {
+                        if (_chargeText != null && _chargeText.gameObject.activeSelf) _chargeText.gameObject.SetActive(false);
+                        HideSkullUI();
+                    }
+                    
                     UpdateDriftIndicator();
-                    UpdateSkullIndicator();
                     _hasBumped = false;
                 }
                 // If we transition to boost, show the "BOOST" text once.
-                else if (_chargeText != null)
+                else 
                 {
-                    if (!_hasBumped)
+                    if (screenUIEnabled && _chargeText != null)
                     {
-                        _launchedChargeRatio = _playerController.DriftSuperState.GetCurrentChargeRatio();
-                        UpdateChargeText();
+                        if (!_hasBumped)
+                        {
+                            _launchedChargeRatio = _playerController.DriftSuperState.GetCurrentChargeRatio();
+                            UpdateChargeText();
+                        }
+
+                        // User wants a "bump" instead of immediate disappearance
+                        if (!_hasBumped)
+                        {
+                            if (_skullSpringScale != null) _skullSpringScale.Bump(_skullBumpScale);
+                            if (_skullSpringPosition != null) _skullSpringPosition.Bump(_skullBumpPosition);
+                            if (_radialSpringScale != null) _radialSpringScale.Bump(_radialBumpScale);
+                            _hasBumped = true;
+                        }
+
+                        BlinkBoostUI();
+                    }
+                    else
+                    {
+                        if (_chargeText != null && _chargeText.gameObject.activeSelf) _chargeText.gameObject.SetActive(false);
+                        HideSkullUI();
                     }
 
                     if (_driftIndicatorLine != null && _driftIndicatorLine.gameObject.activeSelf)
@@ -225,17 +256,6 @@ namespace CharonsCorner.Runtime
 
                     if (_arrowheadRenderer != null && _arrowheadRenderer.gameObject.activeSelf)
                         _arrowheadRenderer.gameObject.SetActive(false);
-
-                    // User wants a "bump" instead of immediate disappearance
-                    if (!_hasBumped)
-                    {
-                        if (_skullSpringScale != null) _skullSpringScale.Bump(_skullBumpScale);
-                        if (_skullSpringPosition != null) _skullSpringPosition.Bump(_skullBumpPosition);
-                        if (_radialSpringScale != null) _radialSpringScale.Bump(_radialBumpScale);
-                        _hasBumped = true;
-                    }
-
-                    BlinkBoostUI();
                 }
 
                 return;
@@ -244,9 +264,14 @@ namespace CharonsCorner.Runtime
             if (!_driftHandler.IsOffCooldown)
             {
                 // Keep showing boost text and blinking until cooldown is over
-                if (_chargeText != null && _chargeText.gameObject.activeSelf)
+                if (screenUIEnabled && _chargeText != null && _chargeText.gameObject.activeSelf)
                 {
                     BlinkBoostUI();
+                }
+                else if (!screenUIEnabled)
+                {
+                    if (_chargeText != null && _chargeText.gameObject.activeSelf) _chargeText.gameObject.SetActive(false);
+                    HideSkullUI();
                 }
             }
             else
@@ -261,6 +286,24 @@ namespace CharonsCorner.Runtime
                 if (_arrowheadRenderer != null && _arrowheadRenderer.gameObject.activeSelf)
                     _arrowheadRenderer.gameObject.SetActive(false);
 
+                HideSkullUI();
+            }
+        }
+
+        private void LateUpdate()
+        {
+            if ((_isSkullActive || _hasBumped) && !GameManager.IsScreenspaceUIHidden)
+            {
+                UpdateSkullLine();
+                UpdateIdenticalSkullLine();
+            }
+        }
+
+        public void RefreshUIVisibility()
+        {
+            if (GameManager.IsScreenspaceUIHidden)
+            {
+                if (_chargeText != null) _chargeText.gameObject.SetActive(false);
                 HideSkullUI();
             }
         }
@@ -470,7 +513,6 @@ namespace CharonsCorner.Runtime
             skullTarget.localRotation = Quaternion.Euler(0, 0, _currentSkullAngle);
 
             UpdateIdenticalSkullIndicator();
-            UpdateSkullLine();
         }
 
         private void UpdateIdenticalSkullIndicator()
@@ -514,8 +556,6 @@ namespace CharonsCorner.Runtime
             }
 
             identicalTarget.localRotation = Quaternion.Euler(0, 0, _currentIdenticalSkullAngle);
-
-            UpdateIdenticalSkullLine();
         }
 
         private void UpdateIdenticalSkullLine()
