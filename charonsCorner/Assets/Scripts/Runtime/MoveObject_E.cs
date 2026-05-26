@@ -1,5 +1,3 @@
-using Codice.CM.Common;
-using TMPro;
 using UnityEngine;
 
 namespace CharonsCorner.Runtime
