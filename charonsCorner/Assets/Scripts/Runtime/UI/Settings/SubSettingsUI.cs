@@ -1,11 +1,15 @@
 using Sirenix.OdinInspector;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace CharonsCorner.Runtime
 {
     public class SubSettingsUI : MonoBehaviour
     {
+        [SerializeField] private Selectable _firstSelected;
+        public Selectable FirstSelected => _firstSelected;
+
         private List<Setting> _settings = new List<Setting>();
 
         public bool IsDirty => _settings.Exists(setting => setting != null && setting.IsDirty());

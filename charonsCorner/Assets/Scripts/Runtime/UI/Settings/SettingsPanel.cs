@@ -70,6 +70,11 @@ namespace CharonsCorner.Runtime
             CurrentSettingsUI = subSettingsUI;
             CurrentSettingsUI.Show();
 
+            if (CurrentSettingsUI.FirstSelected != null)
+            {
+                ChangeCurrentSelectedObject(CurrentSettingsUI.FirstSelected);
+            }
+
             OnSettingsUIChanged.Invoke(subSettingsUI);
         }
 
