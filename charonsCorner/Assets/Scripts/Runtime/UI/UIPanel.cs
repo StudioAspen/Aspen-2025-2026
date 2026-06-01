@@ -26,7 +26,8 @@ namespace CharonsCorner.Runtime
 
         [SerializeField] private float _fadeDuration = 1f;
         [SerializeField] private bool _useFadeTransition = false;
-        [SerializeField] private MMF_Player _closeUIFeedback;
+        [SerializeField] private List<MMF_Player> _openUIFeedbacks;
+        [SerializeField] private List<MMF_Player> _closeUIFeedbacks;
         [ShowInInspector, ReadOnly] public static Selectable TargetSelectedObject { get; private set; }
         /// <summary>
         /// The first object to select when opening this panel.
@@ -216,22 +217,42 @@ namespace CharonsCorner.Runtime
 
         public void Focus()
         {
+            FocusAsync().Forget();
+        }
+
+        public async UniTask FocusAsync()
+        {
             // Debug.Log($"[UIPanel] {name} Focus called. interactable before: {Group.interactable}, blocksRaycasts before: {Group.blocksRaycasts}");
             DOTween.Kill(Group);
             Group.interactable = true;
             Group.blocksRaycasts = true; // Ensure raycasts are enabled when focused
             gameObject.SetActive(true);
             ActivePanel = this;
+
+            if (_openUIFeedbacks != null)
+            {
+                foreach (var feedback in _openUIFeedbacks)
+                {
+                    if (feedback != null) feedback.PlayFeedbacks();
+                }
+            }
             
             if (_useFadeTransition)
             {
                 Group.alpha = 0f;
-                Group.DOFade(1f, _fadeDuration);
-                
+                await Group.DOFade(1f, _fadeDuration).AsyncWaitForCompletion();
             }
             else
             {
                 Group.alpha = 1f; // Ensure alpha is 1 if not using fade
+            }
+
+            if (_openUIFeedbacks != null)
+            {
+                foreach (var feedback in _openUIFeedbacks)
+                {
+                    if (feedback != null) await UniTask.WaitUntil(() => !feedback.IsPlaying);
+                }
             }
 
             ChangeCurrentSelectedObject(DefaultSelected);
@@ -251,10 +272,17 @@ namespace CharonsCorner.Runtime
                 ActivePanel = null;
             }
 
-            if (_closeUIFeedback != null)
+            if (_closeUIFeedbacks != null)
             {
-                _closeUIFeedback.PlayFeedbacks();
-                await UniTask.WaitUntil(() => !_closeUIFeedback.IsPlaying);
+                foreach (var feedback in _closeUIFeedbacks)
+                {
+                    if (feedback != null) feedback.PlayFeedbacks();
+                }
+
+                foreach (var feedback in _closeUIFeedbacks)
+                {
+                    if (feedback != null) await UniTask.WaitUntil(() => !feedback.IsPlaying);
+                }
             }
 
             if (_useFadeTransition)
