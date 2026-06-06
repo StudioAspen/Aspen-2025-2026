@@ -1,0 +1,202 @@
+using System;
+using Rive.Components;
+using Rive.Utils;
+using UnityEngine;
+using UnityEngine.EventSystems;
+
+namespace Rive.Components
+{
+    /// <summary>
+    /// Provides input to a RiveTextureRenderer and the RivePanel it displays.
+    /// </summary>
+    internal class TexturePanelInputProvider : MonoBehaviour, IPanelInputProvider, IPointerDownHandler, IPointerUpHandler, IPointerMoveHandler, IPointerExitHandler, IPointerEnterHandler
+    {
+
+
+        [HideInInspector]
+        [SerializeField] private RiveTextureRenderer m_rivePanelTextureRenderer;
+
+        private bool m_hasLoggedWrongColliderTypeError = false;
+        private Vector2 m_lastNormalizedLocalPointInPanel = Vector2.zero;
+
+        public event Action<PanelPointerEvent> PointerPressed;
+        public event Action<PanelPointerEvent> PointerReleased;
+        public event Action<PanelPointerEvent> PointerMoved;
+        public event Action<PanelPointerEvent> PointerExited;
+        public event Action<PanelPointerEvent> PointerEntered;
+
+        private IRivePanel RivePanel
+        {
+            get
+            {
+                if (m_rivePanelTextureRenderer == null)
+                {
+                    return null;
+                }
+                return m_rivePanelTextureRenderer.RivePanel;
+            }
+        }
+
+
+
+        private bool IsSupportedCollider(Collider collider)
+        {
+            return collider is MeshCollider;
+        }
+
+        void OnEnable()
+        {
+            if (m_rivePanelTextureRenderer == null)
+            {
+                m_rivePanelTextureRenderer = GetComponent<RiveTextureRenderer>();
+
+                if (m_rivePanelTextureRenderer == null)
+                {
+                    DebugLogger.Instance.LogWarning($"No {nameof(RiveTextureRenderer)} component found on the GameObject - {gameObject.name}");
+                }
+            }
+        }
+
+
+
+        /// <summary>
+        /// Tries to get the normalized local point in the frame from the RaycastResult.
+        /// </summary>
+        /// <param name="raycastResult"> The RaycastResult to get the normalized local point from. </param>
+        /// <param name="normalizedLocalPointInFrame"> The normalized local point in the frame. </param>
+        /// <returns> True if the normalized local point was successfully retrieved, false otherwise. </returns>
+        private bool TryGetNormalizedLocalPointInPanel(RaycastResult raycastResult, out Vector2 normalizedLocalPointInFrame)
+        {
+            normalizedLocalPointInFrame = Vector2.zero;
+
+
+            if (RivePanel == null)
+            {
+                return false;
+            }
+
+
+            if (raycastResult.gameObject == null)
+            {
+                return false;
+            }
+
+            Camera camera = raycastResult.module != null ? raycastResult.module.eventCamera : null;
+            if (camera == null)
+            {
+                return false;
+            }
+
+            Ray ray = camera.ScreenPointToRay(raycastResult.screenPosition);
+
+            if (!Physics.Raycast(ray, out RaycastHit hit))
+            {
+                return false;
+            }
+
+
+            // Get the collider from the hit object.
+            Collider collider = hit.collider;
+
+            if (collider == null)
+            {
+                DebugLogger.Instance.Log("Collider is null.");
+                return false;
+            }
+
+
+            Vector2 pixelUV;
+
+            if (IsSupportedCollider(collider))
+            {
+                // For mesh colliders, we can use the texture coordinates directly
+                pixelUV = hit.textureCoord;
+
+            }
+            else
+            {
+                LogWrongColliderErrorIfNeeded();
+                return false;
+            }
+
+            normalizedLocalPointInFrame = pixelUV;
+
+
+            return true;
+        }
+
+        private void LogWrongColliderErrorIfNeeded()
+        {
+            if (!m_hasLoggedWrongColliderTypeError)
+            {
+                DebugLogger.Instance.LogWarning($"Only MeshColliders are supported for pointer input on Rive Panels. Make sure the collider on the GameObject is a MeshCollider, or set the {nameof(PointerInputMode)} to {nameof(PointerInputMode.DisablePointerInput)} on the {nameof(RiveTextureRenderer)}.");
+                m_hasLoggedWrongColliderTypeError = true;
+            }
+        }
+
+        private void ProcessEvent(PointerEventData eventData, Action<PanelPointerEvent> pointerHandler)
+        {
+            if (pointerHandler == null)
+            {
+                return;
+            }
+
+            if (RivePanel == null || m_rivePanelTextureRenderer.PointerInputMode == PointerInputMode.DisablePointerInput || !RivePanel.Enabled)
+            {
+                return;
+            }
+
+            bool pointIsInPanel = TryGetNormalizedLocalPointInPanel(eventData.pointerCurrentRaycast, out Vector2 normalizedLocalPointInPanel);
+
+            if (pointIsInPanel)
+            {
+                // Store the last known point in case we need to call the event with it later (like with OnPointerExit).
+                m_lastNormalizedLocalPointInPanel = normalizedLocalPointInPanel;
+            }
+            else
+            {
+                // This would be the case with OnPointerExit, because the raycast wouldn't have anything to hit, so we call the event with the last known point.
+                normalizedLocalPointInPanel = m_lastNormalizedLocalPointInPanel;
+            }
+
+            int pointerId = eventData.pointerId;
+            pointerHandler?.Invoke(new PanelPointerEvent(normalizedLocalPointInPanel, pointerId));
+
+        }
+
+
+        public void OnPointerMove(PointerEventData eventData)
+        {
+            ProcessEvent(eventData, PointerMoved);
+        }
+
+        public void OnPointerUp(PointerEventData eventData)
+        {
+            ProcessEvent(eventData, PointerReleased);
+        }
+
+        public void OnPointerDown(PointerEventData eventData)
+        {
+            ProcessEvent(eventData, PointerPressed);
+        }
+
+        public void OnPointerExit(PointerEventData eventData)
+        {
+            ProcessEvent(eventData, PointerExited);
+        }
+
+        public void OnPointerEnter(PointerEventData eventData)
+        {
+            ProcessEvent(eventData, PointerEntered);
+        }
+
+        void OnValidate()
+        {
+            if (m_rivePanelTextureRenderer == null)
+            {
+                m_rivePanelTextureRenderer = GetComponent<RiveTextureRenderer>();
+            }
+        }
+
+    }
+}

@@ -1,0 +1,285 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using Rive.Utils;
+using UnityEngine;
+
+namespace Rive.Components
+{
+    /// <summary>
+    /// Central per-frame orchestrator for ticking panels/widgets and then processing databinding callbacks.
+    ///
+    /// This enables "command-server-like" batching:
+    /// - panels register/unregister with the orchestrator
+    /// - on each frame, auto panels are ticked
+    /// - manual ticks execute immediately and notify the orchestrator
+    /// - changed properties are triggered after all panels have been ticked.
+    /// </summary>
+    internal sealed class Orchestrator : MonoBehaviour
+    {
+
+        private static Orchestrator s_instance;
+
+        private static readonly List<RenderTargetStrategy> s_registeredRenderTargetStrategies = new List<RenderTargetStrategy>();
+
+        public static Orchestrator Instance
+        {
+            get
+            {
+                // This check uses Unity's overloaded `==` operator, so it
+                // returns false for destroyed MonoBehaviours and we lazily create a fresh one.
+                // We don't add a boolean `s_isDestroyed` style flag here because it survives
+                // Unity-as-a-Library reloads (RuntimeInitializeOnLoadMethod doesn't fire again
+                // on subsequent runEmbedded calls) and would prevent the Instance getter from
+                // creating a fresh one.
+                if (s_instance != null)
+                {
+                    return s_instance;
+                }
+
+                if (!Application.isPlaying)
+                {
+                    return null;
+                }
+
+#if UNITY_EDITOR
+
+                if (s_isApplicationQuitting)
+                {
+                    return null;
+                }
+#endif
+
+                // Ensure the render pipeline handler exists; the orchestrator will be attached there.
+                var handler = RenderPipelineHelper.GetOrCreateHandler() as MonoBehaviour;
+                if (handler == null)
+                {
+                    return null;
+                }
+
+                s_instance = handler.GetComponent<Orchestrator>();
+                if (s_instance == null)
+                {
+                    s_instance = handler.gameObject.AddComponent<Orchestrator>();
+                }
+
+                return s_instance;
+            }
+        }
+
+        private readonly HashSet<RivePanel> m_registeredPanels = new HashSet<RivePanel>();
+        private readonly List<RivePanel> m_panelTickList = new List<RivePanel>(); // Used to store the panels to tick in the TickAutoPanels method to avoid modifying the HashSet while iterating.
+        private bool m_tickedThisFrame;
+
+        internal event Action OnPostRenderPreparation;
+
+        private void OnDestroy()
+        {
+            m_tickedThisFrame = false;
+
+            if (s_instance == this)
+            {
+                s_instance = null;
+            }
+        }
+
+        internal void RegisterPanel(RivePanel panel)
+        {
+            if (panel == null)
+            {
+                return;
+            }
+            m_registeredPanels.Add(panel);
+        }
+
+        internal void UnregisterPanel(RivePanel panel)
+        {
+            if (panel == null)
+            {
+                return;
+            }
+            m_registeredPanels.Remove(panel);
+        }
+
+        internal void NotifyManualTickOccurred(RivePanel panel)
+        {
+            if (panel == null)
+            {
+                return;
+            }
+            m_tickedThisFrame = true;
+        }
+
+        internal static void RegisterRenderTargetStrategy(RenderTargetStrategy strategy)
+        {
+            if (strategy == null)
+            {
+                return;
+            }
+
+            // Avoid duplicates.
+            for (int i = 0; i < s_registeredRenderTargetStrategies.Count; i++)
+            {
+                if (ReferenceEquals(s_registeredRenderTargetStrategies[i], strategy))
+                {
+                    return;
+                }
+            }
+
+            s_registeredRenderTargetStrategies.Add(strategy);
+        }
+
+        internal static void UnregisterRenderTargetStrategy(RenderTargetStrategy strategy)
+        {
+            if (strategy == null)
+            {
+                return;
+            }
+
+            // We set to null rather than remove to avoid shifting indices during reverse iteration.
+            for (int i = s_registeredRenderTargetStrategies.Count - 1; i >= 0; i--)
+            {
+                if (ReferenceEquals(s_registeredRenderTargetStrategies[i], strategy))
+                {
+                    s_registeredRenderTargetStrategies[i] = null;
+                    return;
+                }
+            }
+        }
+
+        private static void PrepareRenderTargetsStrategies()
+        {
+            if (s_registeredRenderTargetStrategies.Count == 0)
+            {
+                return;
+            }
+
+            // We iterate in reverse so removals are safe .
+            for (int i = s_registeredRenderTargetStrategies.Count - 1; i >= 0; i--)
+            {
+                var strategy = s_registeredRenderTargetStrategies[i];
+
+                // Accounting for Unity "fake null" when the strategy is destroyed.
+                if (strategy == null)
+                {
+                    s_registeredRenderTargetStrategies.RemoveAt(i);
+                    continue;
+                }
+
+                strategy.PrepareRenderFromOrchestrator();
+            }
+        }
+
+        private bool TickAutoPanels()
+        {
+            // Panels with Auto update mode are ticked here.
+            if (m_registeredPanels.Count == 0)
+            {
+                return false;
+            }
+
+            float deltaTime = Time.deltaTime;
+            bool tickedAny = false;
+
+            m_panelTickList.Clear();
+            m_panelTickList.AddRange(m_registeredPanels);
+
+            for (int i = 0; i < m_panelTickList.Count; i++)
+            {
+                var panel = m_panelTickList[i];
+
+                if (panel == null || !panel.isActiveAndEnabled)
+                {
+                    continue;
+                }
+
+                if (panel.UpdateMode != RivePanel.PanelUpdateMode.Auto)
+                {
+                    continue;
+                }
+
+                tickedAny = true;
+
+                try
+                {
+                    panel.TickImmediate(deltaTime);
+                }
+                catch (System.Exception e)
+                {
+                    DebugLogger.Instance.LogException(e);
+                }
+            }
+
+            m_panelTickList.Clear();
+
+            return tickedAny;
+        }
+
+        private void Update()
+        {
+            // We advance any Rive Panels set to Auto update mode. Manual panels notify the orchestrator when they tick via NotifyManualTickOccurred.
+            if (TickAutoPanels())
+            {
+                m_tickedThisFrame = true;
+            }
+
+            TriggerCallbacksForChangedProperties();
+
+        }
+
+        /// <summary>
+        /// Captures changed properties and triggers the Unity callbacks. This only triggers/checks for properties the user has subscribed to in code.
+        /// </summary>
+        private void TriggerCallbacksForChangedProperties()
+        {
+            if (RiveWidget.PropertyCallbackApproach == RiveWidget.DataBindingPropertyCallbackApproach.Orchestrator && m_tickedThisFrame)
+            {
+                if (PropertyCallbacksHub.Instance.CaptureChanges())
+                {
+                    PropertyCallbacksHub.Instance.FlushCapturedCallbacks(); // This triggers the Unity callbacks.
+                }
+
+            }
+            m_tickedThisFrame = false;
+
+        }
+
+
+
+        private void LateUpdate()
+        {
+
+            // Prepare batched rendering after ticking panels.
+            // This is intentionally called every frame so batched render requests (e.g. from
+            // registration/size/layout changes) can be handled even when no panels ticked.
+            PrepareRenderTargetsStrategies();
+
+            OnPostRenderPreparation?.Invoke();
+
+        }
+
+#if UNITY_EDITOR
+       
+        private static bool s_isApplicationQuitting;
+
+         // Resets static state when entering Play Mode in the editor with Domain Reload
+         // disabled, so stale editor-only state does not survive across play sessions.
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        static void Init()
+        {
+            s_instance = null;
+            s_isApplicationQuitting = false;
+            s_registeredRenderTargetStrategies.Clear();
+
+            Application.quitting -= OnApplicationQuitting;
+            Application.quitting += OnApplicationQuitting;
+        }
+
+        private static void OnApplicationQuitting()
+        {
+            s_isApplicationQuitting = true;
+        }
+#endif
+    }
+}
+
