@@ -14,6 +14,7 @@ namespace CharonsCorner.Runtime
         private void OnEnable()
         {
             _volumeSlider.value = CurrentValue;
+            UpdateLabelColor();
         }
 
         public override void Load()

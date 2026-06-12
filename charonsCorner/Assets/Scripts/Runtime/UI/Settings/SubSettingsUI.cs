@@ -9,6 +9,8 @@ namespace CharonsCorner.Runtime
     {
         [SerializeField] private Selectable _firstSelected;
         public Selectable FirstSelected => _firstSelected;
+        [SerializeField] private Selectable _lastSelected;
+        public Selectable LastSelected => _lastSelected;
 
         private List<Setting> _settings = new List<Setting>();
 

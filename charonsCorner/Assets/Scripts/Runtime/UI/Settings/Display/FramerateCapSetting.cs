@@ -14,7 +14,8 @@ namespace CharonsCorner.Runtime
 
         private void OnEnable()
         {
-            _framerateCapDropdown.value = CurrentIndex; 
+            _framerateCapDropdown.value = CurrentIndex;
+            UpdateLabelColor();
         }
 
         public override void Load()

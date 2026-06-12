@@ -74,6 +74,13 @@ namespace CharonsCorner.Runtime
         };
         #endregion
 
+        [Header("Hard Restart")]
+        [SerializeField] private float _hardRestartHoldDuration = 3f;
+        [SerializeField] private TMP_Text _hardRestartText;
+        [SerializeField] private Color _hardRestartNormalColor = new Color(1, 1, 1, 0);
+        [SerializeField] private Color _hardRestartActiveColor = Color.white;
+        private float _hardRestartTimer;
+
         private CursorLockMode _desiredCursorLockState;
 
         private protected override void Awake()
@@ -86,6 +93,48 @@ namespace CharonsCorner.Runtime
 
             // Initialize icon font based on starting control scheme
             SwapIconFont(CurrentControlScheme);
+        }
+
+        private void Update()
+        {
+            HandleHardRestart();
+        }
+
+        private void HandleHardRestart()
+        {
+            if (Gamepad.current == null)
+            {
+                _hardRestartTimer = 0f;
+                UpdateHardRestartUI();
+                return;
+            }
+
+            // Check if both L2 and R2 are held
+            // Using a small threshold for "pressed" to avoid accidental triggers if the user just rests fingers
+            if (Gamepad.current.leftTrigger.isPressed && Gamepad.current.rightTrigger.isPressed)
+            {
+                _hardRestartTimer += Time.unscaledDeltaTime;
+
+                if (_hardRestartTimer >= _hardRestartHoldDuration)
+                {
+                    _hardRestartTimer = 0f;
+                    GameManager.Instance.RestartGameFromScratch();
+                }
+            }
+            else
+            {
+                _hardRestartTimer = 0f;
+            }
+
+            UpdateHardRestartUI();
+        }
+
+        private void UpdateHardRestartUI()
+        {
+            if (_hardRestartText == null) return;
+
+            float progress = Mathf.Clamp01(_hardRestartTimer / _hardRestartHoldDuration);
+            _hardRestartText.color = Color.Lerp(_hardRestartNormalColor, _hardRestartActiveColor, progress);
         }
 
         private protected override void OnDestroy()
@@ -251,19 +300,19 @@ namespace CharonsCorner.Runtime
             
             if (input.currentControlScheme == "Gamepad")
             {
-                newScheme = ControlScheme.Gamepad;
+                newScheme = ControlScheme.PS;
                 
                 // Try to detect specific gamepad type
                 if (Gamepad.current != null)
                 {
                     string deviceName = Gamepad.current.name.ToLower();
-                    if (deviceName.Contains("dualshock") || deviceName.Contains("dualsense") || deviceName.Contains("playstation") || deviceName.Contains("ps4") || deviceName.Contains("ps5"))
-                    {
-                        newScheme = ControlScheme.PS;
-                    }
-                    else if (deviceName.Contains("xbox") || deviceName.Contains("xinput"))
+                    if (deviceName.Contains("xbox") || deviceName.Contains("xinput"))
                     {
                         newScheme = ControlScheme.Xbox;
+                    }
+                    else if (deviceName.Contains("dualshock") || deviceName.Contains("dualsense") || deviceName.Contains("playstation") || deviceName.Contains("ps4") || deviceName.Contains("ps5"))
+                    {
+                        newScheme = ControlScheme.PS;
                     }
                 }
             }
@@ -287,7 +336,7 @@ namespace CharonsCorner.Runtime
             {
                 ControlScheme.PS => playstationFont,
                 ControlScheme.Xbox => xboxFont,
-                ControlScheme.Gamepad => xboxFont,
+                ControlScheme.Gamepad => playstationFont,
                 _ => keyboardFont
             };
 
@@ -320,7 +369,7 @@ namespace CharonsCorner.Runtime
         /// </summary>
         private void ApplyCursorLockState()
         {
-            if (CurrentControlScheme == ControlScheme.Gamepad)
+            if (CurrentControlScheme == ControlScheme.Gamepad || CurrentControlScheme == ControlScheme.PS || CurrentControlScheme == ControlScheme.Xbox)
             {
                 // Gamepad always locks
                 Cursor.lockState = CursorLockMode.Locked;

@@ -1,13 +1,30 @@
+using TMPro;
 using UnityEngine;
 
 namespace CharonsCorner.Runtime
 {
     public abstract class Setting : MonoBehaviour
     {
+        [Header("Visual Feedback")]
+        [SerializeField] private protected TMP_Text _settingLabel;
+        [SerializeField] private protected Color _dirtyColor = Color.yellow;
+        [SerializeField] private protected Color _cleanColor = Color.white;
+
         /// <summary>
         /// The key used to store the setting in the save store.
         /// </summary>
         private protected abstract string SaveKey { get; }
+
+        protected virtual void Update()
+        {
+            UpdateLabelColor();
+        }
+
+        protected void UpdateLabelColor()
+        {
+            if (_settingLabel == null) return;
+            _settingLabel.color = IsDirty() ? _dirtyColor : _cleanColor;
+        }
 
         /// <summary>
         /// Save the current value of the setting to save store and apply it to the game.

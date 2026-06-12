@@ -40,6 +40,8 @@ namespace CharonsCorner.Runtime
         public UnityEvent OnUnfocused = new();
 
         private CanvasGroup _group = null;
+        private System.Threading.CancellationTokenSource _cts;
+
         public CanvasGroup Group
         {
             get
@@ -223,6 +225,12 @@ namespace CharonsCorner.Runtime
         public async UniTask FocusAsync()
         {
             // Debug.Log($"[UIPanel] {name} Focus called. interactable before: {Group.interactable}, blocksRaycasts before: {Group.blocksRaycasts}");
+            
+            _cts?.Cancel();
+            _cts?.Dispose();
+            _cts = new System.Threading.CancellationTokenSource();
+            var token = _cts.Token;
+
             DOTween.Kill(Group);
             Group.interactable = true;
             Group.blocksRaycasts = true; // Ensure raycasts are enabled when focused
@@ -240,7 +248,7 @@ namespace CharonsCorner.Runtime
             if (_useFadeTransition)
             {
                 Group.alpha = 0f;
-                await Group.DOFade(1f, _fadeDuration).AsyncWaitForCompletion();
+                await Group.DOFade(1f, _fadeDuration).SetUpdate(true).ToUniTask(cancellationToken: token);
             }
             else
             {
@@ -251,9 +259,11 @@ namespace CharonsCorner.Runtime
             {
                 foreach (var feedback in _openUIFeedbacks)
                 {
-                    if (feedback != null) await UniTask.WaitUntil(() => !feedback.IsPlaying);
+                    if (feedback != null) await UniTask.WaitUntil(() => !feedback.IsPlaying, cancellationToken: token);
                 }
             }
+
+            if (token.IsCancellationRequested) return;
 
             ChangeCurrentSelectedObject(DefaultSelected);
 
@@ -264,6 +274,12 @@ namespace CharonsCorner.Runtime
         public async UniTask Unfocus()
         {
             // Debug.Log($"[UIPanel] {name} Unfocus called. interactable before: {Group.interactable}");
+            
+            _cts?.Cancel();
+            _cts?.Dispose();
+            _cts = new System.Threading.CancellationTokenSource();
+            var token = _cts.Token;
+
             DOTween.Kill(Group);
             Group.interactable = false;
             
@@ -281,7 +297,7 @@ namespace CharonsCorner.Runtime
 
                 foreach (var feedback in _closeUIFeedbacks)
                 {
-                    if (feedback != null) await UniTask.WaitUntil(() => !feedback.IsPlaying);
+                    if (feedback != null) await UniTask.WaitUntil(() => !feedback.IsPlaying, cancellationToken: token);
                 }
             }
 
@@ -289,13 +305,16 @@ namespace CharonsCorner.Runtime
             {
                 Group.blocksRaycasts = false;
 
-                await Group.DOFade(0f, _fadeDuration).AsyncWaitForCompletion();
+                await Group.DOFade(0f, _fadeDuration).SetUpdate(true).ToUniTask(cancellationToken: token);
                 
+                if (token.IsCancellationRequested) return;
+
                 Group.blocksRaycasts = true;
                 gameObject.SetActive(false);
             }
             else
             {
+                if (token.IsCancellationRequested) return;
                 gameObject.SetActive(false);
             }
 

@@ -25,7 +25,7 @@ namespace CharonsCorner.Runtime
         {
             EndQuickRestart();
             if(InputManager.Instance != null)
-                InputManager.Instance.QuickRestart += InputManager_QuickRestart;
+                InputManager.Instance.QuickRestart -= InputManager_QuickRestart;
         }
 
         private void InputManager_QuickRestart(bool started)

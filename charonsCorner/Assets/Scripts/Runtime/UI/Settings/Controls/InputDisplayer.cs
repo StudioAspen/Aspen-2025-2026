@@ -113,7 +113,7 @@ namespace CharonsCorner.Runtime
                 InputManager.ControlScheme.KeyboardMouse => KeyboardIconMap,
                 InputManager.ControlScheme.Xbox => XboxIconMap,
                 InputManager.ControlScheme.PS => PSIconMap,
-                InputManager.ControlScheme.Gamepad => XboxIconMap,
+                InputManager.ControlScheme.Gamepad => PSIconMap,
                 _ => null
             };
 

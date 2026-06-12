@@ -7,6 +7,7 @@ namespace CharonsCorner.Runtime
     public class GlowController : MonoBehaviour, MMEventListener<MMGameEvent>
     {
         [SerializeField] private GameObject _parentObject;
+        [SerializeField] private string _turnOnEventName;
         
         private readonly List<RendererData> _renderers = new();
         private const string GlowPropertyName = "_Glow";
@@ -43,6 +44,10 @@ namespace CharonsCorner.Runtime
             if (gameEvent.EventName == "Darken")
             {
                 TurnOff();
+            }
+            else if (!string.IsNullOrEmpty(_turnOnEventName) && gameEvent.EventName == _turnOnEventName)
+            {
+                TurnOn();
             }
         }
 

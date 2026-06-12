@@ -15,6 +15,7 @@ namespace CharonsCorner.Runtime
         private void OnEnable()
         {
             _effectSlider.value = CurrentValue;
+            UpdateLabelColor();
         }
 
         public override void Load()
