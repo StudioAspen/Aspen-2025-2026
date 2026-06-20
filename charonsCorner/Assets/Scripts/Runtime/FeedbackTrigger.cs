@@ -6,6 +6,7 @@ using CharonsCorner.Runtime;
 public class FeedbackTrigger : MonoBehaviour
 {
     [SerializeField] private List<MMF_Player> _feedbacks;
+    [SerializeField] private List<GameObject> _feedbackParents;
     [SerializeField] private bool _playOnce = true;
 
     private bool _hasPlayed;
@@ -19,6 +20,17 @@ public class FeedbackTrigger : MonoBehaviour
             _hasPlayed = true;
             foreach (var feedback in _feedbacks)
             {
+                if (feedback != null)
+                {
+                    feedback.PlayFeedbacks();
+                }
+            }
+
+            foreach (var parent in _feedbackParents)
+            {
+                if (parent == null) continue;
+                
+                var feedback = parent.GetComponentInChildren<MMF_Player>();
                 if (feedback != null)
                 {
                     feedback.PlayFeedbacks();

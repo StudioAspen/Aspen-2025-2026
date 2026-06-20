@@ -2,41 +2,108 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Splines;
 using MoreMountains.Tools;
+using CharonsCorner.Runtime;
 
 public class SplineModelFactoryLine : MonoBehaviour
 {
     [SerializeField] private SplineContainer splineContainer;
+    [SerializeField] private List<SplineContainer> extraSplines = new List<SplineContainer>();
     [SerializeField] private GameObject prefab;
+    [SerializeField] private List<GameObject> extraPrefabs = new List<GameObject>();
     [SerializeField] private float speed = 1f;
     [SerializeField] private float spawnInterval = 2f;
+    [SerializeField] private bool useRandomInterval = false;
+    [SerializeField] private float minSpawnInterval = 1f;
+    [SerializeField] private float maxSpawnInterval = 3f;
     [SerializeField] private bool isActive = true;
     [SerializeField] private bool reverse = false;
     [SerializeField] private float scale = 1f;
     [SerializeField] private MMTweenType moveTween = new MMTweenType(MMTween.MMTweenCurve.LinearTween);
     [SerializeField] private bool startPopulated = false;
     [Range(0f, 1f)] [SerializeField] private float startPopulationPercentage = 1f;
+    [SerializeField] private bool randomizeIfPossible = false;
+    [SerializeField] private bool useObjectPooling = true;
+
+    [Header("End Scaling")]
+    [SerializeField] private bool useEndScaling = false;
+    [Range(0f, 1f)] [SerializeField] private float scalingStartPercentage = 0.8f;
+    [SerializeField] private AnimationCurve endScalingCurve = AnimationCurve.Linear(0, 1, 1, 0);
     
     [Header("Speed Populate From Scratch")]
     [SerializeField] private bool _speedPopulateFromScratch = false;
     [SerializeField] private float _speedMultiplier = 5f;
     [SerializeField] private AnimationCurve _speedPopulateCurve = AnimationCurve.Linear(0, 0, 1, 1);
 
-    public void Activate() => isActive = true;
+    public void Activate()
+    {
+        if (!isActive)
+        {
+            isActive = true;
+            if (_speedPopulateFromScratch && _activeObjects.Count == 0)
+            {
+                _isSpeedPopulating = true;
+            }
+        }
+    }
+
     public void Deactivate() => isActive = false;
 
     private float _spawnTimer;
+    private float _currentSpawnInterval;
     private bool _isSpeedPopulating;
+    private bool _lastIsActive;
 
     private class MovingObject
     {
         public GameObject Instance;
         public float Distance;
+        public SplineContainer Container;
+        public Vector3 BaseScale;
+        public PoolableObject Poolable;
     }
 
     private List<MovingObject> _activeObjects = new List<MovingObject>();
+    private List<SplineContainer> _allSplines = new List<SplineContainer>();
+    private Dictionary<SplineContainer, float> _splineLengths = new Dictionary<SplineContainer, float>();
+    private List<GameObject> _allPrefabs = new List<GameObject>();
 
     void Start()
     {
+        _lastIsActive = isActive;
+        _allSplines.Clear();
+        _splineLengths.Clear();
+        if (splineContainer != null)
+        {
+            _allSplines.Add(splineContainer);
+            _splineLengths[splineContainer] = splineContainer.CalculateLength();
+        }
+        if (extraSplines != null)
+        {
+            foreach (var extra in extraSplines)
+            {
+                if (extra != null && !_allSplines.Contains(extra))
+                {
+                    _allSplines.Add(extra);
+                    _splineLengths[extra] = extra.CalculateLength();
+                }
+            }
+        }
+
+        _allPrefabs.Clear();
+        if (prefab != null) _allPrefabs.Add(prefab);
+        if (extraPrefabs != null)
+        {
+            foreach (var extra in extraPrefabs)
+            {
+                if (extra != null)
+                {
+                    _allPrefabs.Add(extra);
+                }
+            }
+        }
+
+        SetNextSpawnInterval();
+
         if (isActive)
         {
             if (_speedPopulateFromScratch)
@@ -45,41 +112,54 @@ public class SplineModelFactoryLine : MonoBehaviour
             }
             else if (startPopulated)
             {
-                PopulateSpline();
+                PopulateSplines();
             }
         }
     }
 
     void Update()
     {
+        if (isActive && !_lastIsActive)
+        {
+            if (_speedPopulateFromScratch && _activeObjects.Count == 0)
+            {
+                _isSpeedPopulating = true;
+            }
+        }
+        _lastIsActive = isActive;
+
         if (!isActive) return;
 
         float currentSpeedMultiplier = 1f;
         if (_isSpeedPopulating)
         {
-            float splineLength = splineContainer.CalculateLength();
-            float targetDistance = splineLength * startPopulationPercentage;
-            
-            // Get the distance of the first object (the one furthest along)
-            float leadDistance = 0f;
-            if (_activeObjects.Count > 0)
+            // Speed populating logic based on the main spline or first available
+            SplineContainer referenceSpline = _allSplines.Count > 0 ? _allSplines[0] : null;
+            if (referenceSpline != null && _splineLengths.TryGetValue(referenceSpline, out float splineLength))
             {
-                leadDistance = _activeObjects[0].Distance;
-            }
+                float targetDistance = splineLength * startPopulationPercentage;
+                
+                // Get the distance of the first object (the one furthest along) on any spline
+                // Or maybe just the one on the reference spline?
+                // The original logic used _activeObjects[0].
+                float leadDistance = 0f;
+                if (_activeObjects.Count > 0)
+                {
+                    leadDistance = _activeObjects[0].Distance;
+                }
 
-            float progress = Mathf.Clamp01(leadDistance / targetDistance);
-            
-            // If we have reached the target percentage, end the speed populate phase
-            if (progress >= 1f && leadDistance > 0)
-            {
-                _isSpeedPopulating = false;
-            }
-            else
-            {
-                // Animation curve evaluates progress from start (0) to end (1)
-                // 0 on the curve corresponds to max speed boost, 1 corresponds to normal speed
-                float curveValue = _speedPopulateCurve.Evaluate(progress);
-                currentSpeedMultiplier = Mathf.Lerp(_speedMultiplier, 1f, curveValue);
+                float progress = Mathf.Clamp01(leadDistance / targetDistance);
+                
+                // If we have reached the target percentage, end the speed populate phase
+                if (progress >= 1f && leadDistance > 0)
+                {
+                    _isSpeedPopulating = false;
+                }
+                else
+                {
+                    float curveValue = _speedPopulateCurve.Evaluate(progress);
+                    currentSpeedMultiplier = Mathf.Lerp(_speedMultiplier, 1f, curveValue);
+                }
             }
         }
 
@@ -90,47 +170,88 @@ public class SplineModelFactoryLine : MonoBehaviour
     private void UpdateSpawning(float multiplier)
     {
         _spawnTimer += Time.deltaTime;
-        float adjustedInterval = spawnInterval / multiplier;
+        float adjustedInterval = _currentSpawnInterval / multiplier;
         if (_spawnTimer >= adjustedInterval)
         {
             _spawnTimer = 0f;
+            SetNextSpawnInterval();
             Spawn();
         }
     }
 
-    private void PopulateSpline()
+    private void SetNextSpawnInterval()
     {
-        if (prefab == null || splineContainer == null || spawnInterval <= 0f) return;
-
-        float splineLength = splineContainer.CalculateLength();
-        if (splineLength <= 0) return;
-
-        // distance = speed * time
-        // The distance between two objects is speed * spawnInterval
-        float distanceBetweenObjects = speed * spawnInterval;
-        if (distanceBetweenObjects <= 0) return;
-
-        float maxDistance = splineLength * startPopulationPercentage;
-        float currentDistance = 0f;
-        while (currentDistance < maxDistance)
+        if (useRandomInterval)
         {
-            SpawnAt(currentDistance);
-            currentDistance += distanceBetweenObjects;
+            _currentSpawnInterval = Random.Range(minSpawnInterval, maxSpawnInterval);
+        }
+        else
+        {
+            _currentSpawnInterval = spawnInterval;
+        }
+    }
+
+    private void PopulateSplines()
+    {
+        if (_allPrefabs.Count == 0 || _allSplines.Count == 0 || _currentSpawnInterval <= 0f) return;
+
+        foreach (var container in _allSplines)
+        {
+            if (!_splineLengths.TryGetValue(container, out float splineLength) || splineLength <= 0) continue;
+
+            float distanceBetweenObjects = speed * _currentSpawnInterval;
+            if (distanceBetweenObjects <= 0) continue;
+
+            float maxDistance = splineLength * startPopulationPercentage;
+            float currentDistance = 0f;
+            while (currentDistance < maxDistance)
+            {
+                SpawnAt(container, currentDistance);
+                currentDistance += distanceBetweenObjects;
+                
+                // If we use random intervals, we should theoretically re-calculate the distance for the next object
+                // during pre-population.
+                if (useRandomInterval)
+                {
+                    float nextInterval = Random.Range(minSpawnInterval, maxSpawnInterval);
+                    distanceBetweenObjects = speed * nextInterval;
+                }
+            }
         }
 
-        // Set the timer to match the next expected spawn
-        // If we spawned at 0, interval, 2*interval...
-        // The last one was at some distance, we want to know how long since then
         _spawnTimer = 0f;
     }
 
-    private void SpawnAt(float distance)
+    private void SpawnAt(SplineContainer container, float distance)
     {
-        if (prefab == null || splineContainer == null) return;
+        if (_allPrefabs.Count == 0 || container == null) return;
 
-        GameObject instance = Instantiate(prefab, splineContainer.transform);
-        instance.transform.localScale = prefab.transform.localScale * scale;
-        MovingObject obj = new MovingObject { Instance = instance, Distance = distance };
+        GameObject prefabToSpawn = _allPrefabs[Random.Range(0, _allPrefabs.Count)];
+        GameObject instance;
+        PoolableObject poolable = null;
+
+        if (useObjectPooling && prefabToSpawn.TryGetComponent(out PoolableObject prefabPoolable))
+        {
+            poolable = ObjectPoolerManager.Instance.SpawnPooledObject<PoolableObject>(prefabPoolable, container.transform.position, container.transform);
+            instance = poolable.gameObject;
+        }
+        else
+        {
+            instance = Instantiate(prefabToSpawn, container.transform);
+        }
+        
+        Vector3 instanceScale = prefabToSpawn.transform.localScale * scale;
+        instance.transform.localScale = instanceScale;
+
+        if (randomizeIfPossible)
+        {
+            if (instance.TryGetComponent(out RandomizeActiveObject randomizer))
+            {
+                randomizer.Randomize();
+            }
+        }
+
+        MovingObject obj = new MovingObject { Instance = instance, Distance = distance, Container = container, BaseScale = instanceScale, Poolable = poolable };
         _activeObjects.Add(obj);
         
         UpdateObjectPosition(obj);
@@ -138,14 +259,14 @@ public class SplineModelFactoryLine : MonoBehaviour
 
     private void Spawn()
     {
-        SpawnAt(0f);
+        foreach (var container in _allSplines)
+        {
+            SpawnAt(container, 0f);
+        }
     }
 
     private void UpdateMovement(float multiplier)
     {
-        float splineLength = splineContainer.CalculateLength();
-        if (splineLength <= 0) return;
-
         float currentSpeed = speed * multiplier;
 
         for (int i = _activeObjects.Count - 1; i >= 0; i--)
@@ -153,9 +274,16 @@ public class SplineModelFactoryLine : MonoBehaviour
             var obj = _activeObjects[i];
             obj.Distance += currentSpeed * Time.deltaTime;
 
-            if (obj.Distance >= splineLength)
+            if (_splineLengths.TryGetValue(obj.Container, out float splineLength) && obj.Distance >= splineLength)
             {
-                Destroy(obj.Instance);
+                if (useObjectPooling && obj.Poolable != null)
+                {
+                    obj.Instance.ReturnToPool();
+                }
+                else
+                {
+                    Destroy(obj.Instance);
+                }
                 _activeObjects.RemoveAt(i);
             }
             else
@@ -167,7 +295,8 @@ public class SplineModelFactoryLine : MonoBehaviour
 
     private void UpdateObjectPosition(MovingObject obj)
     {
-        float splineLength = splineContainer.CalculateLength();
+        if (!_splineLengths.TryGetValue(obj.Container, out float splineLength) || splineLength <= 0) return;
+        
         float progress = obj.Distance / splineLength;
         
         // Apply MMTween to progress
@@ -176,9 +305,9 @@ public class SplineModelFactoryLine : MonoBehaviour
         float t = reverse ? 1f - tweenedProgress : tweenedProgress;
         
         // Evaluate position on the spline in world space
-        Vector3 position = splineContainer.EvaluatePosition(t);
-        Vector3 forward = splineContainer.EvaluateTangent(t);
-        Vector3 up = splineContainer.EvaluateUpVector(t);
+        Vector3 position = obj.Container.EvaluatePosition(t);
+        Vector3 forward = obj.Container.EvaluateTangent(t);
+        Vector3 up = obj.Container.EvaluateUpVector(t);
 
         if (reverse)
         {
@@ -189,6 +318,20 @@ public class SplineModelFactoryLine : MonoBehaviour
         if (forward != Vector3.zero)
         {
             obj.Instance.transform.rotation = Quaternion.LookRotation(forward, up);
+        }
+
+        if (useEndScaling)
+        {
+            if (progress >= scalingStartPercentage)
+            {
+                float scalingProgress = (progress - scalingStartPercentage) / (1f - scalingStartPercentage);
+                float scaleMultiplier = endScalingCurve.Evaluate(scalingProgress);
+                obj.Instance.transform.localScale = obj.BaseScale * scaleMultiplier;
+            }
+            else
+            {
+                obj.Instance.transform.localScale = obj.BaseScale;
+            }
         }
     }
 }
