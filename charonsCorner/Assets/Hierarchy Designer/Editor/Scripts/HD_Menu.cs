@@ -411,6 +411,8 @@ namespace HierarchyDesigner
         [HD_Attributes(HierarchyDesigner_Attribute_Tools.Activate)]
         public static void MenuItem_Activate_Halos() => HD_Operations.Activate_AllHalos(true);
 
+#if UNITY_6000_5_OR_NEWER
+#else
         [MenuItem(HD_Constants.Activate_Effects + "/Activate All Lens Flares", false, HD_Constants.MenuPriorityTen + 3)]
         [HD_Attributes(HierarchyDesigner_Attribute_Tools.Activate)]
         public static void MenuItem_Activate_LensFlares() => HD_Operations.Activate_AllComponentOfType<LensFlare>(true);
@@ -418,6 +420,7 @@ namespace HierarchyDesigner
         [MenuItem(HD_Constants.Activate_Effects + "/Activate All Projectors", false, HD_Constants.MenuPriorityTen + 3)]
         [HD_Attributes(HierarchyDesigner_Attribute_Tools.Activate)]
         public static void MenuItem_Activate_Projectors() => HD_Operations.Activate_AllComponentOfType<Projector>(true);
+#endif
 
         [MenuItem(HD_Constants.Activate_Effects + "/Activate All Visual Effects", false, HD_Constants.MenuPriorityTen + 3)]
         [HD_Attributes(HierarchyDesigner_Attribute_Tools.Activate)]
@@ -457,9 +460,12 @@ namespace HierarchyDesigner
         [HD_Attributes(HierarchyDesigner_Attribute_Tools.Activate)]
         public static void MenuItem_Activate_LightProbeGroups() => HD_Operations.Activate_AllComponentOfType<LightProbeGroup>(true);
 
+#if UNITY_6000_5_OR_NEWER
+#else
         [MenuItem(HD_Constants.Activate_Light + "/Activate All Light Probe Proxy Volumes", false, HD_Constants.MenuPriorityEleven + 4)]
         [HD_Attributes(HierarchyDesigner_Attribute_Tools.Activate)]
         public static void MenuItem_Activate_LightProbeProxyVolumes() => HD_Operations.Activate_AllComponentOfType<LightProbeProxyVolume>(true);
+#endif
         #endregion
 
         #region Video
@@ -773,6 +779,8 @@ namespace HierarchyDesigner
         [HD_Attributes(HierarchyDesigner_Attribute_Tools.Deactivate)]
         public static void MenuItem_Deactivate_Halos() => HD_Operations.Activate_AllHalos(false);
 
+#if UNITY_6000_5_OR_NEWER
+#else
         [MenuItem(HD_Constants.Deactivate_Effects + "/Deactivate All Lens Flares", false, HD_Constants.MenuPriorityTen + 3)]
         [HD_Attributes(HierarchyDesigner_Attribute_Tools.Deactivate)]
         public static void MenuItem_Deactivate_LensFlares() => HD_Operations.Activate_AllComponentOfType<LensFlare>(false);
@@ -780,6 +788,7 @@ namespace HierarchyDesigner
         [MenuItem(HD_Constants.Deactivate_Effects + "/Deactivate All Projectors", false, HD_Constants.MenuPriorityTen + 3)]
         [HD_Attributes(HierarchyDesigner_Attribute_Tools.Deactivate)]
         public static void MenuItem_Deactivate_Projectors() => HD_Operations.Activate_AllComponentOfType<Projector>(false);
+#endif
 
         [MenuItem(HD_Constants.Deactivate_Effects + "/Deactivate All Visual Effects", false, HD_Constants.MenuPriorityTen + 3)]
         [HD_Attributes(HierarchyDesigner_Attribute_Tools.Deactivate)]
@@ -819,9 +828,12 @@ namespace HierarchyDesigner
         [HD_Attributes(HierarchyDesigner_Attribute_Tools.Deactivate)]
         public static void MenuItem_Deactivate_LightProbeGroups() => HD_Operations.Activate_AllComponentOfType<LightProbeGroup>(false);
 
+#if UNITY_6000_5_OR_NEWER
+#else
         [MenuItem(HD_Constants.Deactivate_Light + "/Deactivate All Light Probe Proxy Volumes", false, HD_Constants.MenuPriorityEleven + 4)]
         [HD_Attributes(HierarchyDesigner_Attribute_Tools.Deactivate)]
         public static void MenuItem_Deactivate_LightProbeProxyVolumes() => HD_Operations.Activate_AllComponentOfType<LightProbeProxyVolume>(false);
+#endif
         #endregion
 
         #region Video
@@ -1147,6 +1159,8 @@ namespace HierarchyDesigner
         [HD_Attributes(HierarchyDesigner_Attribute_Tools.Count)]
         public static void MenuItem_Count_Halos() => HD_Operations.Count_AllHalos();
 
+#if UNITY_6000_5_OR_NEWER
+#else
         [MenuItem(HD_Constants.Count_Effects + "/Count All Lens Flares", false, HD_Constants.MenuPriorityEleven + 3)]
         [HD_Attributes(HierarchyDesigner_Attribute_Tools.Count)]
         public static void MenuItem_Count_LensFlares() => HD_Operations.Count_AllComponentOfType<LensFlare>("Lens Flares");
@@ -1154,8 +1168,8 @@ namespace HierarchyDesigner
         [MenuItem(HD_Constants.Count_Effects + "/Count All Projectors", false, HD_Constants.MenuPriorityEleven + 3)]
         [HD_Attributes(HierarchyDesigner_Attribute_Tools.Count)]
         public static void MenuItem_Count_Projectors() => HD_Operations.Count_AllComponentOfType<Projector>("Projectors");
+#endif
 
-        [MenuItem(HD_Constants.Count_Effects + "/Count All Visual Effects", false, HD_Constants.MenuPriorityEleven + 3)]
         [HD_Attributes(HierarchyDesigner_Attribute_Tools.Count)]
         public static void MenuItem_Count_VisualEffects() => HD_Operations.Count_AllComponentOfType<UnityEngine.VFX.VisualEffect>("Visual Effects");
         #endregion
@@ -1193,9 +1207,12 @@ namespace HierarchyDesigner
         [HD_Attributes(HierarchyDesigner_Attribute_Tools.Count)]
         public static void MenuItem_Count_LightProbeGroups() => HD_Operations.Count_AllComponentOfType<LightProbeGroup>("Light Probe Groups");
 
+#if UNITY_6000_5_OR_NEWER
+#else
         [MenuItem(HD_Constants.Count_Light + "/Count All Light Probe Proxy Volumes", false, HD_Constants.MenuPriorityTwelve + 4)]
         [HD_Attributes(HierarchyDesigner_Attribute_Tools.Count)]
         public static void MenuItem_Count_LightProbeProxyVolumes() => HD_Operations.Count_AllComponentOfType<LightProbeProxyVolume>("Light Probe Proxy Volumes");
+#endif
         #endregion
 
         #region Video
@@ -1513,6 +1530,8 @@ namespace HierarchyDesigner
         [HD_Attributes(HierarchyDesigner_Attribute_Tools.Lock)]
         public static void MenuItem_Lock_Halos() => HD_Operations.Lock_AllHalos(true);
 
+#if UNITY_6000_5_OR_NEWER
+#else
         [MenuItem(HD_Constants.Lock_Effects + "/Lock All Lens Flares", false, HD_Constants.MenuPriorityEleven + 3)]
         [HD_Attributes(HierarchyDesigner_Attribute_Tools.Lock)]
         public static void MenuItem_Lock_LensFlares() => HD_Operations.Lock_AllComponentOfType<LensFlare>(true);
@@ -1520,6 +1539,7 @@ namespace HierarchyDesigner
         [MenuItem(HD_Constants.Lock_Effects + "/Lock All Projectors", false, HD_Constants.MenuPriorityEleven + 3)]
         [HD_Attributes(HierarchyDesigner_Attribute_Tools.Lock)]
         public static void MenuItem_Lock_Projectors() => HD_Operations.Lock_AllComponentOfType<Projector>(true);
+#endif
 
         [MenuItem(HD_Constants.Lock_Effects + "/Lock All Visual Effects", false, HD_Constants.MenuPriorityEleven + 3)]
         [HD_Attributes(HierarchyDesigner_Attribute_Tools.Lock)]
@@ -1559,9 +1579,12 @@ namespace HierarchyDesigner
         [HD_Attributes(HierarchyDesigner_Attribute_Tools.Lock)]
         public static void MenuItem_Lock_LightProbeGroups() => HD_Operations.Lock_AllComponentOfType<LightProbeGroup>(true);
 
+#if UNITY_6000_5_OR_NEWER
+#else
         [MenuItem(HD_Constants.Lock_Light + "/Lock All Light Probe Proxy Volumes", false, HD_Constants.MenuPriorityTwelve + 4)]
         [HD_Attributes(HierarchyDesigner_Attribute_Tools.Lock)]
         public static void MenuItem_Lock_LightProbeProxyVolumes() => HD_Operations.Lock_AllComponentOfType<LightProbeProxyVolume>(true);
+#endif
         #endregion
 
         #region Video
@@ -1879,6 +1902,8 @@ namespace HierarchyDesigner
         [HD_Attributes(HierarchyDesigner_Attribute_Tools.Unlock)]
         public static void MenuItem_Unlock_Halos() => HD_Operations.Lock_AllHalos(true);
 
+#if UNITY_6000_5_OR_NEWER
+#else
         [MenuItem(HD_Constants.Unlock_Effects + "/Unlock All Lens Flares", false, HD_Constants.MenuPriorityEleven + 3)]
         [HD_Attributes(HierarchyDesigner_Attribute_Tools.Unlock)]
         public static void MenuItem_Unlock_LensFlares() => HD_Operations.Lock_AllComponentOfType<LensFlare>(false);
@@ -1886,6 +1911,7 @@ namespace HierarchyDesigner
         [MenuItem(HD_Constants.Unlock_Effects + "/Unlock All Projectors", false, HD_Constants.MenuPriorityEleven + 3)]
         [HD_Attributes(HierarchyDesigner_Attribute_Tools.Unlock)]
         public static void MenuItem_Unlock_Projectors() => HD_Operations.Lock_AllComponentOfType<Projector>(false);
+#endif
 
         [MenuItem(HD_Constants.Unlock_Effects + "/Unlock All Visual Effects", false, HD_Constants.MenuPriorityEleven + 3)]
         [HD_Attributes(HierarchyDesigner_Attribute_Tools.Unlock)]
@@ -1925,9 +1951,12 @@ namespace HierarchyDesigner
         [HD_Attributes(HierarchyDesigner_Attribute_Tools.Unlock)]
         public static void MenuItem_Unlock_LightProbeGroups() => HD_Operations.Lock_AllComponentOfType<LightProbeGroup>(false);
 
+#if UNITY_6000_5_OR_NEWER
+#else
         [MenuItem(HD_Constants.Unlock_Light + "/Unlock All Light Probe Proxy Volumes", false, HD_Constants.MenuPriorityTwelve + 4)]
         [HD_Attributes(HierarchyDesigner_Attribute_Tools.Unlock)]
         public static void MenuItem_Unlock_LightProbeProxyVolumes() => HD_Operations.Lock_AllComponentOfType<LightProbeProxyVolume>(false);
+#endif
         #endregion
 
         #region Video
@@ -2267,6 +2296,8 @@ namespace HierarchyDesigner
         [HD_Attributes(HierarchyDesigner_Attribute_Tools.Select)]
         public static void MenuItem_Select_Halos() => HD_Operations.Select_AllHalos();
 
+#if UNITY_6000_5_OR_NEWER
+#else
         [MenuItem(HD_Constants.Select_Effects + "/Select All Lens Flares", false, HD_Constants.MenuPriorityFourteen + 4)]
         [HD_Attributes(HierarchyDesigner_Attribute_Tools.Select)]
         public static void MenuItem_Select_LensFlares() => HD_Operations.Select_AllComponentOfType<LensFlare>();
@@ -2274,6 +2305,7 @@ namespace HierarchyDesigner
         [MenuItem(HD_Constants.Select_Effects + "/Select All Projectors", false, HD_Constants.MenuPriorityFourteen + 4)]
         [HD_Attributes(HierarchyDesigner_Attribute_Tools.Select)]
         public static void MenuItem_Select_AllProjectors() => HD_Operations.Select_AllComponentOfType<Projector>();
+#endif
 
         [MenuItem(HD_Constants.Select_Effects + "/Select All Visual Effects", false, HD_Constants.MenuPriorityFourteen + 4)]
         [HD_Attributes(HierarchyDesigner_Attribute_Tools.Select)]
@@ -2313,9 +2345,12 @@ namespace HierarchyDesigner
         [HD_Attributes(HierarchyDesigner_Attribute_Tools.Select)]
         public static void MenuItem_Select_LightProbeGroups() => HD_Operations.Select_AllComponentOfType<LightProbeGroup>();
 
+#if UNITY_6000_5_OR_NEWER
+#else
         [MenuItem(HD_Constants.Select_Light + "/Select All Light Probe Proxy Volumes", false, HD_Constants.MenuPriorityFifteen + 5)]
         [HD_Attributes(HierarchyDesigner_Attribute_Tools.Select)]
         public static void MenuItem_Select_LightProbeProxyVolumes() => HD_Operations.Select_AllComponentOfType<LightProbeProxyVolume>();
+#endif
         #endregion
 
         #region Video

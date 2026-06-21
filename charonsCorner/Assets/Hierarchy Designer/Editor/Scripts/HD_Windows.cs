@@ -16,9 +16,24 @@ namespace HierarchyDesigner
     {
         #region Properties
         #region General
-        public enum CurrentWindow { Home, About, Folders, Separators, Tools, Presets, PresetCreator, GeneralSettings, DesignSettings, ShortcutSettings, AdvancedSettings }
+        public enum CurrentWindow { Home, About, Folders, Separators, CustomMainIcons, Tools, Presets, PresetCreator, GeneralSettings, DesignSettings, ShortcutSettings, AdvancedSettings }
         private static CurrentWindow currentWindow;
-        private static string cachedCurrentWindowLabel;
+        private static string cachedCurrentWindowLabel => currentWindow switch
+        {
+            CurrentWindow.Home => "Home",
+            CurrentWindow.About => "About",
+            CurrentWindow.Folders => "Folders",
+            CurrentWindow.Separators => "Separators",
+            CurrentWindow.CustomMainIcons => "Custom Main Icons",
+            CurrentWindow.Tools => "Tools",
+            CurrentWindow.Presets => "Presets",
+            CurrentWindow.PresetCreator => "Preset Creator",
+            CurrentWindow.GeneralSettings => "General Settings",
+            CurrentWindow.DesignSettings => "Design Settings",
+            CurrentWindow.ShortcutSettings => "Shortcut Settings",
+            CurrentWindow.AdvancedSettings => "Advanced Settings",
+            _ => ""
+        };
         private Vector2 headerButtonsScroll;
         private Dictionary<string, Action> utilitiesMenuItems;
         private Dictionary<string, Action> settingsMenuItems;
@@ -124,6 +139,18 @@ namespace HierarchyDesigner
         private static bool cacheInitialized = false;
         #endregion
 
+        #region Custom Main Icons
+        private Vector2 customMainIconsMainScroll;
+        private Vector2 customMainIconsListScroll;
+        private Dictionary<string, HD_CustomMainIcon.HD_CustomMainIconData> tempCustomMainIcons;
+        private List<string> customMainIconsOrder;
+        private bool customMainIconsHasModifiedChanges = false;
+        private string newCustomMainIconScriptName = "";
+        private Texture2D newCustomMainIconTexture = null;
+        private string newCustomMainIconBuiltinName = "";
+        private bool newCustomMainIconIsBuiltin = false;
+        #endregion
+
         #region Presets
         private Vector2 presetsMainScroll;
         private const float presetslabelWidth = 130;
@@ -189,6 +216,7 @@ namespace HierarchyDesigner
         private HD_Settings.HierarchyLayoutMode tempLayoutMode;
         private HD_Settings.HierarchyTreeMode tempTreeMode;
         private bool tempEnableGameObjectMainIcon;
+        private bool tempEnableCustomMainIcons;
         private bool tempEnableGameObjectComponentIcons;
         private bool tempEnableHierarchyTree;
         private bool tempEnableGameObjectTag;
@@ -384,6 +412,7 @@ namespace HierarchyDesigner
             LoadGeneralSettingsData();
             LoadDesignSettingsData();
             LoadShortcutSettingsData();
+            LoadCustomMainIconData();
             LoadAdvancedSettingsData();
         }
 
@@ -395,7 +424,8 @@ namespace HierarchyDesigner
                 {
                     { "Tools", () => { SelectToolsWindow(); } },
                     { "Presets", () => { SelectPresetsWindow(); } },
-                    { "Preset Creator", () => { SelectPresetCreatorWindow(); } }
+                    { "Preset Creator", () => { SelectPresetCreatorWindow(); } },
+                    { "Custom Main Icons", () => { SelectCustomMainIconsWindow(); } }
                 };
             }
 
@@ -475,6 +505,9 @@ namespace HierarchyDesigner
                 case CurrentWindow.Separators:
                     DrawSeparatorsTab();
                     break;
+                case CurrentWindow.CustomMainIcons:
+                    DrawCustomMainIconsTab();
+                    break;
                 case CurrentWindow.Tools:
                     DrawToolsTab();
                     break;
@@ -551,6 +584,11 @@ namespace HierarchyDesigner
             SwitchWindow(CurrentWindow.Separators);
         }
 
+        private void SelectCustomMainIconsWindow()
+        {
+            SwitchWindow(CurrentWindow.CustomMainIcons);
+        }
+
         private void SelectHomeWindow()
         {
             SwitchWindow(CurrentWindow.Home);
@@ -608,9 +646,6 @@ namespace HierarchyDesigner
 
         private static void UpdateCurrentWindowLabel()
         {
-            string name = currentWindow.ToString();
-            string correctedName = System.Text.RegularExpressions.Regex.Replace(name, "([a-z])([A-Z])", "$1 $2");
-            cachedCurrentWindowLabel = correctedName.ToUpper();
         }
         #endregion
 
@@ -1812,6 +1847,168 @@ namespace HierarchyDesigner
         }
         #endregion
 
+        #region Custom Main Icons
+        private void LoadCustomMainIconData()
+        {
+            tempCustomMainIcons = HD_CustomMainIcon.GetAllCustomMainIconsData(true);
+            customMainIconsOrder = new List<string>(tempCustomMainIcons.Keys);
+        }
+
+        private void DrawCustomMainIconsTab()
+        {
+            #region Body
+            customMainIconsMainScroll = EditorGUILayout.BeginScrollView(customMainIconsMainScroll, GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
+            DrawCustomMainIconsCreationFields();
+            if (customMainIconsOrder.Count > 0)
+            {
+                DrawCustomMainIconsList();
+            }
+            else
+            {
+                EditorGUILayout.LabelField("No custom main icons found. Please create a new custom main icon.", HD_GUI.UnassignedLabelStyle);
+            }
+            EditorGUILayout.EndScrollView();
+            #endregion
+
+            #region Footer
+            if (customMainIconsHasModifiedChanges)
+            {
+                if (GUILayout.Button("Update and Save Custom Main Icons", GUILayout.Height(primaryButtonsHeight)))
+                {
+                    HD_CustomMainIcon.ApplyChangesToCustomMainIcons(tempCustomMainIcons, customMainIconsOrder);
+                    customMainIconsHasModifiedChanges = false;
+                }
+            }
+            #endregion
+        }
+
+        private void DrawCustomMainIconsCreationFields()
+        {
+            EditorGUILayout.BeginVertical(HD_GUI.SecondaryPanelStyle);
+            EditorGUILayout.LabelField("Custom Main Icon Creation", HD_GUI.FieldsCategoryLabelStyle);
+            GUILayout.Space(defaultMarginSpacing);
+
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.LabelField("Script Name", HD_GUI.LayoutLabelStyle, GUILayout.Width(100));
+            newCustomMainIconScriptName = EditorGUILayout.TextField(newCustomMainIconScriptName);
+            EditorGUILayout.EndHorizontal();
+
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.LabelField("Icon", HD_GUI.LayoutLabelStyle, GUILayout.Width(100));
+            newCustomMainIconTexture = (Texture2D)EditorGUILayout.ObjectField(newCustomMainIconTexture, typeof(Texture2D), false);
+            if (GUILayout.Button("Pick Icon", GUILayout.Width(70)))
+            {
+                HD_IconOverride.Open((tex, val, isBuiltin) =>
+                {
+                    newCustomMainIconTexture = tex;
+                    newCustomMainIconBuiltinName = isBuiltin ? val : "";
+                    newCustomMainIconIsBuiltin = isBuiltin;
+                });
+            }
+            EditorGUILayout.EndHorizontal();
+
+            GUILayout.Space(4);
+            if (GUILayout.Button("Create Custom Main Icon", GUILayout.Height(secondaryButtonsHeight)))
+            {
+                if (!string.IsNullOrEmpty(newCustomMainIconScriptName) && newCustomMainIconTexture != null)
+                {
+                    string guid = newCustomMainIconIsBuiltin ? "" : AssetDatabase.AssetPathToGUID(AssetDatabase.GetAssetPath(newCustomMainIconTexture));
+                    HD_CustomMainIcon.SetCustomMainIconData(newCustomMainIconScriptName, guid, newCustomMainIconBuiltinName, newCustomMainIconIsBuiltin);
+                    newCustomMainIconScriptName = "";
+                    newCustomMainIconTexture = null;
+                    newCustomMainIconBuiltinName = "";
+                    newCustomMainIconIsBuiltin = false;
+                    LoadCustomMainIconData();
+                    customMainIconsHasModifiedChanges = false;
+                    GUI.FocusControl(null);
+                }
+                else
+                {
+                    EditorUtility.DisplayDialog("Invalid Input", "Please provide both a script name and an icon.", "OK");
+                }
+            }
+            EditorGUILayout.EndVertical();
+        }
+
+        private void DrawCustomMainIconsList()
+        {
+            EditorGUILayout.BeginVertical(HD_GUI.SecondaryPanelStyle);
+            EditorGUILayout.LabelField("Custom Main Icons' List", HD_GUI.FieldsCategoryLabelStyle);
+            GUILayout.Space(defaultMarginSpacing);
+
+            customMainIconsListScroll = EditorGUILayout.BeginScrollView(customMainIconsListScroll, GUILayout.ExpandWidth(true), GUILayout.MaxHeight(400));
+            int index = 0;
+            string keyToRemove = null;
+            foreach (string scriptName in customMainIconsOrder)
+            {
+                if (tempCustomMainIcons.TryGetValue(scriptName, out var data))
+                {
+                    EditorGUILayout.BeginHorizontal();
+
+                    if (GUILayout.Button("↑", GUILayout.Width(moveItemInListButtonWidth)))
+                    {
+                        if (index > 0)
+                        {
+                            (customMainIconsOrder[index], customMainIconsOrder[index - 1]) = (customMainIconsOrder[index - 1], customMainIconsOrder[index]);
+                            customMainIconsHasModifiedChanges = true;
+                        }
+                    }
+                    if (GUILayout.Button("↓", GUILayout.Width(moveItemInListButtonWidth)))
+                    {
+                        if (index < customMainIconsOrder.Count - 1)
+                        {
+                            (customMainIconsOrder[index], customMainIconsOrder[index + 1]) = (customMainIconsOrder[index + 1], customMainIconsOrder[index]);
+                            customMainIconsHasModifiedChanges = true;
+                        }
+                    }
+
+                    EditorGUILayout.LabelField(scriptName, HD_GUI.LayoutLabelStyle, GUILayout.ExpandWidth(true));
+
+                    Texture2D currentIcon = HD_CustomMainIcon.GetIconForScript(scriptName);
+                    EditorGUI.BeginChangeCheck();
+                    Texture2D nextIcon = (Texture2D)EditorGUILayout.ObjectField(currentIcon, typeof(Texture2D), false, GUILayout.Width(64));
+                    if (EditorGUI.EndChangeCheck())
+                    {
+                        string guid = AssetDatabase.AssetPathToGUID(AssetDatabase.GetAssetPath(nextIcon));
+                        data.IconGuid = guid;
+                        data.BuiltinIconName = "";
+                        data.IsBuiltin = false;
+                        customMainIconsHasModifiedChanges = true;
+                    }
+
+                    if (GUILayout.Button("Pick", GUILayout.Width(40)))
+                    {
+                        HD_IconOverride.Open((tex, val, isBuiltin) =>
+                        {
+                            data.IconGuid = isBuiltin ? "" : val;
+                            data.BuiltinIconName = isBuiltin ? val : "";
+                            data.IsBuiltin = isBuiltin;
+                            customMainIconsHasModifiedChanges = true;
+                        });
+                    }
+
+                    if (GUILayout.Button("Remove", GUILayout.Width(removeButtonWidth)))
+                    {
+                        keyToRemove = scriptName;
+                    }
+
+                    EditorGUILayout.EndHorizontal();
+                }
+                index++;
+            }
+
+            if (keyToRemove != null)
+            {
+                tempCustomMainIcons.Remove(keyToRemove);
+                customMainIconsOrder.Remove(keyToRemove);
+                customMainIconsHasModifiedChanges = true;
+            }
+
+            EditorGUILayout.EndScrollView();
+            EditorGUILayout.EndVertical();
+        }
+        #endregion
+
         #region Tools
         private void DrawToolsTab()
         {
@@ -2468,6 +2665,7 @@ namespace HierarchyDesigner
 
             EditorGUI.BeginChangeCheck();
             tempEnableGameObjectMainIcon = HD_GUI.DrawToggle("Enable GameObject's Main Icon", generalSettingsMainToggleLabelWidth, tempEnableGameObjectMainIcon, true, true, "Displays the main icon for GameObjects. Main icons are determined based on the order of components in a GameObject (i.e., default Unity behavior; usually, the second or third component becomes the main icon).\n\nNote: You can modify the main icon of a GameObject by moving the desired component to the second or third position.");
+            tempEnableCustomMainIcons = HD_GUI.DrawToggle("Enable Custom Main Icons", generalSettingsMainToggleLabelWidth, tempEnableCustomMainIcons, true, true, "Displays the custom main icon for GameObjects. Custom main icons are determined based on the script name of the GameObject (i.e., manual assignment).");
             tempEnableGameObjectComponentIcons = HD_GUI.DrawToggle("Enable GameObject's Component Icons", generalSettingsMainToggleLabelWidth, tempEnableGameObjectComponentIcons, true, true, "Displays all components of the GameObject in the Hierarchy window.");
             tempEnableGameObjectTag = HD_GUI.DrawToggle("Enable GameObject's Tag", generalSettingsMainToggleLabelWidth, tempEnableGameObjectTag, true, true, "Displays the tag of the GameObject in the Hierarchy window.");
             tempEnableGameObjectLayer = HD_GUI.DrawToggle("Enable GameObject's Layer", generalSettingsMainToggleLabelWidth, tempEnableGameObjectLayer, true, true, "Displays the layer of the GameObject in the Hierarchy window.");
@@ -2521,6 +2719,7 @@ namespace HierarchyDesigner
             HD_Settings.LayoutMode = tempLayoutMode;
             HD_Settings.TreeMode = tempTreeMode;
             HD_Settings.EnableGameObjectMainIcon = tempEnableGameObjectMainIcon;
+            HD_Settings.EnableCustomMainIcons = tempEnableCustomMainIcons;
             HD_Settings.EnableGameObjectComponentIcons = tempEnableGameObjectComponentIcons;
             HD_Settings.EnableHierarchyTree = tempEnableHierarchyTree;
             HD_Settings.EnableGameObjectTag = tempEnableGameObjectTag;
@@ -2545,6 +2744,7 @@ namespace HierarchyDesigner
             tempLayoutMode = HD_Settings.LayoutMode;
             tempTreeMode = HD_Settings.TreeMode;
             tempEnableGameObjectMainIcon = HD_Settings.EnableGameObjectMainIcon;
+            tempEnableCustomMainIcons = HD_Settings.EnableCustomMainIcons;
             tempEnableGameObjectComponentIcons = HD_Settings.EnableGameObjectComponentIcons;
             tempEnableGameObjectTag = HD_Settings.EnableGameObjectTag;
             tempEnableGameObjectLayer = HD_Settings.EnableGameObjectLayer;
@@ -2565,6 +2765,7 @@ namespace HierarchyDesigner
         private void EnableAllGeneralSettingsFeatures(bool enable)
         {
             tempEnableGameObjectMainIcon = enable;
+            tempEnableCustomMainIcons = enable;
             tempEnableGameObjectComponentIcons = enable;
             tempEnableGameObjectTag = enable;
             tempEnableGameObjectLayer = enable;
@@ -3755,6 +3956,7 @@ namespace HierarchyDesigner
 
         private GameObject targetGO;
         private string targetGlobalId;
+        private Action<Texture2D, string, bool> onIconSelected;
         private string search = string.Empty;
 
         private Vector2 scroll;
@@ -3785,6 +3987,22 @@ namespace HierarchyDesigner
             window.titleContent = new GUIContent("Main Icon Override");
             window.targetGO = go;
             window.targetGlobalId = GlobalObjectId.GetGlobalObjectIdSlow(go).ToString();
+
+            Vector2 pos = Event.current != null
+                ? GUIUtility.GUIToScreenPoint(Event.current.mousePosition)
+                : new Vector2(100f, 100f);
+
+            window.position = new Rect(pos, new Vector2(560f, 480f));
+            window.minSize = new Vector2(420f, 360f);
+            window.ShowAuxWindow();
+            window.Focus();
+        }
+
+        public static void Open(Action<Texture2D, string, bool> onIconSelected)
+        {
+            HD_IconOverride window = CreateInstance<HD_IconOverride>();
+            window.titleContent = new GUIContent("Icon Picker");
+            window.onIconSelected = onIconSelected;
 
             Vector2 pos = Event.current != null
                 ? GUIUtility.GUIToScreenPoint(Event.current.mousePosition)
@@ -3851,12 +4069,13 @@ namespace HierarchyDesigner
                     }
                 }
 
-                using (new EditorGUI.DisabledScope(targetGO == null))
+                using (new EditorGUI.DisabledScope(targetGO == null && onIconSelected == null))
                 {
-                    bool has = HD_Icon.Has(targetGlobalId);
+                    bool has = targetGlobalId != null && HD_Icon.Has(targetGlobalId);
                     if (GUILayout.Button(has ? "Clear Override" : "No Override", EditorStyles.toolbarButton, GUILayout.Width(110f)))
                     {
-                        if (HD_Icon.Clear(targetGlobalId)) Close();
+                        if (targetGlobalId != null && HD_Icon.Clear(targetGlobalId)) Close();
+                        else if (onIconSelected != null) { onIconSelected(null, "", false); Close(); }
                     }
                 }
             }
@@ -3891,7 +4110,8 @@ namespace HierarchyDesigner
 
             DrawIconGrid(list, t =>
             {
-                HD_Icon.SetBuiltin(targetGlobalId, t);
+                if (targetGlobalId != null) HD_Icon.SetBuiltin(targetGlobalId, t);
+                else onIconSelected?.Invoke(t, t.name, true);
                 Close();
             }, true);
         }
@@ -3973,7 +4193,8 @@ namespace HierarchyDesigner
 
                         if (GUI.Button(r, GUIContent.none, GUIStyle.none))
                         {
-                            HD_Icon.SetAsset(targetGlobalId, guid);
+                            if (targetGlobalId != null) HD_Icon.SetAsset(targetGlobalId, guid);
+                            else onIconSelected?.Invoke(tex, guid, false);
                             Close();
                         }
 
@@ -4015,7 +4236,8 @@ namespace HierarchyDesigner
 
                         if (GUI.Button(r, GUIContent.none, GUIStyle.none))
                         {
-                            HD_Icon.SetBuiltin(targetGlobalId, tex);
+                            if (targetGlobalId != null) HD_Icon.SetBuiltin(targetGlobalId, tex);
+                            else onIconSelected?.Invoke(tex, tex.name, true);
                             Close();
                         }
 

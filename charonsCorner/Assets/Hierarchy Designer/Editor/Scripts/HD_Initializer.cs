@@ -12,6 +12,7 @@ namespace HierarchyDesigner
             HD_Settings.Initialize();
             HD_Editor.Initialize();
             HD_Folders.Initialize();
+            HD_CustomMainIcon.Initialize();
             HD_Separators.Initialize();
             HD_Manager.Initialize();
             HD_Icon.Initialize();

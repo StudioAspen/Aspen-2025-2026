@@ -27,6 +27,7 @@ namespace HierarchyDesigner
             public HierarchyTreeMode TreeMode = HierarchyTreeMode.Default;
 
             public bool EnableGameObjectMainIcon = true;
+            public bool EnableCustomMainIcons = true;
             public bool EnableGameObjectComponentIcons = true;
             public bool EnableHierarchyTree = true;
             public bool EnableGameObjectTag = true;
@@ -162,6 +163,7 @@ namespace HierarchyDesigner
             HD_Manager.LayoutModeCache = LayoutMode;
             HD_Manager.TreeModeCache = TreeMode;
             HD_Manager.EnableGameObjectMainIconCache = EnableGameObjectMainIcon;
+            HD_Manager.EnableCustomMainIconsCache = EnableCustomMainIcons;
             HD_Manager.EnableGameObjectComponentIconsCache = EnableGameObjectComponentIcons;
             HD_Manager.EnableHierarchyTreeCache = EnableHierarchyTree;
             HD_Manager.EnableGameObjectTagCache = EnableGameObjectTag;
@@ -336,6 +338,19 @@ namespace HierarchyDesigner
                 {
                     generalSettings.EnableGameObjectMainIcon = value;
                     HD_Manager.EnableGameObjectMainIconCache = value;
+                }
+            }
+        }
+
+        public static bool EnableCustomMainIcons
+        {
+            get => generalSettings.EnableCustomMainIcons;
+            set
+            {
+                if (generalSettings.EnableCustomMainIcons != value)
+                {
+                    generalSettings.EnableCustomMainIcons = value;
+                    HD_Manager.EnableCustomMainIconsCache = value;
                 }
             }
         }
@@ -1226,6 +1241,13 @@ namespace HierarchyDesigner
             HD_Main.OpenWindow();
         }
 
+        [Shortcut("Hierarchy Designer/Open Custom Main Icons Panel")]
+        private static void OpenCustomMainIconsPanel()
+        {
+            HD_Main.SwitchWindow(HD_Main.CurrentWindow.CustomMainIcons);
+            HD_Main.OpenWindow();
+        }
+
         [Shortcut("Hierarchy Designer/Open Rename Tool Window")]
         private static void OpenRenameToolWindow()
         {
@@ -1590,6 +1612,7 @@ namespace HierarchyDesigner
                 LayoutMode = HierarchyLayoutMode.Split,
                 TreeMode = HierarchyTreeMode.Default,
                 EnableGameObjectMainIcon = true,
+                EnableCustomMainIcons = true,
                 EnableGameObjectComponentIcons = true,
                 EnableHierarchyTree = true,
                 EnableGameObjectTag = true,

@@ -23,6 +23,7 @@ namespace HierarchyDesigner
 
         private static readonly Dictionary<string, IconOverrideRecord> map = new();
         private static readonly Dictionary<string, Texture2D> resolvedCache = new();
+        private static readonly Dictionary<int, string> globalObjectIdCache = new();
 
         private const string FileName = "HierarchyDesigner_SavedData_IconOverrides.json";
         #endregion
@@ -44,6 +45,32 @@ namespace HierarchyDesigner
             tex = Resolve(rec);
             resolvedCache[globalId] = tex;
             return tex != null;
+        }
+
+        public static bool TryGetTexture(GameObject gameObject, int instanceID, out Texture2D tex)
+        {
+            tex = null;
+
+            if (!HasOverrides || gameObject == null)
+            {
+                return false;
+            }
+
+            string globalId = GetGlobalObjectId(gameObject, instanceID);
+            return TryGetTexture(globalId, out tex);
+        }
+
+        private static string GetGlobalObjectId(GameObject gameObject, int instanceID)
+        {
+            if (globalObjectIdCache.TryGetValue(instanceID, out string globalId))
+            {
+                return globalId;
+            }
+
+            globalId = GlobalObjectId.GetGlobalObjectIdSlow(gameObject).ToString();
+            globalObjectIdCache[instanceID] = globalId;
+
+            return globalId;
         }
 
         public static void SetBuiltin(string globalId, Texture2D builtinTex)
@@ -72,6 +99,13 @@ namespace HierarchyDesigner
         }
 
         public static bool Has(string globalId) => map.ContainsKey(globalId);
+
+        public static bool HasOverrides => map.Count > 0;
+
+        public static void ClearGlobalObjectIdCache()
+        {
+            globalObjectIdCache.Clear();
+        }
 
         private static Texture2D Resolve(IconOverrideRecord rec)
         {
@@ -111,11 +145,18 @@ namespace HierarchyDesigner
         {
             map.Clear();
             resolvedCache.Clear();
+            globalObjectIdCache.Clear();
+
             string path = HD_File.GetSavedDataFilePath(FileName);
             if (!File.Exists(path)) return;
+
             IconOverrideList list = JsonUtility.FromJson<IconOverrideList>(File.ReadAllText(path));
             if (list?.items == null) return;
-            foreach (IconOverrideRecord rec in list.items) map[rec.globalId] = rec;
+
+            foreach (IconOverrideRecord rec in list.items)
+            {
+                map[rec.globalId] = rec;
+            }
         }
         #endregion
     }
