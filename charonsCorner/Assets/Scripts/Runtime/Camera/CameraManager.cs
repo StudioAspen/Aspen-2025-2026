@@ -74,15 +74,21 @@ namespace CharonsCorner.Runtime
         /// <param name="camera">The camera to switch to.</param>
         public void ChangeActiveCamera(CinemachineCamera camera, CinemachineBlendDefinition.Styles? blendType = null, float blendDuration = 0.5f)
         {
+            if (camera == null)
+            {
+                return;
+            }
+
             CurrentCamera = camera;
 
             // Change blend type optionally
             if (blendType.HasValue)
             {
-                if (Camera.main.TryGetComponent(out CinemachineBrain brain))
+                if (Camera.main != null && Camera.main.TryGetComponent(out CinemachineBrain brain))
                     brain.DefaultBlend = new CinemachineBlendDefinition(blendType.Value, blendDuration);
             }
             
+            CurrentCamera.Priority.Value += 10;
             CurrentCamera.Prioritize();
 
             OnActiveCameraChanged.Invoke(CurrentCamera);
@@ -95,7 +101,6 @@ namespace CharonsCorner.Runtime
         {
             if (SceneDefaultCamera == null)
             {
-                Debug.LogWarning("No default camera registered. Cannot reset active camera.");
                 return;
             }
 

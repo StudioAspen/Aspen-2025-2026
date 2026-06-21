@@ -13,9 +13,18 @@ namespace CharonsCorner.Runtime
         [SerializeField] private CinemachineCamera _cinemachineCamera;
         [SerializeField] private bool _changeToActiveCamera = false;
 
+        private void Awake()
+        {
+            if (_cinemachineCamera == null)
+                _cinemachineCamera = GetComponent<CinemachineCamera>();
+        }
+
         private void Start()
         {
-            CameraManager.Instance.RegisterSceneDefaultCamera(_cinemachineCamera, _changeToActiveCamera);
+            if (_cinemachineCamera != null)
+            {
+                CameraManager.Instance.RegisterSceneDefaultCamera(_cinemachineCamera, _changeToActiveCamera);
+            }
         }
     }
 }
