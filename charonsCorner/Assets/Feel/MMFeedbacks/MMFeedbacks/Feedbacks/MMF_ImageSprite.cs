@@ -13,6 +13,7 @@ namespace MoreMountains.Feedbacks
 	/// </summary>
 	[AddComponentMenu("")]
 	[FeedbackHelp("This feedback will let you change the sprite of a target Image.")]
+	[System.Serializable]
 	[FeedbackPath("UI/Image Sprite")]
 	public class MMF_ImageSprite : MMF_Feedback
 	{

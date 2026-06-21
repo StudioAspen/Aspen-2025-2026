@@ -6,93 +6,66 @@ namespace CharonsCorner.Runtime
 {
     public class CannonBall : MonoBehaviour
     {
-        [Header("Projectile Parameters")]
-        [SerializeField] private float _acceleration = -9.81f;
-        [SerializeField] private float _launchVelocity = 25f;
-        [SerializeField] private float _currentHeight = 0f;
+        [Header("Redesigned Cannon Parameters")]
+        [SerializeField] private float _angleA = -45f;
+        [SerializeField] private float _angleB = 45f;
+        [SerializeField] private float _lerpRate = 1f;
+        [SerializeField] private float _launchForce = 50f;
+        [SerializeField] private float _controlDelay = 2f;
+        [SerializeField] private Transform _launchObject;
+        private LineRenderer _lineRenderer;
 
-        public float Acceleration => _acceleration;
-        public float LaunchVelocity => _launchVelocity;
-        public float CurrentHeight => _currentHeight;
-
-        [Header("Shot Parameters")]
-        [SerializeField] private float _shotAngle = 45f;
-        [SerializeField] private float _shotPower = 1f;
-        [SerializeField] private float _shotLoadTime = 1f;
-
-        public float ShotAngle { get => _shotAngle; set => _shotAngle = value; }
-        public float ShotPower => _shotPower;
-        public float ShotLoadTime => _shotLoadTime;
+        public float AngleA => _angleA;
+        public float AngleB => _angleB;
+        public float LerpRate => _lerpRate;
+        public float LaunchForce => _launchForce;
+        public float ControlDelay => _controlDelay;
+        public Transform LaunchObject => _launchObject;
+        public LineRenderer LineRenderer => _lineRenderer;
 
         [Header("Cannon Effects")]
         [SerializeField] private Transform _barrelEnd;
         [SerializeField] private ParticleSystem _launchEffect;
         [SerializeField] private float _effectOffset = 0.5f;
 
-
-        [Header("Pillar Movement")]
-        [SerializeField] private bool _movingPillar = false;
-        [SerializeField] private float _shotAngleMin = 20f;
-        [SerializeField] private float _shotAngleMax = 70f;
-        [SerializeField] private float _pillarSpeed = 0.5f;
-
-        public bool MovingPillar => _movingPillar;
-        public float ShotAngleMin => _shotAngleMin;
-        public float ShotAngleMax => _shotAngleMax;
-        public float PillarSpeed => _pillarSpeed;
-
-        [HideInInspector]
-        public float currentShotAngle;
-
         [Header("Transforms")]
-        [SerializeField] private Transform _cannonBase;
         [SerializeField] private Transform _cannonPillar;
-        [SerializeField] private Transform _launchDirection;
 
-        public Transform CannonBase => _cannonBase;
         public Transform CannonPillar => _cannonPillar;
-        public Transform LaunchDirection => _launchDirection;
-
-        [Header("Gizmos")]
-        [SerializeField] private int _numPointsGizmos = 100;
-        [SerializeField] private float _timeStepGizmos = 0.1f;
-
-        [Header("Play Mode")]
-        [SerializeField] private int _numPoints = 10;
-        [SerializeField] private float _timeStep = 0.1f;
-
-        public int NumPoints => _numPoints;
-        public float TimeStep => _timeStep;
 
         [Header("Camera Target")]
-        [SerializeField] private bool _useCamera = true;
-        [SerializeField, ShowIf("_useCamera")] private CinemachineCamera _cinemachineCamera;
+        [SerializeField] private CinemachineCamera _cinemachineCamera;
 
-        public bool UseCamera => _useCamera;
         public CinemachineCamera CinemachineCamera => _cinemachineCamera;
 
-        private void OnDrawGizmos()
+        private void Awake()
         {
-            if (CannonBase == null) return;
-            Vector3 startPosition = CannonBase.position;
-            Vector3 forward = LaunchDirection ? LaunchDirection.forward : transform.forward;
-
-            Quaternion angleRotation = Quaternion.AngleAxis(ShotAngle, CannonBase.right);
-            Vector3 direction = angleRotation * forward;
-            Vector3 velocity = direction.normalized * -LaunchVelocity;
-            Vector3 previousPosition = startPosition;
-
-            Gizmos.color = Color.yellow;
-            for (int i = 1; i <= _numPointsGizmos; i++)
+            _lineRenderer = gameObject.GetComponent<LineRenderer>();
+            if (_lineRenderer == null)
             {
-                float t = i * _timeStepGizmos;
-                Vector3 calculatedPosition = startPosition + (velocity * t);
-                calculatedPosition.y += (0.5f * Acceleration * (t * t));
-                Gizmos.DrawLine(previousPosition, calculatedPosition);
-                previousPosition = calculatedPosition;
+                _lineRenderer = gameObject.AddComponent<LineRenderer>();
             }
+
+            // Default LineRenderer settings
+            _lineRenderer.startWidth = 0.1f;
+            _lineRenderer.endWidth = 0.1f;
+            _lineRenderer.positionCount = 0;
+            _lineRenderer.enabled = false;
         }
 
+        private void OnTriggerEnter(Collider other)
+        {
+            if (other.TryGetComponent<GameplayPlayerController>(out var player))
+            {
+                var cannonSuper = player.CannonBallSuperState;
+                
+                // Don't activate if already in use
+                if (!cannonSuper.LaunchCompleted && (cannonSuper.EntryState.IsInCannon || cannonSuper.PillarMoveState.IsInCannon || cannonSuper.FiredState.IsLaunching)) return;
+
+                player.CannonBallSuperState.SetCannonReference(this);
+                player.StateMachine.ChangeState(player.CannonBallSuperState, true);
+            }
+        }
 
         public void PlayLaunchEffect()
         {

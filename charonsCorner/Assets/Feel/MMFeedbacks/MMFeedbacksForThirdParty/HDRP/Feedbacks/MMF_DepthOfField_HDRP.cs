@@ -13,6 +13,7 @@ namespace MoreMountains.FeedbacksForThirdParty
 	/// with Depth of Field active, and a MMDepthOfFieldShaker_HDRP component.
 	/// </summary>
 	[AddComponentMenu("")]
+	[System.Serializable]
 	#if MM_HDRP
 	[FeedbackPath("PostProcess/Depth of Field HDRP")]
 	#endif

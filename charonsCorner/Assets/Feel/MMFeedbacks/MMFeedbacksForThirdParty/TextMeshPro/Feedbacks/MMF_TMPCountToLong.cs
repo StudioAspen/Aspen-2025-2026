@@ -13,6 +13,7 @@ namespace MoreMountains.Feedbacks
 	/// This feedback will let you update a TMP text value over time, with a long value going from A to B over time, on a curve
 	/// </summary>
 	[AddComponentMenu("")]
+	[System.Serializable]
 	[FeedbackHelp("This feedback will let you update a TMP text value over time, with a long value going from A to B over time, on a curve")]
 	#if MM_UGUI2
 	[FeedbackPath("TextMesh Pro/TMP Count To Long")]

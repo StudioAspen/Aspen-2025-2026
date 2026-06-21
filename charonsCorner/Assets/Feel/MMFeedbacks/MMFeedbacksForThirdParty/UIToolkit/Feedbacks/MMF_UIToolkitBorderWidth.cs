@@ -13,6 +13,7 @@ namespace MoreMountains.FeedbacksForThirdParty
 	/// </summary>
 	[AddComponentMenu("")]
 	[FeedbackHelp("This feedback will let you change the border width of an element on a target UI Document")]
+	[System.Serializable]
 	[FeedbackPath("UI Toolkit/UITK Border Width")]
 	[MovedFrom(false, null, "MoreMountains.Feedbacks.UIToolkit")]
 	public class MMF_UIToolkitBorderWidth : MMF_UIToolkitFloatBase

@@ -15,6 +15,7 @@ namespace MoreMountains.Feedbacks
 	[AddComponentMenu("")]
 	[FeedbackHelp("This feedback will let you control the texture scale of a target UI Image over time.")]
 	[MovedFrom(false, null, "MoreMountains.Feedbacks")]
+	[System.Serializable]
 	[FeedbackPath("UI/Image Texture Scale")]
 	public class MMF_ImageTextureScale : MMF_Feedback
 	{

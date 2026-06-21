@@ -10,6 +10,7 @@ namespace MoreMountains.FeedbacksForThirdParty
 	/// This feedback has been deprecated, and is just here to avoid errors in case you were to update from an old version. Use the new haptic feedbacks instead.
 	/// </summary>
 	[AddComponentMenu("")]
+	[System.Serializable]
 	[FeedbackPath("Haptics/Haptics DEPRECATED!")]
 	[MovedFrom(false, null, "MoreMountains.Feedbacks.NiceVibrations")]
 	[FeedbackHelp("This feedback has been deprecated, and is just here to avoid errors in case you were to update from an old version. Use any of the new haptic feedbacks instead.")]

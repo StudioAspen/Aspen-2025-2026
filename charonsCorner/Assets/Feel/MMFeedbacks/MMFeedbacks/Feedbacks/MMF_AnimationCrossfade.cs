@@ -12,6 +12,7 @@ namespace MoreMountains.Feedbacks
 	[AddComponentMenu("")]
 	[FeedbackHelp("This feedback will allow you to cross fade a target Animator to the specified state.")]
 	[MovedFrom(false, null, "MoreMountains.Feedbacks")]
+	[System.Serializable]
 	[FeedbackPath("Animation/Animation Crossfade")]
 	public class MMF_AnimationCrossfade : MMF_Feedback 
 	{

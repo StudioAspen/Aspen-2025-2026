@@ -11,6 +11,7 @@ namespace MoreMountains.Feedbacks
 	[AddComponentMenu("")]
 	[FeedbackHelp("A feedback used to pilot Vector4 springs")]
 	[MovedFrom(false, null, "MoreMountains.Feedbacks")]
+	[System.Serializable]
 	[FeedbackPath("Springs/Spring Vector4")]
 	public class MMF_SpringVector4 : MMF_Feedback
 	{

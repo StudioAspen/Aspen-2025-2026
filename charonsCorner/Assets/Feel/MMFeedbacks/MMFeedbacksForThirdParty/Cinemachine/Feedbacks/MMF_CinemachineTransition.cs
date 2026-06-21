@@ -17,6 +17,7 @@ namespace MoreMountains.FeedbacksForThirdParty
 	/// </summary>
 	[AddComponentMenu("")]
 	#if MM_CINEMACHINE || MM_CINEMACHINE3
+	[System.Serializable]
 	[FeedbackPath("Camera/Cinemachine Transition")]
 	#endif
 	[MovedFrom(false, null, "MoreMountains.Feedbacks.Cinemachine")]

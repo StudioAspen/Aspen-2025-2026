@@ -61,9 +61,10 @@ namespace CharonsCorner.Runtime
             Vector3 startPos = _context.transform.position;
             Quaternion startRot = _context.transform.rotation;
 
-            Vector3 targetPos = cannonBall.CannonBase.position;
-            Quaternion targetRot = Quaternion.LookRotation(cannonBall.LaunchDirection.forward, Vector3.up);
-            float loadDuration = cannonBall.ShotLoadTime;
+            Transform targetTransform = cannonBall.LaunchObject != null ? cannonBall.LaunchObject : cannonBall.transform;
+            Vector3 targetPos = targetTransform.position;
+            Quaternion targetRot = Quaternion.LookRotation(targetTransform.forward, Vector3.up);
+            float loadDuration = 1f; // Default load time
 
             //Loading Cannon Sequence:
             while (time < 1f)
@@ -73,29 +74,12 @@ namespace CharonsCorner.Runtime
                 _context.transform.position = Vector3.Lerp(startPos, targetPos, time);
                 _context.transform.rotation = Quaternion.Slerp(startRot, targetRot, time);
 
-                //Adjust Cannon Pillar Rotation To Match Shot Angle:
-                if (cannonBall.CannonPillar != null)
-                {
-                    Vector3 forward = cannonBall.LaunchDirection.forward;
-                    Vector3 launchDir = Quaternion.AngleAxis(-cannonBall.ShotAngle, cannonBall.CannonBase.right) * forward;
-                    Quaternion targetPillarRot = Quaternion.LookRotation(launchDir, cannonBall.CannonBase.up);
-                    cannonBall.CannonPillar.rotation = Quaternion.Slerp(cannonBall.CannonPillar.rotation, targetPillarRot, time);
-                }
-
                 yield return null;
             }
 
             //Start Transition To Next State Based On Cannon Settings:
-            if (cannonBall.MovingPillar)
-            {
-                IsInCannon = false;
-                _shouldTransitionToPillarMove = true;
-            }
-            else
-            {
-                IsInCannon = false;
-                _shouldTransitionToFired = true;
-            }
+            IsInCannon = false;
+            _shouldTransitionToPillarMove = true;
         }
 
         private protected override void OnUpdate() {}
@@ -110,8 +94,6 @@ namespace CharonsCorner.Runtime
             }
             else if (_shouldTransitionToFired)
             {
-                //Reset Camera If Using Cannon Camera:
-                if (_context.CurrentCannon.UseCamera) CameraManager.Instance.ResetActiveCamera();
                 return _context.CannonBallSuperState.FiredState;
             }
 

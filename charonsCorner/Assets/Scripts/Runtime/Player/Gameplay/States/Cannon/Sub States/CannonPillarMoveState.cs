@@ -36,8 +36,6 @@ namespace CharonsCorner.Runtime
             //Disable Player Physics:
             _context.Rb.isKinematic = true;
 
-            SetupTrajectoryRenderer();
-
             //Start Oscillation Coroutine To Move Pillar Angle Back & Forth:
             _oscillationRoutine = _context.StartCoroutine(PillarAngleOscillation(cannon));
         }
@@ -51,10 +49,12 @@ namespace CharonsCorner.Runtime
                 _oscillationRoutine = null;
             }
 
-            //Clear Trajectory Renderer Positions:
-            if (_trajectoryRenderer != null)
+            //Clear Line Renderer Positions:
+            CannonBall cannon = _context.CurrentCannon;
+            if (cannon != null && cannon.LineRenderer != null)
             {
-                _trajectoryRenderer.positionCount = 0;
+                cannon.LineRenderer.positionCount = 0;
+                cannon.LineRenderer.enabled = false;
             }
 
             //Reset Is In Cannon Flag:
@@ -65,102 +65,41 @@ namespace CharonsCorner.Runtime
         {
             //Parameters Settings:
             float elapsed = 0f;
-            float speed = cannonBall.PillarSpeed;
-            const float perpendicularAngle = 90f;
+            Transform launchObject = cannonBall.LaunchObject != null ? cannonBall.LaunchObject : cannonBall.transform;
 
             //Oscillate Until Player Confirms Launch:
             while (!_isComplete)
             {
-                elapsed += Time.deltaTime * speed;
+                elapsed += Time.deltaTime * cannonBall.LerpRate;
 
-                //Oscillate Back <-> Forth & Set The Current Angle Based On Updating Position:
-                float angle = Mathf.Lerp(cannonBall.ShotAngleMin, cannonBall.ShotAngleMax, Mathf.PingPong(elapsed, 1f));
-                cannonBall.currentShotAngle = angle;
+                //Oscillate Back <-> Forth between Angle A and Angle B:
+                float t = Mathf.PingPong(elapsed, 1f);
+                float currentAngle = Mathf.Lerp(cannonBall.AngleA, cannonBall.AngleB, t);
 
-                //Update Cannon Pillar Rotation Based On Current Angle:
+                //Update Cannon Pillar Rotation Based On Current Angle (Rotation around local right axis):
                 if (cannonBall.CannonPillar != null)
                 {
-                    Vector3 forward = cannonBall.LaunchDirection.forward;
-
-                    //Fix Visual & Calculated Offsets:
-                    float adjustedAngle = angle - perpendicularAngle;
-
-                    //Calculate Target Rotation Based On Adjusted Angle:
-                    Quaternion angleRotation = Quaternion.AngleAxis(adjustedAngle, cannonBall.CannonBase.right);
-                    Vector3 direction = angleRotation * forward;
-                    Quaternion targetRotation = Quaternion.LookRotation(direction, cannonBall.CannonBase.up);
-
-                    //Apply Rotation:
-                    cannonBall.CannonPillar.rotation = targetRotation;
-                    cannonBall.ShotAngle = cannonBall.currentShotAngle;
+                    cannonBall.CannonPillar.localRotation = Quaternion.Euler(currentAngle, 0, 0);
                 }
 
-                //Draw Live Trajectory During Oscillation:
-                DrawTrajectoryRuntime(cannonBall);
+                //Update Line Renderer:
+                if (cannonBall.LineRenderer != null)
+                {
+                    cannonBall.LineRenderer.enabled = true;
+                    cannonBall.LineRenderer.positionCount = 2;
+                    cannonBall.LineRenderer.SetPosition(0, launchObject.position);
+                    cannonBall.LineRenderer.SetPosition(1, launchObject.position + launchObject.forward * 10f);
+                }
 
                 //Check For Player Input To Confirm Launch:
                 if (InputManager.Instance.InputActions.Player.Jump.triggered)
                 {
-                    //Reset Camera If Using Cannon Camera:
-                    if (cannonBall.UseCamera) CameraManager.Instance.ResetActiveCamera();
-
-                    cannonBall.ShotAngle = cannonBall.currentShotAngle;
                     _isComplete = true;
                 }
 
                 yield return null;
             }
         }
-
-        #region Trajectory renderer
-        private void SetupTrajectoryRenderer()
-        {
-            if (_trajectoryRenderer != null) return;
-
-            //Create New GameObject With LineRenderer Component:
-            GameObject go = new GameObject("CannonTrajectory_Renderer");
-            _trajectoryRenderer = go.AddComponent<LineRenderer>();
-
-            _trajectoryRenderer.material = new Material(Shader.Find("Sprites/Default"));
-            _trajectoryRenderer.startColor = Color.red;
-            _trajectoryRenderer.endColor = Color.red;
-            _trajectoryRenderer.startWidth = 0.05f;
-            _trajectoryRenderer.endWidth = 0.05f;
-            _trajectoryRenderer.positionCount = 0;
-        }
-
-        private void DrawTrajectoryRuntime(CannonBall cannonBall)
-        {
-            if (cannonBall == null || _trajectoryRenderer == null) return;
-
-            //Initial Parameters:
-            Vector3 startPosition = cannonBall.CannonBase.position;
-            Vector3 forward = cannonBall.LaunchDirection ? cannonBall.LaunchDirection.forward : _context.transform.forward;
-
-            //Calculate Initial Velocity Vector Based On Angle & Launch Velocity:
-            Quaternion angleRotation = Quaternion.AngleAxis(cannonBall.ShotAngle, cannonBall.CannonBase.right);
-            Vector3 direction = angleRotation * forward;
-            Vector3 velocity = direction.normalized * -cannonBall.LaunchVelocity;
-
-            //Get Trajectory Points Settings:
-            float timeStep = cannonBall.TimeStep;
-            int numPoints = Mathf.Max(2, cannonBall.NumPoints);
-            Vector3[] points = new Vector3[numPoints];
-
-            //Calculate Each Point In The Trajectory:
-            for (int i = 0; i < numPoints; i++)
-            {
-                float t = i * timeStep;
-                Vector3 calculatedPosition = startPosition + (velocity * t);
-                calculatedPosition.y += (0.5f * cannonBall.Acceleration * (t * t));
-                points[i] = calculatedPosition;
-            }
-
-            //Set Positions In Line Renderer:
-            _trajectoryRenderer.positionCount = numPoints;
-            _trajectoryRenderer.SetPositions(points);
-        }
-        #endregion
 
         private protected override void OnUpdate() {}
 

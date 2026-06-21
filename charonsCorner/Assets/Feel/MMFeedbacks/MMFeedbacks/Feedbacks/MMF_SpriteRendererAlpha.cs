@@ -13,6 +13,7 @@ namespace MoreMountains.Feedbacks
 	[AddComponentMenu("")]
 	[FeedbackHelp("This feedback will let you change the alpha of a target sprite renderer over time.")]
 	[MovedFrom(false, null, "MoreMountains.Feedbacks")]
+	[System.Serializable]
 	[FeedbackPath("Renderer/SpriteRenderer Alpha")]
 	public class MMF_SpriteRendererAlpha : MMF_Feedback
 	{

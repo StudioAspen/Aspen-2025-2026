@@ -12,6 +12,7 @@ namespace MoreMountains.FeedbacksForThirdParty
 	/// with URP Chromatic Aberration active, and a MMChromaticAberrationShaker_URP component.
 	/// </summary>
 	[AddComponentMenu("")]
+	[System.Serializable]
 	[FeedbackHelp("This feedback allows you to control chromatic aberration intensity over time. It requires you have in your scene an object with a Volume " +
 	              "with Chromatic Aberration active, and a MMChromaticAberrationShaker_URP component.")]
 	#if MM_URP

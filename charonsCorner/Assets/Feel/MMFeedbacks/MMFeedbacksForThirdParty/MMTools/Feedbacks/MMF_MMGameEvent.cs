@@ -12,6 +12,7 @@ namespace MoreMountains.Feedbacks
 	[AddComponentMenu("")]
 	[FeedbackHelp("This feedback will trigger a MMGameEvent of the specified name when played")]
 	[MovedFrom(false, null, "MoreMountains.Feedbacks.MMTools")]
+	[System.Serializable]
 	[FeedbackPath("Events/MMGameEvent")]
 	public class MMF_MMGameEvent : MMF_Feedback
 	{

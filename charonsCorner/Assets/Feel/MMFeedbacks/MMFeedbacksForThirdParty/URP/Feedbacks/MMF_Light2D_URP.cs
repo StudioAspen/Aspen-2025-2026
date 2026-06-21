@@ -15,6 +15,7 @@ namespace MoreMountains.FeedbacksForThirdParty
 	[AddComponentMenu("")]
 	[FeedbackHelp("This feedback will let you control a 2D light's intensity, color, falloff, shadow strength and volumetric intensity over time, or instantly.")]
 	[MovedFrom(false, null, "MoreMountains.Feedbacks")]
+	[System.Serializable]
 	[FeedbackPath("Lights/Light2D_URP")]
 	public class MMF_Light2D_URP : MMF_Feedback
 	{

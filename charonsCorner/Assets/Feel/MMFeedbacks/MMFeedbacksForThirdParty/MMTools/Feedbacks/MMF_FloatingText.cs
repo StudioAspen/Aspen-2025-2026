@@ -22,6 +22,7 @@ namespace MoreMountains.Feedbacks
 	              "Using that feedback will always spawn the same text. While this may be what you want, if you're using the Corgi Engine or TopDown Engine, you'll find dedicated versions " +
 	              "directly hooked to the Health component, letting you display damage taken.")]
 	[MovedFrom(false, null, "MoreMountains.Feedbacks.MMTools")]
+	[System.Serializable]
 	[FeedbackPath("UI/Floating Text")]
 	public class MMF_FloatingText : MMF_Feedback
 	{

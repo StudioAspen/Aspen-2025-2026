@@ -13,6 +13,7 @@ namespace MoreMountains.FeedbacksForThirdParty
 	/// with MotionBlur active, and a MMMotionBlurShaker_HDRP component.
 	/// </summary>
 	[AddComponentMenu("")]
+	[System.Serializable]
 	#if MM_HDRP
 	[FeedbackPath("PostProcess/Motion Blur HDRP")]
 	#endif

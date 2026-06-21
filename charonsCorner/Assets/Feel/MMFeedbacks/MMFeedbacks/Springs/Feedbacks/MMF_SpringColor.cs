@@ -10,6 +10,7 @@ namespace MoreMountains.Feedbacks
 	[AddComponentMenu("")]
 	[FeedbackHelp("A feedback used to pilot color springs")]
 	[MovedFrom(false, null, "MoreMountains.Feedbacks")]
+	[System.Serializable]
 	[FeedbackPath("Springs/Spring Color")]
 	public class MMF_SpringColor : MMF_Feedback
 	{

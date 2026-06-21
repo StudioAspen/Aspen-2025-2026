@@ -27,7 +27,6 @@ namespace CharonsCorner.Runtime
 
         private void ActivateCannon()
         {
-            if (_cannonBall.UseCamera && _cannonBall.CinemachineCamera != null) CameraManager.Instance.ChangeActiveCamera(_cannonBall.CinemachineCamera);
             _player.CannonBallSuperState.SetCannonReference(_cannonBall);
             _player.StateMachine.ChangeState(_player.CannonBallSuperState, true);
         }

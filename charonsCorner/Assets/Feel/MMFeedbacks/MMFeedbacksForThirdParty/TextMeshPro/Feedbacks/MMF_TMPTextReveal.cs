@@ -17,6 +17,7 @@ namespace MoreMountains.Feedbacks
 	/// This feedback will let you reveal words, lines, or characters in a target TMP, one at a time
 	/// </summary>
 	[AddComponentMenu("")]
+	[System.Serializable]
 	[FeedbackHelp("This feedback will let you reveal words, lines, or characters in a target TMP, one at a time")]
 	#if MM_UGUI2
 	[FeedbackPath("TextMesh Pro/TMP Text Reveal")]

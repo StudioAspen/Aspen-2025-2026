@@ -19,6 +19,7 @@ namespace MoreMountains.FeedbacksForThirdParty
 	/// Add this feedback to play a .haptic clip, optionally randomizing its level and frequency
 	/// </summary>
 	[AddComponentMenu("")]
+	[System.Serializable]
 	#if MOREMOUNTAINS_NICEVIBRATIONS_INSTALLED
 	[FeedbackPath("Haptics/Haptic Clip")]
 	#endif

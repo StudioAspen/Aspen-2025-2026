@@ -10,6 +10,7 @@ namespace MoreMountains.Feedbacks
 	[AddComponentMenu("")]
 	[FeedbackHelp("This feedback lets you control the opacity of a canvas group over time.")]
 	[MovedFrom(false, null, "MoreMountains.Feedbacks.MMTools")]
+	[System.Serializable]
 	[FeedbackPath("UI/CanvasGroup")]
 	public class MMF_CanvasGroup : MMF_FeedbackBase
 	{

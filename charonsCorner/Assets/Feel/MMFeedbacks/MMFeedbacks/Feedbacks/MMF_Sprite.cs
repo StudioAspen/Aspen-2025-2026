@@ -7,6 +7,7 @@ namespace MoreMountains.Feedbacks
 	/// </summary>
 	[AddComponentMenu("")]
 	[FeedbackHelp("This feedback will let you change the sprite of a target SpriteRenderer.")]
+	[System.Serializable]
 	[FeedbackPath("Renderer/Sprite")]
 	public class MMF_Sprite : MMF_Feedback
 	{

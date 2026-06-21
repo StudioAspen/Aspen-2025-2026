@@ -12,6 +12,7 @@ namespace MoreMountains.Feedbacks
 	[FeedbackHelp("Define camera shake properties (duration in seconds, amplitude and frequency), and this will broadcast a MMCameraShakeEvent with these same settings. " +
 	              "You'll need to add a MMCameraShaker on your camera for this to work (or a MMCinemachineCameraShaker component on your virtual camera if you're using Cinemachine). " +
 	              "Note that although this event and system was built for cameras in mind, you could technically use it to shake other objects as well.")]
+	[System.Serializable]
 	[FeedbackPath("Camera/Camera Shake")]
 	[MovedFrom(false, null, "MoreMountains.Feedbacks")]
 	public class MMF_CameraShake : MMF_Feedback

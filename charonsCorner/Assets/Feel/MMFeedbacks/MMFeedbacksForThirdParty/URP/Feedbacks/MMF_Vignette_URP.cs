@@ -13,6 +13,7 @@ namespace MoreMountains.FeedbacksForThirdParty
 	/// with Vignette active, and a MMVignetteShaker_URP component.
 	/// </summary>
 	[AddComponentMenu("")]
+	[System.Serializable]
 	#if MM_URP
 	[FeedbackPath("PostProcess/Vignette URP")]
 	#endif

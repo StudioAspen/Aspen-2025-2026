@@ -12,6 +12,7 @@ namespace MoreMountains.FeedbacksForThirdParty
 	/// with Chromatic Aberration active, and a MMChromaticAberrationShaker component.
 	/// </summary>
 	[AddComponentMenu("")]
+	[System.Serializable]
 	#if MM_POSTPROCESSING
 	[FeedbackPath("PostProcess/Chromatic Aberration")]
 	#endif

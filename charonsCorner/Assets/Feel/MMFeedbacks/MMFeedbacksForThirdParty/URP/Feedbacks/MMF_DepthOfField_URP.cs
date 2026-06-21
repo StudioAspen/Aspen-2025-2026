@@ -13,6 +13,7 @@ namespace MoreMountains.FeedbacksForThirdParty
 	/// with Depth of Field active, and a MMDepthOfFieldShaker_URP component.
 	/// </summary>
 	[AddComponentMenu("")]
+	[System.Serializable]
 	[FeedbackHelp("This feedback allows you to control URP depth of field focus distance, aperture and focal length over time. " +
 	              "It requires you have in your scene an object with a Volume " +
 	              "with Depth of Field active, and a MMDepthOfFieldShaker_URP component.")]

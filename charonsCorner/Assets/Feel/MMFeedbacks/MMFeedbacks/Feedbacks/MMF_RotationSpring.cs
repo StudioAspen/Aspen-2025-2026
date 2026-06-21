@@ -14,6 +14,7 @@ namespace MoreMountains.Feedbacks
 	/// </summary>
 	[AddComponentMenu("")]
 	[MovedFrom(false, null, "MoreMountains.Feedbacks")]
+	[System.Serializable]
 	[FeedbackPath("Transform/Rotation Spring")]
 	[FeedbackHelp("This feedback will let you animate the rotation of the target object over time, with a spring effect.")]
 	public class MMF_RotationSpring : MMF_Feedback

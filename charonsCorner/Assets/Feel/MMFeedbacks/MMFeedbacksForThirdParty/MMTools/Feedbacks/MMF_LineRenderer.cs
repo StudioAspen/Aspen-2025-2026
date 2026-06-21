@@ -9,6 +9,7 @@ namespace MoreMountains.Feedbacks
 	/// </summary>
 	[AddComponentMenu("")]
 	[FeedbackHelp("This feedback will let you change the width and color of a target line renderer over time")]
+	[System.Serializable]
 	[FeedbackPath("Renderer/Line Renderer")]
 	public class MMF_LineRenderer : MMF_Feedback
 	{

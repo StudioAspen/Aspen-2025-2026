@@ -12,6 +12,7 @@ namespace MoreMountains.FeedbacksForThirdParty
 	/// </summary>
 	[AddComponentMenu("")]
 	[FeedbackHelp("This feedback will let you translate an element on a target UI Document")]
+	[System.Serializable]
 	[FeedbackPath("UI Toolkit/UITK Translate")]
 	[MovedFrom(false, null, "MoreMountains.Feedbacks.UIToolkit")]
 	public class MMF_UIToolkitTranslate : MMF_UIToolkitVector2Base

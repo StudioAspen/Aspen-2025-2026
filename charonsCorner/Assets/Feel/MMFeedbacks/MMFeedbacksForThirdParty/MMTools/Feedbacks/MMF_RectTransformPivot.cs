@@ -10,6 +10,7 @@ namespace MoreMountains.Feedbacks
 	[AddComponentMenu("")]
 	[FeedbackHelp("This feedback lets you control the position of a RectTransform's pivot over time")]
 	[MovedFrom(false, null, "MoreMountains.Feedbacks.MMTools")]
+	[System.Serializable]
 	[FeedbackPath("UI/RectTransform Pivot")]
 	public class MMF_RectTransformPivot : MMF_FeedbackBase
 	{

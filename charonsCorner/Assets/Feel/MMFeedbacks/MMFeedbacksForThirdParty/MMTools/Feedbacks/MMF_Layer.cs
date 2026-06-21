@@ -12,6 +12,7 @@ namespace MoreMountains.Feedbacks
 	/// </summary>
 	[AddComponentMenu("")]
 	[FeedbackHelp("This feedback will let you change the layer of a target game object when playing the feedback")]
+	[System.Serializable]
 	[FeedbackPath("GameObject/Layer")]
 	public class MMF_Layer : MMF_Feedback
 	{

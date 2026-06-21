@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 namespace CharonsCorner.Runtime
 {
@@ -27,6 +28,13 @@ namespace CharonsCorner.Runtime
             _context.Rb.isKinematic = false;
             LaunchCompleted = false;
             LaunchFailed = false;
+
+            // Handle Camera Switch
+            CannonBall cannon = _context.CurrentCannon;
+            if (cannon != null)
+            {
+                CameraManager.Instance.ChangeActiveCamera(cannon.CinemachineCamera);
+            }
         }
 
         private protected override void OnExit()
@@ -60,11 +68,31 @@ namespace CharonsCorner.Runtime
             SubStateMachine.ChangeState(EntryState);
         }
 
+        private IEnumerator DelayedReturn(float delay)
+        {
+            yield return new WaitForSeconds(delay);
+
+            CameraManager.Instance.ResetActiveCamera();
+
+            _canTransitionBack = true;
+        }
+
+        private bool _canTransitionBack = false;
+
         private protected override State<GameplayPlayerController> GetTransition()
         {
-            //If Launch is Completed, Transition to Ground State:
+            //If Launch is Completed, Transition to Ground State after delay:
             if (LaunchCompleted)
             {
+                if (!_canTransitionBack)
+                {
+                    _canTransitionBack = false; // Reset just in case
+                    _context.StartCoroutine(DelayedReturn(_context.CurrentCannon.ControlDelay));
+                    LaunchCompleted = false; // Prevent multiple coroutines
+                    return null;
+                }
+
+                _canTransitionBack = false;
                 _context.SetCannonAir(true);
                 return _context.GroundSuperState;
             }

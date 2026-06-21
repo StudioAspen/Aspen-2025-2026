@@ -12,6 +12,7 @@ namespace MoreMountains.FeedbacksForThirdParty
 	/// It requires you have in your scene an object with a Volume with Bloom active, and a MMPaniniProjectionShaker_URP component.
 	/// </summary>
 	[AddComponentMenu("")]
+	[System.Serializable]
 	[FeedbackHelp("This feedback allows you to control Panini Projection distance and crop to fit over time. " +
 	              "It requires you have in your scene an object with a Volume " +
 	              "with PaniniProjection active, and a MMPaniniProjectionShaker_URP component.")]

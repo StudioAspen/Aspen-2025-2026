@@ -13,6 +13,7 @@ namespace MoreMountains.FeedbacksForThirdParty
 	/// with Depth of Field active, and a MMDepthOfFieldShaker component.
 	/// </summary>
 	[AddComponentMenu("")]
+	[System.Serializable]
 	[FeedbackHelp("This feedback allows you to control depth of field focus distance, aperture and focal length over time. " +
 	              "It requires you have in your scene an object with a PostProcessVolume " +
 	              "with Depth of Field active, and a MMDepthOfFieldShaker component.")]

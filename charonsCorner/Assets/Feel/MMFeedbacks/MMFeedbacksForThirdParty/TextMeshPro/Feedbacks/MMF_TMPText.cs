@@ -10,6 +10,7 @@ namespace MoreMountains.Feedbacks
 	/// This feedback will let you change the text of a target TMP text component
 	/// </summary>
 	[AddComponentMenu("")]
+	[System.Serializable]
 	[FeedbackHelp("This feedback will let you change the text of a target TMP text component")]
 	#if MM_UGUI2
 	[FeedbackPath("TextMesh Pro/TMP Text")]

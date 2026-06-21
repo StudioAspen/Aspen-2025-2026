@@ -222,11 +222,16 @@ namespace MoreMountains.Feedbacks
 				else if (_currentProperty.TimeScaleLerpMode == MMTimeScaleLerpModes.Duration)
 				{
 					float timeSinceStart = Time.unscaledTime - _startedAt;
-					float progress = MMMaths.Remap(timeSinceStart, 0f, _currentProperty.TimeScaleLerpDuration, 0f, 1f);
-					float delta = _currentProperty.TimeScaleLerpCurve.Evaluate(progress);
-					float newValue = MMMaths.Remap(delta, 0f, 1f, _initialTimeScale, TargetTimeScale);
-					ApplyTimeScale(newValue);
-					if (timeSinceStart > _currentProperty.TimeScaleLerpDuration)
+
+					if (timeSinceStart < _currentProperty.TimeScaleLerpDuration)
+					{
+						float progress = MMMaths.Remap(timeSinceStart, 0f, _currentProperty.TimeScaleLerpDuration, 0f,
+							1f);
+						float delta = _currentProperty.TimeScaleLerpCurve.Evaluate(progress);
+						float newValue = MMMaths.Remap(delta, 0f, 1f, _initialTimeScale, TargetTimeScale);
+						ApplyTimeScale(newValue);
+					}
+					else 
 					{
 						ApplyTimeScale(TargetTimeScale);
 						if (_lerpingBackToNormal)
@@ -254,6 +259,8 @@ namespace MoreMountains.Feedbacks
 			{
 				return;
 			}
+
+			newValue = Mathf.Clamp(newValue,0f, 100f);
 			
 			if (UpdateTimescale)
 			{

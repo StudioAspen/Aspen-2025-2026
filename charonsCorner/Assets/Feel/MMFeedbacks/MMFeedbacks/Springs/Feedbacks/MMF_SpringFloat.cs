@@ -11,6 +11,7 @@ namespace MoreMountains.Feedbacks
 	[AddComponentMenu("")]
 	[FeedbackHelp("A feedback used to pilot float springs")]
 	[MovedFrom(false, null, "MoreMountains.Feedbacks")]
+	[System.Serializable]
 	[FeedbackPath("Springs/Spring Float")]
 	public class MMF_SpringFloat : MMF_Feedback
 	{

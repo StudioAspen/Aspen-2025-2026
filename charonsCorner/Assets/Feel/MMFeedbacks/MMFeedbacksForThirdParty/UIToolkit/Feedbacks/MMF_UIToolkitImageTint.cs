@@ -11,6 +11,7 @@ namespace MoreMountains.FeedbacksForThirdParty
 	/// </summary>
 	[AddComponentMenu("")]
 	[FeedbackHelp("This feedback will let you change the image tint of an element on a target UI Document")]
+	[System.Serializable]
 	[FeedbackPath("UI Toolkit/UITK Image Tint")]
 	[MovedFrom(false, null, "MoreMountains.Feedbacks.UIToolkit")]
 	public class MMF_UIToolkitImageTint : MMF_UIToolkitColorBase

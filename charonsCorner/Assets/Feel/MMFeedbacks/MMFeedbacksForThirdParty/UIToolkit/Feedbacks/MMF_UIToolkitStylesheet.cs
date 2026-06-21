@@ -12,6 +12,7 @@ namespace MoreMountains.FeedbacksForThirdParty
 	/// </summary>
 	[AddComponentMenu("")]
 	[FeedbackHelp("This feedback will let you change the stylesheet on a target UI Document")]
+	[System.Serializable]
 	[FeedbackPath("UI Toolkit/UITK Stylesheet")]
 	[MovedFrom(false, null, "MoreMountains.Feedbacks.UIToolkit")]
 	public class MMF_UIToolkitStylesheet : MMF_UIToolkit

@@ -9,6 +9,7 @@ namespace MoreMountains.Feedbacks
 	/// </summary>
 	[AddComponentMenu("")]
 	[FeedbackHelp("This feedback will let you control the length, width and color of a target TrailRenderer over time")]
+	[System.Serializable]
 	[FeedbackPath("Renderer/Trail Renderer")]
 	public class MMF_TrailRenderer : MMF_Feedback
 	{

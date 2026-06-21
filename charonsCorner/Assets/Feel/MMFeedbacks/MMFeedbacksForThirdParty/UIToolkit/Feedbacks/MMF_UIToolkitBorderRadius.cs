@@ -12,6 +12,7 @@ namespace MoreMountains.FeedbacksForThirdParty
 	/// </summary>
 	[AddComponentMenu("")]
 	[FeedbackHelp("This feedback will let you change the border radius of an element on a target UI Document")]
+	[System.Serializable]
 	[FeedbackPath("UI Toolkit/UITK Border Radius")]
 	[MovedFrom(false, null, "MoreMountains.Feedbacks.UIToolkit")]
 	public class MMF_UIToolkitBorderRadius : MMF_UIToolkitFloatBase

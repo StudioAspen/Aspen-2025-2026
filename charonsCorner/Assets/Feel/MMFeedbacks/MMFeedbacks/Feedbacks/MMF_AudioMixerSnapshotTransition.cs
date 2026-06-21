@@ -12,6 +12,7 @@ namespace MoreMountains.Feedbacks
 	[AddComponentMenu("")]
 	[FeedbackHelp("This feedback will let you transition to a target AudioMixer Snapshot over a specified time")]
 	[MovedFrom(false, null, "MoreMountains.Feedbacks")]
+	[System.Serializable]
 	[FeedbackPath("Audio/AudioMixer Snapshot Transition")]
 	public class MMF_AudioMixerSnapshotTransition : MMF_Feedback
 	{

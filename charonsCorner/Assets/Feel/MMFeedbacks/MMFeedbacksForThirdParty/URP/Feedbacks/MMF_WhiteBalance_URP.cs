@@ -12,6 +12,7 @@ namespace MoreMountains.FeedbacksForThirdParty
 	/// It requires you have in your scene an object with a Volume with White Balance active, and a MMWhiteBalanceShaker_URP component.
 	/// </summary>
 	[AddComponentMenu("")]
+	[System.Serializable]
 	[FeedbackHelp("This feedback allows you to control white balance temperature and tint over time. " +
 	              "It requires you have in your scene an object with a Volume " +
 	              "with WhiteBalance active, and a MMWhiteBalanceShaker_URP component.")]

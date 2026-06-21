@@ -13,6 +13,7 @@ namespace MoreMountains.FeedbacksForThirdParty
 	/// with Lens Distortion active, and a MMLensDistortionShaker component.
 	/// </summary>
 	[AddComponentMenu("")]
+	[System.Serializable]
 	#if MM_POSTPROCESSING
 	[FeedbackPath("PostProcess/Lens Distortion")]
 	#endif

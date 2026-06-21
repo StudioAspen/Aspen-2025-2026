@@ -13,6 +13,7 @@ namespace MoreMountains.FeedbacksForThirdParty
 	/// with Color Adjustments active, and a MMColorAdjustmentsShaker_URP component.
 	/// </summary>
 	[AddComponentMenu("")]
+	[System.Serializable]
 	[FeedbackHelp("This feedback allows you to control color adjustments' post exposure, hue shift, saturation and contrast over time. " +
 	              "It requires you have in your scene an object with a Volume " +
 	              "with Color Adjustments active, and a MMColorAdjustmentsShaker_URP component.")]

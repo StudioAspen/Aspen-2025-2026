@@ -12,6 +12,7 @@ namespace MoreMountains.Feedbacks
 	/// This feedback lets you control the alpha of a target TMP over time
 	/// </summary>
 	[AddComponentMenu("")]
+	[System.Serializable]
 	[FeedbackHelp("This feedback lets you control the alpha of a target TMP over time.")]
 	#if MM_UGUI2
 	[FeedbackPath("TextMesh Pro/TMP Alpha")]

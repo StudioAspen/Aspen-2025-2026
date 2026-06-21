@@ -13,6 +13,7 @@ namespace MoreMountains.FeedbacksForThirdParty
 	/// with Film Grain active, and a MMFilmGrainShaker_URP component.
 	/// </summary>
 	[AddComponentMenu("")]
+	[System.Serializable]
 	#if MM_URP
 	[FeedbackPath("PostProcess/Film Grain URP")]
 	#endif

@@ -12,6 +12,7 @@ namespace MoreMountains.Feedbacks
 	/// This feedback lets you dilate a TMP text over time
 	/// </summary>
 	[AddComponentMenu("")]
+	[System.Serializable]
 	[FeedbackHelp("This feedback lets you dilate a TMP text over time.")]
 	#if MM_UGUI2
 	[FeedbackPath("TextMesh Pro/TMP Dilate")]
@@ -19,7 +20,7 @@ namespace MoreMountains.Feedbacks
 	[MovedFrom(false, null, "MoreMountains.Feedbacks.TextMeshPro")]
 	public class MMF_TMPDilate : MMF_Feedback
 	{
-		/// a static bool used to disable all feedbacks of this type at once
+		/// a static bool used to disable all feedbacks of this type at o
 		public static bool FeedbackTypeAuthorized = true;
 		
 		/// sets the inspector color for this feedback

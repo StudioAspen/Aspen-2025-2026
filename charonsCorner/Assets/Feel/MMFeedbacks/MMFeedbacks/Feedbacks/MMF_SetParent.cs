@@ -9,6 +9,7 @@ namespace MoreMountains.Feedbacks
 	[AddComponentMenu("")]
 	[FeedbackHelp("This feedback lets you change the parent of a transform.")]
 	[MovedFrom(false, null, "MoreMountains.Feedbacks")]
+	[System.Serializable]
 	[FeedbackPath("Transform/Set Parent")]
 	public class MMF_SetParent : MMF_Feedback 
 	{

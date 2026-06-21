@@ -11,6 +11,7 @@ namespace MoreMountains.FeedbacksForThirdParty
 	/// Add this feedback to interact with haptics at a global level, stopping them all, enabling or disabling them, adjusting their global level or initializing/release the haptic engine
 	/// </summary>
 	[AddComponentMenu("")]
+	[System.Serializable]
 	#if MOREMOUNTAINS_NICEVIBRATIONS_INSTALLED
 	[FeedbackPath("Haptics/Haptic Control")]
 	#endif
