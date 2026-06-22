@@ -6214,12 +6214,14 @@ MonoBehaviour:
   - rid: 3896650624441778258
   - rid: 6939354534258409563
   - rid: 6939354534258409585
+  - rid: 8454844710964953171
   - rid: 6939354534258409586
   - rid: 6939354534258409584
   - rid: 6939354534258409582
   - rid: 2821658408677802073
   - rid: 6939354534258409588
   - rid: 6939354534258409589
+  - rid: 8454844710964953172
   - rid: 2821658408677802075
   - rid: 2821658408677802074
   KeepPlayModeChanges: 0
@@ -7201,14 +7203,181 @@ MonoBehaviour:
           ButtonText: 
         Owner: {fileID: 129815839}
         DebugActive: 0
-        BoundRenderer: {fileID: 6192859202262221993}
+        BoundRenderer: {fileID: 1925205044}
         ExtraBoundRenderers:
         - {fileID: 7277565454062506947}
         - {fileID: 8489691118173711176}
         - {fileID: 2102012151}
-        - {fileID: 1925205044}
         Mode: 1
         PropertyName: _GlowColor
+        FlickerDuration: 0.3
+        FlickerPeriod: 0.04
+        FlickerColor: {r: 0, g: 0, b: 0, a: 0}
+        MaterialIndexes: 
+        UseMaterialPropertyBlocks: 0
+        SpriteRendererTextureProperty: _MainTex
+    - rid: 8454844710964953171
+      type: {class: MMF_Flicker, ns: MoreMountains.Feedbacks, asm: MoreMountains.Tools}
+      data:
+        Active: 1
+        UniqueID: -2105728842
+        Label: Charon Mesh Flicker
+        OriginalLabel: Flicker
+        ChannelMode: 0
+        Channel: 0
+        MMChannelDefinition: {fileID: 0}
+        Chance: 100
+        Timing:
+          TimescaleMode: 0
+          ExcludeFromHoldingPauses: 0
+          ContributeToTotalDuration: 1
+          InitialDelay: 0
+          CooldownDuration: 0
+          InterruptsOnStop: 1
+          NumberOfRepeats: 0
+          RepeatForever: 0
+          DelayBetweenRepeats: 1
+          PlayCount: 0
+          LimitPlayCount: 0
+          MaxPlayCount: 3
+          SetPlayCountToZeroOnReset: 0
+          MMFeedbacksDirectionCondition: 0
+          PlayDirection: 0
+          ConstantIntensity: 0
+          UseIntensityInterval: 0
+          IntensityIntervalMin: 0
+          IntensityIntervalMax: 0
+          Sequence: {fileID: 0}
+          TrackID: 0
+          Quantized: 0
+          TargetBPM: 120
+        AutomatedTargetAcquisition:
+          Mode: 0
+          ChildIndex: 0
+        RandomizeOutput: 0
+        RandomMultiplier: {x: 0.8, y: 1}
+        RandomizeDuration: 0
+        RandomDurationMultiplier: {x: 0.5, y: 2}
+        UseRange: 0
+        RangeDistance: 5
+        UseRangeFalloff: 0
+        RangeFalloff:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          - serializedVersion: 3
+            time: 1
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        RemapRangeFalloff: {x: 0, y: 1}
+        AutomaticShakerSetupButton:
+          ButtonText: 
+        Owner: {fileID: 129815839}
+        DebugActive: 0
+        BoundRenderer: {fileID: 6192859202262221993}
+        ExtraBoundRenderers: []
+        Mode: 1
+        PropertyName: _ShadowColor
+        FlickerDuration: 2
+        FlickerPeriod: 2
+        FlickerColor: {r: 0, g: 0, b: 0, a: 0}
+        MaterialIndexes: 
+        UseMaterialPropertyBlocks: 0
+        SpriteRendererTextureProperty: _MainTex
+    - rid: 8454844710964953172
+      type: {class: MMF_Flicker, ns: MoreMountains.Feedbacks, asm: MoreMountains.Tools}
+      data:
+        Active: 1
+        UniqueID: 1301205568
+        Label: Charon Mesh Flicker
+        OriginalLabel: Flicker
+        ChannelMode: 0
+        Channel: 0
+        MMChannelDefinition: {fileID: 0}
+        Chance: 100
+        Timing:
+          TimescaleMode: 0
+          ExcludeFromHoldingPauses: 0
+          ContributeToTotalDuration: 1
+          InitialDelay: 0
+          CooldownDuration: 0
+          InterruptsOnStop: 1
+          NumberOfRepeats: 0
+          RepeatForever: 0
+          DelayBetweenRepeats: 1
+          PlayCount: 0
+          LimitPlayCount: 0
+          MaxPlayCount: 3
+          SetPlayCountToZeroOnReset: 0
+          MMFeedbacksDirectionCondition: 0
+          PlayDirection: 0
+          ConstantIntensity: 0
+          UseIntensityInterval: 0
+          IntensityIntervalMin: 0
+          IntensityIntervalMax: 0
+          Sequence: {fileID: 0}
+          TrackID: 0
+          Quantized: 0
+          TargetBPM: 120
+        AutomatedTargetAcquisition:
+          Mode: 0
+          ChildIndex: 0
+        RandomizeOutput: 0
+        RandomMultiplier: {x: 0.8, y: 1}
+        RandomizeDuration: 0
+        RandomDurationMultiplier: {x: 0.5, y: 2}
+        UseRange: 0
+        RangeDistance: 5
+        UseRangeFalloff: 0
+        RangeFalloff:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          - serializedVersion: 3
+            time: 1
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        RemapRangeFalloff: {x: 0, y: 1}
+        AutomaticShakerSetupButton:
+          ButtonText: 
+        Owner: {fileID: 129815839}
+        DebugActive: 0
+        BoundRenderer: {fileID: 6192859202262221993}
+        ExtraBoundRenderers: []
+        Mode: 1
+        PropertyName: _ShadowColor
         FlickerDuration: 0.3
         FlickerPeriod: 0.04
         FlickerColor: {r: 0, g: 0, b: 0, a: 0}
@@ -20113,6 +20282,30 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4330120544472715104, guid: b9ad386496e658946b9eec54a042476c, type: 3}
   m_PrefabInstance: {fileID: 4309455093057115008}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1588631161
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1047469096}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d068e08e29ec406d928b3b2157f4519f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _active: 0
+  _renderer: {fileID: 6192859202262221993}
+  _minDistance: 7
+  _maxDistance: 9
+  _shadowColorX: {r: 0, g: 0, b: 0, a: 1}
+  _shadowColorY: {r: 0.8392157, g: 0.3372549, b: 0.3882353, a: 1}
+  _glowX: 0.25
+  _glowY: -1.25
+  _glowColorX: {r: 1, g: 1, b: 1, a: 1}
+  _glowColorY: {r: 0.8392157, g: 0.3372549, b: 0.3882353, a: 1}
+  _textureGlowAmountX: 1
+  _textureGlowAmountY: 0
 --- !u!1 &1595021167
 GameObject:
   m_ObjectHideFlags: 0
@@ -20161,7 +20354,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1627253987
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22819,7 +23012,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 35
+  field of view: 60.000004
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -22845,8 +23038,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2102514284}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.029994275, y: 0.008995833, z: 0.000269955, w: 0.99950963}
-  m_LocalPosition: {x: -7.0512695, y: 1.87108, z: 0.31359577}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 5.813, y: 3.44, z: 7.427}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -24528,6 +24721,10 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[2]'
       value: 
       objectReference: {fileID: 2100000, guid: 73732b7f6d9a9be4fb1ba8439444614c, type: 2}
+    - target: {fileID: 2651462769900464283, guid: b9ad386496e658946b9eec54a042476c, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2928373884023762012, guid: b9ad386496e658946b9eec54a042476c, type: 3}
       propertyPath: m_Name
       value: CharonModel
@@ -24583,7 +24780,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3239045656199082840, guid: b9ad386496e658946b9eec54a042476c, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1588631161}
   m_SourcePrefab: {fileID: 100100000, guid: b9ad386496e658946b9eec54a042476c, type: 3}
 --- !u!224 &4491316530441395801
 RectTransform:
