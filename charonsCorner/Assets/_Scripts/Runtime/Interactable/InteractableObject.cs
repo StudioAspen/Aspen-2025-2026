@@ -46,14 +46,10 @@ namespace CharonsCorner.Runtime
         {
             InputManager.Instance.Interact += InputManager_Interact;
             GameManager.Instance.OnGameStateChanged += GameManager_OnGameStateChanged;
-
-            _inputDisplayerCanvasObject.SetActive(_isOverlapping);
         }
 
         private void OnDisable()
         {
-            _inputDisplayerCanvasObject.SetActive(false);
-            
             if(InputManager.Instance != null)
                 InputManager.Instance.Interact -= InputManager_Interact;
 
@@ -75,26 +71,23 @@ namespace CharonsCorner.Runtime
                 return;
             
             _isOverlapping = true; // No need to filter because this object only looks for player layer
-            _inputDisplayerCanvasObject.SetActive(GameManager.Instance.CurrentGameState == GameState.Gameplay);
             OnPlayerEnter.Invoke();
         }
 
         private void OnTriggerExit(Collider other)
         {
             _isOverlapping = false;
-            _inputDisplayerCanvasObject.SetActive(false);
             OnPlayerExit.Invoke();
         }
 
         private void GameManager_OnGameStateChanged(GameState newState)
         {
-            if(newState != GameState.Gameplay)
+            if(newState == GameState.Gameplay && _isOverlapping)
             {
-                _inputDisplayerCanvasObject.SetActive(false);
+                OnPlayerEnter.Invoke();
                 return;
             }
-
-            _inputDisplayerCanvasObject.SetActive(_isOverlapping);
+            OnPlayerExit.Invoke();
         }
     }
 }
