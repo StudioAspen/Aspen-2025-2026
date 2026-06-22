@@ -38,6 +38,8 @@ namespace CharonsCorner.Runtime
         /// </summary>
         public CameraShaker CameraShaker { get; private set; }
 
+        private int _maxPriority = 10;
+
         private protected override void Awake()
         {
             base.Awake();
@@ -62,7 +64,10 @@ namespace CharonsCorner.Runtime
         /// <param name="changeToActiveCamera">Whether to change the current camera to the default one.</param>
         public void RegisterSceneDefaultCamera(CinemachineCamera camera, bool changeToActiveCamera = false)
         {
+            Debug.Log($"[CameraManager] Registering Scene Default Camera: {camera.name}, changeToActiveCamera: {changeToActiveCamera}");
             SceneDefaultCamera = camera;
+            
+            _maxPriority = Math.Max(_maxPriority, camera.Priority.Value);
 
             if (changeToActiveCamera)
                 ChangeActiveCamera(camera, CinemachineBlendDefinition.Styles.Linear, 0f);
@@ -76,8 +81,11 @@ namespace CharonsCorner.Runtime
         {
             if (camera == null)
             {
+                Debug.LogWarning("[CameraManager] ChangeActiveCamera called with null camera.");
                 return;
             }
+
+            Debug.Log($"[CameraManager] Changing Active Camera to: {camera.name}. Current: {(CurrentCamera != null ? CurrentCamera.name : "None")}. Blend: {(blendType.HasValue ? blendType.Value.ToString() : "Default")}, Duration: {blendDuration}");
 
             CurrentCamera = camera;
 
@@ -88,7 +96,9 @@ namespace CharonsCorner.Runtime
                     brain.DefaultBlend = new CinemachineBlendDefinition(blendType.Value, blendDuration);
             }
             
-            CurrentCamera.Priority.Value += 10;
+            _maxPriority++;
+            CurrentCamera.Priority.Value = _maxPriority;
+            Debug.Log($"[CameraManager] {camera.name} Priority set to: {CurrentCamera.Priority.Value}");
             CurrentCamera.Prioritize();
 
             OnActiveCameraChanged.Invoke(CurrentCamera);
@@ -99,8 +109,10 @@ namespace CharonsCorner.Runtime
         /// </summary>
         public void ResetActiveCamera()
         {
+            Debug.Log("[CameraManager] Resetting to Default Camera.");
             if (SceneDefaultCamera == null)
             {
+                Debug.LogWarning("[CameraManager] Cannot reset: SceneDefaultCamera is null.");
                 return;
             }
 
@@ -114,8 +126,10 @@ namespace CharonsCorner.Runtime
         
         private void SceneManager_ActiveSceneChanged(Scene oldScene, Scene newScene)
         {
+            Debug.Log($"[CameraManager] Scene changed from {oldScene.name} to {newScene.name}. Clearing camera references.");
             SceneDefaultCamera = null;
             CurrentCamera = null;
+            _maxPriority = 10;
         }
     }
 }

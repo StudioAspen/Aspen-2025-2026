@@ -18,12 +18,14 @@ namespace CharonsCorner.Runtime
         [Button("Switch", ButtonSizes.Large)]
         public void SwitchCamera(CinemachineCamera targetCamera)
         {
+            Debug.Log($"[CameraSwitcher] {gameObject.name} switching to: {(targetCamera != null ? targetCamera.name : "Null")}");
             CameraManager.Instance.ChangeActiveCamera(targetCamera, _blendType, _blendDuration);
         }
 
         [Button("Return To Default Camera", ButtonSizes.Large)]
         public void ReturnToDefaultCamera()
         {
+            Debug.Log($"[CameraSwitcher] {gameObject.name} returning to default camera.");
             CameraManager.Instance.ResetActiveCamera();
         }
     }
