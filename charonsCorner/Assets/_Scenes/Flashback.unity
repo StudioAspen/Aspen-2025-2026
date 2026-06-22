@@ -295,9 +295,36 @@ MonoBehaviour:
   level6:
     asset: {fileID: 0}
     guid: 00000000000000000000000000000000
+  hubScene:
+    asset: {fileID: 0}
+    guid: 00000000000000000000000000000000
+  creditsScene:
+    asset: {fileID: 0}
+    guid: 00000000000000000000000000000000
   cameraSwitcher: {fileID: 0}
   camToBowley: {fileID: 0}
+  camToBowlingAlley: {fileID: 0}
+  camToBowlingAlleyPan: {fileID: 0}
   camToCharon: {fileID: 0}
+  camCharonLooksAtPlayer: {fileID: 0}
+  camPlayerCloseup: {fileID: 0}
+  camToFadeOut: {fileID: 0}
+  fadeImage: {fileID: 0}
+  shakeDuration: 0.5
+  shakeAmplitude: 1
+  shakeFrequency: 1
+  shakeChannelMode: 0
+  shakeChannelInt: 0
+  shakeChannelDefinition: {fileID: 0}
+  bowleyRotationShaker: {fileID: 0}
+  movePlayerFeedback: {fileID: 0}
+  playerScaredFeedback: {fileID: 0}
+  bowlingLightsFeedback: {fileID: 0}
+  bowlingPanFeedback: {fileID: 0}
+  startBowlingAnimationFeedback: {fileID: 0}
+  flashbackText: {fileID: 0}
+  charonColor: {r: 1, g: 1, b: 1, a: 1}
+  bowleyColor: {r: 1, g: 1, b: 1, a: 1}
   typewriter: {fileID: 353682496}
 --- !u!114 &353682496
 MonoBehaviour:
@@ -367,8 +394,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: This is Example Text
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 420110eea83878f4e8b481ecade460f2, type: 2}
+  m_sharedMaterial: {fileID: 7677580540135049608, guid: 420110eea83878f4e8b481ecade460f2, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -486,6 +513,55 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   typewriter: {fileID: 0}
   textComponent: {fileID: 0}
+  inputPromptObject: {fileID: 0}
+  inputInteraction: {fileID: 0}
+  inputPromptText: {fileID: 0}
+  interactAction: {fileID: 0}
+--- !u!1 &591505249
+GameObject:
+  m_ObjectHideFlags: 11
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 591505251}
+  - component: {fileID: 591505250}
+  m_Layer: 0
+  m_Name: Prefab Indexer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &591505250
+MonoBehaviour:
+  m_ObjectHideFlags: 11
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 591505249}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 05a7c62fccbafd342991629222351294, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _scenePrefabInstances: []
+--- !u!4 &591505251
+Transform:
+  m_ObjectHideFlags: 11
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 591505249}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &604572978
 GameObject:
   m_ObjectHideFlags: 0
@@ -878,3 +954,4 @@ SceneRoots:
   - {fileID: 42087703}
   - {fileID: 1271950027}
   - {fileID: 1421018564}
+  - {fileID: 591505251}
