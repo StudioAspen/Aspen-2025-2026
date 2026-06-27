@@ -183,6 +183,7 @@ public class RankingSystem : MonoBehaviour
             _rankText.text = "S-Rank";
             _rankScore.SetFinalRank(Ranks.S);
             SetNextRankText("", 0); // No next rank
+            UpdateSRankProgression();
         }
         // A Rank Check
         else if (_timer > times[0] && _timer <= times[1])
@@ -288,6 +289,17 @@ public class RankingSystem : MonoBehaviour
         if (currentChapter < chapterIndex)
         {
             FlagManager.Set(ProgressFlag.CurrentChapterIndex, chapterIndex);
+        }
+    }
+
+    private void UpdateSRankProgression()
+    {
+        var list = SaveManager.GameStore.GetList<int>(DialogueSaveKeys.SRankAchievedListKey, new());
+        if (!list.Contains(_chapterIndex))
+        {
+            list.Add(_chapterIndex);
+            SaveManager.GameStore.SetList(DialogueSaveKeys.SRankAchievedListKey, list);
+            FlagManager.Increment(ProgressFlag.SRankCount);
         }
     }
 

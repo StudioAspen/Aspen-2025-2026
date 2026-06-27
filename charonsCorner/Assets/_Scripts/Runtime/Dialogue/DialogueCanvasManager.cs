@@ -27,6 +27,7 @@ namespace CharonsCorner.Runtime
             _dialogueManager.OnDialogueOpenerStarted += DialogueManager_OnDialogueOpenerStarted;
             _dialogueManager.OnDialogueSequenceStarted += DialogueManager_OnDialogueSequenceStarted;
             _dialogueManager.OnDialogueStarted += DialogueManager_OnDialogueStarted;
+            _dialogueManager.OnLineStarted += DialogueManager_OnLineStarted;
 
             _dialogueManager.OnDialogueSequenceEndReached += DialogueManager_OnDialogueSequenceEndReached;
         }
@@ -38,6 +39,7 @@ namespace CharonsCorner.Runtime
                 _dialogueManager.OnDialogueOpenerStarted -= DialogueManager_OnDialogueOpenerStarted;
                 _dialogueManager.OnDialogueSequenceStarted -= DialogueManager_OnDialogueSequenceStarted;
                 _dialogueManager.OnDialogueStarted -= DialogueManager_OnDialogueStarted;
+                _dialogueManager.OnLineStarted -= DialogueManager_OnLineStarted;
 
                 _dialogueManager.OnDialogueSequenceEndReached -= DialogueManager_OnDialogueSequenceEndReached;
             }
@@ -70,7 +72,20 @@ namespace CharonsCorner.Runtime
             ShowNextButton();
         }
 
-        private void DialogueManager_OnDialogueSequenceEndReached(DialogueSequenceSO sequence, DialogueSO dialogue)
+        private void DialogueManager_OnLineStarted(string line)
+        {
+            ClearUI();
+
+            // Keep the name of the opener speaker if we are in a sequence
+            if (_dialogueManager.CurrentOpener != null)
+                _nameText.text = _dialogueManager.CurrentOpener.SpeakerName;
+            
+            _dialogueTextTypewriter.ShowText(line);
+
+            ShowNextButton();
+        }
+
+        private void DialogueManager_OnDialogueSequenceEndReached(DialogueSequenceSO sequence, string line)
         {
             ShowOptions(new(), true);
 

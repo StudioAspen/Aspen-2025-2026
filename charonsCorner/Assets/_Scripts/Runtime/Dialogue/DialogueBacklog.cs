@@ -38,11 +38,15 @@ namespace CharonsCorner.Runtime
             ChapterSRankDialogueEntry sRankEntry = null;
             if (HasPendingSRankDialogue())
             {
-                int currSRankDialogueSequenceIndex = FlagManager.Get(ProgressFlag.CurrentSRankDialogueIndex);
-                sRankEntry =
-                    SRankDialogues.Find(e => e.ChapterIndex == currSRankDialogueSequenceIndex);
+                int currSRankDialogueIndex = FlagManager.Get(ProgressFlag.CurrentSRankDialogueIndex);
+                // Search by index in the list, not by ChapterIndex
+                if (currSRankDialogueIndex >= 0 && currSRankDialogueIndex < SRankDialogues.Count)
+                {
+                    sRankEntry = SRankDialogues[currSRankDialogueIndex];
+                }
+                
                 if(sRankEntry == null)
-                    Debug.LogWarning($"No S rank entry found for ChapterIndex {currDialogueOpenerIndex}");
+                    Debug.LogWarning($"No S rank entry found for index {currSRankDialogueIndex}");
             }
             
             CurrentChapterDialogue = entry;
@@ -119,11 +123,8 @@ namespace CharonsCorner.Runtime
 
         public bool HasPendingSRankDialogue()
         {
-            int currentChapterIndex = FlagManager.Get(ProgressFlag.CurrentChapterIndex);
-            var sRanksAchievedList = SaveManager.GameStore.GetList<int>(DialogueSaveKeys.SRankAchievedListKey, new());
-            bool hasSRankForCurrChapter = sRanksAchievedList.Contains(currentChapterIndex);
-            bool hasSRankDialogue = (FlagManager.Get(ProgressFlag.CurrentSRankDialogueIndex) <= currentChapterIndex)
-                                    && hasSRankForCurrChapter;
+            bool hasSRankDialogue = FlagManager.Get(ProgressFlag.CurrentSRankDialogueIndex)
+                                    < FlagManager.Get(ProgressFlag.SRankCount);
 
             return hasSRankDialogue;
         }
@@ -136,6 +137,7 @@ namespace CharonsCorner.Runtime
             {
                 list.Add(chapterIndex);
                 SaveManager.GameStore.SetList(DialogueSaveKeys.SRankAchievedListKey, list);
+                FlagManager.Increment(ProgressFlag.SRankCount);
             }
         }
 
@@ -143,6 +145,7 @@ namespace CharonsCorner.Runtime
         public void ClearSRanksOnAllChapters()
         {
             SaveManager.GameStore.SetList(DialogueSaveKeys.SRankAchievedListKey, new List<int>());
+            FlagManager.Set(ProgressFlag.SRankCount, 0);
         }
     }
 }

@@ -12,11 +12,13 @@ namespace CharonsCorner.Runtime
 
         [field: SerializeField, ReadOnly] public DialogueSequenceSO CurrentSequence { get; private set; }
         public event Action<DialogueSequenceSO> OnDialogueSequenceStarted = delegate { };
-        public event Action<DialogueSequenceSO, DialogueSO> OnDialogueSequenceEndReached = delegate { };
+        public event Action<DialogueSequenceSO, string> OnDialogueSequenceEndReached = delegate { };
 
         [field: SerializeField, ReadOnly] public int CurrentDialogueIndex { get; private set; }
         [field: SerializeField, ReadOnly] public DialogueSO CurrentDialogue { get; private set; }
+        [field: SerializeField, ReadOnly] public string CurrentLine { get; private set; }
         public event Action<DialogueSO> OnDialogueStarted = delegate { };
+        public event Action<string> OnLineStarted = delegate { };
 
         public event Action OnDialogueEnded = delegate { };
         
@@ -60,10 +62,18 @@ namespace CharonsCorner.Runtime
             OnDialogueSequenceStarted.Invoke(sequence);
 
             CurrentDialogueIndex = 0;
-            StartDialogue(sequence.DialogueContainers[CurrentDialogueIndex].Dialogue);
-            
-            if(CurrentDialogueIndex >= CurrentSequence.DialogueContainers.Count - 1)
-                OnDialogueSequenceEndReached.Invoke(CurrentSequence, CurrentDialogue);
+            if (sequence.lines != null && sequence.lines.Length > 0)
+            {
+                StartLine(sequence.lines[CurrentDialogueIndex]);
+
+                if (CurrentDialogueIndex >= sequence.lines.Length - 1)
+                    OnDialogueSequenceEndReached.Invoke(CurrentSequence, CurrentLine);
+            }
+            else
+            {
+                Debug.LogWarning($"DialogueSequenceSO {sequence.SequenceName} has no lines.");
+                OnDialogueSequenceEndReached.Invoke(CurrentSequence, string.Empty);
+            }
         }
 
         public void StartDialogue(DialogueSO dialogue)
@@ -75,7 +85,14 @@ namespace CharonsCorner.Runtime
             }
 
             CurrentDialogue = dialogue;
+            CurrentLine = dialogue.Text;
             OnDialogueStarted.Invoke(dialogue);
+        }
+
+        public void StartLine(string line)
+        {
+            CurrentLine = line;
+            OnLineStarted.Invoke(line);
         }
 
         public void StartNextDialogueInSequence()
@@ -86,18 +103,18 @@ namespace CharonsCorner.Runtime
                 return;
             }
 
-            if (CurrentDialogueIndex + 1 > CurrentSequence.DialogueContainers.Count)
+            if (CurrentDialogueIndex + 1 >= CurrentSequence.lines.Length)
             {
                 Debug.LogWarning("End of dialogue sequence reached. Cannot start next dialogue in sequence.");
                 return;
             }
 
             CurrentDialogueIndex++;
-            DialogueSO nextDialogue = CurrentSequence.DialogueContainers[CurrentDialogueIndex].Dialogue;
-            StartDialogue(nextDialogue);
+            string nextLine = CurrentSequence.lines[CurrentDialogueIndex];
+            StartLine(nextLine);
 
-            if(CurrentDialogueIndex >= CurrentSequence.DialogueContainers.Count - 1)
-                OnDialogueSequenceEndReached.Invoke(CurrentSequence, nextDialogue);
+            if(CurrentDialogueIndex >= CurrentSequence.lines.Length - 1)
+                OnDialogueSequenceEndReached.Invoke(CurrentSequence, nextLine);
         }
 
         public void EndDialogue()
@@ -108,6 +125,7 @@ namespace CharonsCorner.Runtime
             CurrentSequence = null;
             CurrentDialogueIndex = 0;
             CurrentDialogue = null;
+            CurrentLine = string.Empty;
             
             Owner = null;
             CurrentBacklog = null;
