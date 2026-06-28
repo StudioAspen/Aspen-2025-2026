@@ -2,6 +2,7 @@
 using System;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using Febucci.TextAnimatorForUnity;
 
 namespace CharonsCorner.Runtime
 {
@@ -130,6 +131,18 @@ namespace CharonsCorner.Runtime
             Owner = null;
             CurrentBacklog = null;
             ReturnAction = null;
+        }
+
+        public void ChangeSpeakerName(TMPro.TMP_Text nameText, TypewriterComponent nameTypewriter, string newName)
+        {
+            if (nameText == null) return;
+            if (nameText.text == newName) return;
+
+            nameText.text = newName;
+            if (nameTypewriter != null)
+            {
+                nameTypewriter.ShowText(newName);
+            }
         }
     }
 }
