@@ -26,7 +26,7 @@ namespace CharonsCorner.Runtime
 
         private void UIPanel_OnPanelChanged(UIPanel newPanel)
         {
-            if (newPanel == null)
+            if (newPanel == null || newPanel.EnablePlayerActions)
             {
                 _inputManager.EnablePlayerActions();
             }

@@ -18,19 +18,16 @@ namespace CharonsCorner.Runtime
         public ChapterSRankDialogueEntry CurrentSRankDialogue { get; private set; }
         
         [field: SerializeField] public ProgressFlag CurrentDialogueOpenerIndexFlag { get; private set; } = ProgressFlag.CurrentDialogueOpenerIndex;
-        [field: SerializeField] public ProgressFlag CurrentDialogueSequenceCompletedFlag { get; private set; } = ProgressFlag.CurrentDialogueSequenceCompleted;
+        [field: SerializeField] public ProgressFlag CurrentDialogueSequenceIndexFlag { get; private set; } = ProgressFlag.CurrentDialogueSequenceIndex;
 
         public DialogueOpenerSO GetCurrentDialogueOpener()
         {
-            if (!HasPendingDialogue())
-                return null;
-
             ChapterDialogueEntry entry = null;
             int currDialogueOpenerIndex = FlagManager.Get(CurrentDialogueOpenerIndexFlag);
+            
             if (HasPendingRegularDialogue())
             {
-                entry =
-                    ChapterDialogues.Find(e => e.ChapterIndex == currDialogueOpenerIndex);
+                entry = ChapterDialogues.Find(e => e.ChapterIndex == currDialogueOpenerIndex);
                 if (entry == null)
                     Debug.LogWarning($"No dialogue entry found for ChapterIndex {currDialogueOpenerIndex}");
             }
@@ -39,7 +36,6 @@ namespace CharonsCorner.Runtime
             if (HasPendingSRankDialogue())
             {
                 int currSRankDialogueIndex = FlagManager.Get(ProgressFlag.CurrentSRankDialogueIndex);
-                // Search by index in the list, not by ChapterIndex
                 if (currSRankDialogueIndex >= 0 && currSRankDialogueIndex < SRankDialogues.Count)
                 {
                     sRankEntry = SRankDialogues[currSRankDialogueIndex];
@@ -55,45 +51,76 @@ namespace CharonsCorner.Runtime
             DialogueOpenerSO runtimeOpener;
             if (entry != null)
                 runtimeOpener = Instantiate(entry.DialogueOpener);
+            else if (ChapterDialogues.Count > 0)
+            {
+                // If we finished all chapter dialogues, we use the most recent one's exhausted sequence
+                int lastIndex = Mathf.Clamp(currDialogueOpenerIndex - 1, 0, ChapterDialogues.Count - 1);
+                runtimeOpener = Instantiate(ChapterDialogues[lastIndex].DialogueOpener);
+            }
             else
                 runtimeOpener = Instantiate(DefaultCharonDialogueOpener);
-            
-            // Add regular sequences first
+
+            List<DialogueSequenceSO> sequencesToPlay = new List<DialogueSequenceSO>();
+
+            // 1. Regular Sequences for the current chapter
             if (entry != null)
             {
-                if (entry.DialogueOpener.SequenceOptions.Count == 2)
+                int sequenceIndex = FlagManager.Get(CurrentDialogueSequenceIndexFlag);
+                if (sequenceIndex < entry.DialogueOpener.SequenceOptions.Count)
                 {
-                    int completedSequenceIndex = FlagManager.Get(CurrentDialogueSequenceCompletedFlag);
-                    if (completedSequenceIndex == 1)
-                        runtimeOpener.SetSequenceOptions(new List<DialogueSequenceSO>(){entry.DialogueOpener.SequenceOptions[1]});
-                    else if (completedSequenceIndex == 2)
-                        runtimeOpener.SetSequenceOptions(new List<DialogueSequenceSO>(){entry.DialogueOpener.SequenceOptions[0]});
-                }
-                else if (entry.DialogueOpener.SequenceOptions.Count == 1)
-                {
-                    runtimeOpener.SetSequenceOptions(new List<DialogueSequenceSO>(){entry.DialogueOpener.SequenceOptions[0]});
+                    sequencesToPlay.Add(entry.DialogueOpener.SequenceOptions[sequenceIndex]);
                 }
             }
-            
-            // Add s rank sequence after
-            if (sRankEntry != null)
+
+            // 2. S-Rank Sequences (only if regular sequences for the current chapter are done)
+            if (sRankEntry != null && sequencesToPlay.Count == 0)
             {
-                List<DialogueSequenceSO> mergedList = new List<DialogueSequenceSO>(runtimeOpener.SequenceOptions);
-                mergedList.Add(sRankEntry.DialogueSequence);
-                runtimeOpener.SetSequenceOptions(mergedList);
+                sequencesToPlay.Add(sRankEntry.DialogueSequence);
             }
-            
+
+            // 3. Exhausted Sequence (if no new regular or S-rank sequences are available)
+            if (sequencesToPlay.Count == 0)
+            {
+                if (runtimeOpener.SequenceOptions.Count > 0)
+                {
+                    sequencesToPlay.Add(runtimeOpener.SequenceOptions[runtimeOpener.SequenceOptions.Count - 1]);
+                }
+            }
+
+            runtimeOpener.SetSequenceOptions(sequencesToPlay);
             return runtimeOpener;
         }
 
         /// <summary>
-        /// Marks the current chapter's dialogue as completed
-        /// and advances the dialogue index.
+        /// Marks the current sequence as completed.
+        /// If all sequences in the opener are done, advances to the next opener.
         /// </summary>
+        public void CompleteCurrentSequence()
+        {
+            if (CurrentChapterDialogue != null)
+            {
+                int sequenceIndex = FlagManager.Get(CurrentDialogueSequenceIndexFlag);
+                sequenceIndex++;
+                
+                if (sequenceIndex >= CurrentChapterDialogue.DialogueOpener.SequenceOptions.Count)
+                {
+                    CompleteCurrentDialogueSet();
+                }
+                else
+                {
+                    FlagManager.Set(CurrentDialogueSequenceIndexFlag, sequenceIndex);
+                }
+            }
+            else if (CurrentSRankDialogue != null)
+            {
+                CompleteCurrentSRankDialogueSet();
+            }
+        }
+
         public void CompleteCurrentDialogueSet()
         {
             FlagManager.Increment(CurrentDialogueOpenerIndexFlag);
-            FlagManager.Set(CurrentDialogueSequenceCompletedFlag, 0);
+            FlagManager.Set(CurrentDialogueSequenceIndexFlag, 0);
             CurrentChapterDialogue = null;
         }
 

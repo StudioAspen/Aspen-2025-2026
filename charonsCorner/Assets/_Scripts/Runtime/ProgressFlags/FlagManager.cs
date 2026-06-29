@@ -8,11 +8,11 @@ namespace CharonsCorner.Runtime
         TutorialCompleted,
         CurrentChapterIndex,
         CurrentDialogueOpenerIndex,
-        CurrentDialogueSequenceCompleted, // 0 - non finished, 1 - first dialogue finished, 2 - second dialogue finished
+        CurrentDialogueSequenceIndex, 
         CurrentSRankDialogueIndex,
         SRankCount,
         CurrentMomentoDialogueOpenerIndex,
-        CurrentMomentoDialogueSequenceCompleted
+        CurrentMomentoDialogueSequenceIndex
     }
 
     /// <summary>

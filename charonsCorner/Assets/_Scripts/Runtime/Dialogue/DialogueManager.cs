@@ -48,7 +48,15 @@ namespace CharonsCorner.Runtime
             OnDialogueOpenerStarted.Invoke(opener);
 
             CurrentDialogueIndex = 0;
-            CurrentDialogue = opener;
+            
+            if (opener.SequenceOptions != null && opener.SequenceOptions.Count > 0)
+            {
+                StartDialogueSequence(opener.SequenceOptions[0]);
+            }
+            else
+            {
+                Debug.LogWarning($"DialogueOpenerSO {opener.name} has no sequences.");
+            }
         }
 
         public void StartDialogueSequence(DialogueSequenceSO sequence)
@@ -65,7 +73,7 @@ namespace CharonsCorner.Runtime
             CurrentDialogueIndex = 0;
             if (sequence.lines != null && sequence.lines.Length > 0)
             {
-                StartLine(sequence.lines[CurrentDialogueIndex]);
+                StartLine(GetProcessedLine(sequence.lines[CurrentDialogueIndex]));
 
                 if (CurrentDialogueIndex >= sequence.lines.Length - 1)
                     OnDialogueSequenceEndReached.Invoke(CurrentSequence, CurrentLine);
@@ -75,6 +83,19 @@ namespace CharonsCorner.Runtime
                 Debug.LogWarning($"DialogueSequenceSO {sequence.SequenceName} has no lines.");
                 OnDialogueSequenceEndReached.Invoke(CurrentSequence, string.Empty);
             }
+        }
+
+        private string GetProcessedLine(DialogueLine line)
+        {
+            string speakerName = line.speaker switch
+            {
+                Speaker.Charon => "Charon",
+                Speaker.Bowley => "Bowley",
+                Speaker.Unknown => "???",
+                _ => "???"
+            };
+
+            return $"<?ChangeSpeakerName={speakerName}>{line.text}";
         }
 
         public void StartDialogue(DialogueSO dialogue)
@@ -111,7 +132,7 @@ namespace CharonsCorner.Runtime
             }
 
             CurrentDialogueIndex++;
-            string nextLine = CurrentSequence.lines[CurrentDialogueIndex];
+            string nextLine = GetProcessedLine(CurrentSequence.lines[CurrentDialogueIndex]);
             StartLine(nextLine);
 
             if(CurrentDialogueIndex >= CurrentSequence.lines.Length - 1)

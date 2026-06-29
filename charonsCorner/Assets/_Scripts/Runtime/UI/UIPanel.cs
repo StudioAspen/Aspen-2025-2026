@@ -23,6 +23,7 @@ namespace CharonsCorner.Runtime
         /// Think of popup UI.
         /// </summary>
         [field: SerializeField] public bool IsAdditive { get; private set; } = false;
+        [field: SerializeField] public bool EnablePlayerActions { get; private set; } = false;
 
         [SerializeField] private float _fadeDuration = 1f;
         [SerializeField] private bool _useFadeTransition = false;
