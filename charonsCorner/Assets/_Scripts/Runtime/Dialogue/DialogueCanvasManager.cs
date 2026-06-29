@@ -107,7 +107,7 @@ namespace CharonsCorner.Runtime
 
         private void DialogueManager_OnDialogueStarted(DialogueSO dialogue)
         {
-            ClearUI();
+            ClearUI(false);
 
             _nameText.text = dialogue.SpeakerName;
             _isTyping = true;
@@ -116,10 +116,10 @@ namespace CharonsCorner.Runtime
 
         private void DialogueManager_OnLineStarted(string line)
         {
-            ClearUI();
+            ClearUI(false);
 
             // Keep the name of the opener speaker if we are in a sequence
-            if (_dialogueManager.CurrentOpener != null)
+            if (_dialogueManager.CurrentOpener != null && string.IsNullOrEmpty(_nameText.text))
                 _nameText.text = _dialogueManager.CurrentOpener.SpeakerName;
             
             _isTyping = true;
@@ -144,10 +144,10 @@ namespace CharonsCorner.Runtime
         /// Completely clears the UI, including name and dialogue text.
         /// Used for resetting the dialogue UI before starting a new dialogue or sequence.
         /// </summary>
-        private void ClearUI()
+        private void ClearUI(bool clearName = true)
         {
             _isTyping = false;
-            _nameText.text = "";
+            if (clearName) _nameText.text = "";
             _dialogueTextTypewriter.TextAnimator.SetText("");
         }
 

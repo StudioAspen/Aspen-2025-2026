@@ -157,7 +157,17 @@ namespace CharonsCorner.Runtime
         public void ChangeSpeakerName(TMPro.TMP_Text nameText, TypewriterComponent nameTypewriter, string newName)
         {
             if (nameText == null) return;
-            if (nameText.text == newName) return;
+            if (nameText.text == newName)
+            {
+                // Ensure name is visible if it was already set but typewriter didn't run
+                if (nameTypewriter != null)
+                {
+                    // This is a bit tricky, if it's already showing the correct text we might not want to do anything
+                    // But if it's partially typed or hidden, we'd want it shown.
+                    // Given the goal is to NOT repeat the effect, if the text matches, we assume it's already there.
+                }
+                return;
+            }
 
             nameText.text = newName;
             if (nameTypewriter != null)
