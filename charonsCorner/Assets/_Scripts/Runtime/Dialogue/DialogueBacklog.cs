@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using MoreMountains.Feedbacks;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -11,6 +12,10 @@ namespace CharonsCorner.Runtime
         [field: SerializeField] public List<ChapterSRankDialogueEntry> SRankDialogues { get; private set; } = new();
         [field: SerializeField] public DialogueOpenerSO DefaultCharonDialogueOpener { get; private set; }
         
+        [Header("Alert Feedbacks")]
+        [SerializeField] private MMF_Player _alertEnterFeedback;
+        [SerializeField] private MMF_Player _alertExitFeedback;
+
         /// <summary>
         /// Tracks the current opener.
         /// </summary>
@@ -19,6 +24,49 @@ namespace CharonsCorner.Runtime
         
         [field: SerializeField] public ProgressFlag CurrentDialogueOpenerIndexFlag { get; private set; } = ProgressFlag.CurrentDialogueOpenerIndex;
         [field: SerializeField] public ProgressFlag CurrentDialogueSequenceIndexFlag { get; private set; } = ProgressFlag.CurrentDialogueSequenceIndex;
+
+        private void Start()
+        {
+            if (GameManager.Instance != null)
+            {
+                GameManager.Instance.OnGameStateChanged += GameManager_OnGameStateChanged;
+                GameManager.Instance.OnBeforeGameStateChanged += GameManager_OnBeforeGameStateChanged;
+            }
+        }
+
+        private void OnDestroy()
+        {
+            if (GameManager.Instance != null)
+            {
+                GameManager.Instance.OnGameStateChanged -= GameManager_OnGameStateChanged;
+                GameManager.Instance.OnBeforeGameStateChanged -= GameManager_OnBeforeGameStateChanged;
+            }
+        }
+
+        private void GameManager_OnBeforeGameStateChanged(GameState currentState, GameState newState)
+        {
+            if (currentState == GameState.Gameplay && newState != GameState.Gameplay)
+            {
+                if (_alertExitFeedback != null)
+                {
+                    _alertExitFeedback.PlayFeedbacks();
+                }
+            }
+        }
+
+        private void GameManager_OnGameStateChanged(GameState newState)
+        {
+            if (newState == GameState.Gameplay)
+            {
+                if (HasPendingDialogue())
+                {
+                    if (_alertEnterFeedback != null)
+                    {
+                        _alertEnterFeedback.PlayFeedbacks();
+                    }
+                }
+            }
+        }
 
         public DialogueOpenerSO GetCurrentDialogueOpener()
         {

@@ -32,6 +32,11 @@ namespace CharonsCorner.Runtime
         /// </remarks>
         public event Action<GameState> OnGameStateChanged = delegate { };
 
+        /// <summary>
+        /// Action that is invoked before the game state is changed.
+        /// </summary>
+        public event Action<GameState, GameState> OnBeforeGameStateChanged = delegate { };
+
         [Header("References")]
         [SerializeField] private SceneReference _titleScene;
         [SerializeField] private SceneReference _hubScene;
@@ -118,6 +123,8 @@ namespace CharonsCorner.Runtime
         {
             if(CurrentGameState == newState && !force)
                 return;
+
+            OnBeforeGameStateChanged.Invoke(CurrentGameState, newState);
 
             CurrentGameState = newState;
             OnGameStateEnter(newState);
