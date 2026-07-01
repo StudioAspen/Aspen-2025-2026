@@ -1,6 +1,7 @@
 using System;
 using Cysharp.Threading.Tasks;
 using Eflatun.SceneReference;
+using MoreMountains.Feedbacks;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Events;
@@ -19,15 +20,17 @@ namespace CharonsCorner.Runtime
         //Editor references
         [Header("References")]
         [SerializeField] private SceneReference _flashbackScene;
+        [SerializeField] private MMF_Player _bowlingStarter;
         [SerializeField, ReadOnly] private LevelDataSO _currentLevelData;
 
         [SerializeField, ReadOnly] private bool _isOpen;
+        [SerializeField, ReadOnly] private bool _isStartingLevel;
 
         public bool IsOpen => _isOpen;
         
         public void OpenLevelSelect(LevelDataSO data)
         {
-            if (_isOpen) 
+            if (_isOpen || _isStartingLevel) 
                 return;
 
             _currentLevelData = data;
@@ -38,7 +41,7 @@ namespace CharonsCorner.Runtime
         [Button("Close")]
         public void CloseLevelSelect()
         {
-            if (!_isOpen) 
+            if (!_isOpen || _isStartingLevel) 
                 return;
 
             _currentLevelData = null;
@@ -53,9 +56,14 @@ namespace CharonsCorner.Runtime
         [Button("Start Level")]
         public void StartLevel()
         {
+            StartLevelAsync().Forget();
+        }
+
+        private async UniTask StartLevelAsync()
+        {
             if (_currentLevelData == null)
             {
-                Debug.LogWarning("[HubLevelSelectController] Missing level data to start");  
+                Debug.LogWarning("[HubLevelSelectController] Missing level data to start");
                 return;
             }
 
@@ -65,15 +73,51 @@ namespace CharonsCorner.Runtime
                 return;
             }
 
+            if (_isStartingLevel)
+                return;
+
+            _isStartingLevel = true;
+
+            Debug.Log($"[HubLevelSelectController] Starting level sequence for: {_currentLevelData.LevelTitle}");
+
+            if (_bowlingStarter != null)
+            {
+                bool skipped = false;
+                Action onInteract = () => skipped = true;
+
+                if (InputManager.Instance != null)
+                {
+                    InputManager.Instance.Interact += onInteract;
+                }
+
+                _bowlingStarter.PlayFeedbacks();
+
+                // Wait until feedback is done or player interacts
+                await UniTask.WaitUntil(() => !_bowlingStarter.IsPlaying || skipped);
+
+                if (InputManager.Instance != null)
+                {
+                    InputManager.Instance.Interact -= onInteract;
+                }
+            }
+
             Debug.Log($"[HubLevelSelectController] Starting flashback for level: {_currentLevelData.LevelTitle}");
-            
+
             // Set the pending dialogue for the flashback scene
             FlashbackTrigger.SetPendingDialogue(_currentLevelData.FlashbackDialogue);
 
             // Open flashback scene
-            GameManager.Instance.SwitchScenes(_flashbackScene, GameState.Cutscene).Forget();
-            
+            if (GameManager.Instance != null)
+            {
+                await GameManager.Instance.SwitchScenes(_flashbackScene, GameState.Cutscene);
+            }
+            else
+            {
+                Debug.LogError("[HubLevelSelectController] GameManager.Instance is null! Cannot switch scenes.");
+            }
+
             OnLevelStarted?.Invoke();
+            _isStartingLevel = false;
         }
     }
 }

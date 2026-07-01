@@ -16,6 +16,8 @@ namespace CharonsCorner.Runtime
         
         [field: Header("Data")]
         [field: SerializeField] public int WorldFlagIndex { get; private set; }
+        [field: SerializeField] public int ChapterInWhichUnlocked { get; private set; }
+        [field: SerializeField] public int LevelIndex { get; private set; }
         [field: SerializeField] public SceneReference LevelScene { get; private set; }
         [field: SerializeField] public FlashbackDialogueData FlashbackDialogue { get; private set; }
     }

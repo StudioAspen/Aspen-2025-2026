@@ -7,6 +7,8 @@ namespace CharonsCorner.Runtime
     {
         [Header("Settings")]
         [SerializeField] private bool _active = true;
+        [SerializeField] private bool _forceX = false;
+        [SerializeField] private bool _forceY = false;
         [SerializeField] private Renderer _renderer;
         [SerializeField] private float _minDistance = 2f;
         [SerializeField] private float _maxDistance = 10f;
@@ -104,17 +106,26 @@ namespace CharonsCorner.Runtime
         {
             if (_materialInstance == null) return;
 
-            if (_playerController == null)
-            {
-                _playerController = Object.FindAnyObjectByType<HubPlayerController>();
-                if (_playerController == null) return;
-            }
+            float t;
 
-            float distance = Vector3.Distance(transform.position, _playerController.transform.position);
-            
-            // min distance: closer = 100% X
-            // max distance: further = 100% Y
-            float t = Mathf.InverseLerp(_minDistance, _maxDistance, distance);
+            if (_forceX != _forceY)
+            {
+                t = _forceX ? 0f : 1f;
+            }
+            else
+            {
+                if (_playerController == null)
+                {
+                    _playerController = Object.FindAnyObjectByType<HubPlayerController>();
+                    if (_playerController == null) return;
+                }
+
+                float distance = Vector3.Distance(transform.position, _playerController.transform.position);
+
+                // min distance: closer = 100% X
+                // max distance: further = 100% Y
+                t = Mathf.InverseLerp(_minDistance, _maxDistance, distance);
+            }
 
             if (_materialInstance.HasProperty(ShadowColorId))
                 _materialInstance.SetColor(ShadowColorId, Color.Lerp(_shadowColorX, _shadowColorY, _shadowColorCurve.Evaluate(t)));
@@ -167,6 +178,16 @@ namespace CharonsCorner.Runtime
         public void SetActive(bool active)
         {
             _active = active;
+        }
+
+        public void ForceX(bool force)
+        {
+            _forceX = force;
+        }
+
+        public void ForceY(bool force)
+        {
+            _forceY = force;
         }
     }
 }

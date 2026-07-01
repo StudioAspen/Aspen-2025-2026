@@ -52,6 +52,20 @@ namespace CharonsCorner.Runtime
                 _input.Interact += OnInteract;
             }
 
+            int currentChapterIndex = FlagManager.Get(ProgressFlag.CurrentChapterIndex);
+            if (LaneData.Count > 0 && LaneData[CurrentLaneIndex].ChapterInWhichUnlocked > currentChapterIndex)
+            {
+                // Current lane is locked, find the first unlocked one
+                for (int i = 0; i < LaneData.Count; i++)
+                {
+                    if (LaneData[i].ChapterInWhichUnlocked <= currentChapterIndex)
+                    {
+                        CurrentLaneIndex = i;
+                        break;
+                    }
+                }
+            }
+
             if (_spinRight != null)
                 _spinRight.PlayFeedbacks();
 
@@ -130,6 +144,17 @@ namespace CharonsCorner.Runtime
         {
             LevelDataSO selectedLaneData = LaneData[CurrentLaneIndex];
 
+            int currentChapterIndex = FlagManager.Get(ProgressFlag.CurrentChapterIndex);
+            
+            // if ChapterInWhichUnlocked is greater than the current chapter index, it will not be selectable at all
+            // (Selection logic should already prevent this, but added as a safety check)
+            if (selectedLaneData.ChapterInWhichUnlocked > currentChapterIndex)
+            {
+                Debug.LogWarning($"Level {selectedLaneData.LevelTitle} is locked until chapter {selectedLaneData.ChapterInWhichUnlocked}. Current chapter: {currentChapterIndex}");
+                return;
+            }
+
+
             int world1CurrentChapterFlagIndex = FlagManager.Get(ProgressFlag.CurrentChapterIndex);
             if (selectedLaneData.WorldFlagIndex > world1CurrentChapterFlagIndex)
             {
@@ -152,28 +177,44 @@ namespace CharonsCorner.Runtime
 
         public void SelectNextLane()
         {
-            if (CurrentLaneIndex == LaneData.Count - 1)
-                return;
+            int nextIndex = CurrentLaneIndex + 1;
+            int currentChapterIndex = FlagManager.Get(ProgressFlag.CurrentChapterIndex);
 
-            SelectLane(CurrentLaneIndex + 1);
-            if (_spinRight != null)
-                _spinRight.PlayFeedbacks();
+            while (nextIndex < LaneData.Count)
+            {
+                if (LaneData[nextIndex].ChapterInWhichUnlocked <= currentChapterIndex)
+                {
+                    SelectLane(nextIndex);
+                    if (_spinRight != null)
+                        _spinRight.PlayFeedbacks();
 
-            if (_skyboxRotator != null)
-                _skyboxRotator.Rotate(1f);
+                    if (_skyboxRotator != null)
+                        _skyboxRotator.Rotate(1f);
+                    return;
+                }
+                nextIndex++;
+            }
         }
 
         public void SelectPreviousLane()
         {
-            if (CurrentLaneIndex == 0)
-                return;
+            int prevIndex = CurrentLaneIndex - 1;
+            int currentChapterIndex = FlagManager.Get(ProgressFlag.CurrentChapterIndex);
 
-            SelectLane(CurrentLaneIndex - 1);
-            if (_spinLeft != null)
-                _spinLeft.PlayFeedbacks();
+            while (prevIndex >= 0)
+            {
+                if (LaneData[prevIndex].ChapterInWhichUnlocked <= currentChapterIndex)
+                {
+                    SelectLane(prevIndex);
+                    if (_spinLeft != null)
+                        _spinLeft.PlayFeedbacks();
 
-            if (_skyboxRotator != null)
-                _skyboxRotator.Rotate(-1f);
+                    if (_skyboxRotator != null)
+                        _skyboxRotator.Rotate(-1f);
+                    return;
+                }
+                prevIndex--;
+            }
         }
 
         public LevelDataSO GetCurrentLevelData() => LaneData[CurrentLaneIndex];

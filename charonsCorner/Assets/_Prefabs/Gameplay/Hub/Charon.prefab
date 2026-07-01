@@ -1420,7 +1420,6 @@ GameObject:
   - component: {fileID: 3071377622202203597}
   - component: {fileID: 1237692140379531003}
   - component: {fileID: 1869440743056354465}
-  - component: {fileID: 3753544221577819239}
   - component: {fileID: 2251239428750671827}
   - component: {fileID: 67755824260414207}
   - component: {fileID: 2567514452136509396}
@@ -1572,22 +1571,6 @@ MonoBehaviour:
   _useCamera: 1
   _cinemachineCamera: {fileID: 5454533530177445654}
   _endingDialogueCinemachineCamera: {fileID: 0}
---- !u!114 &3753544221577819239
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3239045656199082840}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 339397434d88238418cfefc01ece9172, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _inputAction: {fileID: 1781555164194001046, guid: 052faaac586de48259a63d0c4782560b, type: 3}
-  _inputDisplayText: {fileID: 8559723929055134538}
-  _autoDetectControlScheme: 1
-  _controlScheme: 0
 --- !u!114 &2251239428750671827
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1626,8 +1609,10 @@ MonoBehaviour:
   - ChapterIndex: 1
     DialogueSequence: {fileID: 11400000, guid: ea2ed8854843b97409f37748151c0f10, type: 2}
   <DefaultCharonDialogueOpener>k__BackingField: {fileID: 11400000, guid: 579f4c408a9292840b8dc05c489ace15, type: 2}
+  _alertEnterFeedback: {fileID: 0}
+  _alertExitFeedback: {fileID: 0}
   <CurrentDialogueOpenerIndexFlag>k__BackingField: 2
-  <CurrentDialogueSequenceCompletedFlag>k__BackingField: 3
+  <CurrentDialogueSequenceIndexFlag>k__BackingField: 3
 --- !u!65 &2567514452136509396
 BoxCollider:
   m_ObjectHideFlags: 0

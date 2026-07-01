@@ -21,6 +21,8 @@ namespace CharonsCorner.Runtime
         }
 
         [SerializeField] private TMP_Text _displayText;
+        [SerializeField] private TMP_Text _rankTimeText;
+        [SerializeField] private TypewriterComponent _rankTypewriter;
         [SerializeField] private TypewriterComponent _typewriter;
         [SerializeField] private HubLaneSelector _laneSelector;
         [SerializeField] private MMF_Player _swapFeedback;
@@ -79,9 +81,17 @@ namespace CharonsCorner.Runtime
             if (_displayText == null || _laneSelector == null) return;
             if (index < 0 || index >= _laneSelector.LaneData.Count) return;
 
-            string newName = _laneSelector.LaneData[index].LevelTitle;
+            LevelDataSO data = _laneSelector.LaneData[index];
+            int currentChapterIndex = FlagManager.Get(ProgressFlag.CurrentChapterIndex);
+            
+            string newName = data.LevelTitle;
+            if (data.ChapterInWhichUnlocked == currentChapterIndex)
+            {
+                newName = "???";
+            }
 
             UpdateLaneColors(index);
+            UpdateRankTimeDisplay(data);
 
             if (_typewriter != null)
             {
@@ -95,6 +105,47 @@ namespace CharonsCorner.Runtime
             if (_swapFeedback != null)
             {
                 _swapFeedback.PlayFeedbacks();
+            }
+        }
+
+        private void UpdateRankTimeDisplay(LevelDataSO data)
+        {
+            if (_rankTimeText == null) return;
+
+            string levelKey = $"Level_{data.LevelIndex}";
+            string bestRankKey = $"{levelKey}_BestRank";
+            string bestTimeKey = $"{levelKey}_BestTime";
+
+            if (!SaveManager.GameStore.HasKey(bestRankKey))
+            {
+                if (_rankTypewriter != null)
+                {
+                    _rankTypewriter.ShowText("");
+                }
+                else
+                {
+                    _rankTimeText.text = "";
+                }
+                return;
+            }
+
+            int rankInt = SaveManager.GameStore.GetInt(bestRankKey, (int)Ranks.F);
+            Ranks rank = (Ranks)Mathf.Clamp(rankInt, (int)Ranks.S, (int)Ranks.F);
+            float time = SaveManager.GameStore.GetFloat(bestTimeKey, 0f);
+
+            int minutes = Mathf.FloorToInt(time / 60);
+            int seconds = Mathf.FloorToInt(time % 60);
+            int milliseconds = Mathf.FloorToInt((time * 100) % 100);
+
+            string rankTimeStr = $"{rank} Rank - {minutes:00}:{seconds:00}.{milliseconds:00}";
+
+            if (_rankTypewriter != null)
+            {
+                _rankTypewriter.ShowText(rankTimeStr);
+            }
+            else
+            {
+                _rankTimeText.text = rankTimeStr;
             }
         }
 
@@ -152,7 +203,18 @@ namespace CharonsCorner.Runtime
             if (index >= 0 && index < _laneSelector.LaneData.Count)
             {
                 UpdateLaneColors(index);
-                string newName = _laneSelector.LaneData[index].LevelTitle;
+
+                LevelDataSO data = _laneSelector.LaneData[index];
+                UpdateRankTimeDisplay(data);
+
+                int currentChapterIndex = FlagManager.Get(ProgressFlag.CurrentChapterIndex);
+
+                string newName = data.LevelTitle;
+                if (data.ChapterInWhichUnlocked == currentChapterIndex)
+                {
+                    newName = "???";
+                }
+
                 if (_typewriter != null)
                 {
                     _typewriter.ShowText(newName);

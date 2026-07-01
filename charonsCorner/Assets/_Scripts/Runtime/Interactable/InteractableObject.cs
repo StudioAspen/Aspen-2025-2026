@@ -1,4 +1,5 @@
 using Cysharp.Threading.Tasks;
+using MoreMountains.Tools;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Events;
@@ -6,14 +7,18 @@ using UnityEngine.Events;
 namespace CharonsCorner.Runtime
 {
     [RequireComponent(typeof(Collider))]
-    public class InteractableObject : MonoBehaviour
+    public class InteractableObject : MonoBehaviour, MMEventListener<MMGameEvent>
     {
         [Header("References")]
         [SerializeField] private Collider _triggerCollider;
         [SerializeField] private GameObject _inputDisplayerCanvasObject;
 
+        [Header("Settings")]
+        [SerializeField] private float _interactCooldown = 1f;
+
         [Space]
         [SerializeField, ReadOnly] private bool _isOverlapping;
+        [SerializeField, ReadOnly] private bool _isOnCooldown;
 
         [Space]
         public UnityEvent OnInteract = new UnityEvent();
@@ -46,6 +51,7 @@ namespace CharonsCorner.Runtime
         {
             InputManager.Instance.Interact += InputManager_Interact;
             GameManager.Instance.OnGameStateChanged += GameManager_OnGameStateChanged;
+            this.MMEventStartListening<MMGameEvent>();
         }
 
         private void OnDisable()
@@ -55,11 +61,28 @@ namespace CharonsCorner.Runtime
 
             if(GameManager.Instance != null)
                 GameManager.Instance.OnGameStateChanged -= GameManager_OnGameStateChanged;
+            
+            this.MMEventStopListening<MMGameEvent>();
+        }
+
+        public void OnMMEvent(MMGameEvent gameEvent)
+        {
+            if (gameEvent.EventName == "OnDialogueEnd")
+            {
+                StartCooldown().Forget();
+            }
+        }
+
+        private async UniTaskVoid StartCooldown()
+        {
+            _isOnCooldown = true;
+            await UniTask.Delay((int)(_interactCooldown * 1000));
+            _isOnCooldown = false;
         }
 
         private void InputManager_Interact()
         {
-            if (!_isOverlapping)
+            if (!_isOverlapping || _isOnCooldown)
                 return;
 
             OnInteract.Invoke();

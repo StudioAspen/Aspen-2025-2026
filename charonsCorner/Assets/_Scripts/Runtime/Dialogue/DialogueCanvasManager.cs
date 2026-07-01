@@ -7,6 +7,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Febucci.TextAnimatorForUnity.TextMeshPro;
+using MoreMountains.Tools;
 
 namespace CharonsCorner.Runtime
 {
@@ -31,7 +32,11 @@ namespace CharonsCorner.Runtime
 
             _dialogueManager.OnDialogueSequenceEndReached += DialogueManager_OnDialogueSequenceEndReached;
 
-            _dialogueTextTypewriter.onTextShowed.AddListener(() => _isTyping = false);
+            _dialogueTextTypewriter.onTextShowed.AddListener(() =>
+            {
+                _isTyping = false;
+                MMGameEvent.Trigger("StopTalk");
+            });
         }
 
         private void OnEnable()
@@ -138,6 +143,7 @@ namespace CharonsCorner.Runtime
         {
             _isTyping = false;
             _dialogueTextTypewriter.SkipTypewriter();
+            MMGameEvent.Trigger("StopTalk");
         }
 
         /// <summary>

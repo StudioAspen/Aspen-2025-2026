@@ -176,12 +176,13 @@ public class RankingSystem : MonoBehaviour
         foreach (var time in _rankScore.Ranks) times.Add(time.Key);
         _rankText.gameObject.SetActive(true);
 
+        Ranks currentRank;
         // Note: Refactor to a cleaner check & elimate boundary error
         // S Rank Check
         if (_timer <= times[0])
         {
             _rankText.text = "S-Rank";
-            _rankScore.SetFinalRank(Ranks.S);
+            currentRank = Ranks.S;
             SetNextRankText("", 0); // No next rank
             UpdateSRankProgression();
         }
@@ -189,29 +190,53 @@ public class RankingSystem : MonoBehaviour
         else if (_timer > times[0] && _timer <= times[1])
         {
             _rankText.text = "A-Rank";
-            _rankScore.SetFinalRank(Ranks.A);
+            currentRank = Ranks.A;
             SetNextRankText("S", times[0]);
         }
         // B Rank Check
         else if (_timer > times[1] && _timer <= times[2])
         {
             _rankText.text = "B-Rank";
-            _rankScore.SetFinalRank(Ranks.B);
+            currentRank = Ranks.B;
             SetNextRankText("A", times[1]);
         }
         // C Rank Check
         else if (_timer > times[2] && _timer <= times[3])
         {
             _rankText.text = "C-Rank";
-            _rankScore.SetFinalRank(Ranks.C);
+            currentRank = Ranks.C;
             SetNextRankText("B", times[2]);
         }
         // F Rank Check
         else
         {
             _rankText.text = "F-Rank";
-            _rankScore.SetFinalRank(Ranks.F);
+            currentRank = Ranks.F;
             SetNextRankText("C", times[3]);
+        }
+        
+        _rankScore.SetFinalRank(currentRank);
+        SaveBestStats(currentRank, _timer);
+    }
+
+    private void SaveBestStats(Ranks rank, float time)
+    {
+        string levelKey = $"Level_{_chapterIndex}"; 
+        string bestRankKey = $"{levelKey}_BestRank";
+        string bestTimeKey = $"{levelKey}_BestTime";
+
+        // Lower enum value means better rank (S=0, A=1, etc.)
+        int savedRankInt = SaveManager.GameStore.GetInt(bestRankKey, (int)Ranks.F + 1);
+        
+        if ((int)rank < savedRankInt)
+        {
+            SaveManager.GameStore.SetInt(bestRankKey, (int)rank);
+        }
+
+        float savedTime = SaveManager.GameStore.GetFloat(bestTimeKey, float.MaxValue);
+        if (time < savedTime)
+        {
+            SaveManager.GameStore.SetFloat(bestTimeKey, time);
         }
     }
 

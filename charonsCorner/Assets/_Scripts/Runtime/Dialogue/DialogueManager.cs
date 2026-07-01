@@ -3,6 +3,7 @@ using System;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using Febucci.TextAnimatorForUnity;
+using MoreMountains.Tools;
 
 namespace CharonsCorner.Runtime
 {
@@ -73,6 +74,7 @@ namespace CharonsCorner.Runtime
             CurrentDialogueIndex = 0;
             if (sequence.lines != null && sequence.lines.Length > 0)
             {
+                TriggerTalkEvent(sequence.lines[CurrentDialogueIndex].speaker);
                 StartLine(GetProcessedLine(sequence.lines[CurrentDialogueIndex]));
 
                 if (CurrentDialogueIndex >= sequence.lines.Length - 1)
@@ -106,6 +108,11 @@ namespace CharonsCorner.Runtime
                 return;
             }
 
+            if (dialogue.SpeakerName == "Charon")
+                MMGameEvent.Trigger("CharonTalk");
+            else if (dialogue.SpeakerName == "Bowley")
+                MMGameEvent.Trigger("BowleyTalk");
+
             CurrentDialogue = dialogue;
             CurrentLine = dialogue.Text;
             OnDialogueStarted.Invoke(dialogue);
@@ -132,6 +139,7 @@ namespace CharonsCorner.Runtime
             }
 
             CurrentDialogueIndex++;
+            TriggerTalkEvent(CurrentSequence.lines[CurrentDialogueIndex].speaker);
             string nextLine = GetProcessedLine(CurrentSequence.lines[CurrentDialogueIndex]);
             StartLine(nextLine);
 
@@ -139,9 +147,23 @@ namespace CharonsCorner.Runtime
                 OnDialogueSequenceEndReached.Invoke(CurrentSequence, nextLine);
         }
 
+        private void TriggerTalkEvent(Speaker speaker)
+        {
+            switch (speaker)
+            {
+                case Speaker.Charon:
+                    MMGameEvent.Trigger("CharonTalk");
+                    break;
+                case Speaker.Bowley:
+                    MMGameEvent.Trigger("BowleyTalk");
+                    break;
+            }
+        }
+
         public void EndDialogue()
         {
             OnDialogueEnded.Invoke();
+            MMGameEvent.Trigger("OnDialogueEnd");
             
             CurrentOpener = null;
             CurrentSequence = null;
@@ -162,9 +184,6 @@ namespace CharonsCorner.Runtime
                 // Ensure name is visible if it was already set but typewriter didn't run
                 if (nameTypewriter != null)
                 {
-                    // This is a bit tricky, if it's already showing the correct text we might not want to do anything
-                    // But if it's partially typed or hidden, we'd want it shown.
-                    // Given the goal is to NOT repeat the effect, if the text matches, we assume it's already there.
                 }
                 return;
             }
