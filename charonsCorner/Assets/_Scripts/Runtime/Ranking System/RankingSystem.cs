@@ -11,19 +11,13 @@ public class RankingSystem : MonoBehaviour
     [Header("Checks Setting")]
     [SerializeField] Color _checkColor = Color.white;
     [SerializeField] LayerMask _playerLayer;
-    [SerializeField] GameObject _startCheck;
     [SerializeField] GameObject _endCheck;
     [SerializeField] float _radius;
     [SerializeField] bool _useAlternativeEndScene;
     [SerializeField] Eflatun.SceneReference.SceneReference _alternativeEndScene;
 
     [Header("UI Settings")]
-    [SerializeField] GameObject _RankingPanel;
     [SerializeField] GameObject _interactIcon;
-    [SerializeField] TextMeshProUGUI _finalScoreText;
-    [SerializeField] TextMeshProUGUI _finalTimerText;
-    [SerializeField] TextMeshProUGUI _timerText;
-    [SerializeField] TextMeshProUGUI _levelText;
     // Debug Feature
     [SerializeField] TextMeshProUGUI _rankText;
     [SerializeField] TextMeshProUGUI _nextRankText;
@@ -61,6 +55,7 @@ public class RankingSystem : MonoBehaviour
         }
 
         PinScoring.OnPinScored += SubtractTime;
+        Checkpoint.OnCheckpointHit += HandleCheckpointHit;
     }
 
     private void OnDisable()
@@ -76,19 +71,20 @@ public class RankingSystem : MonoBehaviour
         }
 
         PinScoring.OnPinScored -= SubtractTime;
+        Checkpoint.OnCheckpointHit -= HandleCheckpointHit;
+    }
+
+    private void HandleCheckpointHit(Checkpoint checkpoint)
+    {
+        if (!_hasPlayerStarted)
+        {
+            _hasPlayerStarted = true;
+            Debug.Log($"RankingSystem: Timer started by checkpoint {checkpoint.CheckpointIndex}");
+        }
     }
 
     private void HandleGameStateChanged(GameState newState)
     {
-        UpdateUIVisibility(newState);
-    }
-
-    private void UpdateUIVisibility(GameState state)
-    {
-        if (_timerText != null)
-        {
-            _timerText.gameObject.SetActive(state != GameState.Cutscene);
-        }
     }
 
     private void HandleInteract()
@@ -119,7 +115,7 @@ public class RankingSystem : MonoBehaviour
 
         if (GameManager.Instance != null)
         {
-            UpdateUIVisibility(GameManager.Instance.CurrentGameState);
+            // Visibility logic moved to TimerUI
         }
     }
 
@@ -130,7 +126,6 @@ public class RankingSystem : MonoBehaviour
             PlayerEnd();
         }
 
-        CheckPlayerStart();
         if (!_hasPlayerFinished) Timer();
         CheckPlayerEnd();
 
@@ -164,13 +159,6 @@ public class RankingSystem : MonoBehaviour
             Debug.LogError("Rank Score has not been assigned");
             return;
         }
-        _RankingPanel.SetActive(true);
-        _finalScoreText.text = $"";
-        /*int minutes = Mathf.FloorToInt(_timer / 60);
-        int seconds = Mathf.FloorToInt(_timer % 60);
-        _finalTimerText.text = $"Time: {string.Format("{0:00} : {1:00}", minutes, seconds)}";*/
-        _finalTimerText.text = $"";
-        _levelText.text = $"Chapter {_chapterIndex}";
         
         List<float> times = new List<float>();
         foreach (var time in _rankScore.Ranks) times.Add(time.Key);
@@ -255,36 +243,11 @@ public class RankingSystem : MonoBehaviour
         _nextRankText.text = $"Get {string.Format("{0:0}:{1:00}", minutes, seconds)} to get an {rankName}-rank!";
     }
 
-    void CheckPlayerStart()
-    {
-        if (_hasPlayerStarted) return;
-
-        if (_playerLayer.value == 0)
-        {
-            Debug.LogError("Player Layer has not been assigned");
-            return;
-        }
-
-        if (_startCheck == null)
-        {
-            Debug.LogError("Start Check's gameObject has not been assigned");
-            return;
-        }
-
-        if (_radius <= 0)
-        {
-            Debug.LogError("Start and End check's radius needs to be higher than 0");
-            return;
-        }
-
-        _hasPlayerStarted = Physics.CheckSphere(_startCheck.transform.position, _radius, _playerLayer);
-    }
-
     void CheckPlayerEnd()
     {
         if (_hasPlayerFinished) return;
 
-        if (_playerLayer == LayerMask.NameToLayer("Nothing"))
+        if (_playerLayer.value == 0)
         {
             Debug.LogError("Player Layer has not been assigned");
             return;
@@ -360,7 +323,6 @@ public class RankingSystem : MonoBehaviour
     {
         _timer -= seconds;
         if (_timer < 0) _timer = 0;
-        UpdateTimerText();
 
         if (_subtractFeedback != null)
         {
@@ -384,29 +346,14 @@ public class RankingSystem : MonoBehaviour
         if (_hasPlayerStarted)
         {
             _timer += Time.deltaTime;
-            UpdateTimerText();
         }
-    }
-
-    void UpdateTimerText()
-    {
-        if (_timerText == null)
-        {
-            Debug.LogError("Timer text has not been assigned");
-            return;
-        }
-
-        int minutes = Mathf.FloorToInt(_timer / 60);
-        int seconds = Mathf.FloorToInt(_timer % 60);
-        _timerText.text = string.Format("{0:00} : {1:00}", minutes, seconds);
     }
 
     private void OnDrawGizmos()
     {
-        if (_startCheck == null || _endCheck == null) return;
+        if (_endCheck == null) return;
 
         Gizmos.color = _checkColor;
-        Gizmos.DrawSphere(_startCheck.transform.position, _radius);
         Gizmos.DrawSphere(_endCheck.transform.position, _radius);
     }
 }

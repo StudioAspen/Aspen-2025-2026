@@ -149,6 +149,12 @@ namespace HierarchyDesigner
         private Texture2D newCustomMainIconTexture = null;
         private string newCustomMainIconBuiltinName = "";
         private bool newCustomMainIconIsBuiltin = false;
+        private Texture2D newCustomMainIconAlternativeTexture = null;
+        private string newCustomMainIconAlternativeBuiltinName = "";
+        private bool newCustomMainIconAlternativeIsBuiltin = false;
+        private Texture2D newCustomMainIconRecursiveTexture = null;
+        private string newCustomMainIconRecursiveBuiltinName = "";
+        private bool newCustomMainIconRecursiveIsBuiltin = false;
         #endregion
 
         #region Presets
@@ -1907,17 +1913,53 @@ namespace HierarchyDesigner
             }
             EditorGUILayout.EndHorizontal();
 
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.LabelField("Alternative Icon", HD_GUI.LayoutLabelStyle, GUILayout.Width(100));
+            newCustomMainIconAlternativeTexture = (Texture2D)EditorGUILayout.ObjectField(newCustomMainIconAlternativeTexture, typeof(Texture2D), false);
+            if (GUILayout.Button("Pick Icon", GUILayout.Width(70)))
+            {
+                HD_IconOverride.Open((tex, val, isBuiltin) =>
+                {
+                    newCustomMainIconAlternativeTexture = tex;
+                    newCustomMainIconAlternativeBuiltinName = isBuiltin ? val : "";
+                    newCustomMainIconAlternativeIsBuiltin = isBuiltin;
+                });
+            }
+            EditorGUILayout.EndHorizontal();
+
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.LabelField("Recursive Icon", HD_GUI.LayoutLabelStyle, GUILayout.Width(100));
+            newCustomMainIconRecursiveTexture = (Texture2D)EditorGUILayout.ObjectField(newCustomMainIconRecursiveTexture, typeof(Texture2D), false);
+            if (GUILayout.Button("Pick Icon", GUILayout.Width(70)))
+            {
+                HD_IconOverride.Open((tex, val, isBuiltin) =>
+                {
+                    newCustomMainIconRecursiveTexture = tex;
+                    newCustomMainIconRecursiveBuiltinName = isBuiltin ? val : "";
+                    newCustomMainIconRecursiveIsBuiltin = isBuiltin;
+                });
+            }
+            EditorGUILayout.EndHorizontal();
+
             GUILayout.Space(4);
             if (GUILayout.Button("Create Custom Main Icon", GUILayout.Height(secondaryButtonsHeight)))
             {
                 if (!string.IsNullOrEmpty(newCustomMainIconScriptName) && newCustomMainIconTexture != null)
                 {
                     string guid = newCustomMainIconIsBuiltin ? "" : AssetDatabase.AssetPathToGUID(AssetDatabase.GetAssetPath(newCustomMainIconTexture));
-                    HD_CustomMainIcon.SetCustomMainIconData(newCustomMainIconScriptName, guid, newCustomMainIconBuiltinName, newCustomMainIconIsBuiltin);
+                    string altGuid = newCustomMainIconAlternativeIsBuiltin ? "" : (newCustomMainIconAlternativeTexture != null ? AssetDatabase.AssetPathToGUID(AssetDatabase.GetAssetPath(newCustomMainIconAlternativeTexture)) : "");
+                    string recGuid = newCustomMainIconRecursiveIsBuiltin ? "" : (newCustomMainIconRecursiveTexture != null ? AssetDatabase.AssetPathToGUID(AssetDatabase.GetAssetPath(newCustomMainIconRecursiveTexture)) : "");
+                    HD_CustomMainIcon.SetCustomMainIconData(newCustomMainIconScriptName, guid, newCustomMainIconBuiltinName, newCustomMainIconIsBuiltin, altGuid, newCustomMainIconAlternativeBuiltinName, newCustomMainIconAlternativeIsBuiltin, recGuid, newCustomMainIconRecursiveBuiltinName, newCustomMainIconRecursiveIsBuiltin);
                     newCustomMainIconScriptName = "";
                     newCustomMainIconTexture = null;
                     newCustomMainIconBuiltinName = "";
                     newCustomMainIconIsBuiltin = false;
+                    newCustomMainIconAlternativeTexture = null;
+                    newCustomMainIconAlternativeBuiltinName = "";
+                    newCustomMainIconAlternativeIsBuiltin = false;
+                    newCustomMainIconRecursiveTexture = null;
+                    newCustomMainIconRecursiveBuiltinName = "";
+                    newCustomMainIconRecursiveIsBuiltin = false;
                     LoadCustomMainIconData();
                     customMainIconsHasModifiedChanges = false;
                     GUI.FocusControl(null);
@@ -1962,11 +2004,11 @@ namespace HierarchyDesigner
                         }
                     }
 
-                    EditorGUILayout.LabelField(scriptName, HD_GUI.LayoutLabelStyle, GUILayout.ExpandWidth(true));
+                    EditorGUILayout.LabelField(scriptName, HD_GUI.LayoutLabelStyle, GUILayout.Width(150));
 
-                    Texture2D currentIcon = HD_CustomMainIcon.GetIconForScript(scriptName);
+                    Texture2D currentIcon = HD_CustomMainIcon.GetIconForScript(scriptName, false, false);
                     EditorGUI.BeginChangeCheck();
-                    Texture2D nextIcon = (Texture2D)EditorGUILayout.ObjectField(currentIcon, typeof(Texture2D), false, GUILayout.Width(64));
+                    Texture2D nextIcon = (Texture2D)EditorGUILayout.ObjectField(currentIcon, typeof(Texture2D), false, GUILayout.Width(45));
                     if (EditorGUI.EndChangeCheck())
                     {
                         string guid = AssetDatabase.AssetPathToGUID(AssetDatabase.GetAssetPath(nextIcon));
@@ -1983,6 +2025,56 @@ namespace HierarchyDesigner
                             data.IconGuid = isBuiltin ? "" : val;
                             data.BuiltinIconName = isBuiltin ? val : "";
                             data.IsBuiltin = isBuiltin;
+                            customMainIconsHasModifiedChanges = true;
+                        });
+                    }
+
+                    GUILayout.Space(10);
+                    EditorGUILayout.LabelField("Alt:", HD_GUI.LayoutLabelStyle, GUILayout.Width(25));
+                    Texture2D currentAltIcon = HD_CustomMainIcon.GetIconForScript(scriptName, true, false);
+                    EditorGUI.BeginChangeCheck();
+                    Texture2D nextAltIcon = (Texture2D)EditorGUILayout.ObjectField(currentAltIcon, typeof(Texture2D), false, GUILayout.Width(45));
+                    if (EditorGUI.EndChangeCheck())
+                    {
+                        string guid = AssetDatabase.AssetPathToGUID(AssetDatabase.GetAssetPath(nextAltIcon));
+                        data.PrefabAlternativeIconGuid = guid;
+                        data.PrefabAlternativeBuiltinIconName = "";
+                        data.PrefabAlternativeIsBuiltin = false;
+                        customMainIconsHasModifiedChanges = true;
+                    }
+
+                    if (GUILayout.Button("Pick", GUILayout.Width(40)))
+                    {
+                        HD_IconOverride.Open((tex, val, isBuiltin) =>
+                        {
+                            data.PrefabAlternativeIconGuid = isBuiltin ? "" : val;
+                            data.PrefabAlternativeBuiltinIconName = isBuiltin ? val : "";
+                            data.PrefabAlternativeIsBuiltin = isBuiltin;
+                            customMainIconsHasModifiedChanges = true;
+                        });
+                    }
+
+                    GUILayout.Space(10);
+                    EditorGUILayout.LabelField("Rec:", HD_GUI.LayoutLabelStyle, GUILayout.Width(30));
+                    Texture2D currentRecIcon = HD_CustomMainIcon.GetIconForScript(scriptName, false, true);
+                    EditorGUI.BeginChangeCheck();
+                    Texture2D nextRecIcon = (Texture2D)EditorGUILayout.ObjectField(currentRecIcon, typeof(Texture2D), false, GUILayout.Width(45));
+                    if (EditorGUI.EndChangeCheck())
+                    {
+                        string guid = AssetDatabase.AssetPathToGUID(AssetDatabase.GetAssetPath(nextRecIcon));
+                        data.RecursiveAlternativeIconGuid = guid;
+                        data.RecursiveAlternativeBuiltinIconName = "";
+                        data.RecursiveAlternativeIsBuiltin = false;
+                        customMainIconsHasModifiedChanges = true;
+                    }
+
+                    if (GUILayout.Button("Pick", GUILayout.Width(40)))
+                    {
+                        HD_IconOverride.Open((tex, val, isBuiltin) =>
+                        {
+                            data.RecursiveAlternativeIconGuid = isBuiltin ? "" : val;
+                            data.RecursiveAlternativeBuiltinIconName = isBuiltin ? val : "";
+                            data.RecursiveAlternativeIsBuiltin = isBuiltin;
                             customMainIconsHasModifiedChanges = true;
                         });
                     }

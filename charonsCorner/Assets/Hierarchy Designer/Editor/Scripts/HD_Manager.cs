@@ -356,6 +356,11 @@ namespace HierarchyDesigner
             #region Features
             if (enableGameObjectMainIcon || enableGameObjectComponentIcons || enableHierarchyTree || enableGameObjectTag || enableGameObjectLayer)
             {
+                if (enableCustomMainIcons)
+                {
+                    ClearGameObjectDataCache();
+                }
+
                 hierarchyChangeCount++;
                 if (hierarchyChangeCount >= updateThreshold)
                 {
@@ -539,6 +544,12 @@ bool isSelected = Array.IndexOf(Selection.entityIds, instanceID) >= 0;
                     hash = hash * 31 + component.GetType().GetHashCode();
                 }
 
+                if (enableCustomMainIcons)
+                {
+                    hash = hash * 31 + gameObject.transform.childCount;
+                    hash = hash * 31 + (PrefabUtility.IsAnyPrefabInstanceRoot(gameObject) ? 1 : 0);
+                }
+
                 return hash;
             }
         }
@@ -556,12 +567,21 @@ bool isSelected = Array.IndexOf(Selection.entityIds, instanceID) >= 0;
             Component[] components = gameObject.GetComponents<Component>();
             if (enableCustomMainIcons)
             {
-                for (int i = 0; i < components.Length; i++)
+                bool isPrefabParent = PrefabUtility.IsAnyPrefabInstanceRoot(gameObject);
+                Dictionary<string, HD_CustomMainIcon.HD_CustomMainIconData> customIconsData = HD_CustomMainIcon.GetAllCustomMainIconsData(false);
+                foreach (string scriptName in customIconsData.Keys)
                 {
-                    Component component = components[i];
-                    if (component == null) continue;
-                    Texture2D customIcon = HD_CustomMainIcon.GetIconForScript(component.GetType().Name);
-                    if (customIcon != null) return customIcon;
+                    for (int i = 0; i < components.Length; i++)
+                    {
+                        Component component = components[i];
+                        if (component == null) continue;
+                        if (component.GetType().Name == scriptName)
+                        {
+                            bool hasChildren = gameObject.transform.childCount > 0;
+                            Texture2D customIcon = HD_CustomMainIcon.GetIconForScript(scriptName, isPrefabParent, hasChildren);
+                            if (customIcon != null) return customIcon;
+                        }
+                    }
                 }
             }
 
