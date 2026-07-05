@@ -496,7 +496,7 @@ bool isSelected = Array.IndexOf(Selection.entityIds, instanceID) >= 0;
             {
                 if (mainIconUpdateMode == HD_Settings.UpdateMode.Smart)
                 {
-                    if (!data.HasMainIconCache)
+                    if (!data.HasMainIconCache || data.MainIcon == null)
                     {
                         int componentSignature = GetMainIconComponentSignature(gameObject);
                         UpdateMainIconCache(gameObject, instanceID, ref data, componentSignature);
@@ -506,7 +506,7 @@ bool isSelected = Array.IndexOf(Selection.entityIds, instanceID) >= 0;
                 }
 
                 int currentComponentSignature = GetMainIconComponentSignature(gameObject);
-                if (!data.HasMainIconCache || data.MainIconComponentSignature != currentComponentSignature)
+                if (!data.HasMainIconCache || data.MainIconComponentSignature != currentComponentSignature || data.MainIcon == null)
                 {
                     UpdateMainIconCache(gameObject, instanceID, ref data, currentComponentSignature);
                 }

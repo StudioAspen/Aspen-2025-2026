@@ -8,6 +8,8 @@ namespace HierarchyDesigner
     {
         public List<T> items;
 
+        public HD_Serializable() { }
+
         public HD_Serializable(List<T> items)
         {
             this.items = items;

@@ -44,6 +44,8 @@ namespace HierarchyDesigner
             public int MaximumComponentIconsAmount = 10;
             public List<string> ExcludedTags = new() { "Untagged" };
             public List<string> ExcludedLayers = new() { "Default" };
+
+            public HD_GeneralSettings() { }
         }
         private static HD_GeneralSettings generalSettings = new();
         #endregion
@@ -94,6 +96,8 @@ namespace HierarchyDesigner
             public TextAnchor LockTextAnchor = TextAnchor.MiddleCenter;
             public FontStyle LockFontStyle = FontStyle.BoldAndItalic;
             public int LockFontSize = 11;
+
+            public HD_DesignSettings() { }
         }
         private static HD_DesignSettings designSettings = new();
         #endregion
@@ -107,6 +111,8 @@ namespace HierarchyDesigner
             public KeyCode ToggleLockStateKeyCode = KeyCode.F1;
             public KeyCode ChangeTagLayerKeyCode = KeyCode.Mouse0;
             public KeyCode RenameSelectedGameObjectsKeyCode = KeyCode.F3;
+
+            public HD_ShortcutsSettings() { }
         }
         private static HD_ShortcutsSettings shortcutsSettings = new();
         #endregion
@@ -135,6 +141,8 @@ namespace HierarchyDesigner
             public bool ExpandHierarchyOnStartup = false;
             public bool ExcludeFoldersFromCountSelectToolCalculations = true;
             public bool ExcludeSeparatorsFromCountSelectToolCalculations = true;
+
+            public HD_AdvancedSettings() { }
         }
         private static HD_AdvancedSettings advancedSettings = new();
         #endregion

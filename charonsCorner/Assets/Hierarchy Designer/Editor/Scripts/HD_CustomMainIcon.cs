@@ -22,6 +22,11 @@ namespace HierarchyDesigner
             public string RecursiveAlternativeIconGuid;
             public string RecursiveAlternativeBuiltinIconName;
             public bool RecursiveAlternativeIsBuiltin;
+            public Color IconColor;
+            public Color PrefabAlternativeIconColor;
+            public Color RecursiveAlternativeIconColor;
+            
+            public HD_CustomMainIconData() { }
 
             public HD_CustomMainIconData(string scriptName, string iconGuid, string builtinIconName, bool isBuiltin, string prefabAlternativeIconGuid = "", string prefabAlternativeBuiltinIconName = "", bool prefabAlternativeIsBuiltin = false, string recursiveAlternativeIconGuid = "", string recursiveAlternativeBuiltinIconName = "", bool recursiveAlternativeIsBuiltin = false)
             {
@@ -35,6 +40,28 @@ namespace HierarchyDesigner
                 RecursiveAlternativeIconGuid = recursiveAlternativeIconGuid;
                 RecursiveAlternativeBuiltinIconName = recursiveAlternativeBuiltinIconName;
                 RecursiveAlternativeIsBuiltin = recursiveAlternativeIsBuiltin;
+                ColorUtility.TryParseHtmlString("#A2A6A2", out Color defaultIconColor);
+                ColorUtility.TryParseHtmlString("#7FD6FC", out Color defaultPrefabColor);
+                IconColor = defaultIconColor;
+                PrefabAlternativeIconColor = defaultPrefabColor;
+                RecursiveAlternativeIconColor = defaultIconColor;
+            }
+
+            public HD_CustomMainIconData(string scriptName, string iconGuid, string builtinIconName, bool isBuiltin, Color iconColor, string prefabAlternativeIconGuid, string prefabAlternativeBuiltinIconName, bool prefabAlternativeIsBuiltin, Color prefabAlternativeIconColor, string recursiveAlternativeIconGuid, string recursiveAlternativeBuiltinIconName, bool recursiveAlternativeIsBuiltin, Color recursiveAlternativeIconColor)
+            {
+                ScriptName = scriptName;
+                IconGuid = iconGuid;
+                BuiltinIconName = builtinIconName;
+                IsBuiltin = isBuiltin;
+                IconColor = iconColor;
+                PrefabAlternativeIconGuid = prefabAlternativeIconGuid;
+                PrefabAlternativeBuiltinIconName = prefabAlternativeBuiltinIconName;
+                PrefabAlternativeIsBuiltin = prefabAlternativeIsBuiltin;
+                PrefabAlternativeIconColor = prefabAlternativeIconColor;
+                RecursiveAlternativeIconGuid = recursiveAlternativeIconGuid;
+                RecursiveAlternativeBuiltinIconName = recursiveAlternativeBuiltinIconName;
+                RecursiveAlternativeIsBuiltin = recursiveAlternativeIsBuiltin;
+                RecursiveAlternativeIconColor = recursiveAlternativeIconColor;
             }
         }
 
@@ -52,9 +79,9 @@ namespace HierarchyDesigner
         #endregion
 
         #region Methods
-        public static void SetCustomMainIconData(string scriptName, string iconGuid, string builtinIconName, bool isBuiltin, string prefabAlternativeIconGuid, string prefabAlternativeBuiltinIconName, bool prefabAlternativeIsBuiltin, string recursiveAlternativeIconGuid, string recursiveAlternativeBuiltinIconName, bool recursiveAlternativeIsBuiltin)
+        public static void SetCustomMainIconData(string scriptName, string iconGuid, string builtinIconName, bool isBuiltin, Color iconColor, string prefabAlternativeIconGuid, string prefabAlternativeBuiltinIconName, bool prefabAlternativeIsBuiltin, Color prefabAlternativeIconColor, string recursiveAlternativeIconGuid, string recursiveAlternativeBuiltinIconName, bool recursiveAlternativeIsBuiltin, Color recursiveAlternativeIconColor)
         {
-            customMainIcons[scriptName] = new HD_CustomMainIconData(scriptName, iconGuid, builtinIconName, isBuiltin, prefabAlternativeIconGuid, prefabAlternativeBuiltinIconName, prefabAlternativeIsBuiltin, recursiveAlternativeIconGuid, recursiveAlternativeBuiltinIconName, recursiveAlternativeIsBuiltin);
+            customMainIcons[scriptName] = new HD_CustomMainIconData(scriptName, iconGuid, builtinIconName, isBuiltin, iconColor, prefabAlternativeIconGuid, prefabAlternativeBuiltinIconName, prefabAlternativeIsBuiltin, prefabAlternativeIconColor, recursiveAlternativeIconGuid, recursiveAlternativeBuiltinIconName, recursiveAlternativeIsBuiltin, recursiveAlternativeIconColor);
             cachedIcons.Remove(scriptName);
             cachedAlternativeIcons.Remove(scriptName);
             cachedRecursiveIcons.Remove(scriptName);
@@ -113,21 +140,21 @@ namespace HierarchyDesigner
         {
             if (isPrefabParent)
             {
-                if (cachedAlternativeIcons.TryGetValue(scriptName, out Texture2D cachedAltIcon))
+                if (cachedAlternativeIcons.TryGetValue(scriptName, out Texture2D cachedAltIcon) && cachedAltIcon != null)
                 {
                     return cachedAltIcon;
                 }
             }
             else if (hasChildren)
             {
-                if (cachedRecursiveIcons.TryGetValue(scriptName, out Texture2D cachedRecIcon))
+                if (cachedRecursiveIcons.TryGetValue(scriptName, out Texture2D cachedRecIcon) && cachedRecIcon != null)
                 {
                     return cachedRecIcon;
                 }
             }
             else
             {
-                if (cachedIcons.TryGetValue(scriptName, out Texture2D cachedIcon))
+                if (cachedIcons.TryGetValue(scriptName, out Texture2D cachedIcon) && cachedIcon != null)
                 {
                     return cachedIcon;
                 }
@@ -139,24 +166,28 @@ namespace HierarchyDesigner
                 bool isBuiltin;
                 string builtinName;
                 string guid;
-
+                Color tintColor;
+ 
                 if (isPrefabParent)
                 {
                     isBuiltin = data.PrefabAlternativeIsBuiltin;
                     builtinName = data.PrefabAlternativeBuiltinIconName;
                     guid = data.PrefabAlternativeIconGuid;
+                    tintColor = data.PrefabAlternativeIconColor;
                 }
                 else if (hasChildren)
                 {
                     isBuiltin = data.RecursiveAlternativeIsBuiltin;
                     builtinName = data.RecursiveAlternativeBuiltinIconName;
                     guid = data.RecursiveAlternativeIconGuid;
+                    tintColor = data.RecursiveAlternativeIconColor;
                 }
                 else
                 {
                     isBuiltin = data.IsBuiltin;
                     builtinName = data.BuiltinIconName;
                     guid = data.IconGuid;
+                    tintColor = data.IconColor;
                 }
 
                 if (isBuiltin)
@@ -177,6 +208,11 @@ namespace HierarchyDesigner
                             icon = AssetDatabase.LoadAssetAtPath<Texture2D>(path);
                         }
                     }
+                }
+
+                if (icon != null && tintColor != Color.white)
+                {
+                    icon = CreateTintedTexture(icon, tintColor);
                 }
 
                 if (icon == null)
@@ -209,6 +245,34 @@ namespace HierarchyDesigner
             HD_Serializable<HD_CustomMainIconData> serializableList = new(new(customMainIcons.Values));
             string json = JsonUtility.ToJson(serializableList, true);
             File.WriteAllText(dataFilePath, json);
+            AssetDatabase.Refresh();
+        }
+
+        private static Texture2D CreateTintedTexture(Texture2D original, Color tint)
+        {
+            RenderTexture rt = RenderTexture.GetTemporary(original.width, original.height, 0, RenderTextureFormat.ARGB32);
+            rt.filterMode = FilterMode.Point;
+            RenderTexture.active = rt;
+            GL.Clear(true, true, Color.clear);
+            Graphics.Blit(original, rt);
+
+            Texture2D result = new Texture2D(original.width, original.height, TextureFormat.ARGB32, false);
+            result.ReadPixels(new Rect(0, 0, original.width, original.height), 0, 0);
+
+            Color[] pixels = result.GetPixels();
+            for (int i = 0; i < pixels.Length; i++)
+            {
+                pixels[i].r *= tint.r;
+                pixels[i].g *= tint.g;
+                pixels[i].b *= tint.b;
+                pixels[i].a *= tint.a;
+            }
+            result.SetPixels(pixels);
+            result.Apply();
+
+            RenderTexture.active = null;
+            RenderTexture.ReleaseTemporary(rt);
+            return result;
         }
 
         public static void LoadSettings()
@@ -229,6 +293,11 @@ namespace HierarchyDesigner
                         customMainIcons[data.ScriptName] = data;
                     }
                 }
+                HD_Manager.ClearGameObjectDataCache();
+            }
+            else
+            {
+                customMainIcons = new();
             }
         }
         #endregion

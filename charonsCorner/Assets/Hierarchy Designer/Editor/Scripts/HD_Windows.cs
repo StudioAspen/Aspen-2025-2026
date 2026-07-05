@@ -155,6 +155,9 @@ namespace HierarchyDesigner
         private Texture2D newCustomMainIconRecursiveTexture = null;
         private string newCustomMainIconRecursiveBuiltinName = "";
         private bool newCustomMainIconRecursiveIsBuiltin = false;
+        private Color newCustomMainIconColor = HD_Color.HexToColor("#A2A6A2");
+        private Color newCustomMainIconAlternativeColor = HD_Color.HexToColor("#7FD6FC");
+        private Color newCustomMainIconRecursiveColor = HD_Color.HexToColor("#A2A6A2");
         #endregion
 
         #region Presets
@@ -1911,10 +1914,11 @@ namespace HierarchyDesigner
                     newCustomMainIconIsBuiltin = isBuiltin;
                 });
             }
+            newCustomMainIconColor = EditorGUILayout.ColorField(newCustomMainIconColor, GUILayout.Width(40));
             EditorGUILayout.EndHorizontal();
 
             EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.LabelField("Alternative Icon", HD_GUI.LayoutLabelStyle, GUILayout.Width(100));
+            EditorGUILayout.LabelField("Prefab Icon", HD_GUI.LayoutLabelStyle, GUILayout.Width(100));
             newCustomMainIconAlternativeTexture = (Texture2D)EditorGUILayout.ObjectField(newCustomMainIconAlternativeTexture, typeof(Texture2D), false);
             if (GUILayout.Button("Pick Icon", GUILayout.Width(70)))
             {
@@ -1925,6 +1929,7 @@ namespace HierarchyDesigner
                     newCustomMainIconAlternativeIsBuiltin = isBuiltin;
                 });
             }
+            newCustomMainIconAlternativeColor = EditorGUILayout.ColorField(newCustomMainIconAlternativeColor, GUILayout.Width(40));
             EditorGUILayout.EndHorizontal();
 
             EditorGUILayout.BeginHorizontal();
@@ -1939,6 +1944,7 @@ namespace HierarchyDesigner
                     newCustomMainIconRecursiveIsBuiltin = isBuiltin;
                 });
             }
+            newCustomMainIconRecursiveColor = EditorGUILayout.ColorField(newCustomMainIconRecursiveColor, GUILayout.Width(40));
             EditorGUILayout.EndHorizontal();
 
             GUILayout.Space(4);
@@ -1949,17 +1955,20 @@ namespace HierarchyDesigner
                     string guid = newCustomMainIconIsBuiltin ? "" : AssetDatabase.AssetPathToGUID(AssetDatabase.GetAssetPath(newCustomMainIconTexture));
                     string altGuid = newCustomMainIconAlternativeIsBuiltin ? "" : (newCustomMainIconAlternativeTexture != null ? AssetDatabase.AssetPathToGUID(AssetDatabase.GetAssetPath(newCustomMainIconAlternativeTexture)) : "");
                     string recGuid = newCustomMainIconRecursiveIsBuiltin ? "" : (newCustomMainIconRecursiveTexture != null ? AssetDatabase.AssetPathToGUID(AssetDatabase.GetAssetPath(newCustomMainIconRecursiveTexture)) : "");
-                    HD_CustomMainIcon.SetCustomMainIconData(newCustomMainIconScriptName, guid, newCustomMainIconBuiltinName, newCustomMainIconIsBuiltin, altGuid, newCustomMainIconAlternativeBuiltinName, newCustomMainIconAlternativeIsBuiltin, recGuid, newCustomMainIconRecursiveBuiltinName, newCustomMainIconRecursiveIsBuiltin);
+                    HD_CustomMainIcon.SetCustomMainIconData(newCustomMainIconScriptName, guid, newCustomMainIconBuiltinName, newCustomMainIconIsBuiltin, newCustomMainIconColor, altGuid, newCustomMainIconAlternativeBuiltinName, newCustomMainIconAlternativeIsBuiltin, newCustomMainIconAlternativeColor, recGuid, newCustomMainIconRecursiveBuiltinName, newCustomMainIconRecursiveIsBuiltin, newCustomMainIconRecursiveColor);
                     newCustomMainIconScriptName = "";
                     newCustomMainIconTexture = null;
                     newCustomMainIconBuiltinName = "";
                     newCustomMainIconIsBuiltin = false;
+                    newCustomMainIconColor = HD_Color.HexToColor("#A2A6A2");
                     newCustomMainIconAlternativeTexture = null;
                     newCustomMainIconAlternativeBuiltinName = "";
                     newCustomMainIconAlternativeIsBuiltin = false;
+                    newCustomMainIconAlternativeColor = HD_Color.HexToColor("#7FD6FC");
                     newCustomMainIconRecursiveTexture = null;
                     newCustomMainIconRecursiveBuiltinName = "";
                     newCustomMainIconRecursiveIsBuiltin = false;
+                    newCustomMainIconRecursiveColor = HD_Color.HexToColor("#A2A6A2");
                     LoadCustomMainIconData();
                     customMainIconsHasModifiedChanges = false;
                     GUI.FocusControl(null);
@@ -2029,8 +2038,15 @@ namespace HierarchyDesigner
                         });
                     }
 
+                    EditorGUI.BeginChangeCheck();
+                    data.IconColor = EditorGUILayout.ColorField(data.IconColor, GUILayout.Width(40));
+                    if (EditorGUI.EndChangeCheck())
+                    {
+                        customMainIconsHasModifiedChanges = true;
+                    }
+
                     GUILayout.Space(10);
-                    EditorGUILayout.LabelField("Alt:", HD_GUI.LayoutLabelStyle, GUILayout.Width(25));
+                    EditorGUILayout.LabelField("Prefab:", HD_GUI.LayoutLabelStyle, GUILayout.Width(45));
                     Texture2D currentAltIcon = HD_CustomMainIcon.GetIconForScript(scriptName, true, false);
                     EditorGUI.BeginChangeCheck();
                     Texture2D nextAltIcon = (Texture2D)EditorGUILayout.ObjectField(currentAltIcon, typeof(Texture2D), false, GUILayout.Width(45));
@@ -2052,6 +2068,13 @@ namespace HierarchyDesigner
                             data.PrefabAlternativeIsBuiltin = isBuiltin;
                             customMainIconsHasModifiedChanges = true;
                         });
+                    }
+
+                    EditorGUI.BeginChangeCheck();
+                    data.PrefabAlternativeIconColor = EditorGUILayout.ColorField(data.PrefabAlternativeIconColor, GUILayout.Width(40));
+                    if (EditorGUI.EndChangeCheck())
+                    {
+                        customMainIconsHasModifiedChanges = true;
                     }
 
                     GUILayout.Space(10);
@@ -2077,6 +2100,13 @@ namespace HierarchyDesigner
                             data.RecursiveAlternativeIsBuiltin = isBuiltin;
                             customMainIconsHasModifiedChanges = true;
                         });
+                    }
+
+                    EditorGUI.BeginChangeCheck();
+                    data.RecursiveAlternativeIconColor = EditorGUILayout.ColorField(data.RecursiveAlternativeIconColor, GUILayout.Width(40));
+                    if (EditorGUI.EndChangeCheck())
+                    {
+                        customMainIconsHasModifiedChanges = true;
                     }
 
                     if (GUILayout.Button("Remove", GUILayout.Width(removeButtonWidth)))

@@ -272,9 +272,9 @@ namespace HierarchyDesigner
                 foreach (HD_SeparatorData separator in loadedSeparators.items)
                 {
                     separator.ImageType = HD_Validation.ParseEnum(separator.ImageType.ToString(), SeparatorImageType.Default);
-                    separator.BackgroundGradient = HD_Color.CopyGradient(separator.BackgroundGradient);
                     separators[separator.Name] = separator;
                 }
+                HD_Manager.ClearSeparatorCache();
             }
             else
             {

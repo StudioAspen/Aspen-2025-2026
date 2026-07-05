@@ -43,6 +43,8 @@ namespace HierarchyDesigner
             public FontStyle lockFontStyle;
             public TextAnchor lockTextAnchor;
 
+            public HD_Preset() { }
+
             public HD_Preset(
                 string name,
                 Color folderTextColor, 
@@ -115,6 +117,8 @@ namespace HierarchyDesigner
         private class PresetListWrapper
         {
             public List<HD_Preset> presets;
+            
+            public PresetListWrapper() { }
         }
         #endregion
 
@@ -1618,6 +1622,9 @@ namespace HierarchyDesigner
             {
                 string json = File.ReadAllText(filePath);
                 customPresets = JsonUtility.FromJson<PresetListWrapper>(json).presets;
+                HD_Manager.ClearGameObjectDataCache();
+                HD_Manager.ClearFolderCache();
+                HD_Manager.ClearSeparatorCache();
             }
             else
             {

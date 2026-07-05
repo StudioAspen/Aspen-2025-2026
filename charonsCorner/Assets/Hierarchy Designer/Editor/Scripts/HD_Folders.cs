@@ -17,7 +17,9 @@ namespace HierarchyDesigner
             public int FontSize = HD_Settings.FolderDefaultFontSize;
             public FontStyle FontStyle = HD_Settings.FolderDefaultFontStyle;
             public Color ImageColor = HD_Settings.FolderDefaultImageColor;
-            public FolderImageType ImageType = HD_Settings.FolderDefaultImageType;
+            public HD_Folders.FolderImageType ImageType = HD_Settings.FolderDefaultImageType;
+
+            public HD_FolderData() { }
         }
         public enum FolderImageType
         { 
@@ -228,6 +230,7 @@ namespace HierarchyDesigner
                     folder.ImageType = HD_Validation.ParseEnum(folder.ImageType.ToString(), FolderImageType.Default);
                     folders[folder.Name] = folder;
                 }
+                HD_Manager.ClearFolderCache();
             }
             else
             {

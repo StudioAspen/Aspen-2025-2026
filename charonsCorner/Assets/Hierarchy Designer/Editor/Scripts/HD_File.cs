@@ -18,7 +18,6 @@ namespace HierarchyDesigner
             if (!Directory.Exists(fullPath))
             {
                 Directory.CreateDirectory(fullPath);
-                AssetDatabase.Refresh();
             }
 
             return fullPath;
