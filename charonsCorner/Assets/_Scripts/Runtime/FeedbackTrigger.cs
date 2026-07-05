@@ -2,11 +2,13 @@ using System.Collections.Generic;
 using MoreMountains.Feedbacks;
 using UnityEngine;
 using CharonsCorner.Runtime;
+using UnityEngine.Events;
 
 public class FeedbackTrigger : MonoBehaviour
 {
     [SerializeField] private List<MMF_Player> _feedbacks;
     [SerializeField] private List<GameObject> _feedbackParents;
+    [SerializeField] private List<UnityEvent> _unityEvents;
     [SerializeField] private bool _playOnce = true;
 
     private bool _hasPlayed;
@@ -35,6 +37,11 @@ public class FeedbackTrigger : MonoBehaviour
                 {
                     feedback.PlayFeedbacks();
                 }
+            }
+
+            foreach (var unityEvent in _unityEvents)
+            {
+                unityEvent?.Invoke();
             }
         }
     }
