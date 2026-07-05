@@ -26,6 +26,19 @@ namespace MoreMountains.Feedbacks
 		[Tooltip("the rect transform to shake the scale of. If left blank, this component will target the transform it's put on.")]
 		[MMEnumCondition("Mode", (int)Modes.RectTransform)]
 		public RectTransform TargetRectTransform;
+
+		[MMInspectorGroup("Multi-Targets", true, 48)]
+		/// whether or not to use the multi-target lists below
+		[Tooltip("whether or not to use the multi-target lists below")]
+		public bool UseMultiTargets = false;
+		/// the list of transforms to shake the scale of. 
+		[Tooltip("the list of transforms to shake the scale of.")]
+		[MMEnumCondition("Mode", (int)Modes.Transform)]
+		public System.Collections.Generic.List<Transform> MultiTargetTransforms;
+		/// the list of rect transforms to shake the scale of.
+		[Tooltip("the list of rect transforms to shake the rotation of.")]
+		[MMEnumCondition("Mode", (int)Modes.RectTransform)]
+		public System.Collections.Generic.List<RectTransform> MultiTargetRectTransforms;
         
 		[MMInspectorGroup("Shake Settings", true, 42)]
 		/// the speed at which the transform should shake
@@ -95,6 +108,7 @@ namespace MoreMountains.Feedbacks
 		protected Vector3 _randomNoiseStrength;
 		protected Vector3 _noNoise = Vector3.zero;
 		protected Vector3 _randomizedDirection;
+		protected System.Collections.Generic.List<Vector3> _initialScales;
 
 		/// <summary>
 		/// On init we initialize our values
@@ -102,21 +116,52 @@ namespace MoreMountains.Feedbacks
 		protected override void Initialization()
 		{
 			base.Initialization();
-			if (TargetTransform == null) { TargetTransform = this.transform; }
-			if (TargetRectTransform == null) { TargetRectTransform = this.GetComponent<RectTransform>(); }
+			if (UseMultiTargets)
+			{
+				if (MultiTargetTransforms == null) { MultiTargetTransforms = new System.Collections.Generic.List<Transform>(); }
+				if (MultiTargetRectTransforms == null) { MultiTargetRectTransforms = new System.Collections.Generic.List<RectTransform>(); }
+				_initialScales = new System.Collections.Generic.List<Vector3>();
+			}
+			else
+			{
+				if (TargetTransform == null) { TargetTransform = this.transform; }
+				if (TargetRectTransform == null) { TargetRectTransform = this.GetComponent<RectTransform>(); }
+			}
 			GrabInitialScale();
 		}
 
 		public virtual void GrabInitialScale()
 		{
-			switch (Mode)
+			if (UseMultiTargets)
 			{
-				case Modes.Transform:
-					_initialScale = TargetTransform.localScale;
-					break;
-				case Modes.RectTransform:
-					_initialScale = TargetRectTransform.localScale;
-					break;
+				_initialScales.Clear();
+				switch (Mode)
+				{
+					case Modes.Transform:
+						foreach (Transform t in MultiTargetTransforms)
+						{
+							_initialScales.Add(t.localScale);
+						}
+						break;
+					case Modes.RectTransform:
+						foreach (RectTransform rt in MultiTargetRectTransforms)
+						{
+							_initialScales.Add(rt.localScale);
+						}
+						break;
+				}
+			}
+			else
+			{
+				switch (Mode)
+				{
+					case Modes.Transform:
+						_initialScale = TargetTransform.localScale;
+						break;
+					case Modes.RectTransform:
+						_initialScale = TargetRectTransform.localScale;
+						break;
+				}
 			}
 		}
                
@@ -162,22 +207,46 @@ namespace MoreMountains.Feedbacks
 			base.ShakeComplete();
 			_attenuation = 0f;
 			_newScale = ComputeNewScale();
-			if (TargetTransform != null)
-			{
-				ApplyNewScale(_newScale);	
-			}
+			ApplyNewScale(_newScale);	
 		}
 
 		protected virtual void ApplyNewScale(Vector3 newScale)
 		{
-			switch (Mode)
+			if (UseMultiTargets)
 			{
-				case Modes.Transform:
-					TargetTransform.localScale = newScale;
-					break;
-				case Modes.RectTransform:
-					TargetRectTransform.localScale = newScale;
-					break;
+				switch (Mode)
+				{
+					case Modes.Transform:
+						for (int i = 0; i < MultiTargetTransforms.Count; i++)
+						{
+							MultiTargetTransforms[i].localScale = _initialScales[i] + _workDirection * _oscillation * ShakeRange * _attenuation;
+						}
+						break;
+					case Modes.RectTransform:
+						for (int i = 0; i < MultiTargetRectTransforms.Count; i++)
+						{
+							MultiTargetRectTransforms[i].localScale = _initialScales[i] + _workDirection * _oscillation * ShakeRange * _attenuation;
+						}
+						break;
+				}
+			}
+			else
+			{
+				switch (Mode)
+				{
+					case Modes.Transform:
+						if (TargetTransform != null)
+						{
+							TargetTransform.localScale = newScale;
+						}
+						break;
+					case Modes.RectTransform:
+						if (TargetRectTransform != null)
+						{
+							TargetRectTransform.localScale = newScale;
+						}
+						break;
+				}
 			}
 		}
 
@@ -296,14 +365,35 @@ namespace MoreMountains.Feedbacks
 		protected override void ResetTargetValues()
 		{
 			base.ResetTargetValues();
-			switch (Mode)
+			if (UseMultiTargets)
 			{
-				case Modes.Transform:
-					TargetTransform.localScale = _initialScale;
-					break;
-				case Modes.RectTransform:
-					TargetRectTransform.localScale = _initialScale;
-					break;
+				switch (Mode)
+				{
+					case Modes.Transform:
+						for (int i = 0; i < MultiTargetTransforms.Count; i++)
+						{
+							MultiTargetTransforms[i].localScale = _initialScales[i];
+						}
+						break;
+					case Modes.RectTransform:
+						for (int i = 0; i < MultiTargetRectTransforms.Count; i++)
+						{
+							MultiTargetRectTransforms[i].localScale = _initialScales[i];
+						}
+						break;
+				}
+			}
+			else
+			{
+				switch (Mode)
+				{
+					case Modes.Transform:
+						TargetTransform.localScale = _initialScale;
+						break;
+					case Modes.RectTransform:
+						TargetRectTransform.localScale = _initialScale;
+						break;
+				}
 			}
 		}
 

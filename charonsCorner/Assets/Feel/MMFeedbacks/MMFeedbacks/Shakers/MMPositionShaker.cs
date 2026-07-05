@@ -27,6 +27,19 @@ namespace MoreMountains.Feedbacks
 		[MMEnumCondition("Mode", (int)Modes.RectTransform)]
 		public RectTransform TargetRectTransform;
 
+		[MMInspectorGroup("Multi-Targets", true, 48)]
+		/// whether or not to use the multi-target lists below
+		[Tooltip("whether or not to use the multi-target lists below")]
+		public bool UseMultiTargets = false;
+		/// the list of transforms to shake the position of. 
+		[Tooltip("the list of transforms to shake the position of.")]
+		[MMEnumCondition("Mode", (int)Modes.Transform)]
+		public System.Collections.Generic.List<Transform> MultiTargetTransforms;
+		/// the list of rect transforms to shake the position of.
+		[Tooltip("the list of rect transforms to shake the rotation of.")]
+		[MMEnumCondition("Mode", (int)Modes.RectTransform)]
+		public System.Collections.Generic.List<RectTransform> MultiTargetRectTransforms;
+        
 		[MMInspectorGroup("Shake Settings", true, 42)]
 		/// the speed at which the transform should shake
 		[Tooltip("the speed at which the transform should shake")]
@@ -108,6 +121,7 @@ namespace MoreMountains.Feedbacks
 		protected Vector3 _randomNoiseStrength;
 		protected Vector3 _noNoise = Vector3.zero;
 		protected Vector3 _randomizedDirection;
+		protected System.Collections.Generic.List<Vector3> _initialPositions;
 
 		/// <summary>
 		/// On init we initialize our values
@@ -115,22 +129,53 @@ namespace MoreMountains.Feedbacks
 		protected override void Initialization()
 		{
 			base.Initialization();
-			if (TargetTransform == null) { TargetTransform = this.transform; }
-			if (TargetRectTransform == null) { TargetRectTransform = this.GetComponent<RectTransform>(); }
+			if (UseMultiTargets)
+			{
+				if (MultiTargetTransforms == null) { MultiTargetTransforms = new System.Collections.Generic.List<Transform>(); }
+				if (MultiTargetRectTransforms == null) { MultiTargetRectTransforms = new System.Collections.Generic.List<RectTransform>(); }
+				_initialPositions = new System.Collections.Generic.List<Vector3>();
+			}
+			else
+			{
+				if (TargetTransform == null) { TargetTransform = this.transform; }
+				if (TargetRectTransform == null) { TargetRectTransform = this.GetComponent<RectTransform>(); }
+			}
 
 			GrabInitialPosition();
 		}
 
 		public virtual void GrabInitialPosition()
 		{
-			switch (Mode)
+			if (UseMultiTargets)
 			{
-				case Modes.Transform:
-					_initialPosition = TargetTransform.localPosition;
-					break;
-				case Modes.RectTransform:
-					_initialPosition = TargetRectTransform.anchoredPosition;
-					break;
+				_initialPositions.Clear();
+				switch (Mode)
+				{
+					case Modes.Transform:
+						foreach (Transform t in MultiTargetTransforms)
+						{
+							_initialPositions.Add(t.localPosition);
+						}
+						break;
+					case Modes.RectTransform:
+						foreach (RectTransform rt in MultiTargetRectTransforms)
+						{
+							_initialPositions.Add(rt.anchoredPosition);
+						}
+						break;
+				}
+			}
+			else
+			{
+				switch (Mode)
+				{
+					case Modes.Transform:
+						_initialPosition = TargetTransform.localPosition;
+						break;
+					case Modes.RectTransform:
+						_initialPosition = TargetRectTransform.anchoredPosition;
+						break;
+				}
 			}
 		}
                
@@ -184,22 +229,46 @@ namespace MoreMountains.Feedbacks
 			base.ShakeComplete();
 			_attenuation = 0f;
 			_newPosition = ComputeNewPosition();
-			if (TargetTransform != null)
-			{
-				ApplyNewPosition(_newPosition);	
-			}
+			ApplyNewPosition(_newPosition);	
 		}
 
 		protected virtual void ApplyNewPosition(Vector3 newPosition)
 		{
-			switch (Mode)
+			if (UseMultiTargets)
 			{
-				case Modes.Transform:
-					TargetTransform.localPosition = newPosition;
-					break;
-				case Modes.RectTransform:
-					TargetRectTransform.anchoredPosition = newPosition;
-					break;
+				switch (Mode)
+				{
+					case Modes.Transform:
+						for (int i = 0; i < MultiTargetTransforms.Count; i++)
+						{
+							MultiTargetTransforms[i].localPosition = _initialPositions[i] + _workDirection * _oscillation * ShakeRange * _attenuation;
+						}
+						break;
+					case Modes.RectTransform:
+						for (int i = 0; i < MultiTargetRectTransforms.Count; i++)
+						{
+							MultiTargetRectTransforms[i].anchoredPosition = _initialPositions[i] + _workDirection * _oscillation * ShakeRange * _attenuation;
+						}
+						break;
+				}
+			}
+			else
+			{
+				switch (Mode)
+				{
+					case Modes.Transform:
+						if (TargetTransform != null)
+						{
+							TargetTransform.localPosition = newPosition;
+						}
+						break;
+					case Modes.RectTransform:
+						if (TargetRectTransform != null)
+						{
+							TargetRectTransform.anchoredPosition = newPosition;
+						}
+						break;
+				}
 			}
 		}
 
@@ -327,14 +396,35 @@ namespace MoreMountains.Feedbacks
 		protected override void ResetTargetValues()
 		{
 			base.ResetTargetValues();
-			switch (Mode)
+			if (UseMultiTargets)
 			{
-				case Modes.Transform:
-					TargetTransform.localPosition = _initialPosition;
-					break;
-				case Modes.RectTransform:
-					TargetRectTransform.anchoredPosition = _initialPosition;
-					break;
+				switch (Mode)
+				{
+					case Modes.Transform:
+						for (int i = 0; i < MultiTargetTransforms.Count; i++)
+						{
+							MultiTargetTransforms[i].localPosition = _initialPositions[i];
+						}
+						break;
+					case Modes.RectTransform:
+						for (int i = 0; i < MultiTargetRectTransforms.Count; i++)
+						{
+							MultiTargetRectTransforms[i].anchoredPosition = _initialPositions[i];
+						}
+						break;
+				}
+			}
+			else
+			{
+				switch (Mode)
+				{
+					case Modes.Transform:
+						TargetTransform.localPosition = _initialPosition;
+						break;
+					case Modes.RectTransform:
+						TargetRectTransform.anchoredPosition = _initialPosition;
+						break;
+				}
 			}
 		}
 

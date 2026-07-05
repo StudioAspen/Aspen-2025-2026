@@ -26,6 +26,19 @@ namespace MoreMountains.Feedbacks
 		[Tooltip("the rect transform to shake the rotation of. If left blank, this component will target the transform it's put on.")]
 		[MMEnumCondition("Mode", (int)Modes.RectTransform)]
 		public RectTransform TargetRectTransform;
+
+		[MMInspectorGroup("Multi-Targets", true, 48)]
+		/// whether or not to use the multi-target lists below
+		[Tooltip("whether or not to use the multi-target lists below")]
+		public bool UseMultiTargets = false;
+		/// the list of transforms to shake the rotation of. 
+		[Tooltip("the list of transforms to shake the rotation of.")]
+		[MMEnumCondition("Mode", (int)Modes.Transform)]
+		public System.Collections.Generic.List<Transform> MultiTargetTransforms;
+		/// the list of rect transforms to shake the rotation of.
+		[Tooltip("the list of rect transforms to shake the rotation of.")]
+		[MMEnumCondition("Mode", (int)Modes.RectTransform)]
+		public System.Collections.Generic.List<RectTransform> MultiTargetRectTransforms;
         
 		[MMInspectorGroup("Shake Settings", true, 42)]
 		/// the speed at which the transform should shake
@@ -95,6 +108,7 @@ namespace MoreMountains.Feedbacks
 		protected Vector3 _randomNoiseStrength;
 		protected Vector3 _noNoise = Vector3.zero;
 		protected Vector3 _randomizedDirection;
+		protected System.Collections.Generic.List<Vector3> _initialRotations;
 
 		/// <summary>
 		/// On init we initialize our values
@@ -102,21 +116,52 @@ namespace MoreMountains.Feedbacks
 		protected override void Initialization()
 		{
 			base.Initialization();
-			if (TargetTransform == null) { TargetTransform = this.transform; }
-			if (TargetRectTransform == null) { TargetRectTransform = this.GetComponent<RectTransform>(); }
+			if (UseMultiTargets)
+			{
+				if (MultiTargetTransforms == null) { MultiTargetTransforms = new System.Collections.Generic.List<Transform>(); }
+				if (MultiTargetRectTransforms == null) { MultiTargetRectTransforms = new System.Collections.Generic.List<RectTransform>(); }
+				_initialRotations = new System.Collections.Generic.List<Vector3>();
+			}
+			else
+			{
+				if (TargetTransform == null) { TargetTransform = this.transform; }
+				if (TargetRectTransform == null) { TargetRectTransform = this.GetComponent<RectTransform>(); }
+			}
 			GrabLocalRotation();
 		}
 
 		public virtual void GrabLocalRotation()
 		{
-			switch (Mode)
+			if (UseMultiTargets)
 			{
-				case Modes.Transform:
-					_initialRotation = TargetTransform.localRotation.eulerAngles;
-					break;
-				case Modes.RectTransform:
-					_initialRotation = TargetRectTransform.localRotation.eulerAngles;
-					break;
+				_initialRotations.Clear();
+				switch (Mode)
+				{
+					case Modes.Transform:
+						foreach (Transform t in MultiTargetTransforms)
+						{
+							_initialRotations.Add(t.localRotation.eulerAngles);
+						}
+						break;
+					case Modes.RectTransform:
+						foreach (RectTransform rt in MultiTargetRectTransforms)
+						{
+							_initialRotations.Add(rt.localRotation.eulerAngles);
+						}
+						break;
+				}
+			}
+			else
+			{
+				switch (Mode)
+				{
+					case Modes.Transform:
+						_initialRotation = TargetTransform.localRotation.eulerAngles;
+						break;
+					case Modes.RectTransform:
+						_initialRotation = TargetRectTransform.localRotation.eulerAngles;
+						break;
+				}
 			}
 		}
                
@@ -162,22 +207,46 @@ namespace MoreMountains.Feedbacks
 			base.ShakeComplete();
 			_attenuation = 0f;
 			_newRotation = ComputeNewRotation();
-			if (TargetTransform != null)
-			{
-				ApplyNewRotation(_newRotation);	
-			}
+			ApplyNewRotation(_newRotation);	
 		}
 
 		protected virtual void ApplyNewRotation(Vector3 newRotation)
 		{
-			switch (Mode)
+			if (UseMultiTargets)
 			{
-				case Modes.Transform:
-					TargetTransform.localRotation = Quaternion.Euler(newRotation);
-					break;
-				case Modes.RectTransform:
-					TargetRectTransform.localRotation = Quaternion.Euler(newRotation);
-					break;
+				switch (Mode)
+				{
+					case Modes.Transform:
+						for (int i = 0; i < MultiTargetTransforms.Count; i++)
+						{
+							MultiTargetTransforms[i].localRotation = Quaternion.Euler(_initialRotations[i] + _workDirection * _oscillation * ShakeRange * _attenuation);
+						}
+						break;
+					case Modes.RectTransform:
+						for (int i = 0; i < MultiTargetRectTransforms.Count; i++)
+						{
+							MultiTargetRectTransforms[i].localRotation = Quaternion.Euler(_initialRotations[i] + _workDirection * _oscillation * ShakeRange * _attenuation);
+						}
+						break;
+				}
+			}
+			else
+			{
+				switch (Mode)
+				{
+					case Modes.Transform:
+						if (TargetTransform != null)
+						{
+							TargetTransform.localRotation = Quaternion.Euler(newRotation);
+						}
+						break;
+					case Modes.RectTransform:
+						if (TargetRectTransform != null)
+						{
+							TargetRectTransform.localRotation = Quaternion.Euler(newRotation);
+						}
+						break;
+				}
 			}
 		}
 
@@ -296,14 +365,35 @@ namespace MoreMountains.Feedbacks
 		protected override void ResetTargetValues()
 		{
 			base.ResetTargetValues();
-			switch (Mode)
+			if (UseMultiTargets)
 			{
-				case Modes.Transform:
-					TargetTransform.localRotation = Quaternion.Euler(_initialRotation);
-					break;
-				case Modes.RectTransform:
-					TargetRectTransform.localRotation = Quaternion.Euler(_initialRotation);
-					break;
+				switch (Mode)
+				{
+					case Modes.Transform:
+						for (int i = 0; i < MultiTargetTransforms.Count; i++)
+						{
+							MultiTargetTransforms[i].localRotation = Quaternion.Euler(_initialRotations[i]);
+						}
+						break;
+					case Modes.RectTransform:
+						for (int i = 0; i < MultiTargetRectTransforms.Count; i++)
+						{
+							MultiTargetRectTransforms[i].localRotation = Quaternion.Euler(_initialRotations[i]);
+						}
+						break;
+				}
+			}
+			else
+			{
+				switch (Mode)
+				{
+					case Modes.Transform:
+						TargetTransform.localRotation = Quaternion.Euler(_initialRotation);
+						break;
+					case Modes.RectTransform:
+						TargetRectTransform.localRotation = Quaternion.Euler(_initialRotation);
+						break;
+				}
 			}
 		}
 
