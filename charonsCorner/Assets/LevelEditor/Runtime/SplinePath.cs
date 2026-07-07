@@ -137,10 +137,21 @@ namespace CharonsCorner.LevelEditor
             // --------------------------------------------------------------------------------
             // Initialize mesh
             
+            if (pathMeshFilter == null)
+            {
+                pathMeshFilter = GetComponent<MeshFilter>();
+            }
+
             Mesh mesh = pathMeshFilter.sharedMesh;
-            if (mesh == null) {
+            bool isPersistentAsset = false;
+#if UNITY_EDITOR
+            isPersistentAsset = !string.IsNullOrEmpty(UnityEditor.AssetDatabase.GetAssetPath(mesh));
+#endif
+
+            if (mesh == null || !mesh.name.Contains("PathMesh") || isPersistentAsset) {
                 mesh = new Mesh();
-                mesh.name = "PathMesh";
+                mesh.name = "PathMesh_" + gameObject.name + "_" + gameObject.GetInstanceID();
+                pathMeshFilter.sharedMesh = mesh;
             }
             
             mesh.Clear();

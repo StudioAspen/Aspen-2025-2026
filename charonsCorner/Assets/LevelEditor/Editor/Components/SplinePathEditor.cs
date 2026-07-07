@@ -25,23 +25,7 @@ namespace CharonsCorner.LevelEditor
 	        
 	        if (_splinePath.splineContainer == null)
 	        {
-		        _splinePath.splineContainer = _splinePath.GetComponent<SplineContainer>();
-	        }
-
-	        // Create path mesh object and mesh filter
-	        if (_splinePath.pathMeshFilter == null)
-	        {
-		        _splinePath.pathMeshFilter = _splinePath.GetComponent<MeshFilter>();
-		        Mesh generatedMesh = new Mesh();
-		        generatedMesh.name = "PathMesh";
-		        _splinePath.pathMeshFilter.mesh = generatedMesh;
-	        }
-	        
-	        // Set default material in mesh renderer if it is null
-	        MeshRenderer meshRenderer = _splinePath.GetComponent<MeshRenderer>();
-	        if (meshRenderer != null && meshRenderer.sharedMaterial == null)
-	        {
-		        meshRenderer.sharedMaterial = _defaultMaterial;
+		        _splinePath.splineContainer = _splineContainer;
 	        }
 	        
 	        Spline.Changed += OnSplineChanged;
@@ -73,7 +57,23 @@ namespace CharonsCorner.LevelEditor
 	    /// <param name="arg3">Default arg</param>
         private void OnSplineChanged(Spline spline, int i, SplineModification arg3)
         {
-	        _splinePath.CookSplinePath();
+            if (_splineContainer != null)
+            {
+                bool belongsToContainer = false;
+                foreach (var s in _splineContainer.Splines)
+                {
+                    if (s == spline)
+                    {
+                        belongsToContainer = true;
+                        break;
+                    }
+                }
+                
+                if (belongsToContainer)
+                {
+                    _splinePath.CookSplinePath();
+                }
+            }
         }
     }
 }
