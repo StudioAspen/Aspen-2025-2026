@@ -23,10 +23,7 @@ namespace CharonsCorner.LevelEditor
 	        _splinePath = (SplinePath)target;
 	        _splineContainer = _splinePath.GetComponent<SplineContainer>();
 	        
-	        if (_splinePath.splineContainer == null)
-	        {
-		        _splinePath.splineContainer = _splineContainer;
-	        }
+	        _splinePath.splineContainer = _splineContainer;
 	        
 	        Spline.Changed += OnSplineChanged;
 	        
@@ -41,13 +38,6 @@ namespace CharonsCorner.LevelEditor
 	        Spline.Changed -= OnSplineChanged;
         }
         
-	    /// <summary>
-	    /// Called on validate
-	    /// </summary>
-        private void OnValidate()
-        {
-            _splinePath.CookSplinePath();
-        }
         
 	    /// <summary>
 	    /// Called when the spline is changed.

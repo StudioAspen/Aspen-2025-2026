@@ -57,12 +57,61 @@ namespace CharonsCorner.LevelEditor
         }
 
         /// <summary>
+        /// Called when the script is loaded or a value is changed in the inspector.
+        /// </summary>
+        private void OnValidate()
+        {
+            splineContainer = GetComponent<SplineContainer>();
+            pathMeshFilter = GetComponent<MeshFilter>();
+            
+            // Fix stale references in intersections after duplication
+            if (_intersections != null)
+            {
+                for (int i = 0; i < _intersections.Count; i++)
+                {
+                    Intersection intersection = _intersections[i];
+                    if (intersection.junctions != null)
+                    {
+                        for (int j = 0; j < intersection.junctions.Count; j++)
+                        {
+                            Junction junction = intersection.junctions[j];
+                            // If the junction's spline is different but on the same object (likely a duplicate component)
+                            // or if it's pointing to a SplineContainer on another object that looks like it might be the original
+                            if (junction.spline != null && junction.spline != splineContainer)
+                            {
+                                // If it's on a different object, we assume it's a stale reference from duplication
+                                // and we point it to our local splineContainer IF it's supposed to be an internal intersection.
+                                // Note: This might need more sophisticated logic if intersections across different objects are intended.
+                                // But based on CreateIntersectionAction, it uses the same object's SplineContainer.
+                                junction.spline = splineContainer;
+                                intersection.junctions[j] = junction;
+                            }
+                        }
+                    }
+                    _intersections[i] = intersection;
+                }
+            }
+
+            // Recook path on validation to ensure unique mesh and up-to-date geometry
+            if (splineContainer != null)
+            {
+                CookSplinePath();
+            }
+        }
+
+        /// <summary>
         /// Rebuild the mesh and mesh collider for the path.
         /// </summary>
         public void CookSplinePath()
         {
+            // Ensure we have references
+            if (splineContainer == null)
+            {
+                splineContainer = GetComponent<SplineContainer>();
+            }
+
             // Return if there are no splines
-            if (splineContainer.Splines.Count == 0)
+            if (splineContainer == null || splineContainer.Splines == null || splineContainer.Splines.Count == 0)
             {
                 return;
             }
@@ -143,14 +192,18 @@ namespace CharonsCorner.LevelEditor
             }
 
             Mesh mesh = pathMeshFilter.sharedMesh;
+            string expectedName = "PathMesh_" + gameObject.name + "_" + gameObject.GetInstanceID();
             bool isPersistentAsset = false;
 #if UNITY_EDITOR
-            isPersistentAsset = !string.IsNullOrEmpty(UnityEditor.AssetDatabase.GetAssetPath(mesh));
+            if (mesh != null)
+            {
+                isPersistentAsset = !string.IsNullOrEmpty(UnityEditor.AssetDatabase.GetAssetPath(mesh));
+            }
 #endif
 
-            if (mesh == null || !mesh.name.Contains("PathMesh") || isPersistentAsset) {
+            if (mesh == null || mesh.name != expectedName || isPersistentAsset) {
                 mesh = new Mesh();
-                mesh.name = "PathMesh_" + gameObject.name + "_" + gameObject.GetInstanceID();
+                mesh.name = expectedName;
                 pathMeshFilter.sharedMesh = mesh;
             }
             
