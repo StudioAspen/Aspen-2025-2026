@@ -197,12 +197,18 @@ namespace CharonsCorner.Runtime
             }
 
             bool canGoNext = false;
-            for (int i = CurrentLaneIndex + 1; i < LaneData.Count; i++)
+            // The current lane is considered the "rightmost unlocked lane" (showing "???") 
+            // if its ChapterInWhichUnlocked is exactly the currentChapterIndex.
+            // In this case, the player should not be able to go further right.
+            if (LaneData[CurrentLaneIndex].ChapterInWhichUnlocked < currentChapterIndex)
             {
-                if (LaneData[i].ChapterInWhichUnlocked <= currentChapterIndex)
+                for (int i = CurrentLaneIndex + 1; i < LaneData.Count; i++)
                 {
-                    canGoNext = true;
-                    break;
+                    if (LaneData[i].ChapterInWhichUnlocked <= currentChapterIndex)
+                    {
+                        canGoNext = true;
+                        break;
+                    }
                 }
             }
 
