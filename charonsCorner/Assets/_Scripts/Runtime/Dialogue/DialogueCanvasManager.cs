@@ -20,6 +20,7 @@ namespace CharonsCorner.Runtime
         [Header("UI Elements")]
         [SerializeField] private TMP_Text _nameText;
         [SerializeField] private TypewriterComponent _dialogueTextTypewriter;
+        [SerializeField] private InputInteraction _inputInteraction;
 
         private bool _isTyping;
         
@@ -36,6 +37,7 @@ namespace CharonsCorner.Runtime
             {
                 _isTyping = false;
                 MMGameEvent.Trigger("StopTalk");
+                if (_inputInteraction != null) _inputInteraction.Appear();
             });
         }
 
@@ -75,9 +77,12 @@ namespace CharonsCorner.Runtime
 
             if (_isTyping)
             {
+                if (_inputInteraction != null) _inputInteraction.Disappear();
                 SkipTyping();
                 return;
             }
+
+            if (_inputInteraction != null) _inputInteraction.Disappear();
 
             if (_dialogueManager.CurrentSequence == null)
             {
@@ -153,6 +158,7 @@ namespace CharonsCorner.Runtime
         private void ClearUI(bool clearName = true)
         {
             _isTyping = false;
+            if (_inputInteraction != null) _inputInteraction.Disappear();
             if (clearName) _nameText.text = "";
             _dialogueTextTypewriter.TextAnimator.SetText("");
         }

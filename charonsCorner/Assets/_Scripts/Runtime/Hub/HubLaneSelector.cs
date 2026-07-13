@@ -20,6 +20,7 @@ namespace CharonsCorner.Runtime
         [Header("Feedbacks")]
         [SerializeField] private MMF_Player _spinRight;
         [SerializeField] private MMF_Player _spinLeft;
+        [SerializeField] private LevelSelectUI _levelSelectUI;
 
         [Header("Skybox Rotation")]
         [SerializeField] private SkyboxRotator _skyboxRotator;
@@ -71,6 +72,8 @@ namespace CharonsCorner.Runtime
 
             if (_skyboxRotator != null)
                 _skyboxRotator.Rotate(1f);
+
+            UpdateArrowStates();
 
             OnEnter.Invoke();
         }
@@ -173,12 +176,47 @@ namespace CharonsCorner.Runtime
 
             CurrentLaneIndex = index;
             OnLaneSelected.Invoke(CurrentLaneIndex);
+            
+            UpdateArrowStates();
+        }
+
+        private void UpdateArrowStates()
+        {
+            if (_levelSelectUI == null) return;
+
+            int currentChapterIndex = FlagManager.Get(ProgressFlag.CurrentChapterIndex);
+
+            bool canGoPrev = false;
+            for (int i = CurrentLaneIndex - 1; i >= 0; i--)
+            {
+                if (LaneData[i].ChapterInWhichUnlocked <= currentChapterIndex)
+                {
+                    canGoPrev = true;
+                    break;
+                }
+            }
+
+            bool canGoNext = false;
+            for (int i = CurrentLaneIndex + 1; i < LaneData.Count; i++)
+            {
+                if (LaneData[i].ChapterInWhichUnlocked <= currentChapterIndex)
+                {
+                    canGoNext = true;
+                    break;
+                }
+            }
+
+            _levelSelectUI.SetLeftArrowState(canGoPrev);
+            _levelSelectUI.SetRightArrowState(canGoNext);
         }
 
         public void SelectNextLane()
         {
             int nextIndex = CurrentLaneIndex + 1;
             int currentChapterIndex = FlagManager.Get(ProgressFlag.CurrentChapterIndex);
+
+            if (_levelSelectUI != null)
+                _levelSelectUI.OnRightArrowPressed();
 
             while (nextIndex < LaneData.Count)
             {
@@ -200,6 +238,9 @@ namespace CharonsCorner.Runtime
         {
             int prevIndex = CurrentLaneIndex - 1;
             int currentChapterIndex = FlagManager.Get(ProgressFlag.CurrentChapterIndex);
+
+            if (_levelSelectUI != null)
+                _levelSelectUI.OnLeftArrowPressed();
 
             while (prevIndex >= 0)
             {
