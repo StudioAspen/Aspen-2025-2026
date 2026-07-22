@@ -323,8 +323,10 @@ namespace MoreMountains.Feedbacks
 
 		protected virtual void ApplyFloatValue(Renderer targetRenderer, float value, int materialIndex)
 		{
+			if (targetRenderer == null) return;
 			if (UseMaterialPropertyBlocks)
 			{
+				if (_propertyBlock == null) _propertyBlock = new MaterialPropertyBlock();
 				targetRenderer.GetPropertyBlock(_propertyBlock, materialIndex);
 				_propertyBlock.SetFloat(_propertyID, value);
 				targetRenderer.SetPropertyBlock(_propertyBlock);
@@ -337,8 +339,10 @@ namespace MoreMountains.Feedbacks
 
 		protected virtual void ApplyCurrentColor(Renderer targetRenderer, int materialIndex)
 		{
+			if (targetRenderer == null) return;
 			if (UseMaterialPropertyBlocks)
 			{
+				if (_propertyBlock == null) _propertyBlock = new MaterialPropertyBlock();
 				targetRenderer.GetPropertyBlock(_propertyBlock, materialIndex);
 				_propertyBlock.SetColor(_propertyID, _currentColor);
 				targetRenderer.SetPropertyBlock(_propertyBlock);
@@ -455,6 +459,11 @@ namespace MoreMountains.Feedbacks
 			_currentPhaseStartedAt = GetTime();
 			CurrentPhaseIndex = 0;
 			_repeatCount = RepeatCount;
+
+			if (_propertyBlock == null)
+			{
+				_propertyBlock = new MaterialPropertyBlock();
+			}
 
 			float value = 1f;
 			if (Method == Methods.ShaderFloatValue)

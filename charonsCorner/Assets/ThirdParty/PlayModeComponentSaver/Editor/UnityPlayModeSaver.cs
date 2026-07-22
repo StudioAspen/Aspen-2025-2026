@@ -1871,7 +1871,7 @@ namespace Framework
 				private static int GetInstanceId(Object obj)
 				{
 					if (obj != null)
-						return obj.GetInstanceID();
+						return obj.GetEntityId().GetHashCode();
 
 					return 0;
 				}

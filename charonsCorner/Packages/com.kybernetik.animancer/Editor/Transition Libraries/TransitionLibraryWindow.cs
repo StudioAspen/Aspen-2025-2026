@@ -34,9 +34,9 @@ namespace Animancer.Editor.TransitionLibraries
         /// opens it in the <see cref="TransitionLibraryWindow"/>.
         /// </summary>
         [OnOpenAsset]
-        private static bool OnOpenAsset(int instanceID, int line)
+        private static bool OnOpenAsset(EntityId instanceID, int line)
         {
-            var library = EditorUtility.InstanceIDToObject(instanceID) as TransitionLibraryAsset;
+            var library = EditorUtility.EntityIdToObject(instanceID) as TransitionLibraryAsset;
             if (library == null)
                 return false;
 

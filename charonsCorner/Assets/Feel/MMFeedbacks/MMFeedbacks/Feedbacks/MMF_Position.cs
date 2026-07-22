@@ -162,6 +162,7 @@ namespace MoreMountains.Feedbacks
 		protected Vector3 _workDestinationPosition;
 		protected float _remapCurveZero;
 		protected float _remapCurveOne;
+		protected Vector3 _originalPosition;
 
 		/// <summary>
 		/// On init, we set our initial and destination positions (transform will take precedence over vector3s)
@@ -172,9 +173,8 @@ namespace MoreMountains.Feedbacks
 			base.CustomInitialization(owner);
 			if (Active)
 			{
-				if (AnimatePositionTarget == null)
+				if (!TargetExists(AnimatePositionTarget, nameof(AnimatePositionTarget)))
 				{
-					Debug.LogWarning("[Position Feedback] The position feedback on "+Owner.name+" doesn't have an AnimatePositionTarget, it won't work. You need to specify one in its inspector.");
 					return;
 				}
 
@@ -182,6 +182,9 @@ namespace MoreMountains.Feedbacks
 				{
 					_rectTransform = AnimatePositionTarget.GetComponent<RectTransform>();
 				}
+
+				// store the true original position before any offsets are applied
+				_originalPosition = GetPosition(AnimatePositionTarget.transform);
 
 				if (!DeterminePositionsOnPlay)
 				{
@@ -467,7 +470,7 @@ namespace MoreMountains.Feedbacks
 				return;
 			}
 			
-			SetPosition(AnimatePositionTarget.transform, _workInitialPosition);
+			SetPosition(AnimatePositionTarget.transform, _originalPosition);
 		}
 
 		/// <summary>

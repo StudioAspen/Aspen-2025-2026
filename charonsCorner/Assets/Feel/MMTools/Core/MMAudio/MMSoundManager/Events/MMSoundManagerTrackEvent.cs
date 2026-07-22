@@ -27,21 +27,25 @@ namespace MoreMountains.Tools
 		public MMSoundManagerTrackEventTypes TrackEventType;
 		/// the track to pass the order to
 		public MMSoundManager.MMSoundManagerTracks Track;
+		/// if Track is Other, the optional custom track SO to target
+		public MMSoundManagerCustomTrackSO CustomTrack;
 		/// if in SetVolume mode, the volume to which to set the track to
 		public float Volume;
         
-		public MMSoundManagerTrackEvent(MMSoundManagerTrackEventTypes trackEventType, MMSoundManager.MMSoundManagerTracks track = MMSoundManager.MMSoundManagerTracks.Master, float volume = 1f)
+		public MMSoundManagerTrackEvent(MMSoundManagerTrackEventTypes trackEventType, MMSoundManager.MMSoundManagerTracks track = MMSoundManager.MMSoundManagerTracks.Master, float volume = 1f, MMSoundManagerCustomTrackSO customTrack = null)
 		{
 			TrackEventType = trackEventType;
 			Track = track;
+			CustomTrack = customTrack;
 			Volume = volume;
 		}
 
 		static MMSoundManagerTrackEvent e;
-		public static void Trigger(MMSoundManagerTrackEventTypes trackEventType, MMSoundManager.MMSoundManagerTracks track = MMSoundManager.MMSoundManagerTracks.Master, float volume = 1f)
+		public static void Trigger(MMSoundManagerTrackEventTypes trackEventType, MMSoundManager.MMSoundManagerTracks track = MMSoundManager.MMSoundManagerTracks.Master, float volume = 1f, MMSoundManagerCustomTrackSO customTrack = null)
 		{
 			e.TrackEventType = trackEventType;
 			e.Track = track;
+			e.CustomTrack = customTrack;
 			e.Volume = volume;
 			MMEventManager.TriggerEvent(e);
 		}

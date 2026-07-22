@@ -104,10 +104,10 @@ namespace MoreMountains.Feedbacks
 				{
 					Turn(false);
 				}
-
-				if (BoundImage == null)
+				
+				if (!TargetExists(BoundImage, nameof(BoundImage)))
 				{
-					Debug.LogWarning("[Image Feedback] The image feedback on "+Owner.name+" doesn't have a BoundImage, it won't work. You need to specify an Image in its inspector.");
+					return;
 				}
 				else
 				{

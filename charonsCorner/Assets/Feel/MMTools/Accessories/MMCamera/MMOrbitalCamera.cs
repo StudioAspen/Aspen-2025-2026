@@ -1,6 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.Events;
+#if ENABLE_INPUT_SYSTEM && !ENABLE_LEGACY_INPUT_MANAGER
+using UnityEngine.InputSystem.Utilities;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.EnhancedTouch;
+using Touch = UnityEngine.InputSystem.EnhancedTouch.Touch;
+using TouchPhase = UnityEngine.InputSystem.TouchPhase;
+#endif
 
 namespace MoreMountains.Tools
 {
@@ -52,6 +59,12 @@ namespace MoreMountains.Tools
 		/// the max value at which to clamp the mouse wheel
 		public float MaxMouseWheelClamp = 10f;
 
+		[Header("Mouse Rotation")]
+		/// if true, the camera will only orbit while the primary mouse button is held down
+		public bool OnlyRotateOnMousePress = false;
+		/// if true, the cursor will be hidden and locked while orbiting with the mouse
+		public bool LockCursorOnRotation = false;
+
 		[Header("Steps")]
 		/// the distance after which to trigger a step
 		public float StepThreshold = 1;
@@ -68,6 +81,33 @@ namespace MoreMountains.Tools
 		protected Vector3 _position;
 		protected float _scrollWheelAmount = 0;
 		protected float _stepBuffer = 0f;
+		protected bool _isRotating = false;
+
+		/// <summary>
+		/// On enable we activate enhanced touch support if needed
+		/// </summary>
+		protected virtual void OnEnable()
+		{
+			#if ENABLE_INPUT_SYSTEM && !ENABLE_LEGACY_INPUT_MANAGER
+			EnhancedTouchSupport.Enable();
+			#endif
+		}
+
+		/// <summary>
+		/// On disable we deactivate enhanced touch support if needed
+		/// </summary>
+		protected virtual void OnDisable()
+		{
+			#if ENABLE_INPUT_SYSTEM && !ENABLE_LEGACY_INPUT_MANAGER
+			EnhancedTouchSupport.Disable();
+			#endif
+			if (_isRotating && LockCursorOnRotation)
+			{
+				Cursor.lockState = CursorLockMode.None;
+				Cursor.visible = true;
+			}
+			_isRotating = false;
+		}
 
 		/// <summary>
 		/// On Start we initialize our orbital camera
@@ -128,6 +168,86 @@ namespace MoreMountains.Tools
 				return;
 			}
 
+			#if ENABLE_INPUT_SYSTEM && !ENABLE_LEGACY_INPUT_MANAGER
+			if (Mode == Modes.Touch)
+			{
+				ReadOnlyArray<Touch> activeTouches = Touch.activeTouches;
+				if (activeTouches.Count > 0)
+				{
+					Touch touch0 = activeTouches[0];
+					if (touch0.phase == TouchPhase.Moved && activeTouches.Count == 1)
+					{
+						float screenHeight = Screen.currentResolution.height;
+						if (touch0.screenPosition.y < screenHeight / 4)
+						{
+							return;
+						}
+
+						float swipeSpeed = touch0.delta.magnitude / Time.deltaTime;
+
+						_angleX += touch0.delta.x * RotationSpeed.x * Time.deltaTime * swipeSpeed * 0.00001f;
+						_angleY -= touch0.delta.y * RotationSpeed.y * Time.deltaTime * swipeSpeed * 0.00001f;
+						_stepBuffer += touch0.delta.x;
+
+						_angleY = MMMaths.ClampAngle(_angleY, MinVerticalAngleLimit, MaxVerticalAngleLimit);
+						_desiredRotation = Quaternion.Euler(_angleY, _angleX, 0);
+						_currentRotation = transform.rotation;
+
+						_rotation = Quaternion.Lerp(_currentRotation, _desiredRotation, Time.deltaTime * ZoomDampening);
+						transform.rotation = _rotation;
+					}
+					else if (activeTouches.Count == 1 && touch0.phase == TouchPhase.Began)
+					{
+						_desiredRotation = transform.rotation;
+					}
+
+					if (transform.rotation != _desiredRotation)
+					{
+						_rotation = Quaternion.Lerp(transform.rotation, _desiredRotation, Time.deltaTime * ZoomDampening);
+						transform.rotation = _rotation;
+					}
+				}
+			}
+			else if (Mode == Modes.Mouse)
+			{
+				if (Mouse.current != null)
+				{
+					bool mousePressed = !OnlyRotateOnMousePress || Mouse.current.leftButton.isPressed;
+
+					if (mousePressed && !_isRotating)
+					{
+						_isRotating = true;
+						if (LockCursorOnRotation)
+						{
+							Cursor.lockState = CursorLockMode.Locked;
+							Cursor.visible = false;
+						}
+					}
+					else if (!mousePressed && _isRotating)
+					{
+						_isRotating = false;
+						if (LockCursorOnRotation)
+						{
+							Cursor.lockState = CursorLockMode.None;
+							Cursor.visible = true;
+						}
+					}
+
+					if (mousePressed)
+					{
+						Vector2 mouseDelta = Mouse.current.delta.ReadValue();
+						_angleX += mouseDelta.x * RotationSpeed.x * Time.deltaTime;
+						_angleY += -mouseDelta.y * RotationSpeed.y * Time.deltaTime;
+						_angleY = Mathf.Clamp(_angleY, MinVerticalAngleLimit, MaxVerticalAngleLimit);
+
+						_desiredRotation = Quaternion.Euler(new Vector3(_angleY, _angleX, 0));
+						_currentRotation = transform.rotation;
+						_rotation = Quaternion.Lerp(_currentRotation, _desiredRotation, Time.deltaTime * ZoomDampening);
+						transform.rotation = _rotation;
+					}
+				}
+			}
+			#else
 			if (Mode == Modes.Touch && (Input.touchCount > 0))
 			{
 				if ((Input.touches[0].phase == TouchPhase.Moved) && (Input.touchCount == 1))
@@ -164,15 +284,40 @@ namespace MoreMountains.Tools
 			}
 			else if (Mode == Modes.Mouse)
 			{
-				_angleX += Input.GetAxis("Mouse X") * RotationSpeed.x * Time.deltaTime;
-				_angleY += -Input.GetAxis("Mouse Y") * RotationSpeed.y * Time.deltaTime;
-				_angleY = Mathf.Clamp(_angleY, MinVerticalAngleLimit, MaxVerticalAngleLimit);
+				bool mousePressed = !OnlyRotateOnMousePress || Input.GetMouseButton(0);
 
-				_desiredRotation = Quaternion.Euler(new Vector3(_angleY, _angleX, 0));
-				_currentRotation = transform.rotation;
-				_rotation = Quaternion.Lerp(_currentRotation, _desiredRotation, Time.deltaTime * ZoomDampening);
-				transform.rotation = _rotation;
-			}            
+				if (mousePressed && !_isRotating)
+				{
+					_isRotating = true;
+					if (LockCursorOnRotation)
+					{
+						Cursor.lockState = CursorLockMode.Locked;
+						Cursor.visible = false;
+					}
+				}
+				else if (!mousePressed && _isRotating)
+				{
+					_isRotating = false;
+					if (LockCursorOnRotation)
+					{
+						Cursor.lockState = CursorLockMode.None;
+						Cursor.visible = true;
+					}
+				}
+
+				if (mousePressed)
+				{
+					_angleX += Input.GetAxis("Mouse X") * RotationSpeed.x * Time.deltaTime;
+					_angleY += -Input.GetAxis("Mouse Y") * RotationSpeed.y * Time.deltaTime;
+					_angleY = Mathf.Clamp(_angleY, MinVerticalAngleLimit, MaxVerticalAngleLimit);
+
+					_desiredRotation = Quaternion.Euler(new Vector3(_angleY, _angleX, 0));
+					_currentRotation = transform.rotation;
+					_rotation = Quaternion.Lerp(_currentRotation, _desiredRotation, Time.deltaTime * ZoomDampening);
+					transform.rotation = _rotation;
+				}
+			}
+			#endif
 		}
 
 		/// <summary>
@@ -197,6 +342,49 @@ namespace MoreMountains.Tools
 				return;
 			}
 
+			#if ENABLE_INPUT_SYSTEM && !ENABLE_LEGACY_INPUT_MANAGER
+			if (Mode == Modes.Touch)
+			{
+				ReadOnlyArray<Touch> activeTouches = Touch.activeTouches;
+				if (activeTouches.Count == 2)
+				{
+					Touch firstTouch = activeTouches[0];
+					Touch secondTouch = activeTouches[1];
+
+					Vector2 firstTouchPreviousPosition = firstTouch.screenPosition - firstTouch.delta;
+					Vector2 secondTouchPreviousPosition = secondTouch.screenPosition - secondTouch.delta;
+
+					float previousTouchDeltaMagnitude = (firstTouchPreviousPosition - secondTouchPreviousPosition).magnitude;
+					float thisTouchDeltaMagnitude = (firstTouch.screenPosition - secondTouch.screenPosition).magnitude;
+					float deltaMagnitudeDifference = previousTouchDeltaMagnitude - thisTouchDeltaMagnitude;
+
+					_desiredDistance += deltaMagnitudeDifference * Time.deltaTime * ZoomSpeed * Mathf.Abs(_desiredDistance) * 0.001f;
+					_desiredDistance = Mathf.Clamp(_desiredDistance, MinimumZoomDistance, MaximumZoomDistance);
+					_currentDistance = Mathf.Lerp(_currentDistance, _desiredDistance, Time.deltaTime * ZoomDampening);
+				}
+			}
+			else if (Mode == Modes.Mouse)
+			{
+				if (Mouse.current != null)
+				{
+					float scrollValue = Mouse.current.scroll.ReadValue().y;
+					if (Mathf.Abs(scrollValue) > 0f)
+					{
+						// normalize raw pixel scroll to match legacy Input.GetAxis("Mouse ScrollWheel") scale (~120 px/notch → ~1 unit)
+						_scrollWheelAmount += -scrollValue * MouseWheelSpeed * (1f / 120f);
+						_scrollWheelAmount = Mathf.Clamp(_scrollWheelAmount, -MaxMouseWheelClamp, MaxMouseWheelClamp);
+					}
+					else
+					{
+						_scrollWheelAmount = Mathf.Lerp(_scrollWheelAmount, 0f, Time.deltaTime * ZoomDampening * 3f);
+					}
+
+					_desiredDistance += _scrollWheelAmount * Time.deltaTime * ZoomSpeed * Mathf.Abs(_desiredDistance) * 0.001f;
+					_desiredDistance = Mathf.Clamp(_desiredDistance, MinimumZoomDistance, MaximumZoomDistance);
+					_currentDistance = Mathf.Lerp(_currentDistance, _desiredDistance, Time.deltaTime * ZoomDampening);
+				}
+			}
+			#else
 			if (Mode == Modes.Touch && (Input.touchCount > 0))
 			{
 				if (Input.touchCount == 2)
@@ -218,16 +406,22 @@ namespace MoreMountains.Tools
 			}
 			else if (Mode == Modes.Mouse)
 			{
-				_scrollWheelAmount += - Input.GetAxis("Mouse ScrollWheel") * MouseWheelSpeed;
-				_scrollWheelAmount = Mathf.Clamp(_scrollWheelAmount, -MaxMouseWheelClamp, MaxMouseWheelClamp);
-                
-				float deltaMagnitudeDifference = _scrollWheelAmount;
+				float legacyScroll = Input.GetAxis("Mouse ScrollWheel");
+				if (Mathf.Abs(legacyScroll) > 0f)
+				{
+					_scrollWheelAmount += -legacyScroll * MouseWheelSpeed;
+					_scrollWheelAmount = Mathf.Clamp(_scrollWheelAmount, -MaxMouseWheelClamp, MaxMouseWheelClamp);
+				}
+				else
+				{
+					_scrollWheelAmount = Mathf.Lerp(_scrollWheelAmount, 0f, Time.deltaTime * ZoomDampening * 3f);
+				}
 
-				_desiredDistance += deltaMagnitudeDifference * Time.deltaTime * ZoomSpeed * Mathf.Abs(_desiredDistance) * 0.001f;
+				_desiredDistance += _scrollWheelAmount * Time.deltaTime * ZoomSpeed * Mathf.Abs(_desiredDistance) * 0.001f;
 				_desiredDistance = Mathf.Clamp(_desiredDistance, MinimumZoomDistance, MaximumZoomDistance);
 				_currentDistance = Mathf.Lerp(_currentDistance, _desiredDistance, Time.deltaTime * ZoomDampening);
-
 			}
+			#endif
 		}
 
 		/// <summary>

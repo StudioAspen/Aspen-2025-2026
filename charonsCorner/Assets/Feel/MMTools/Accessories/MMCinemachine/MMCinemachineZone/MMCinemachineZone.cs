@@ -10,8 +10,26 @@ using UnityEngine.Events;
 
 namespace MoreMountains.Tools
 {
+	public enum MMCinemachineZoneEventTypes { Enter, Exit }
+	
+	public struct MMCinemachineZoneEvent
+	{
+		static MMCinemachineZoneEvent e;
+
+		public MMCinemachineZone Zone;
+		public MMCinemachineZoneEventTypes Type;
+		
+		
+		public static void Trigger(MMCinemachineZone zone, MMCinemachineZoneEventTypes type)
+		{
+			e.Zone = zone;
+			e.Type = type;
+			MMEventManager.TriggerEvent(e);
+		}
+	}	
+	
 	/// <summary>
-	/// An abstract class that lets you define a zone that, when entered, enables a virtual camera, and takes care
+	/// An abstract class that lets you define a zone that, when entered, enables a Cinemachine camera, and takes care
 	/// of all the boilerplate setup
 	/// </summary>
 	[AddComponentMenu("")]
@@ -32,8 +50,8 @@ namespace MoreMountains.Tools
 		[Tooltip("the virtual camera associated to this zone (will try to grab one in children if none is set)")]
 		public CinemachineVirtualCamera VirtualCamera;
 		#elif MM_CINEMACHINE3
-		/// the virtual camera associated to this zone (will try to grab one in children if none is set)
-		[Tooltip("the virtual camera associated to this zone (will try to grab one in children if none is set)")]
+		/// the Cinemachine camera associated to this zone (will try to grab one in children if none is set)
+		[Tooltip("the Cinemachine camera associated to this zone (will try to grab one in children if none is set)")]
 		public CinemachineCamera VirtualCamera;
 		#endif
 
@@ -100,7 +118,7 @@ namespace MoreMountains.Tools
 		[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
 		protected static void InitializeStatics()
 		{
-			foreach (var zone in FindObjectsByType<MMCinemachineZone>(FindObjectsSortMode.None))
+			foreach (var zone in FindObjectsByType<MMCinemachineZone>())
 			{
 				zone.Awake();
 			}
@@ -128,7 +146,7 @@ namespace MoreMountains.Tools
 		}
 
 		/// <summary>
-		/// On init we grab our virtual camera 
+		/// On init we grab our Cinemachine camera 
 		/// </summary>
 		protected virtual void Initialization()
 		{
@@ -287,6 +305,8 @@ namespace MoreMountains.Tools
 			{
 				go.SetActive(true);
 			}
+			
+			MMCinemachineZoneEvent.Trigger(this, MMCinemachineZoneEventTypes.Enter);
 		}
 
 		protected virtual void ExitZone()
@@ -301,6 +321,7 @@ namespace MoreMountains.Tools
 			{
 				go.SetActive(false);
 			}
+			MMCinemachineZoneEvent.Trigger(this, MMCinemachineZoneEventTypes.Exit);
 		}
 
 		/// <summary>

@@ -11,23 +11,34 @@ namespace MoreMountains.Tools
 	public class MMAudioAnalyzerEditor : Editor
 	{
 		public bool Active;
+		[System.NonSerialized]
 		public SerializedProperty BandLevels;
+		[System.NonSerialized]
 		public SerializedProperty BufferedBandLevels;
 
+		[System.NonSerialized]
 		public SerializedProperty NormalizedBandLevels;
+		[System.NonSerialized]
 		public SerializedProperty NormalizedBufferedBandLevels;
 
+		[System.NonSerialized]
 		public SerializedProperty BandPeaks;
+		[System.NonSerialized]
 		public SerializedProperty LastPeaksAt;
+		[System.NonSerialized]
 		public SerializedProperty RawSpectrum;
 
+		[System.NonSerialized]
 		public SerializedProperty Amplitude;
+		[System.NonSerialized]
 		public SerializedProperty NormalizedAmplitude;
+		[System.NonSerialized]
 		public SerializedProperty BufferedAmplitude;
+		[System.NonSerialized]
 		public SerializedProperty NormalizedBufferedAmplitude;
-
+		[System.NonSerialized]
 		public SerializedProperty PeaksPasted;
-
+		[System.NonSerialized]
 		public SerializedProperty Beats;
 
 		// inspector

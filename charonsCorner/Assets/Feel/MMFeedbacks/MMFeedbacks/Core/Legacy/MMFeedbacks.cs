@@ -2,11 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using MoreMountains.Feedbacks;
 using System.Linq;
 using MoreMountains.Tools;
-using UnityEditor.Experimental;
-using UnityEngine.Events;
 using Random = UnityEngine.Random;
 #if UNITY_EDITOR
 using UnityEditor;
@@ -60,6 +57,9 @@ namespace MoreMountains.Feedbacks
 		/// whether or not to play this feedbacks automatically on Enable
 		[Tooltip("whether or not to play this feedbacks automatically on Enable")]
 		public bool AutoPlayOnEnable = false;
+		/// whether or not to log console messages if feedback targets on this MMF Player are missing
+		[Tooltip("whether or not to log console  messages if feedback targets on this MMF Player are missing")]
+		public bool LogMissingTargets = true;
 
 		/// if this is true, all feedbacks within that player will work on the specified ForcedTimescaleMode, regardless of their individual settings 
 		[Tooltip("if this is true, all feedbacks within that player will work on the specified ForcedTimescaleMode, regardless of their individual settings")] 
@@ -182,8 +182,27 @@ namespace MoreMountains.Feedbacks
 			}
 		}
         
-		public virtual float GetTime() { return (PlayerTimescaleMode == TimescaleModes.Scaled) ? Time.time : Time.unscaledTime; }
-		public virtual float GetDeltaTime() { return (PlayerTimescaleMode == TimescaleModes.Scaled) ? Time.deltaTime : Time.unscaledDeltaTime; }
+		public virtual float GetTime()
+		{
+			#if UNITY_EDITOR
+			if (!Application.isPlaying)
+			{
+				return (float)EditorApplication.timeSinceStartup;
+			}
+			#endif
+			return (PlayerTimescaleMode == TimescaleModes.Scaled) ? Time.time : Time.unscaledTime;
+		}
+		
+		public virtual float GetDeltaTime()
+		{
+			#if UNITY_EDITOR
+			if (!Application.isPlaying)
+			{
+				return Time.unscaledDeltaTime;
+			}
+			#endif
+			return (PlayerTimescaleMode == TimescaleModes.Scaled) ? Time.deltaTime : Time.unscaledDeltaTime;
+		}
 		public virtual float ComputedInitialDelay => ApplyTimeMultiplier(InitialDelay);
 		
 		protected float _startTime = 0f;

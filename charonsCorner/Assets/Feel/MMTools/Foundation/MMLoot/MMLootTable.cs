@@ -16,6 +16,7 @@ namespace  MoreMountains.Tools
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
 	/// <typeparam name="V"></typeparam>
+	[System.Serializable]
 	public class MMLootTable<T,V> where T:MMLoot<V>
 	{
 		/// the list of objects that have a chance of being returned by the table

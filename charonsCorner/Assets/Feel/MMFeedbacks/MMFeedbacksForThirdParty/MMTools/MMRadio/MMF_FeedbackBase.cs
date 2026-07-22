@@ -24,6 +24,7 @@ namespace MoreMountains.Feedbacks
 		public float ToDestinationLevel;
 	}
     
+	[Serializable]
 	public abstract class MMF_FeedbackBase : MMF_Feedback
 	{
 		/// a static bool used to disable all feedbacks of this type at once

@@ -25,6 +25,7 @@ namespace MoreMountains.Feedbacks
 		public override string RequiresSetupText { get { return "This feedback requires that a TargetRigidbody be set to be able to work properly. You can set one below."; } }
 		#endif
 		public enum Modes { AddForce, AddRelativeForce, AddTorque, AddRelativeTorque }
+		public enum Spaces { World, Local }
 		public override bool HasAutomatedTargetAcquisition => true;
 		protected override void AutomateTargetAcquisition() => TargetRigidbody = FindAutomatedTarget<Rigidbody>();
 
@@ -38,6 +39,9 @@ namespace MoreMountains.Feedbacks
 		/// the selected mode for this feedback
 		[Tooltip("the selected mode for this feedback")]
 		public Modes Mode = Modes.AddForce;
+		/// the selected space for this feedback
+		[Tooltip("the selected space for this feedback")]
+		public Spaces Space = Spaces.World;
 		/// the min force or torque to apply
 		[Tooltip("the min force or torque to apply")]
 		public Vector3 MinForce;
@@ -109,6 +113,11 @@ namespace MoreMountains.Feedbacks
 			if (ForwardForce)
 			{
 				_force = _force.magnitude * rb.transform.forward;
+			}
+
+			if (Space == Spaces.Local)
+			{
+				_force = rb.transform.TransformDirection(_force);
 			}
 			
 			switch (Mode)

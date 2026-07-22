@@ -21,6 +21,7 @@ namespace MoreMountains.FeedbacksForThirdParty
 		public NVVersion version;
 		public NVMetadata metadata;
 		public NVSignals signals;
+		public GamepadRumble gamepadRumble;
 	}
 
 	[Serializable]

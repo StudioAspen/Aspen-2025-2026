@@ -20,7 +20,7 @@ namespace Animancer.Editor
         /************************************************************************************************************************/
 
         [SerializeField] private GameObject _SourceGameObject;
-        [SerializeField] private int _SourceComponentInstanceID;
+        [SerializeField] private EntityId _SourceComponentInstanceID;
 
         /************************************************************************************************************************/
 
@@ -41,7 +41,7 @@ namespace Animancer.Editor
                 var source = base.SourceObject;
 
                 if (source == null && _SourceGameObject != null)
-                    source = base.SourceObject = EditorUtility.InstanceIDToObject(_SourceComponentInstanceID) as TObject;
+                    source = base.SourceObject = EditorUtility.EntityIdToObject(_SourceComponentInstanceID) as TObject;
 
                 return source;
             }
@@ -63,7 +63,7 @@ namespace Animancer.Editor
             if (SourceObject != null)
             {
                 _SourceGameObject = SourceObject.gameObject;
-                _SourceComponentInstanceID = SourceObject.GetInstanceID();
+                _SourceComponentInstanceID = SourceObject.GetEntityId();
             }
         }
 

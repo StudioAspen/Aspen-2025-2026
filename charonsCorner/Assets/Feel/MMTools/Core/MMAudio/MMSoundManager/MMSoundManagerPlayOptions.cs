@@ -21,6 +21,8 @@ namespace MoreMountains.Tools
 		[Header("Track")]
 		/// the track on which to play the sound
 		public MMSoundManager.MMSoundManagerTracks MmSoundManagerTrack;
+		/// when MmSoundManagerTrack is set to Other, an optional custom track SO to route through
+		public MMSoundManagerCustomTrackSO CustomTrack;
 		/// an audiogroup to use if you don't want to play on any of the preset tracks
 		public AudioMixerGroup AudioGroup;
 		
@@ -156,6 +158,7 @@ namespace MoreMountains.Tools
 				defaultOptions.Initialized = true;
 				defaultOptions.AudioResourceToPlay = null;
 				defaultOptions.MmSoundManagerTrack = MMSoundManager.MMSoundManagerTracks.Sfx;
+				defaultOptions.CustomTrack = null;
 				defaultOptions.Location = Vector3.zero;
 				defaultOptions.Loop = false;
 				defaultOptions.Volume = 1.0f;

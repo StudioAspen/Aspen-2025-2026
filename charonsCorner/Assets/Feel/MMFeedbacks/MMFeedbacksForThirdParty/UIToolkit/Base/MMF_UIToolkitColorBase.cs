@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using MoreMountains.Feedbacks;
 using UnityEngine;
@@ -9,6 +10,7 @@ namespace MoreMountains.FeedbacksForThirdParty
 	/// <summary>
 	/// A base feedback to set a color on a target UI Document
 	/// </summary>
+	[Serializable]
 	[AddComponentMenu("")]
 	public class MMF_UIToolkitColorBase : MMF_UIToolkit
 	{

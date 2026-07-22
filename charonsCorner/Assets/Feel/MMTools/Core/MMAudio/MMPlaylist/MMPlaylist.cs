@@ -272,6 +272,7 @@ namespace MoreMountains.Tools
 		public string CurrentSongName;
 		/// the current state of this playlist
 		[MMReadOnly]
+		[System.NonSerialized]
 		public MMStateMachine<MMPlaylist.PlaylistStates> PlaylistState;
 
 		[MMInspectorGroup("Tests", true, 15)]

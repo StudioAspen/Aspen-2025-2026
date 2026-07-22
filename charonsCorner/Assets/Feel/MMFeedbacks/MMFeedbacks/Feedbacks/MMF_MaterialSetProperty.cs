@@ -50,6 +50,9 @@ namespace MoreMountains.Feedbacks
 		/// the ID of the material to target on the renderer
 		[Tooltip("the ID of the material to target on the renderer")]
 		public int MaterialID = 0;
+		/// whether to use a MaterialPropertyBlock, to avoid creating a new instance of the material, thus breaking GPU instancing
+		[Tooltip("whether to use a MaterialPropertyBlock, to avoid creating a new instance of the material, thus breaking GPU instancing")]
+		public bool UseMaterialPropertyBlock = false;
 		/// the name of the property to set, as exposed by your material's shader (should be something like _Emission, or _Color, or _MainText, etc)
 		[Tooltip("the name of the property to set, as exposed by your material's shader (should be something like _Emission, or _Color, or _MainText, etc)")] 
 		[FormerlySerializedAs("PropertyID")]
@@ -114,6 +117,20 @@ namespace MoreMountains.Feedbacks
 		protected Color _newColor;
 		protected Vector2 _newVector2;
 		protected Vector4 _newVector4;
+		protected MaterialPropertyBlock _propertyBlock;
+		protected Dictionary<Renderer, MaterialPropertyBlock> _extraPropertyBlocks;
+
+		/// <summary>
+		/// Returns sharedMaterials[index] in edit mode (to avoid leaking instantiated materials) or materials[index] in play mode.
+		/// </summary>
+		protected virtual Material GetTargetMaterial(Renderer renderer, int materialIndex)
+		{
+			#if UNITY_EDITOR
+			if (!Application.isPlaying)
+				return renderer.sharedMaterials[materialIndex];
+			#endif
+			return renderer.materials[materialIndex];
+		}
 		
 		/// <summary>
 		/// On init we turn the sprite renderer off if needed
@@ -124,41 +141,70 @@ namespace MoreMountains.Feedbacks
 			base.CustomInitialization(owner);
 
 			_propertyID = Shader.PropertyToID(PropertyName);
-			
-			if (TargetRenderer == null)
+	
+			if (!TargetExists(TargetRenderer, nameof(TargetRenderer)))
 			{
-				Debug.LogWarning("[Material Set Property Feedback] The material set property feedback on "+Owner.name+" doesn't have a target renderer, it won't work. You need to specify a renderer in its inspector.");
 				return;
 			}
-			
+
+			// we initialize property blocks if needed
+			if (UseMaterialPropertyBlock)
+			{
+				_propertyBlock = new MaterialPropertyBlock();
+		
+				if (ExtraTargetRenderers != null && ExtraTargetRenderers.Count > 0)
+				{
+					_extraPropertyBlocks = new Dictionary<Renderer, MaterialPropertyBlock>();
+					foreach (ExtraRendererData data in ExtraTargetRenderers)
+					{
+						if (data.TargetRenderer != null)
+						{
+							_extraPropertyBlocks[data.TargetRenderer] = new MaterialPropertyBlock();
+						}
+					}
+				}
+			}
+	
 			// we store the initial value of the property based on its type
 			if (Active)
 			{
 				switch (PropertyType)
 				{
 					case PropertyTypes.Color:
-						_initialColor = TargetRenderer.materials[MaterialID].GetColor(_propertyID);
+						_initialColor = GetTargetMaterial(TargetRenderer, MaterialID).GetColor(_propertyID);
 						break;
 					case PropertyTypes.Float:
-						_initialFloat = TargetRenderer.materials[MaterialID].GetFloat(_propertyID);
+						_initialFloat = GetTargetMaterial(TargetRenderer, MaterialID).GetFloat(_propertyID);
 						break;
 					case PropertyTypes.Integer:
-						_initialInt = TargetRenderer.materials[MaterialID].GetInt(_propertyID);
+						_initialInt = GetTargetMaterial(TargetRenderer, MaterialID).GetInt(_propertyID);
 						break;
 					case PropertyTypes.Texture:
-						_initialTexture = TargetRenderer.materials[MaterialID].GetTexture(_propertyID);
+						_initialTexture = GetTargetMaterial(TargetRenderer, MaterialID).GetTexture(_propertyID);
 						break;
 					case PropertyTypes.TextureOffset:
-						_initialOffset = TargetRenderer.materials[MaterialID].GetTextureOffset(_propertyID);
+						_initialOffset = GetTargetMaterial(TargetRenderer, MaterialID).GetTextureOffset(_propertyID);
 						break;
 					case PropertyTypes.TextureScale:
-						_initialScale = TargetRenderer.materials[MaterialID].GetTextureScale(_propertyID);
+						_initialScale = GetTargetMaterial(TargetRenderer, MaterialID).GetTextureScale(_propertyID);
 						break;
 					case PropertyTypes.Vector:
-						_initialVector = TargetRenderer.materials[MaterialID].GetVector(_propertyID);
+						_initialVector = GetTargetMaterial(TargetRenderer, MaterialID).GetVector(_propertyID);
 						break;
 				}
 			}
+		}
+
+		/// <summary>
+		/// Generic helper to get a property value from renderer, handling both material and property block modes
+		/// </summary>
+		protected virtual T GetPropertyFromRenderer<T>(System.Func<Renderer, int, T> getMaterial, System.Func<MaterialPropertyBlock, int, T> getPropertyBlock)
+		{
+			if (UseMaterialPropertyBlock)
+			{
+				return getPropertyBlock(_propertyBlock, _propertyID);
+			}
+			return getMaterial(TargetRenderer, _propertyID);
 		}
 		
 		/// <summary>
@@ -329,67 +375,126 @@ namespace MoreMountains.Feedbacks
 			}
 		}
 
+		/// <summary>
+		/// Generic helper to get a property value from renderer, handling both material and property block modes
+		/// </summary>
+		protected virtual T GetPropertyFromRenderer<T>(System.Func<Renderer, int, T> getMaterial, System.Func<Renderer, MaterialPropertyBlock, int, T> getPropertyBlock)
+		{
+			if (UseMaterialPropertyBlock)
+			{
+				return getPropertyBlock(TargetRenderer, _propertyBlock, _propertyID);
+			}
+			return getMaterial(TargetRenderer, _propertyID);
+		}
+
+		/// <summary>
+		/// Generic helper to set a property on all renderers, handling both material and property block modes
+		/// </summary>
+		protected virtual void SetPropertyOnRenderers<T>(T value, 
+			System.Action<Material, int, T> setMaterial, 
+			System.Action<MaterialPropertyBlock, int, T> setPropertyBlock)
+		{
+			if (UseMaterialPropertyBlock)
+			{
+				TargetRenderer.GetPropertyBlock(_propertyBlock);
+				setPropertyBlock(_propertyBlock, _propertyID, value);
+				TargetRenderer.SetPropertyBlock(_propertyBlock);
+
+				if (ExtraTargetRenderers != null)
+				{
+					foreach (ExtraRendererData data in ExtraTargetRenderers)
+					{
+						if (data.TargetRenderer != null && _extraPropertyBlocks.ContainsKey(data.TargetRenderer))
+						{
+							MaterialPropertyBlock block = _extraPropertyBlocks[data.TargetRenderer];
+							data.TargetRenderer.GetPropertyBlock(block);
+							setPropertyBlock(block, _propertyID, value);
+							data.TargetRenderer.SetPropertyBlock(block);
+						}
+					}
+				}
+			}
+			else
+			{
+				setMaterial(GetTargetMaterial(TargetRenderer, MaterialID), _propertyID, value);
+				if (ExtraTargetRenderers != null)
+				{
+					foreach (ExtraRendererData data in ExtraTargetRenderers)
+					{
+						if (data.TargetRenderer != null)
+						{
+							setMaterial(GetTargetMaterial(data.TargetRenderer, data.MaterialID), _propertyID, value);
+						}
+					}
+				}
+			}
+		}
+
 		protected virtual void SetColor(Color newColor)
 		{
-			TargetRenderer.materials[MaterialID].SetColor(_propertyID, newColor);
-			foreach (ExtraRendererData data in ExtraTargetRenderers)
-			{
-				data.TargetRenderer.materials[data.MaterialID].SetColor(_propertyID, newColor);
-			}
+			SetPropertyOnRenderers(newColor, 
+				(m, id, v) => m.SetColor(id, v), 
+				(b, id, v) => b.SetColor(id, v));
 		}
 
 		protected virtual void SetFloat(float newFloat)
 		{
-			TargetRenderer.materials[MaterialID].SetFloat(_propertyID, newFloat);
-			foreach (ExtraRendererData data in ExtraTargetRenderers)
-			{
-				data.TargetRenderer.materials[data.MaterialID].SetFloat(_propertyID, newFloat);
-			}
+			SetPropertyOnRenderers(newFloat,
+				(m, id, v) => m.SetFloat(id, v),
+				(b, id, v) => b.SetFloat(id, v));
 		}
 
 		protected virtual void SetInt(int newInt)
 		{
-			TargetRenderer.materials[MaterialID].SetInt(_propertyID, newInt);
-			foreach (ExtraRendererData data in ExtraTargetRenderers)
-			{
-				data.TargetRenderer.materials[data.MaterialID].SetInt(_propertyID, newInt);
-			}
+			SetPropertyOnRenderers(newInt,
+				(m, id, v) => m.SetInt(id, v),
+				(b, id, v) => b.SetInt(id, v));
 		}
 
 		protected virtual void SetTexture(Texture newTexture)
 		{
-			TargetRenderer.materials[MaterialID].SetTexture(_propertyID, newTexture);
-			foreach (ExtraRendererData data in ExtraTargetRenderers)
-			{
-				data.TargetRenderer.materials[data.MaterialID].SetTexture(_propertyID, newTexture);
-			}
+			SetPropertyOnRenderers(newTexture,
+				(m, id, v) => m.SetTexture(id, v),
+				(b, id, v) => b.SetTexture(id, v));
 		}
 
 		protected virtual void SetTextureOffset(Vector2 newOffset)
 		{
-			TargetRenderer.materials[MaterialID].SetTextureOffset(_propertyID, newOffset);
-			foreach (ExtraRendererData data in ExtraTargetRenderers)
+			// MaterialPropertyBlock doesn't support texture offset/scale, always use material
+			GetTargetMaterial(TargetRenderer, MaterialID).SetTextureOffset(_propertyID, newOffset);
+			if (ExtraTargetRenderers != null)
 			{
-				data.TargetRenderer.materials[data.MaterialID].SetTextureOffset(_propertyID, newOffset);
+				foreach (ExtraRendererData data in ExtraTargetRenderers)
+				{
+					if (data.TargetRenderer != null)
+					{
+						GetTargetMaterial(data.TargetRenderer, data.MaterialID).SetTextureOffset(_propertyID, newOffset);
+					}
+				}
 			}
 		}
 
 		protected virtual void SetTextureScale(Vector2 newScale)
 		{
-			TargetRenderer.materials[MaterialID].SetTextureScale(_propertyID, newScale);
-			foreach (ExtraRendererData data in ExtraTargetRenderers)
+			// MaterialPropertyBlock doesn't support texture offset/scale, always use material
+			GetTargetMaterial(TargetRenderer, MaterialID).SetTextureScale(_propertyID, newScale);
+			if (ExtraTargetRenderers != null)
 			{
-				data.TargetRenderer.materials[data.MaterialID].SetTextureScale(_propertyID, newScale);
+				foreach (ExtraRendererData data in ExtraTargetRenderers)
+				{
+					if (data.TargetRenderer != null)
+					{
+						GetTargetMaterial(data.TargetRenderer, data.MaterialID).SetTextureScale(_propertyID, newScale);
+					}
+				}
 			}
 		}
 
 		protected virtual void SetVector(Vector4 newVector)
 		{
-			TargetRenderer.materials[MaterialID].SetVector(_propertyID, newVector);
-			foreach (ExtraRendererData data in ExtraTargetRenderers)
-			{
-				data.TargetRenderer.materials[data.MaterialID].SetVector(_propertyID, newVector);
-			}
+			SetPropertyOnRenderers(newVector,
+				(m, id, v) => m.SetVector(id, v),
+				(b, id, v) => b.SetVector(id, v));
 		}
 		
 		/// <summary>

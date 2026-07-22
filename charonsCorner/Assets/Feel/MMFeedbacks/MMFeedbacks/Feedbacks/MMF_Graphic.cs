@@ -87,9 +87,9 @@ namespace MoreMountains.Feedbacks
 					Turn(false);
 				}
 
-				if (TargetGraphic == null)
+				if (!TargetExists(TargetGraphic, nameof(TargetGraphic)))
 				{
-					Debug.LogWarning("[Graphic Feedback] The graphic feedback on "+Owner.name+" doesn't have a Target Graphic, it won't work. You need to specify a graphic in its inspector.");
+					return;
 				}
 				else
 				{

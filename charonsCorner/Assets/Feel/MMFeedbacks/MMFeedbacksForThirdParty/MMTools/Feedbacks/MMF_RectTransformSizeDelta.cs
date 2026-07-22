@@ -1,4 +1,5 @@
-﻿using MoreMountains.Tools;
+﻿using System.Collections;
+using MoreMountains.Tools;
 using UnityEngine;
 using UnityEngine.Scripting.APIUpdating;
 
@@ -33,7 +34,7 @@ namespace MoreMountains.Feedbacks
 		[MMFInspectorGroup("Size Delta", true, 38)] 
 		/// the speed at which we should animate the size delta
 		[Tooltip("the speed at which we should animate the size delta")]
-		[MMFEnumCondition("Mode", (int)MMFeedbackBase.Modes.OverTime)]
+		[MMFEnumCondition("Mode", (int)MMFeedbackBase.Modes.OverTime, (int)Modes.ToDestination)]
 		public MMTweenType SpeedCurve = new MMTweenType(new AnimationCurve(new Keyframe(0, 0), new Keyframe(1, 1)));
 		/// the value to remap the curve's 0 to, randomized between its min and max - put the same value in both min and max if you don't want any randomness
 		[Tooltip("the value to remap the curve's 0 to, randomized between its min and max - put the same value in both min and max if you don't want any randomness")]
@@ -43,6 +44,108 @@ namespace MoreMountains.Feedbacks
 		[Tooltip("the value to remap the curve's 1 to, randomized between its min and max - put the same value in both min and max if you don't want any randomness")]
 		[MMFEnumCondition("Mode", (int)MMFeedbackBase.Modes.OverTime, (int)MMFeedbackBase.Modes.Instant)]
 		public Vector2 RemapOne = Vector2.one;
+		/// the size delta to reach when in ToDestination mode
+		[Tooltip("the size delta to reach when in ToDestination mode")]
+		[MMFEnumCondition("Mode", (int)Modes.ToDestination)]
+		public Vector2 DestinationSizeDelta = new Vector2(100f, 100f);
+
+		protected Vector2 _initialSizeDelta;
+		protected Vector2 _newValue;
+
+		/// <summary>
+		/// On init we store our initial size delta
+		/// </summary>
+		/// <param name="owner"></param>
+		protected override void CustomInitialization(MMF_Player owner)
+		{
+			base.CustomInitialization(owner);
+			if (Active && (TargetRectTransform != null))
+			{
+				_initialSizeDelta = TargetRectTransform.sizeDelta;
+			}
+		}
+
+		/// <summary>
+		/// On Play we handle ToDestination mode ourselves, and delegate other modes to the base class
+		/// </summary>
+		protected override void CustomPlayFeedback(Vector3 position, float feedbacksIntensity = 1.0f)
+		{
+			if (!Active || !FeedbackTypeAuthorized || (TargetRectTransform == null))
+			{
+				return;
+			}
+
+			if (Mode == Modes.ToDestination)
+			{
+				if (!AllowAdditivePlays && (_coroutine != null))
+				{
+					return;
+				}
+				if (_coroutine != null) { Owner.StopCoroutine(_coroutine); }
+				_initialSizeDelta = TargetRectTransform.sizeDelta;
+				_coroutine = Owner.StartCoroutine(SizeDeltaToDestinationCo(feedbacksIntensity, position));
+			}
+			else
+			{
+				base.CustomPlayFeedback(position, feedbacksIntensity);
+			}
+		}
+
+		/// <summary>
+		/// Coroutine that lerps the sizeDelta from its current value to the destination value
+		/// </summary>
+		protected virtual IEnumerator SizeDeltaToDestinationCo(float feedbacksIntensity, Vector3 position)
+		{
+			if (FeedbackDuration == 0f)
+			{
+				TargetRectTransform.sizeDelta = NormalPlayDirection ? DestinationSizeDelta : _initialSizeDelta;
+				_coroutine = null;
+				IsPlaying = false;
+				yield break;
+			}
+
+			float journey = NormalPlayDirection ? 0f : FeedbackDuration;
+			_newValue = _initialSizeDelta;
+			IsPlaying = true;
+
+			while ((journey >= 0) && (journey <= FeedbackDuration) && (FeedbackDuration > 0))
+			{
+				float percent = Mathf.Clamp01(journey / FeedbackDuration);
+
+				_newValue.x = MMTween.Tween(percent, 0f, 1f, _initialSizeDelta.x, DestinationSizeDelta.x, SpeedCurve);
+				_newValue.y = MMTween.Tween(percent, 0f, 1f, _initialSizeDelta.y, DestinationSizeDelta.y, SpeedCurve);
+
+				TargetRectTransform.sizeDelta = _newValue;
+
+				journey += NormalPlayDirection ? FeedbackDeltaTime : -FeedbackDeltaTime;
+				yield return null;
+			}
+
+			TargetRectTransform.sizeDelta = NormalPlayDirection ? DestinationSizeDelta : _initialSizeDelta;
+			_coroutine = null;
+			IsPlaying = false;
+			yield return null;
+		}
+
+		/// <summary>
+		/// On restore, we put our object back at its initial size delta
+		/// </summary>
+		protected override void CustomRestoreInitialValues()
+		{
+			if (!Active || !FeedbackTypeAuthorized)
+			{
+				return;
+			}
+
+			if (Mode == Modes.ToDestination)
+			{
+				TargetRectTransform.sizeDelta = _initialSizeDelta;
+			}
+			else
+			{
+				base.CustomRestoreInitialValues();
+			}
+		}
         
 		protected override void FillTargets()
 		{

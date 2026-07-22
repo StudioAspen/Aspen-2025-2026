@@ -129,7 +129,8 @@ namespace MoreMountains.FeedbacksForThirdParty
 								frequency = frequencyPoints
 							}
 						}
-					}
+					},
+					gamepadRumble = new GamepadRumble() { }
 				};
 
 				string json = JsonUtility.ToJson(hapticFile, true);
@@ -141,6 +142,7 @@ namespace MoreMountains.FeedbacksForThirdParty
 				Debug.Log($"Haptic file generated and saved to: {outputPath}");
 
 				NVHapticData data = new NVHapticData();
+				
 				data.Clip = haptic;
 				data.SampleCount = sampleCount;
 				data.AmplitudePoints = amplitudePoints;
@@ -150,6 +152,15 @@ namespace MoreMountains.FeedbacksForThirdParty
 					normalizeAmplitudeFactor, normalizeFrequency, normalizeFrequencyFactor);
 
 				data.RumbleData = haptic.gamepadRumble;
+				
+				// adds gamepad rumble data to file
+				string jsonText = File.ReadAllText(outputPath);
+				var hapticData = JsonUtility.FromJson<NVHapticFile>(jsonText);
+				hapticData.gamepadRumble = haptic.gamepadRumble;
+				hapticData.metadata.editor = "Feel AudioToHapticConverter";
+				string updatedJson = JsonUtility.ToJson(hapticData, prettyPrint: true);
+				File.WriteAllText(outputPath, updatedJson);
+				AssetDatabase.ImportAsset(outputPath);
 
 				return data;
 			}

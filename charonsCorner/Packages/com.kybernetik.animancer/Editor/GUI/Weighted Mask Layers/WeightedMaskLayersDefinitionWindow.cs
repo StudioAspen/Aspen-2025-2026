@@ -94,7 +94,7 @@ namespace Animancer.Editor
         /************************************************************************************************************************/
 
         /// <inheritdoc/>
-        protected override Color GetRowColor(TreeViewItem item)
+        protected override Color GetRowColor(TreeViewItem<int> item)
         {
             if (!TreeView.Transforms.TryGetObject(item.id, out var transform))
                 return default;
@@ -130,7 +130,7 @@ namespace Animancer.Editor
         /************************************************************************************************************************/
 
         /// <inheritdoc/>
-        public override void DrawCellGUI(Rect area, int column, int row, TreeViewItem item, ref bool isSelectionClick)
+        public override void DrawCellGUI(Rect area, int column, int row, TreeViewItem<int> item, ref bool isSelectionClick)
         {
             if (!TreeView.Transforms.TryGetObject(item.id, out var transform))
                 return;

@@ -56,9 +56,12 @@ namespace MoreMountains.Feedbacks
 				return;
 			}
 			ProceedWithDestruction(TargetGameObject);
-			foreach (GameObject go in ExtraTargetGameObjects)
+			if (ExtraTargetGameObjects != null)
 			{
-				ProceedWithDestruction(go);
+				foreach (GameObject go in ExtraTargetGameObjects)
+				{
+					ProceedWithDestruction(go);
+				}	
 			}
 		}
         

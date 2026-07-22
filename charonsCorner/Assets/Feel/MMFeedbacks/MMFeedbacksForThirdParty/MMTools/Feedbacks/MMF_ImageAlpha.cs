@@ -87,9 +87,8 @@ namespace MoreMountains.Feedbacks
 		{
 			base.CustomInitialization(owner);
 			
-			if (BoundImage == null)
+			if (!TargetExists(BoundImage, nameof(BoundImage)))
 			{
-				Debug.LogWarning("[Image Alpha Feedback] The image alpha feedback on "+Owner.name+" doesn't have a bound image, it won't work. You need to specify an image in its inspector.");
 				return;
 			}
 

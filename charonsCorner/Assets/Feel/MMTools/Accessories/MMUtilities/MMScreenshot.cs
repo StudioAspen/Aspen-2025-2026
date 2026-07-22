@@ -109,7 +109,9 @@ namespace MoreMountains.Tools
 			float height = Screen.height * GameViewSizeMultiplier;
 			string savePath = FolderName+"/screenshot_" + width + "x" + height + "_" + System.DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss") + ".png";
 
+			#if MM_SCREENCAPTURE
 			ScreenCapture.CaptureScreenshot(savePath, GameViewSizeMultiplier);
+			#endif
 			return savePath;
 		}
 

@@ -184,15 +184,12 @@ namespace MoreMountains.Feedbacks
 					BoundRenderer = owner.GetComponentInChildren<Renderer>();
 				}
 			}
-			if (BoundRenderer == null)
+			if (!TargetExists(BoundRenderer, nameof(BoundRenderer)))
 			{
-				Debug.LogWarning("[Flicker Feedback] The flicker feedback on "+Owner.name+" doesn't have a bound renderer, it won't work. You need to specify a renderer to flicker in its inspector.");
+				_spriteRendererIsNull = true;
+				return;
 			}
-
-			if (BoundRenderer != null)
-			{
-				_spriteRenderer = BoundRenderer.GetComponent<SpriteRenderer>();	
-			}
+			_spriteRenderer = BoundRenderer.GetComponent<SpriteRenderer>();	
 			
 			_spriteRenderers = new List<SpriteRenderer>();
 			foreach (Renderer renderer in ExtraBoundRenderers)

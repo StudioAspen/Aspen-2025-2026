@@ -66,7 +66,7 @@ namespace MoreMountains.Tools
 			_confinerCompositeCollider2D = _confinerGameObject.AddComponent<CompositeCollider2D>();
 			_confinerCompositeCollider2D.geometryType = CompositeCollider2D.GeometryType.Polygons;
             
-			// we set the composite collider as the virtual camera's confiner
+			// we set the composite collider as the CM camera's confiner
 			#if MM_CINEMACHINE 
 			_cinemachineConfiner = VirtualCamera.gameObject.MMGetComponentAroundOrAdd<CinemachineConfiner>();
 			_cinemachineConfiner.m_ConfineMode = CinemachineConfiner.Mode.Confine2D;

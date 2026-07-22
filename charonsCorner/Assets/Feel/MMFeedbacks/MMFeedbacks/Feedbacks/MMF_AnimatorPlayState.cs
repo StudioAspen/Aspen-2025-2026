@@ -96,6 +96,12 @@ namespace MoreMountains.Feedbacks
 		protected override void CustomInitialization(MMF_Player owner)
 		{
 			base.CustomInitialization(owner);
+			
+			if (!TargetExists(BoundAnimator, nameof(BoundAnimator)))
+			{
+				return;
+			}
+			
 			_targetParameter = Animator.StringToHash(StateName);
 			_layerID = TargetLayerIndex;
 			if ((LayerName != "") && (BoundAnimator != null))
@@ -118,7 +124,6 @@ namespace MoreMountains.Feedbacks
 
 			if (BoundAnimator == null)
 			{
-				Debug.LogWarning("[Animator Play State Feedback] The animator play state feedback on "+Owner.name+" doesn't have a BoundAnimator, it won't work. You need to specify one in its inspector.");
 				return;
 			}
 

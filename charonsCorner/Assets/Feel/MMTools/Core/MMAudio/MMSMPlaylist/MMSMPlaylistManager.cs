@@ -86,6 +86,7 @@ namespace MoreMountains.Tools
 		public string CurrentSongName;
 		/// the current state of this playlist
 		[MMReadOnly]
+		[System.NonSerialized]
 		public MMStateMachine<PlaylistManagerStates> PlaylistManagerState;
 		
 		/// the time of the currently playing song
@@ -186,6 +187,7 @@ namespace MoreMountains.Tools
 		protected float _lastTestVolumeControl = 1f;
 		protected float _lastTestPlaybackSpeedControl = 1f;
 		internal bool _listeningToEvents = false;
+		protected bool _initialized = false;
 
 		#region INITIALIZATION
 
@@ -282,6 +284,7 @@ namespace MoreMountains.Tools
 				InitializeRandomSeed();
 				Playlist.Initialization();
 				InitializePlaylistManagerState();
+				_initialized = true;
 			}
 
 			/// <summary>
@@ -451,7 +454,6 @@ namespace MoreMountains.Tools
 			}
 
 		#endregion
-		
 		
 		#region CONTROLS
 		
@@ -857,6 +859,11 @@ namespace MoreMountains.Tools
 			protected virtual void OnApplicationPause(bool pauseStatus)
 			{
 				if (!AutoHandleApplicationPause)
+				{
+					return;
+				}
+
+				if (!_initialized)
 				{
 					return;
 				}

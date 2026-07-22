@@ -378,7 +378,14 @@ namespace MoreMountains.Feedbacks
 					AudioSource audioSource = temporaryAudioHost.AddComponent<AudioSource>() as AudioSource;
 					PlayAudioSource(audioSource, sfx, volume, pitch, timeSamples, SfxAudioMixerGroup, Priority);
 					// we destroy the host after the clip has played
-					Owner.ProxyDestroy(temporaryAudioHost, sfx.length * Time.timeScale);
+					if (Application.isPlaying)
+					{
+						Owner.ProxyDestroy(temporaryAudioHost, sfx.length * Time.timeScale);	
+					}
+					else
+					{
+						Owner.ProxyDestroyImmediate(temporaryAudioHost);
+					}
 					break;
 				case PlayMethods.Pool:
 					_tempAudioSource = GetAudioSourceFromPool();

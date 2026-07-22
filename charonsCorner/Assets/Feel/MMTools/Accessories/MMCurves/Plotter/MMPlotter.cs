@@ -7,6 +7,7 @@ namespace MoreMountains.Tools
 {
 	public class MMPlotter : MonoBehaviour
 	{
+		[System.NonSerialized]
 		public MethodInfo TweenMethod;
 		public int TweenMethodIndex;
 

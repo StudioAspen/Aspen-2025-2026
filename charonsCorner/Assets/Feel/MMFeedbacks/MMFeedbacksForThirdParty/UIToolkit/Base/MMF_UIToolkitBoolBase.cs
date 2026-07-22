@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using MoreMountains.Feedbacks;
 using MoreMountains.Tools;
@@ -10,6 +11,7 @@ namespace MoreMountains.FeedbacksForThirdParty
 	/// <summary>
 	/// A base feedback to set a bool on a target UI Document
 	/// </summary>
+	[Serializable]
 	[AddComponentMenu("")]
 	public class MMF_UIToolkitBoolBase : MMF_UIToolkit
 	{

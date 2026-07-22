@@ -253,7 +253,7 @@ namespace MoreMountains.Tools
 			/// <returns></returns>
 			protected virtual IMMPersistent[] FindAllPersistentObjects()
 			{
-				return FindObjectsByType<MonoBehaviour>(FindObjectsInactive.Include, FindObjectsSortMode.None).OfType<IMMPersistent>().ToArray();
+				return FindObjectsByType<MonoBehaviour>(FindObjectsInactive.Include).OfType<IMMPersistent>().ToArray();
 			}
 
 			/// <summary>

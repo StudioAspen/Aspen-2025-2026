@@ -1,6 +1,5 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
+using MoreMountains.Tools;
 using UnityEngine;
 using UnityEngine.Scripting.APIUpdating;
 
@@ -10,7 +9,7 @@ namespace MoreMountains.Feedbacks
 	/// Turns an object active or inactive at the various stages of the feedback
 	/// </summary>
 	[AddComponentMenu("")]
-	[FeedbackHelp("This feedback allows you to set global properties on your shader, or enable/disable keywords.")]
+	[FeedbackHelp("This feedback allows you to set global properties on your shader, or enable/disable keywords. Supports optional interpolation over time for Color, Float, Int, and Vector properties.")]
 	[MovedFrom(false, null, "MoreMountains.Feedbacks")]
 	[System.Serializable]
 	[FeedbackPath("Renderer/Shader Global")]
@@ -22,6 +21,7 @@ namespace MoreMountains.Feedbacks
 		#if UNITY_EDITOR
 		public override Color FeedbackColor { get { return MMFeedbacksInspectorColors.RendererColor; } }
 		public override string RequiredTargetText { get { return Mode.ToString();  } }
+		public override bool HasCustomInspectors => true;
 		#endif
 
 		public enum Modes { SetGlobalColor, SetGlobalFloat, SetGlobalInt, SetGlobalMatrix, SetGlobalTexture, SetGlobalVector, EnableKeyword, DisableKeyword, WarmupAllShaders }
@@ -67,15 +67,82 @@ namespace MoreMountains.Feedbacks
 		[MMFEnumCondition("Mode", (int)Modes.EnableKeyword, (int)Modes.DisableKeyword)]
 		public string Keyword;
 
+		[Header("Interpolation")]
+		/// whether or not to interpolate the value over time. If set to false, the change will be instant. Only applies to Color, Float, Int, and Vector modes.
+		[Tooltip("whether or not to interpolate the value over time. If set to false, the change will be instant. Only applies to Color, Float, Int, and Vector modes.")]
+		public bool InterpolateValue = false;
+		/// the duration of the interpolation
+		[Tooltip("the duration of the interpolation")]
+		[MMFCondition("InterpolateValue", true)]
+		public float Duration = 2f;
+		/// the curve over which to interpolate the value
+		[Tooltip("the curve over which to interpolate the value")]
+		public MMTweenType InterpolationCurve = new MMTweenType(new AnimationCurve(new Keyframe(0, 0), new Keyframe(0.3f, 1f), new Keyframe(1, 0)), "InterpolateValue");
+		
+		public override float FeedbackDuration { get { return (InterpolateValue && CanInterpolate()) ? ApplyTimeMultiplier(Duration) : 0f; } set { if (InterpolateValue) { Duration = value; } } }
+
 		protected Color _initialColor;
 		protected float _initialFloat;
 		protected int _initialInt;
 		protected Matrix4x4 _initialMatrix;
 		protected RenderTexture _initialTexture;
 		protected Vector4 _initialVector;
+		protected Coroutine _coroutine;
+		protected Color _newColor;
+		protected Vector4 _newVector;
+
+		/// <summary>
+		/// Returns true if the current Mode supports interpolation
+		/// </summary>
+		protected virtual bool CanInterpolate()
+		{
+			return Mode == Modes.SetGlobalColor || Mode == Modes.SetGlobalFloat || 
+			       Mode == Modes.SetGlobalInt || Mode == Modes.SetGlobalVector;
+		}
+
+		/// <summary>
+		/// On init we capture the initial values of the global shader properties for interpolation and restore
+		/// </summary>
+		protected override void CustomInitialization(MMF_Player owner)
+		{
+			base.CustomInitialization(owner);
+			if (!Active || !FeedbackTypeAuthorized)
+			{
+				return;
+			}
+			GetInitialValues();
+		}
+
+		/// <summary>
+		/// Captures the current global shader property values for later use in interpolation and restore
+		/// </summary>
+		protected virtual void GetInitialValues()
+		{
+			switch (Mode)
+			{
+				case Modes.SetGlobalColor:
+					_initialColor = (PropertyName == "") ? Shader.GetGlobalColor(PropertyNameID) : Shader.GetGlobalColor(PropertyName);
+					break;
+				case Modes.SetGlobalFloat:
+					_initialFloat = (PropertyName == "") ? Shader.GetGlobalFloat(PropertyNameID) : Shader.GetGlobalFloat(PropertyName);
+					break;
+				case Modes.SetGlobalInt:
+					_initialInt = (PropertyName == "") ? Shader.GetGlobalInt(PropertyNameID) : Shader.GetGlobalInt(PropertyName);
+					break;
+				case Modes.SetGlobalMatrix:
+					_initialMatrix = (PropertyName == "") ? Shader.GetGlobalMatrix(PropertyNameID) : Shader.GetGlobalMatrix(PropertyName);
+					break;
+				case Modes.SetGlobalTexture:
+					_initialTexture = (PropertyName == "") ? (RenderTexture)Shader.GetGlobalTexture(PropertyNameID) : (RenderTexture)Shader.GetGlobalTexture(PropertyName);
+					break;
+				case Modes.SetGlobalVector:
+					_initialVector = (PropertyName == "") ? Shader.GetGlobalVector(PropertyNameID) : Shader.GetGlobalVector(PropertyName);
+					break;
+			}
+		}
         
 		/// <summary>
-		/// On Play we set our global shader property
+		/// On Play we set our global shader property, either instantly or interpolated over time
 		/// </summary>
 		/// <param name="position"></param>
 		/// <param name="feedbacksIntensity"></param>
@@ -86,67 +153,40 @@ namespace MoreMountains.Feedbacks
 				return;
 			}
 
+			if (InterpolateValue && CanInterpolate())
+			{
+				_coroutine = Owner.StartCoroutine(InterpolationSequenceCo(feedbacksIntensity));
+			}
+			else
+			{
+				ApplyGlobalValue();
+			}
+		}
+
+		/// <summary>
+		/// Applies the global shader value instantly (no interpolation)
+		/// </summary>
+		protected virtual void ApplyGlobalValue()
+		{
 			switch (Mode)
 			{
 				case Modes.SetGlobalColor:
-					if (PropertyName == "")
-					{
-						Shader.SetGlobalColor(PropertyNameID, GlobalColor);
-					}
-					else
-					{
-						Shader.SetGlobalColor(PropertyName, GlobalColor);
-					}
+					SetGlobalColor(GlobalColor);
 					break;
 				case Modes.SetGlobalFloat:
-					if (PropertyName == "")
-					{
-						Shader.SetGlobalFloat(PropertyNameID, GlobalFloat);
-					}
-					else
-					{
-						Shader.SetGlobalFloat(PropertyName, GlobalFloat);
-					}
+					SetGlobalFloat(GlobalFloat);
 					break;
 				case Modes.SetGlobalInt:
-					if (PropertyName == "")
-					{
-						Shader.SetGlobalInt(PropertyNameID, GlobalInt);
-					}
-					else
-					{
-						Shader.SetGlobalInt(PropertyName, GlobalInt);
-					}
+					SetGlobalInt(GlobalInt);
 					break;
 				case Modes.SetGlobalMatrix:
-					if (PropertyName == "")
-					{
-						Shader.SetGlobalMatrix(PropertyNameID, GlobalMatrix);
-					}
-					else
-					{
-						Shader.SetGlobalMatrix(PropertyName, GlobalMatrix);
-					}
+					SetGlobalMatrix(GlobalMatrix);
 					break;
 				case Modes.SetGlobalTexture:
-					if (PropertyName == "")
-					{
-						Shader.SetGlobalTexture(PropertyNameID, GlobalTexture);
-					}
-					else
-					{
-						Shader.SetGlobalTexture(PropertyName, GlobalTexture);
-					}
+					SetGlobalTexture(GlobalTexture);
 					break;
 				case Modes.SetGlobalVector:
-					if (PropertyName == "")
-					{
-						Shader.SetGlobalVector(PropertyNameID, GlobalVector);
-					}
-					else
-					{
-						Shader.SetGlobalVector(PropertyName, GlobalVector);
-					}
+					SetGlobalVector(GlobalVector);
 					break;
 				case Modes.EnableKeyword:
 					Shader.EnableKeyword(Keyword);
@@ -158,6 +198,68 @@ namespace MoreMountains.Feedbacks
 					Shader.WarmupAllShaders();
 					break;
 			}
+		}
+
+		/// <summary>
+		/// An internal coroutine used to interpolate the value over time
+		/// </summary>
+		protected virtual IEnumerator InterpolationSequenceCo(float intensityMultiplier)
+		{
+			IsPlaying = true;
+			float journey = NormalPlayDirection ? 0f : FeedbackDuration;
+			while ((journey >= 0) && (journey <= FeedbackDuration) && (FeedbackDuration > 0))
+			{
+				float remappedTime = MMFeedbacksHelpers.Remap(journey, 0f, FeedbackDuration, 0f, 1f);
+				SetValueAtTime(remappedTime, intensityMultiplier);
+				journey += NormalPlayDirection ? FeedbackDeltaTime : -FeedbackDeltaTime;
+				yield return null;
+			}
+			SetValueAtTime(FinalNormalizedTime, intensityMultiplier);
+			_coroutine = null;
+			IsPlaying = false;
+			yield return null;
+		}
+
+		/// <summary>
+		/// Sets the value of the global shader property at a given normalized time during interpolation
+		/// </summary>
+		protected virtual void SetValueAtTime(float t, float intensityMultiplier)
+		{
+			switch (Mode)
+			{
+				case Modes.SetGlobalColor:
+					float colorEval = MMTween.Tween(t, 0f, 1f, 0f, 1f, InterpolationCurve);
+					_newColor = Color.Lerp(_initialColor, GlobalColor, colorEval);
+					SetGlobalColor(_newColor);
+					break;
+				case Modes.SetGlobalFloat:
+					float newFloat = MMTween.Tween(t, 0f, 1f, _initialFloat, GlobalFloat, InterpolationCurve);
+					SetGlobalFloat(newFloat);
+					break;
+				case Modes.SetGlobalInt:
+					int newInt = (int)MMTween.Tween(t, 0f, 1f, _initialInt, GlobalInt, InterpolationCurve);
+					SetGlobalInt(newInt);
+					break;
+				case Modes.SetGlobalVector:
+					_newVector = MMTween.Tween(t, 0f, 1f, _initialVector, GlobalVector, InterpolationCurve);
+					SetGlobalVector(_newVector);
+					break;
+			}
+		}
+
+		/// <summary>
+		/// Stops this feedback
+		/// </summary>
+		protected override void CustomStopFeedback(Vector3 position, float feedbacksIntensity = 1)
+		{
+			if (!Active || !FeedbackTypeAuthorized || (_coroutine == null))
+			{
+				return;
+			}
+			base.CustomStopFeedback(position, feedbacksIntensity);
+			IsPlaying = false;
+			Owner.StopCoroutine(_coroutine);
+			_coroutine = null;
 		}
 		
 		/// <summary>
@@ -172,66 +274,83 @@ namespace MoreMountains.Feedbacks
 			switch (Mode)
 			{
 				case Modes.SetGlobalColor:
-					if (PropertyName == "")
-					{
-						Shader.SetGlobalColor(PropertyNameID, _initialColor);
-					}
-					else
-					{
-						Shader.SetGlobalColor(PropertyName, _initialColor);
-					}
+					SetGlobalColor(_initialColor);
 					break;
 				case Modes.SetGlobalFloat:
-					if (PropertyName == "")
-					{
-						Shader.SetGlobalFloat(PropertyNameID, _initialFloat);
-					}
-					else
-					{
-						Shader.SetGlobalFloat(PropertyName, _initialFloat);
-					}
+					SetGlobalFloat(_initialFloat);
 					break;
 				case Modes.SetGlobalInt:
-					if (PropertyName == "")
-					{
-						Shader.SetGlobalInt(PropertyNameID, _initialInt);
-					}
-					else
-					{
-						Shader.SetGlobalInt(PropertyName, _initialInt);
-					}
+					SetGlobalInt(_initialInt);
 					break;
 				case Modes.SetGlobalMatrix:
-					if (PropertyName == "")
-					{
-						Shader.SetGlobalMatrix(PropertyNameID, _initialMatrix);
-					}
-					else
-					{
-						Shader.SetGlobalMatrix(PropertyName, _initialMatrix);
-					}
+					SetGlobalMatrix(_initialMatrix);
 					break;
 				case Modes.SetGlobalTexture:
-					if (PropertyName == "")
-					{
-						Shader.SetGlobalTexture(PropertyNameID, _initialTexture);
-					}
-					else
-					{
-						Shader.SetGlobalTexture(PropertyName, _initialTexture);
-					}
+					SetGlobalTexture(_initialTexture);
 					break;
 				case Modes.SetGlobalVector:
-					if (PropertyName == "")
-					{
-						Shader.SetGlobalVector(PropertyNameID, _initialVector);
-					}
-					else
-					{
-						Shader.SetGlobalVector(PropertyName, _initialVector);
-					}
+					SetGlobalVector(_initialVector);
 					break;
 			}
 		}
+
+		#region GlobalShaderHelpers
+
+		/// <summary>
+		/// Sets a global color on the shader, using either PropertyName or PropertyNameID
+		/// </summary>
+		protected virtual void SetGlobalColor(Color color)
+		{
+			if (PropertyName == "") { Shader.SetGlobalColor(PropertyNameID, color); }
+			else { Shader.SetGlobalColor(PropertyName, color); }
+		}
+
+		/// <summary>
+		/// Sets a global float on the shader, using either PropertyName or PropertyNameID
+		/// </summary>
+		protected virtual void SetGlobalFloat(float value)
+		{
+			if (PropertyName == "") { Shader.SetGlobalFloat(PropertyNameID, value); }
+			else { Shader.SetGlobalFloat(PropertyName, value); }
+		}
+
+		/// <summary>
+		/// Sets a global int on the shader, using either PropertyName or PropertyNameID
+		/// </summary>
+		protected virtual void SetGlobalInt(int value)
+		{
+			if (PropertyName == "") { Shader.SetGlobalInt(PropertyNameID, value); }
+			else { Shader.SetGlobalInt(PropertyName, value); }
+		}
+
+		/// <summary>
+		/// Sets a global matrix on the shader, using either PropertyName or PropertyNameID
+		/// </summary>
+		protected virtual void SetGlobalMatrix(Matrix4x4 matrix)
+		{
+			if (PropertyName == "") { Shader.SetGlobalMatrix(PropertyNameID, matrix); }
+			else { Shader.SetGlobalMatrix(PropertyName, matrix); }
+		}
+
+		/// <summary>
+		/// Sets a global texture on the shader, using either PropertyName or PropertyNameID
+		/// </summary>
+		protected virtual void SetGlobalTexture(Texture texture)
+		{
+			if (PropertyName == "") { Shader.SetGlobalTexture(PropertyNameID, texture); }
+			else { Shader.SetGlobalTexture(PropertyName, texture); }
+		}
+
+		/// <summary>
+		/// Sets a global vector on the shader, using either PropertyName or PropertyNameID
+		/// </summary>
+		protected virtual void SetGlobalVector(Vector4 vector)
+		{
+			if (PropertyName == "") { Shader.SetGlobalVector(PropertyNameID, vector); }
+			else { Shader.SetGlobalVector(PropertyName, vector); }
+		}
+
+		#endregion
 	}
 }
+

@@ -149,9 +149,12 @@ namespace MoreMountains.Feedbacks
 		protected virtual void SetStatus(PossibleStates state)
 		{
 			SetStatus(state, TargetBehaviour);
-			foreach (Behaviour extra in ExtraTargetBehaviours)
+			if (ExtraTargetBehaviours != null)
 			{
-				SetStatus(state, extra);
+				foreach (Behaviour extra in ExtraTargetBehaviours)
+				{
+					SetStatus(state, extra);
+				}	
 			}
 		}
 

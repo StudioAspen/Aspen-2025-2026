@@ -52,7 +52,7 @@ namespace MoreMountains.Tools
 			_confinerGameObject.transform.localPosition = Vector3.zero;
             
             
-			// we set the composite collider as the virtual camera's confiner
+			// we set the composite collider as the CM camera's confiner
 			
 			#if MM_CINEMACHINE
 			_cinemachineConfiner = VirtualCamera.gameObject.MMGetComponentAroundOrAdd<CinemachineConfiner>();

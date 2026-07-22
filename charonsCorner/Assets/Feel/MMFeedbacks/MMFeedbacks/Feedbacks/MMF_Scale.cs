@@ -224,7 +224,11 @@ namespace MoreMountains.Feedbacks
 
 			float duration = HandleSpeedMode(AnimateScaleTarget.localScale, DestinationScale, FeedbackDuration);
 
-			_initialScale = AnimateScaleTarget.localScale;
+			if (DetermineScaleOnPlay)
+			{
+				_initialScale = AnimateScaleTarget.localScale;	
+			}
+			
 			_newScale = _initialScale;
 			IsPlaying = true;
 			while ((journey >= 0) && (journey <= duration) && (duration > 0))
@@ -297,8 +301,11 @@ namespace MoreMountains.Feedbacks
 			}
             
 			float journey = NormalPlayDirection ? 0f : duration;
-            
-			_initialScale = targetTransform.localScale;
+
+			if (DetermineScaleOnPlay)
+			{
+				_initialScale = targetTransform.localScale;	
+			}
             
 			IsPlaying = true;
 			

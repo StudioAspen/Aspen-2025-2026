@@ -71,6 +71,9 @@ namespace MoreMountains.Feedbacks
 		[Tooltip("the max value from which to pick a random target value when in MoveTo or MoveToAdditive modes")]
 		[MMFEnumCondition("Mode", (int)Modes.MoveTo, (int)Modes.MoveToAdditive)]
 		public float MoveToMax = 2f;
+		/// if this is true, calling Stop on this feedback will reset the object's scale to its initial value
+		[Tooltip("if this is true, calling Stop on this feedback will reset the object's scale to its initial value")]
+		public bool ResetScaleOnStop = false;
 
 		/// the min value from which to pick a random bump amount when in Bump mode
 		[Tooltip("the min value from which to pick a random bump amount when in Bump mode")]
@@ -92,6 +95,7 @@ namespace MoreMountains.Feedbacks
 		
 		protected Vector3 _newScale;
 		protected Vector3 _initialScale;
+		protected float _initialValue;
 
 		/// <summary>
 		/// On init we store our initial scale
@@ -112,8 +116,32 @@ namespace MoreMountains.Feedbacks
 		protected virtual void GetInitialValues()
 		{
 			_initialScale = AnimateScaleTarget.localScale;
-			_currentValue = AnimateScaleTarget.localScale.x;
+			_currentValue = GetInitialAxisValue(_initialScale);
 			_targetValue = _currentValue;
+		}
+
+		/// <summary>
+		/// Returns the scalar spring value matching the currently selected axis mode.
+		/// </summary>
+		protected virtual float GetInitialAxisValue(Vector3 scale)
+		{
+			switch (Axis)
+			{
+				case PossibleAxis.XtoYZ:
+				case PossibleAxis.XtoY:
+				case PossibleAxis.XtoZ:
+					return scale.x;
+				case PossibleAxis.YtoXZ:
+				case PossibleAxis.YtoX:
+				case PossibleAxis.YtoZ:
+					return scale.y;
+				case PossibleAxis.ZtoXZ:
+				case PossibleAxis.ZtoX:
+				case PossibleAxis.ZtoY:
+					return scale.z;
+				default:
+					return scale.x;
+			}
 		}
 
 		/// <summary>
@@ -173,6 +201,8 @@ namespace MoreMountains.Feedbacks
 		protected virtual void UpdateSpring()
 		{
 			MMMaths.Spring(ref _currentValue, _targetValue, ref _velocity, Damping, Frequency, FeedbackDeltaTime);
+			// Clamp to prevent extreme negative overshoots at low frequencies
+			_currentValue = Mathf.Max(_currentValue, 0.01f);
 			ApplyValue();
 		}
 
@@ -182,53 +212,60 @@ namespace MoreMountains.Feedbacks
 		protected virtual void ApplyValue()
 		{
 			float newValue = _currentValue;
-			float invertScale = 1 / Mathf.Sqrt(newValue);
+			if (float.IsNaN(newValue) || float.IsInfinity(newValue))
+			{
+				newValue = GetInitialAxisValue(_initialScale);
+			}
+
+			float absoluteValue = Mathf.Abs(newValue);
+			float invertSource = Mathf.Max(absoluteValue, 0.0001f);
+			float invertScale = 1f / Mathf.Sqrt(invertSource);
 			switch (Axis)
 			{
 				case PossibleAxis.XtoYZ:
-					_newScale.x = newValue;
+					_newScale.x = absoluteValue;
 					_newScale.y = invertScale;
 					_newScale.z = invertScale;
 					break;
 				case PossibleAxis.XtoY:
-					_newScale.x = newValue;
+					_newScale.x = absoluteValue;
 					_newScale.y = invertScale;
 					_newScale.z = _initialScale.z;
 					break;
 				case PossibleAxis.XtoZ:
-					_newScale.x = newValue;
+					_newScale.x = absoluteValue;
 					_newScale.y = _initialScale.y;
 					_newScale.z = invertScale;
 					break;
 				case PossibleAxis.YtoXZ:
 					_newScale.x = invertScale;
-					_newScale.y = newValue;
+					_newScale.y = absoluteValue;
 					_newScale.z = invertScale;
 					break;
 				case PossibleAxis.YtoX:
 					_newScale.x = invertScale;
-					_newScale.y = newValue;
+					_newScale.y = absoluteValue;
 					_newScale.z = _initialScale.z;
 					break;
 				case PossibleAxis.YtoZ:
-					_newScale.x = newValue;
+					_newScale.x = absoluteValue;
 					_newScale.y = _initialScale.y;
 					_newScale.z = invertScale;
 					break;
 				case PossibleAxis.ZtoXZ:
 					_newScale.x = invertScale;
 					_newScale.y = invertScale;
-					_newScale.z = newValue;
+					_newScale.z = absoluteValue;
 					break;
 				case PossibleAxis.ZtoX:
 					_newScale.x = invertScale;
 					_newScale.y = _initialScale.y;
-					_newScale.z = newValue;
+					_newScale.z = absoluteValue;
 					break;
 				case PossibleAxis.ZtoY:
 					_newScale.x = _initialScale.x;
 					_newScale.y = invertScale;
-					_newScale.z = newValue;
+					_newScale.z = absoluteValue;
 					break;
 			}
 			_newScale.x = Mathf.Abs(_newScale.x);
@@ -256,6 +293,14 @@ namespace MoreMountains.Feedbacks
 			_velocity = 0f;
 			_targetValue = _currentValue;
 			ApplyValue();
+			
+			if (ResetScaleOnStop)
+			{
+				// Reset to the cached initial scale if requested.
+				AnimateScaleTarget.localScale = _initialScale;
+				_currentValue = GetInitialAxisValue(_initialScale);
+				_targetValue = _currentValue;
+			}
 		}
 		
 		/// <summary>
@@ -288,7 +333,7 @@ namespace MoreMountains.Feedbacks
 			{
 				return;
 			}
-			_currentValue = _initialScale.x;
+			_currentValue = GetInitialAxisValue(_initialScale);
 			_targetValue = _currentValue;
 			ApplyValue();
 		}

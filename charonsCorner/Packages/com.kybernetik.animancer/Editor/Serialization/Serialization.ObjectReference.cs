@@ -25,7 +25,7 @@ namespace Animancer.Editor
             /************************************************************************************************************************/
 
             [SerializeField] private Object _Object;
-            [SerializeField] private int _InstanceID;
+            [SerializeField] private EntityId _InstanceID;
 
             /************************************************************************************************************************/
 
@@ -39,8 +39,8 @@ namespace Animancer.Editor
                 }
             }
 
-            /// <summary>The <see cref="Object.GetInstanceID"/>.</summary>
-            public int InstanceID => _InstanceID;
+            /// <summary>The <see cref="Object.GetEntityId"/>.</summary>
+            public EntityId InstanceID => _InstanceID;
 
             /************************************************************************************************************************/
 
@@ -52,7 +52,7 @@ namespace Animancer.Editor
             {
                 _Object = obj;
                 if (obj != null)
-                    _InstanceID = obj.GetInstanceID();
+                    _InstanceID = obj.GetEntityId();
             }
 
             /************************************************************************************************************************/
@@ -60,9 +60,9 @@ namespace Animancer.Editor
             private void Initialize()
             {
                 if (_Object == null)
-                    _Object = EditorUtility.InstanceIDToObject(_InstanceID);
+                    _Object = EditorUtility.EntityIdToObject(_InstanceID);
                 else
-                    _InstanceID = _Object.GetInstanceID();
+                    _InstanceID = _Object.GetEntityId();
             }
 
             /************************************************************************************************************************/

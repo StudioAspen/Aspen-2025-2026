@@ -46,9 +46,9 @@ namespace MoreMountains.Feedbacks
 
 			if (Active)
 			{
-				if (BoundSpriteRenderer == null)
+				if (!TargetExists(BoundSpriteRenderer, nameof(BoundSpriteRenderer)))
 				{
-					Debug.LogWarning("[Sprite Feedback] The Sprite feedback on "+Owner.name+" doesn't have a BoundSpriteRenderer, it won't work. You need to specify a Sprite Renderer in its inspector.");
+					return;
 				}
 				else
 				{

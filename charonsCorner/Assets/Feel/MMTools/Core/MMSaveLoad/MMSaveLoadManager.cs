@@ -93,6 +93,19 @@ namespace MoreMountains.Tools
 		}
 
 		/// <summary>
+		/// Returns whether or not a save file with the specified name already exists in the specified folder
+		/// </summary>
+		/// <param name="fileName"></param>
+		/// <param name="foldername"></param>
+		/// <returns></returns>
+		public static bool SaveFileExists(string fileName, string foldername = _defaultFolderName)
+		{
+			string savePath = DetermineSavePath(foldername);
+			string saveFileName = DetermineSaveFileName(fileName);
+			return File.Exists(savePath + saveFileName);
+		}
+
+		/// <summary>
 		/// Load the specified file based on a file name into a specified folder
 		/// </summary>
 		/// <param name="fileName">File name.</param>

@@ -170,6 +170,7 @@ namespace MoreMountains.Tools
 		public float PingPong;
 		/// internal use only
 		[HideInInspector]
+		[System.NonSerialized]
 		public MonoAttribute TargetAttribute;
 		/// internal use only
 		[HideInInspector]
@@ -615,7 +616,10 @@ namespace MoreMountains.Tools
 		/// </summary>
 		public virtual void RestoreInitialValues()
 		{
-			TargetAttribute.SetValue(InitialValue);
+			if (TargetAttribute != null)
+			{
+				TargetAttribute.SetValue(InitialValue);	
+			}
 		}
 	}
 }

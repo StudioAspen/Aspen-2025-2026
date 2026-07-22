@@ -18,6 +18,8 @@ namespace MoreMountains.Tools
 		public Modes Mode;
 		/// the track to fade the volume of
 		public MMSoundManager.MMSoundManagerTracks Track;
+		/// if Track is Other, the optional custom track SO to target
+		public MMSoundManagerCustomTrackSO CustomTrack;
 		/// the duration of the fade, in seconds
 		public float FadeDuration;
 		/// the final volume to fade towards
@@ -25,20 +27,22 @@ namespace MoreMountains.Tools
 		/// the tween to use when fading
 		public MMTweenType FadeTween;
         
-		public MMSoundManagerTrackFadeEvent(Modes mode, MMSoundManager.MMSoundManagerTracks track, float fadeDuration, float finalVolume, MMTweenType fadeTween)
+		public MMSoundManagerTrackFadeEvent(Modes mode, MMSoundManager.MMSoundManagerTracks track, float fadeDuration, float finalVolume, MMTweenType fadeTween, MMSoundManagerCustomTrackSO customTrack = null)
 		{
 			Mode = mode;
 			Track = track;
+			CustomTrack = customTrack;
 			FadeDuration = fadeDuration;
 			FinalVolume = finalVolume;
 			FadeTween = fadeTween;
 		}
 
 		static MMSoundManagerTrackFadeEvent e;
-		public static void Trigger(Modes mode, MMSoundManager.MMSoundManagerTracks track, float fadeDuration, float finalVolume, MMTweenType fadeTween)
+		public static void Trigger(Modes mode, MMSoundManager.MMSoundManagerTracks track, float fadeDuration, float finalVolume, MMTweenType fadeTween, MMSoundManagerCustomTrackSO customTrack = null)
 		{
 			e.Mode = mode;
 			e.Track = track;
+			e.CustomTrack = customTrack;
 			e.FadeDuration = fadeDuration;
 			e.FinalVolume = finalVolume;
 			e.FadeTween = fadeTween;

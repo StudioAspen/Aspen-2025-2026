@@ -78,6 +78,21 @@ namespace MoreMountains.FeedbacksForThirdParty
 					impulseListener = virtualCamera.gameObject.AddComponent<CinemachineImpulseListener>();
 					additions += "Added an impulse listener. ";
 				}
+				switch (feedbackName)
+				{
+					case "CameraZoom":
+						virtualCameraGo.MMGetOrAddComponent<MMCinemachineZoom>();
+						break;
+					case "FieldOfView":
+						virtualCameraGo.MMGetOrAddComponent<MMCinemachineFieldOfViewShaker>();
+						break;
+					case "OrthographicSize":
+						virtualCameraGo.MMGetOrAddComponent<MMCinemachineOrthographicSizeShaker>();
+						break;
+					case "Dutch":
+						virtualCameraGo.MMGetOrAddComponent<MMCinemachineDutchShaker>();
+						break;
+				}
 			#endif
 
 			#if MM_CINEMACHINE || MM_CINEMACHINE3
@@ -88,6 +103,7 @@ namespace MoreMountains.FeedbacksForThirdParty
 				virtualCameraGo.MMGetOrAddComponent<MMCinemachinePriorityListener>();
 				virtualCameraGo.MMGetOrAddComponent<MMCinemachineClippingPlanesShaker>();
 				virtualCameraGo.MMGetOrAddComponent<MMCinemachineFieldOfViewShaker>();	
+				virtualCameraGo.MMGetOrAddComponent<MMCinemachineDutchShaker>();	
 				additions += "Added camera shaker, zoom, priority listener, clipping planes shaker and field of view shaker to the Cinemachine Camera. ";
 			}
 			

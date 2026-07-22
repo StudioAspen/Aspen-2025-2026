@@ -1,7 +1,7 @@
 A more user friendly doc is available at https://feel-docs.moremountains.com/
 Find out more about the asset at https://feel.moremountains.com/
 
-Feel v5.9.1
+Feel v6.0
 
 ## WHAT'S IN THE ASSET ?
 -------------------------

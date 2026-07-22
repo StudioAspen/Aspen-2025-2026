@@ -1,5 +1,10 @@
 ﻿using MoreMountains.FeedbacksForThirdParty;
 using MoreMountains.Tools;
+#if MM_CINEMACHINE
+using Cinemachine;
+#elif MM_CINEMACHINE3
+using Unity.Cinemachine;
+#endif
 using UnityEngine;
 using UnityEngine.Scripting.APIUpdating;
 
@@ -10,7 +15,7 @@ namespace MoreMountains.Feedbacks
 	/// </summary>
 	[AddComponentMenu("")]
 	[FeedbackHelp("Define camera shake properties (duration in seconds, amplitude and frequency), and this will broadcast a MMCameraShakeEvent with these same settings. " +
-	              "You'll need to add a MMCameraShaker on your camera for this to work (or a MMCinemachineCameraShaker component on your virtual camera if you're using Cinemachine). " +
+	              "You'll need to add a MMCameraShaker on your camera for this to work (or a MMCinemachineCameraShaker component on your Cinemachine camera if you're using Cinemachine). " +
 	              "Note that although this event and system was built for cameras in mind, you could technically use it to shake other objects as well.")]
 	[System.Serializable]
 	[FeedbackPath("Camera/Camera Shake")]
@@ -76,11 +81,11 @@ namespace MoreMountains.Feedbacks
 			bool virtualCameraFound = false;
 			#endif
 			
-			#if MMCINEMACHINE 
+			#if MM_CINEMACHINE 
 				CinemachineVirtualCamera virtualCamera = (CinemachineVirtualCamera)Object.FindObjectOfType(typeof(CinemachineVirtualCamera));
 				virtualCameraFound = (virtualCamera != null);
-			#elif MMCINEMACHINE3
-				CinemachineCamera virtualCamera = (CinemachineCamera)Object.FindObjectOfType(typeof(CinemachineCamera));
+			#elif MM_CINEMACHINE3
+				CinemachineCamera virtualCamera = (CinemachineCamera)Object.FindAnyObjectByType(typeof(CinemachineCamera), FindObjectsInactive.Include);
 				virtualCameraFound = (virtualCamera != null);
 			#endif
 			

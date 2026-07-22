@@ -199,7 +199,11 @@ namespace MoreMountains.Feedbacks
 		/// <returns></returns>
 		public virtual float ComputeIntensity(float intensity, Vector3 position)
 		{
-			float result = Timing.ConstantIntensity ? 1f : intensity;
+			if (Timing.ConstantIntensity)
+			{
+				return 1f;
+			}
+			float result = intensity;
 			result *= ComputedRandomMultiplier;
 			result *= Owner.ComputeRangeIntensityMultiplier(position);
 			return result;
@@ -283,12 +287,29 @@ namespace MoreMountains.Feedbacks
 			}
 		}
 
+		/// the maximum delta time allowed in editor preview mode
+		public const float MaxEditorPreviewDeltaTime = 0.05f;
+		
 		/// the delta time (or unscaled delta time) based on the selected Timing settings
 		public virtual float FeedbackDeltaTime
 		{
 			get
 			{
+				if (_skipFirstDeltaTime)
+				{
+					_skipFirstDeltaTime = false;
+					return 0f;
+				}
+				
 				float timescaleMultiplier = Owner.TimescaleMultiplier;
+				
+				#if UNITY_EDITOR
+				if (!Application.isPlaying)
+				{
+					// we cap the delta time to prevent spikes in editor preview mode
+					return Mathf.Min(Time.unscaledDeltaTime, MaxEditorPreviewDeltaTime) * timescaleMultiplier;
+				}
+				#endif
 				
 				if (Timing.UseScriptDrivenTimescale)
 				{
@@ -398,7 +419,7 @@ namespace MoreMountains.Feedbacks
 		}
 
 		// the timestamp at which this feedback was last played
-		public virtual float FeedbackStartedAt => Application.isPlaying ? _lastPlayTimestamp : -1f;
+		public virtual float FeedbackStartedAt => (Application.isPlaying || _lastPlayTimestamp > 0f) ? _lastPlayTimestamp : -1f;
 
 		// the perceived duration of the feedback, to be used to display its progress bar, meant to be overridden with meaningful data by each feedback
 		public virtual float FeedbackDuration
@@ -448,6 +469,7 @@ namespace MoreMountains.Feedbacks
 		protected string _requiredTargetTextCached = ".";
 		protected string _requiredTargetTextCachedExtra = "";
 		protected float _repeatOffset = 0f;
+		protected bool _skipFirstDeltaTime = false;
 
 		#endregion Properties
 
@@ -573,6 +595,33 @@ namespace MoreMountains.Feedbacks
 		}
 		
 		#endregion Automation
+		
+		#region Target Checks
+
+		/// <summary>
+		/// Checks whether a feedback has a correct target setup or not
+		/// </summary>
+		/// <param name="target"></param>
+		/// <param name="targetName"></param>
+		/// <param name="feedbackName"></param>
+		/// <returns></returns>
+		public bool TargetExists(UnityEngine.Object target, string targetName)
+		{
+			if (target != null)
+			{
+				return true;
+			}
+
+			if (Owner.LogMissingTargets)
+			{
+				string feedbackName = GetType().Name.Replace("MMF_", "");
+				Debug.LogWarning("<color=#82d3f9>["+feedbackName+" Feedback]</color> The <color=#ffc400>"+feedbackName.ToLower()+"</color> feedback on <color=#ffc400>"+Owner.name+"</color> doesn't have an <color=#ffc400>"+targetName+"</color>, it won't work. You need to specify one in its inspector.");	
+			}
+			
+			return false;
+		}
+
+		#endregion Target Checks
 
 		#region Play
 
@@ -694,6 +743,7 @@ namespace MoreMountains.Feedbacks
 		{
 			Timing.PlayCount++;
 			_lastPlayTimestamp = FeedbackTime;
+			_skipFirstDeltaTime = true;
 			CustomPlayFeedback(position, intensity);
 		}
 
@@ -1032,19 +1082,15 @@ namespace MoreMountains.Feedbacks
 		}
 
 		/// <summary>
-		/// Internal method used to wait for a duration, on scaled or unscaled time
+		/// Internal method used to wait for a duration, using FeedbackDeltaTime to ensure proper timing in all modes (editor preview, runtime, scaled/unscaled)
 		/// </summary>
 		/// <param name="delay"></param>
 		/// <returns></returns>
 		protected virtual IEnumerator WaitFor(float delay)
 		{
-			if (InScaledTimescaleMode)
+			for (float timer = 0f; timer < delay; timer += FeedbackDeltaTime)
 			{
-				yield return MMFeedbacksCoroutine.WaitFor(delay);
-			}
-			else
-			{
-				yield return MMFeedbacksCoroutine.WaitForUnscaled(delay);
+				yield return null;
 			}
 		}
 

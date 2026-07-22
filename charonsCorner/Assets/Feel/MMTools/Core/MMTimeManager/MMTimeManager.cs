@@ -74,11 +74,11 @@ namespace MoreMountains.Feedbacks
 		static public void Register(Delegate callback) { OnEvent += callback; }
 		static public void Unregister(Delegate callback) { OnEvent -= callback; }
 
-		public delegate void Delegate(float duration);
+		public delegate void Delegate(float duration, float minimumTimescaleThreshold);
 
-		static public void Trigger(float duration)
+		static public void Trigger(float duration, float minimumTimescaleThreshold)
 		{
-			OnEvent?.Invoke(duration);
+			OnEvent?.Invoke(duration, minimumTimescaleThreshold);
 		}
 	}
 
@@ -391,8 +391,12 @@ namespace MoreMountains.Feedbacks
 		/// When getting a freeze frame event we stop the time
 		/// </summary>
 		/// <param name="freezeFrameEvent">Freeze frame event.</param>
-		public virtual void OnMMFreezeFrameEvent(float duration)
+		public virtual void OnMMFreezeFrameEvent(float duration, float minimumTimescaleThreshold)
 		{
+			if (Time.timeScale < minimumTimescaleThreshold)
+			{
+				return;
+			}
 			TimeScaleProperties properties = new TimeScaleProperties();
 			properties.Duration = duration;
 			properties.TimeScaleLerp = false;

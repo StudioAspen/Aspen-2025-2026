@@ -266,17 +266,19 @@ namespace Sirenix.OdinInspector.Modules.Addressables.Editor
                     {
                         if (this.isSpriteAtlas && obj is Sprite sprite)
                         {
-                            foreach (SpriteAtlas spriteAtlas in AssetDatabase_Internals.FindAssets<SpriteAtlas>(String.Empty, false, AssetDatabaseSearchArea.AllAssets))
+                        foreach (string atlasGuid in AssetDatabase.FindAssets("t:SpriteAtlas"))
+                        {
+                            SpriteAtlas spriteAtlas = AssetDatabase.LoadAssetAtPath<SpriteAtlas>(AssetDatabase.GUIDToAssetPath(atlasGuid));
+                            if (spriteAtlas == null) continue;
+                            if (!spriteAtlas.CanBindTo(sprite))
                             {
-                                if (!spriteAtlas.CanBindTo(sprite))
-                                {
-                                    continue;
-                                }
-
-                                this.SetMainAndSubAsset(spriteAtlas, sprite);
-
-                                break;
+                                continue;
                             }
+
+                            this.SetMainAndSubAsset(spriteAtlas, sprite);
+
+                            break;
+                        }
                         }
                         else
                         {
@@ -985,9 +987,9 @@ namespace Sirenix.OdinInspector.Modules.Addressables.Editor
                     searchFilter += $"t:{filterType.Name} ";
                 }
 
-                IEnumerator<HierarchyProperty> enumerator = AssetDatabase_Internals.EnumerateAllAssets(searchFilter, false, AssetDatabaseSearchArea.InAssetsOnly);
+                var guids = AssetDatabase.FindAssets(searchFilter);
 
-                if (enumerator.MoveNext())
+                if (guids.Length > 0)
                 {
                     var addedGuids = new HashSet<string>();
 
@@ -1005,28 +1007,29 @@ namespace Sirenix.OdinInspector.Modules.Addressables.Editor
 
                     tree.MenuItems.Add(nonAddressablesItem);
 
-                    do
+                    foreach (var guid in guids)
                     {
-                        HierarchyProperty current = enumerator.Current;
-
-                        if (addedGuids.Contains(current.guid) || !current.isMainRepresentation)
+                        if (addedGuids.Contains(guid))
                         {
                             continue;
                         }
 
-                        AddressableAssetEntry entry = OdinAddressableUtility.CreateFakeAddressableAssetEntry(current.guid);
+                        string path = AssetDatabase.GUIDToAssetPath(guid);
+                        if (string.IsNullOrEmpty(path)) continue;
+
+                        AddressableAssetEntry entry = OdinAddressableUtility.CreateFakeAddressableAssetEntry(guid);
+                        Texture icon = AssetDatabase.GetCachedIcon(path);
+                        string name = System.IO.Path.GetFileNameWithoutExtension(path);
 
                         if (listMode == SelectorListMode.Flat)
                         {
-                            var item = new OdinMenuItem(tree, current.name, entry) {Icon = current.icon};
+                            var item = new OdinMenuItem(tree, name, entry) {Icon = icon};
 
                             nonAddressablesItem.ChildMenuItems.Add(item);
                         }
                         else
                         {
-                            string path = AssetDatabase.GetAssetPath(current.instanceID);
-
-                            if (!current.isFolder)
+                            if (!AssetDatabase.IsValidFolder(path))
                             {
                                 int extensionEndingIndex = GetExtensionsEndingIndex(path);
 
@@ -1038,9 +1041,9 @@ namespace Sirenix.OdinInspector.Modules.Addressables.Editor
 
                             path = RemoveBaseDirectoryFromAssetPath(path);
 
-                            tree.Add($"{NON_ADDRESSABLES_ITEM_NAME}/{path}", entry, current.icon);
+                            tree.Add($"{NON_ADDRESSABLES_ITEM_NAME}/{path}", entry, icon);
                         }
-                    } while (enumerator.MoveNext());
+                    }
 
                     nonAddressablesItem.ChildMenuItems.SortMenuItemsByName();
                 }

@@ -120,7 +120,7 @@ namespace MoreMountains.Tools
 			}
 			if (_pools.Count == 0)
 			{
-				var pools = FindObjectsByType<MMObjectPool>(FindObjectsSortMode.None);
+				var pools = FindObjectsByType<MMObjectPool>();
 				if (pools.Length > 0)
 				{
 					_pools.AddRange(pools);

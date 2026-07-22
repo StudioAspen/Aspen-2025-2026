@@ -53,7 +53,7 @@ namespace MoreMountains.Feedbacks
 				return;
 			}
             
-			MMFreezeFrameEvent.Trigger(FeedbackDuration);
+			MMFreezeFrameEvent.Trigger(FeedbackDuration, MinimumTimescaleThreshold);
 		}
 		
 		/// <summary>

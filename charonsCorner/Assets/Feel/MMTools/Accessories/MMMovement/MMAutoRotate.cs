@@ -74,6 +74,7 @@ namespace MoreMountains.Tools
 		[HideInInspector]
 		public Vector3 _worldRotationAxis;
 		[HideInInspector]
+		[System.NonSerialized]
 		public Plane _rotationPlane;
 		[HideInInspector]
 		public Vector3 _snappedPosition;

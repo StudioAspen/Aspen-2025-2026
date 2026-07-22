@@ -26,16 +26,16 @@ namespace Animancer.Editor
         IList<Transform> Transforms { get; }
 
         /// <summary>Adds the items to be displayed in the view.</summary>
-        void AddItems(ref int id, TreeViewItem root);
+        void AddItems(ref int id, TreeViewItem<int> root);
 
         /// <summary>Adds an item for the `transform` to be displayed in the view.</summary>
-        TreeViewItem AddItem(ref int id, TreeViewItem parent, Transform transform);
+        TreeViewItem<int> AddItem(ref int id, TreeViewItem<int> parent, Transform transform);
 
         /// <summary>Called before a row is drawn.</summary>
-        void BeforeRowGUI(Rect area, TreeViewItem item);
+        void BeforeRowGUI(Rect area, TreeViewItem<int> item);
 
         /// <summary>Draws a cell in the <see cref="TreeView"/>.</summary>
-        void DrawCellGUI(Rect area, int column, int row, TreeViewItem item, ref bool isSelectionClick);
+        void DrawCellGUI(Rect area, int column, int row, TreeViewItem<int> item, ref bool isSelectionClick);
 
         /************************************************************************************************************************/
     }
@@ -43,7 +43,7 @@ namespace Animancer.Editor
     /// <summary>A <see cref="TreeView"/> for displaying <see cref="Transform"/>s alongside other data.</summary>
     /// https://kybernetik.com.au/animancer/api/Animancer.Editor/TransformTreeView
     /// https://kybernetik.com.au/flexi-motion/api/FlexiMotion.Editor/TransformTreeView
-    public class TransformTreeView : TreeView, IDisposable
+    public class TransformTreeView : TreeView<int>, IDisposable
     {
         /************************************************************************************************************************/
 
@@ -65,7 +65,7 @@ namespace Animancer.Editor
 
         /// <summary>Creates a new <see cref="TransformTreeView"/>.</summary>
         public TransformTreeView(
-            TreeViewState state,
+            TreeViewState<int> state,
             MultiColumnHeader header,
             ITransformTreeViewSource source)
             : base(state, header)
@@ -86,7 +86,7 @@ namespace Animancer.Editor
         /************************************************************************************************************************/
 
         /// <inheritdoc/>
-        protected override TreeViewItem BuildRoot()
+        protected override TreeViewItem<int> BuildRoot()
         {
             Transforms.Clear();
 
@@ -102,7 +102,7 @@ namespace Animancer.Editor
         /************************************************************************************************************************/
 
         /// <summary>Adds a new item for the `transform` as a child of the `parent` and increments the `id`.</summary>
-        public virtual TreeViewItem AddItem(ref int id, TreeViewItem parent, Transform transform)
+        public virtual TreeViewItem<int> AddItem(ref int id, TreeViewItem<int> parent, Transform transform)
         {
             Transforms.Add(transform);
 
@@ -112,7 +112,7 @@ namespace Animancer.Editor
         }
 
         /// <summary>Adds a new item for each child of the `transform` recursively.</summary>
-        public void AddItemRecursive(ref int id, TreeViewItem parent, Transform transform)
+        public void AddItemRecursive(ref int id, TreeViewItem<int> parent, Transform transform)
         {
             parent = Source.AddItem(ref id, parent, transform);
 
@@ -123,7 +123,7 @@ namespace Animancer.Editor
         /************************************************************************************************************************/
 
         /// <summary>Creates a new <see cref="TreeViewItem"/> and increments the `id`.</summary>
-        public static TreeViewItem CreateItem(ref int id, int depth, string displayName)
+        public static TreeViewItem<int> CreateItem(ref int id, int depth, string displayName)
             => new()
             {
                 id = id++,

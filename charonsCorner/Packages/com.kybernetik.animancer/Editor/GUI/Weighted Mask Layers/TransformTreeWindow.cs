@@ -27,7 +27,7 @@ namespace Animancer.Editor
         /************************************************************************************************************************/
 
         [SerializeField] private MultiColumnHeaderState _HeaderState;
-        [SerializeField] private TreeViewState _GUIState;
+        [SerializeField] private TreeViewState<int> _GUIState;
 
         [NonSerialized] private TransformTreeView _TreeView;
 
@@ -135,7 +135,7 @@ namespace Animancer.Editor
         /************************************************************************************************************************/
 
         /// <inheritdoc/>
-        public virtual void AddItems(ref int id, TreeViewItem root)
+        public virtual void AddItems(ref int id, TreeViewItem<int> root)
         {
             var rootTransform = Root;
             TreeView.AddItemRecursive(ref id, root, rootTransform);
@@ -153,7 +153,7 @@ namespace Animancer.Editor
         }
 
         /// <inheritdoc/>
-        public virtual TreeViewItem AddItem(ref int id, TreeViewItem parent, Transform transform)
+        public virtual TreeViewItem<int> AddItem(ref int id, TreeViewItem<int> parent, Transform transform)
             => TreeView.AddItem(ref id, parent, transform);
 
         /************************************************************************************************************************/
@@ -228,7 +228,7 @@ namespace Animancer.Editor
         /************************************************************************************************************************/
 
         /// <inheritdoc/>
-        public virtual void BeforeRowGUI(Rect area, TreeViewItem item)
+        public virtual void BeforeRowGUI(Rect area, TreeViewItem<int> item)
         {
             var color = GetRowColor(item);
             if (color.a > 0)
@@ -236,13 +236,13 @@ namespace Animancer.Editor
         }
 
         /// <summary>Gets the color of a row in the <see cref="TreeView"/>.</summary>
-        protected virtual Color GetRowColor(TreeViewItem item)
+        protected virtual Color GetRowColor(TreeViewItem<int> item)
             => default;
 
         /************************************************************************************************************************/
 
         /// <inheritdoc/>
-        public abstract void DrawCellGUI(Rect area, int column, int row, TreeViewItem item, ref bool isSelectionClick);
+        public abstract void DrawCellGUI(Rect area, int column, int row, TreeViewItem<int> item, ref bool isSelectionClick);
 
         /************************************************************************************************************************/
 

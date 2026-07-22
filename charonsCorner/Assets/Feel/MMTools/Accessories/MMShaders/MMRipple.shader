@@ -17,10 +17,10 @@ Shader "MoreMountains/MMRipple"
         }
         Zwrite Off
         Blend SrcAlpha OneMinusSrcAlpha
-        GrabPass
-        {
-            "_BackgroundTexture"
-        }
+//        GrabPass
+//        {
+//            "_BackgroundTexture"
+//        }
         Pass
         {
             CGPROGRAM
@@ -33,7 +33,7 @@ Shader "MoreMountains/MMRipple"
             float _RippleAlpha;
             float _RippleIntensity;
             fixed4 _Hue;
-            sampler2D _BackgroundTexture;
+            sampler2D _CameraOpaqueTexture;
             sampler2D _NormalMap;
             sampler2D_float _CameraDepthTexture;
             float _Density;
@@ -79,8 +79,9 @@ Shader "MoreMountains/MMRipple"
 
                 half3 ripple = UnpackNormal(tex2D(_NormalMap, i.normalMap.xy));
                 i.grabScreenPosition.xy += ripple.xy / ripple.z * _RippleIntensity * i.color.a;
-                half4 backgroundColor = tex2Dproj(_BackgroundTexture, i.grabScreenPosition);
+                half4 backgroundColor = tex2Dproj(_CameraOpaqueTexture, i.grabScreenPosition);
                 _Hue.a = _RippleAlpha;
+                // return float4(i.grabScreenPosition.xy, 0, 1);
                 return backgroundColor * _Hue;
             }
             ENDCG

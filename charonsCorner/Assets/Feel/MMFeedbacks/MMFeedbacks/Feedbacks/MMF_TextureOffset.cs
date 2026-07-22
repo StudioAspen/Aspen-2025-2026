@@ -95,9 +95,8 @@ namespace MoreMountains.Feedbacks
 		{
 			base.CustomInitialization(owner);
 			
-			if (TargetRenderer == null)
+			if (!TargetExists(TargetRenderer, nameof(TargetRenderer)))
 			{
-				Debug.LogWarning("[Texture Offset Feedback] The texture offset feedback on "+Owner.name+" doesn't have a target renderer, it won't work. You need to specify a renderer in its inspector.");
 				return;
 			}
             

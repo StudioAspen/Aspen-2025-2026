@@ -462,7 +462,7 @@ namespace MoreMountains.Feedbacks
 			base.CustomStopFeedback(position, feedbacksIntensity);
 			IsPlaying = false;
             
-			if (_coroutine != null)
+			if ((TargetTransform != null) && (_coroutine != null))
 			{
 				Owner.StopCoroutine(_coroutine);
 			}

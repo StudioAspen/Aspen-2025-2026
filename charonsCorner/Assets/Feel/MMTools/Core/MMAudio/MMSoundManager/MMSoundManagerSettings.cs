@@ -7,6 +7,22 @@ using UnityEngine;
 namespace MoreMountains.Tools
 {
 	/// <summary>
+	/// Runtime state for a single custom track, used for save/load
+	/// </summary>
+	[Serializable]
+	public class MMSoundManagerCustomTrackState
+	{
+		/// the name of the custom track (matches the MMSoundManagerTrackSO asset name)
+		public string TrackName;
+		/// the current volume of this track
+		public float Volume = 1f;
+		/// whether this track is currently on
+		public bool On = true;
+		/// the volume of this track before it was muted
+		public float MutedVolume;
+	}
+	
+	/// <summary>
 	/// This class stores MMSoundManager settings and lets you tweak them from the MMSoundManagerSettingsSO's inspector
 	/// </summary>
 	[Serializable]
@@ -102,5 +118,33 @@ namespace MoreMountains.Tools
 		/// whether or not each change in the settings should be automaticall saved. If not, you'll have to call a save MMSoundManager event for settings to be saved.
 		[Tooltip("whether or not each change in the settings should be automaticall saved. If not, you'll have to call a save MMSoundManager event for settings to be saved.")]
 		public bool AutoSave = false;
+		
+		[Header("Custom Tracks - Debug")]
+		/// runtime state for custom tracks, used for save and load
+		[Tooltip("runtime state for custom tracks, used for save and load")]
+		public List<MMSoundManagerCustomTrackState> CustomTrackStates = new List<MMSoundManagerCustomTrackState>();
+		
+		/// <summary>
+		/// Returns the custom track state for the specified track SO, creating one if it doesn't exist yet
+		/// </summary>
+		public virtual MMSoundManagerCustomTrackState GetOrCreateCustomTrackState(MMSoundManagerCustomTrackSO customTrackSo)
+		{
+			if (customTrackSo == null) { return null; }
+			
+			for (int i = 0; i < CustomTrackStates.Count; i++)
+			{
+				if (CustomTrackStates[i].TrackName == customTrackSo.name)
+				{
+					return CustomTrackStates[i];
+				}
+			}
+			
+			MMSoundManagerCustomTrackState newState = new MMSoundManagerCustomTrackState();
+			newState.TrackName = customTrackSo.name;
+			newState.Volume = customTrackSo.DefaultVolume;
+			newState.On = customTrackSo.DefaultOn;
+			CustomTrackStates.Add(newState);
+			return newState;
+		}
 	}
 }

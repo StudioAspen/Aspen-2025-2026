@@ -39,6 +39,23 @@ namespace MoreMountains.Feedbacks
 		public bool WorldPositionStays = true;
 
 		/// <summary>
+		/// On init we check if we have a target
+		/// </summary>
+		/// <param name="owner"></param>
+		protected override void CustomInitialization(MMF_Player owner)
+		{
+			base.CustomInitialization(owner);
+
+			if (Active)
+			{
+				if (!TargetExists(ObjectToParent, nameof(ObjectToParent)))
+				{
+					return;
+				}
+			}
+		}
+		
+		/// <summary>
 		/// On Play, changes the parent of the target transform
 		/// </summary>
 		/// <param name="position"></param>
@@ -51,7 +68,6 @@ namespace MoreMountains.Feedbacks
 			}
 			if (ObjectToParent == null)
 			{
-				Debug.LogWarning("[SetParent Feedback] The set parent feedback on "+Owner.name+" doesn't have an ObjectToParent, it won't work. You need to specify one in its inspector.");
 				return;
 			}
 			ObjectToParent.SetParent(NewParent, WorldPositionStays);

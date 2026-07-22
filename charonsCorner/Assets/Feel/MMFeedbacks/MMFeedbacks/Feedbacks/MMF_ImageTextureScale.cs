@@ -48,6 +48,9 @@ namespace MoreMountains.Feedbacks
 		[Tooltip("the property name, for example _MainTex_ST, or _MainTex if you don't have UseMaterialPropertyBlocks set to true")]
 		[MMEnumCondition("MaterialPropertyType", (int)MaterialPropertyTypes.TextureID)]
 		public string MaterialPropertyName = "_MainTex_ST";
+		/// if this is true, a unique material copy will be created for the target image, preventing changes from affecting other images sharing the same material
+		[Tooltip("if this is true, a unique material copy will be created for the target image, preventing changes from affecting other images sharing the same material")]
+		public bool CreateUniqueMaterial = true;
 		/// whether the feedback should affect the material instantly or over a period of time
 		[Tooltip("whether the feedback should affect the material instantly or over a period of time")]
 		public Modes Mode = Modes.OverTime;
@@ -86,6 +89,7 @@ namespace MoreMountains.Feedbacks
 		protected Coroutine _coroutine;
 		protected Vector2 _newValue;
 		protected Material _material;
+		protected Material _originalMaterial;
 
 		/// the duration of this feedback is the duration of the transition
 		public override float FeedbackDuration { get { return (Mode == Modes.Instant) ? 0f : ApplyTimeMultiplier(Duration); } set { Duration = value; } }
@@ -98,13 +102,21 @@ namespace MoreMountains.Feedbacks
 		{
 			base.CustomInitialization(owner);
 			
-			if (TargetImage == null)
+			if (!TargetExists(TargetImage, nameof(TargetImage)))
 			{
-				Debug.LogWarning("[Image Texture Scale Feedback] The image texture scale feedback on "+Owner.name+" doesn't have a TargetImage, it won't work. You need to specify an Image in its inspector.");
 				return;
 			}
 
-			_material = TargetImage.material;
+			if (CreateUniqueMaterial)
+			{
+				_originalMaterial = TargetImage.material;
+				_material = new Material(_originalMaterial);
+				TargetImage.material = _material;
+			}
+			else
+			{
+				_material = TargetImage.material;
+			}
 
 			switch (MaterialPropertyType)
 			{
@@ -226,6 +238,36 @@ namespace MoreMountains.Feedbacks
 			IsPlaying = false;
 			Owner.StopCoroutine(_coroutine);
 			_coroutine = null;
+		}
+		
+		/// <summary>
+		/// On restore, we restore our initial state
+		/// </summary>
+		protected override void CustomRestoreInitialValues()
+		{
+			if (!Active || !FeedbackTypeAuthorized)
+			{
+				return;
+			}
+
+			ApplyValue(_initialValue);
+		}
+		
+		/// <summary>
+		/// On destroy, we restore the original material and destroy the instance
+		/// </summary>
+		public override void OnDestroy()
+		{
+			if (CreateUniqueMaterial && _material != null && TargetImage != null && _originalMaterial != null)
+			{
+				TargetImage.material = _originalMaterial;
+				
+				#if UNITY_EDITOR
+				UnityEngine.Object.DestroyImmediate(_material);
+				#else
+				UnityEngine.Object.Destroy(_material);
+				#endif
+			}
 		}
 	}
 }

@@ -1,4 +1,5 @@
-﻿using MoreMountains.Tools;
+﻿using System.Collections;
+using MoreMountains.Tools;
 using UnityEngine;
 using UnityEngine.Scripting.APIUpdating;
 
@@ -35,7 +36,7 @@ namespace MoreMountains.Feedbacks
 		public bool ModifyOffsetMin = true;
 		/// the curve to animate the min offset on
 		[Tooltip("the curve to animate the min offset on")]
-		[MMFEnumCondition("Mode", (int)MMFeedbackBase.Modes.OverTime)]
+		[MMFEnumCondition("Mode", (int)MMFeedbackBase.Modes.OverTime, (int)Modes.ToDestination)]
 		public MMTweenType OffsetMinCurve = new MMTweenType(new AnimationCurve(new Keyframe(0, 0), new Keyframe(1, 1)));
 		/// the value to remap the min curve's 0 on
 		[Tooltip("the value to remap the min curve's 0 on")]
@@ -45,6 +46,10 @@ namespace MoreMountains.Feedbacks
 		[Tooltip("the value to remap the min curve's 1 on")]
 		[MMFEnumCondition("Mode", (int)MMFeedbackBase.Modes.OverTime, (int)MMFeedbackBase.Modes.Instant)]
 		public Vector2 OffsetMinRemapOne = Vector2.one;
+		/// the offset min to reach when in ToDestination mode
+		[Tooltip("the offset min to reach when in ToDestination mode")]
+		[MMFEnumCondition("Mode", (int)Modes.ToDestination)]
+		public Vector2 DestinationOffsetMin = Vector2.zero;
         
 		[MMFInspectorGroup("Offset Max", true, 41)] 
 		/// whether we should modify the offset max or not
@@ -52,7 +57,7 @@ namespace MoreMountains.Feedbacks
 		public bool ModifyOffsetMax = true;
 		/// the curve to animate the max offset on
 		[Tooltip("the curve to animate the max offset on")]
-		[MMFEnumCondition("Mode", (int)MMFeedbackBase.Modes.OverTime)]
+		[MMFEnumCondition("Mode", (int)MMFeedbackBase.Modes.OverTime, (int)Modes.ToDestination)]
 		public MMTweenType OffsetMaxCurve = new MMTweenType(new AnimationCurve(new Keyframe(0, 0), new Keyframe(1, 1)));
 		/// the value to remap the max curve's 0 on
 		[Tooltip("the value to remap the max curve's 0 on")]
@@ -62,6 +67,143 @@ namespace MoreMountains.Feedbacks
 		[Tooltip("the value to remap the max curve's 1 on")]
 		[MMFEnumCondition("Mode", (int)MMFeedbackBase.Modes.OverTime, (int)MMFeedbackBase.Modes.Instant)]
 		public Vector2 OffsetMaxRemapOne = Vector2.one;
+		/// the offset max to reach when in ToDestination mode
+		[Tooltip("the offset max to reach when in ToDestination mode")]
+		[MMFEnumCondition("Mode", (int)Modes.ToDestination)]
+		public Vector2 DestinationOffsetMax = Vector2.zero;
+
+		protected Vector2 _initialOffsetMin;
+		protected Vector2 _initialOffsetMax;
+		protected Vector2 _newMinValue;
+		protected Vector2 _newMaxValue;
+
+		/// <summary>
+		/// On init we store our initial offsets
+		/// </summary>
+		/// <param name="owner"></param>
+		protected override void CustomInitialization(MMF_Player owner)
+		{
+			base.CustomInitialization(owner);
+			if (Active && (TargetRectTransform != null))
+			{
+				_initialOffsetMin = TargetRectTransform.offsetMin;
+				_initialOffsetMax = TargetRectTransform.offsetMax;
+			}
+		}
+
+		/// <summary>
+		/// On Play we handle ToDestination mode ourselves, and delegate other modes to the base class
+		/// </summary>
+		protected override void CustomPlayFeedback(Vector3 position, float feedbacksIntensity = 1.0f)
+		{
+			if (!Active || !FeedbackTypeAuthorized || (TargetRectTransform == null))
+			{
+				return;
+			}
+
+			if (Mode == Modes.ToDestination)
+			{
+				if (!AllowAdditivePlays && (_coroutine != null))
+				{
+					return;
+				}
+				if (_coroutine != null) { Owner.StopCoroutine(_coroutine); }
+				_initialOffsetMin = TargetRectTransform.offsetMin;
+				_initialOffsetMax = TargetRectTransform.offsetMax;
+				_coroutine = Owner.StartCoroutine(OffsetToDestinationCo(feedbacksIntensity, position));
+			}
+			else
+			{
+				base.CustomPlayFeedback(position, feedbacksIntensity);
+			}
+		}
+
+		/// <summary>
+		/// Coroutine that lerps the offsets from their current values to the destination values
+		/// </summary>
+		protected virtual IEnumerator OffsetToDestinationCo(float feedbacksIntensity, Vector3 position)
+		{
+			if (FeedbackDuration == 0f)
+			{
+				if (ModifyOffsetMin)
+				{
+					TargetRectTransform.offsetMin = NormalPlayDirection ? DestinationOffsetMin : _initialOffsetMin;
+				}
+				if (ModifyOffsetMax)
+				{
+					TargetRectTransform.offsetMax = NormalPlayDirection ? DestinationOffsetMax : _initialOffsetMax;
+				}
+				_coroutine = null;
+				IsPlaying = false;
+				yield break;
+			}
+
+			float journey = NormalPlayDirection ? 0f : FeedbackDuration;
+			_newMinValue = _initialOffsetMin;
+			_newMaxValue = _initialOffsetMax;
+			IsPlaying = true;
+
+			while ((journey >= 0) && (journey <= FeedbackDuration) && (FeedbackDuration > 0))
+			{
+				float percent = Mathf.Clamp01(journey / FeedbackDuration);
+
+				if (ModifyOffsetMin)
+				{
+					_newMinValue.x = MMTween.Tween(percent, 0f, 1f, _initialOffsetMin.x, DestinationOffsetMin.x, OffsetMinCurve);
+					_newMinValue.y = MMTween.Tween(percent, 0f, 1f, _initialOffsetMin.y, DestinationOffsetMin.y, OffsetMinCurve);
+					TargetRectTransform.offsetMin = _newMinValue;
+				}
+
+				if (ModifyOffsetMax)
+				{
+					_newMaxValue.x = MMTween.Tween(percent, 0f, 1f, _initialOffsetMax.x, DestinationOffsetMax.x, OffsetMaxCurve);
+					_newMaxValue.y = MMTween.Tween(percent, 0f, 1f, _initialOffsetMax.y, DestinationOffsetMax.y, OffsetMaxCurve);
+					TargetRectTransform.offsetMax = _newMaxValue;
+				}
+
+				journey += NormalPlayDirection ? FeedbackDeltaTime : -FeedbackDeltaTime;
+				yield return null;
+			}
+
+			if (ModifyOffsetMin)
+			{
+				TargetRectTransform.offsetMin = NormalPlayDirection ? DestinationOffsetMin : _initialOffsetMin;
+			}
+			if (ModifyOffsetMax)
+			{
+				TargetRectTransform.offsetMax = NormalPlayDirection ? DestinationOffsetMax : _initialOffsetMax;
+			}
+			_coroutine = null;
+			IsPlaying = false;
+			yield return null;
+		}
+
+		/// <summary>
+		/// On restore, we put our object back at its initial offsets
+		/// </summary>
+		protected override void CustomRestoreInitialValues()
+		{
+			if (!Active || !FeedbackTypeAuthorized)
+			{
+				return;
+			}
+
+			if (Mode == Modes.ToDestination)
+			{
+				if (ModifyOffsetMin)
+				{
+					TargetRectTransform.offsetMin = _initialOffsetMin;
+				}
+				if (ModifyOffsetMax)
+				{
+					TargetRectTransform.offsetMax = _initialOffsetMax;
+				}
+			}
+			else
+			{
+				base.CustomRestoreInitialValues();
+			}
+		}
         
 		protected override void FillTargets()
 		{

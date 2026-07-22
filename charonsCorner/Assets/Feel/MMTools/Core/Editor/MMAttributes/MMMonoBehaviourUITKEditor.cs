@@ -34,7 +34,9 @@ namespace MoreMountains.Tools
 		public StyleSheet EditorStyleSheet;
 		
 		public bool DrawerInitialized;
+		[System.NonSerialized]
 		public Dictionary<string, MMInspectorGroupData> GroupData ;
+		[System.NonSerialized]
 		public List<SerializedProperty> PropertiesList;
 		private bool _requiresConstantRepaint;
 		private bool _requiresConstantRepaintOnlyWhenPlaying;
@@ -116,7 +118,7 @@ namespace MoreMountains.Tools
 				{
 					bool fallbackOpenState = true;
 					if (group.ClosedByDefault) { fallbackOpenState = false; }
-					bool groupIsOpen = EditorPrefs.GetBool(string.Format($"{group.GroupName}{fieldInfoList[i].Name}{target.GetInstanceID()}"), fallbackOpenState);
+					bool groupIsOpen = EditorPrefs.GetBool(string.Format($"{group.GroupName}{fieldInfoList[i].Name}{target.GetEntityId()}"), fallbackOpenState);
 					GroupData.Add(group.GroupName, new MMInspectorGroupData
 					{
 						GroupAttribute = group,

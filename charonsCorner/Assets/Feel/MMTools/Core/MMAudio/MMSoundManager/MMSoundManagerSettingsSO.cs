@@ -33,6 +33,11 @@ namespace MoreMountains.Tools
 		/// the multiplier to apply when converting normalized volume values to audio mixer values
 		[Tooltip("the multiplier to apply when converting normalized volume values to audio mixer values")]
 		public float MixerValuesMultiplier = 20;
+		
+		[Header("Custom Tracks")]
+		/// an optional list of custom tracks to register with the MMSoundManager
+		[Tooltip("an optional list of custom tracks to register with the MMSoundManager")]
+		public List<MMSoundManagerCustomTrackSO> CustomTracks = new List<MMSoundManagerCustomTrackSO>();
         
 		[Header("Settings Unfold")]
 		/// the full settings for this MMSoundManager
@@ -122,6 +127,32 @@ namespace MoreMountains.Tools
 				SaveSoundSettings();
 			}
 		}
+		
+		/// <summary>
+		/// Sets the volume of a custom track defined by the given TrackSO
+		/// </summary>
+		public virtual void SetTrackVolume(MMSoundManagerCustomTrackSO customTrackSo, float volume)
+		{
+			if (customTrackSo == null || TargetAudioMixer == null) { return; }
+			
+			if (volume <= 0f)
+			{
+				volume = MMSoundManagerSettings._minimalVolume;
+			}
+			
+			if (!string.IsNullOrEmpty(customTrackSo.VolumeParameter))
+			{
+				TargetAudioMixer.SetFloat(customTrackSo.VolumeParameter, NormalizedToMixerVolume(volume));
+			}
+			
+			MMSoundManagerCustomTrackState state = Settings.GetOrCreateCustomTrackState(customTrackSo);
+			state.Volume = volume;
+
+			if (Settings.AutoSave)
+			{
+				SaveSoundSettings();
+			}
+		}
 
 		/// <summary>
 		/// Returns the volume of the specified track
@@ -149,6 +180,24 @@ namespace MoreMountains.Tools
 
 			return MixerVolumeToNormalized(volume);
 		}
+		
+		/// <summary>
+		/// Returns the volume of the specified custom track
+		/// </summary>
+		public virtual float GetTrackVolume(MMSoundManagerCustomTrackSO customTrackSo)
+		{
+			if (customTrackSo == null || TargetAudioMixer == null) { return 1f; }
+			
+			float volume = 1f;
+			if (!string.IsNullOrEmpty(customTrackSo.VolumeParameter))
+			{
+				TargetAudioMixer.GetFloat(customTrackSo.VolumeParameter, out volume);
+				return MixerVolumeToNormalized(volume);
+			}
+			
+			MMSoundManagerCustomTrackState state = Settings.GetOrCreateCustomTrackState(customTrackSo);
+			return state.Volume;
+		}
 
 		/// <summary>
 		/// assigns the volume of each track to the settings values
@@ -159,6 +208,13 @@ namespace MoreMountains.Tools
 			Settings.MusicVolume = GetTrackVolume(MMSoundManager.MMSoundManagerTracks.Music);
 			Settings.SfxVolume = GetTrackVolume(MMSoundManager.MMSoundManagerTracks.Sfx);
 			Settings.UIVolume = GetTrackVolume(MMSoundManager.MMSoundManagerTracks.UI);
+			
+			for (int i = 0; i < CustomTracks.Count; i++)
+			{
+				if (CustomTracks[i] == null) { continue; }
+				MMSoundManagerCustomTrackState state = Settings.GetOrCreateCustomTrackState(CustomTracks[i]);
+				state.Volume = GetTrackVolume(CustomTracks[i]);
+			}
 		}
 
 		/// <summary>
@@ -177,6 +233,20 @@ namespace MoreMountains.Tools
 				if (!Settings.MusicOn) { TargetAudioMixer.SetFloat(Settings.MusicVolumeParameter, -80f); }
 				if (!Settings.SfxOn) { TargetAudioMixer.SetFloat(Settings.SfxVolumeParameter, -80f); }
 				if (!Settings.UIOn) { TargetAudioMixer.SetFloat(Settings.UIVolumeParameter, -80f); }
+				
+				for (int i = 0; i < CustomTracks.Count; i++)
+				{
+					if (CustomTracks[i] == null) { continue; }
+					MMSoundManagerCustomTrackState state = Settings.GetOrCreateCustomTrackState(CustomTracks[i]);
+					if (!string.IsNullOrEmpty(CustomTracks[i].VolumeParameter))
+					{
+						TargetAudioMixer.SetFloat(CustomTracks[i].VolumeParameter, NormalizedToMixerVolume(state.Volume));
+						if (!state.On)
+						{
+							TargetAudioMixer.SetFloat(CustomTracks[i].VolumeParameter, -80f);
+						}
+					}
+				}
 
 				if (Settings.AutoSave)
 				{

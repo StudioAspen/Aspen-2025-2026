@@ -11,7 +11,7 @@ using MoreMountains.Tools;
 namespace MoreMountains.FeedbacksForThirdParty
 {
 	/// <summary>
-	/// Add this component to your Cinemachine Virtual Camera to have it shake when calling its ShakeCamera methods.
+	/// Add this component to your Cinemachine Camera to have it shake when calling its ShakeCamera methods.
 	/// </summary>
 	[AddComponentMenu("More Mountains/Feedbacks/Shakers/Cinemachine/MM Cinemachine Camera Shaker")]
 	#if MM_CINEMACHINE

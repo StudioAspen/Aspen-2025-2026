@@ -520,7 +520,11 @@ namespace MoreMountains.Feedbacks
 			MMF_RectTransformOffset.FeedbackTypeAuthorized = RectTransformOffset;
 			MMF_RectTransformPivot.FeedbackTypeAuthorized = RectTransformPivot;
 			MMF_RectTransformSizeDelta.FeedbackTypeAuthorized = RectTransformSizeDelta;
+			
+			
+			#if !UNITY_WEBGL
 			MMF_VideoPlayer.FeedbackTypeAuthorized = VideoPlayer;
+			#endif
 			
 			#if MM_UI
 			MMF_ShaderController.FeedbackTypeAuthorized = ShaderController;

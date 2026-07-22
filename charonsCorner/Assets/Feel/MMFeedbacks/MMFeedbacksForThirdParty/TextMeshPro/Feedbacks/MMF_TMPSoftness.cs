@@ -93,9 +93,8 @@ namespace MoreMountains.Feedbacks
 				return;
 			}
 			#if MM_UGUI2
-			if (TargetTMPText == null)
+			if (!TargetExists(TargetTMPText, nameof(TargetTMPText)))
 			{
-				Debug.LogWarning("[TMP Softness Feedback] The TMP Softness feedback on "+Owner.name+" doesn't have a TargetTMPText, it won't work. You need to specify one in its inspector.");
 				return;
 			}
 			_initialSoftness = TargetTMPText.fontMaterial.GetFloat(ShaderUtilities.ID_OutlineSoftness);

@@ -11,6 +11,7 @@ namespace MoreMountains.FeedbacksForThirdParty
 	/// A base feedback to set a vector2 on a target UI Document
 	/// </summary>
 	[AddComponentMenu("")]
+	[System.Serializable]
 	public class MMF_UIToolkitVector2Base : MMF_UIToolkit
 	{
 		/// a static bool used to disable all feedbacks of this type at once

@@ -12,7 +12,7 @@ using MoreMountains.Tools;
 namespace MoreMountains.FeedbacksForThirdParty
 {
 	/// <summary>
-	/// Add this to a Cinemachine virtual camera and it'll let you control its near and far clipping planes
+	/// Add this to a Cinemachine camera and it'll let you control its near and far clipping planes
 	/// </summary>
 	[AddComponentMenu("More Mountains/Feedbacks/Shakers/Cinemachine/MM Cinemachine Clipping Planes Shaker")]
 	#if MM_CINEMACHINE

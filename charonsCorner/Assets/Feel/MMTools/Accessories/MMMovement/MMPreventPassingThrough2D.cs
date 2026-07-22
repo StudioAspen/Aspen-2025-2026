@@ -27,6 +27,7 @@ namespace MoreMountains.Tools
 
 		[Header("Debug")]
 		[MMReadOnly]
+		[System.NonSerialized]
 		public RaycastHit2D Hit;
 
 		protected float _smallestBoundsWidth; 

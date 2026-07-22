@@ -63,6 +63,8 @@ namespace MoreMountains.Tools
 		protected Color _uiColorPlay;
 		protected Color _uiColorFree;
 
+		protected Color _customColorBase = MMColors.MediumPurple;
+
 		protected MMColors.ColoringMode _coloringMode = MMColors.ColoringMode.Add;
 
 		/// <summary>
@@ -125,6 +127,7 @@ namespace MoreMountains.Tools
 				DrawTrack("Music Track", _mmSoundManager.settingsSo.Settings.MusicOn, MMSoundManager.MMSoundManagerTracks.Music, _musicColorMute, _musicColorUnmute, _musicColorPause, _musicColorStop, _musicColorPlay, _musicColorFree);
 				DrawTrack("SFX Track", _mmSoundManager.settingsSo.Settings.SfxOn, MMSoundManager.MMSoundManagerTracks.Sfx, _sfxColorMute, _sfxColorUnmute, _sfxColorPause, _sfxColorStop, _sfxColorPlay, _sfxColorFree);
 				DrawTrack("UI Track", _mmSoundManager.settingsSo.Settings.UIOn, MMSoundManager.MMSoundManagerTracks.UI, _uiColorMute, _uiColorUnmute, _uiColorPause, _uiColorStop, _uiColorPlay, _uiColorFree);
+				DrawCustomTracks();
 				DrawSaveLoadButtons();
 			}
 		}
@@ -198,6 +201,74 @@ namespace MoreMountains.Tools
 		}
         
 		/// <summary>
+		/// Draws controls for all custom tracks defined in the settings SO
+		/// </summary>
+		protected virtual void DrawCustomTracks()
+		{
+			if (_settingsSO.CustomTracks == null || _settingsSO.CustomTracks.Count == 0)
+			{
+				return;
+			}
+			
+			for (int i = 0; i < _settingsSO.CustomTracks.Count; i++)
+			{
+				MMSoundManagerCustomTrackSO customTrack = _settingsSO.CustomTracks[i];
+				if (customTrack == null) { continue; }
+				
+				MMSoundManagerCustomTrackState state = _settingsSO.Settings.GetOrCreateCustomTrackState(customTrack);
+				float colorLerp = (i % 5) * 0.15f;
+				Color trackColor = MMColors.MMColorize(_baseColor, _customColorBase, _coloringMode, 0.8f + colorLerp * 0.2f);
+				DrawCustomTrack(customTrack.name + " Track", state.On, customTrack, trackColor);
+			}
+		}
+		
+		/// <summary>
+		/// Draws track controls for a custom track SO
+		/// </summary>
+		protected virtual void DrawCustomTrack(string title, bool isOn, MMSoundManagerCustomTrackSO customTrack, Color trackColor)
+		{
+			GUILayout.Space(10);
+			GUILayout.Label(title, EditorStyles.boldLabel);
+			
+			EditorGUI.BeginDisabledGroup(!Application.isPlaying);
+			
+			// volume slider
+			EditorGUILayout.BeginHorizontal();
+			GUILayout.Label("Volume");
+			float currentVolume = _settingsSO.GetTrackVolume(customTrack);
+			float newVolume = EditorGUILayout.Slider(currentVolume, MMSoundManagerSettings._minimalVolume, MMSoundManagerSettings._maxVolume);
+			if (newVolume != currentVolume) { _mmSoundManager.SetTrackVolume(customTrack, newVolume); }
+			EditorGUILayout.EndHorizontal();
+			
+			// buttons
+			EditorGUILayout.BeginHorizontal();
+			{
+				Color muteColor = MMColors.MMColorize(_baseColor, _customColorBase, _coloringMode, 1f);
+				Color unmuteColor = MMColors.MMColorize(_baseColor, _customColorBase, _coloringMode, 0.9f);
+				Color pauseColor = MMColors.MMColorize(_baseColor, _customColorBase, _coloringMode, 0.8f);
+				Color stopColor = MMColors.MMColorize(_baseColor, _customColorBase, _coloringMode, 0.7f);
+				Color playColor = MMColors.MMColorize(_baseColor, _customColorBase, _coloringMode, 0.5f);
+				Color freeColor = MMColors.MMColorize(_baseColor, _customColorBase, _coloringMode, 0.4f);
+				
+				if (isOn)
+				{
+					DrawColoredButton("Mute", muteColor, customTrack, _mmSoundManager.MuteTrack, EditorStyles.miniButtonLeft);
+				}
+				else
+				{
+					DrawColoredButton("Unmute", unmuteColor, customTrack, _mmSoundManager.UnmuteTrack, EditorStyles.miniButtonMid);
+				}
+				DrawColoredButton("Pause", pauseColor, customTrack, _mmSoundManager.PauseTrack, EditorStyles.miniButtonMid);
+				DrawColoredButton("Stop", stopColor, customTrack, _mmSoundManager.StopTrack, EditorStyles.miniButtonMid);
+				DrawColoredButton("Play", playColor, customTrack, _mmSoundManager.PlayTrack, EditorStyles.miniButtonMid);
+				DrawColoredButton("Free", freeColor, customTrack, _mmSoundManager.FreeTrack, EditorStyles.miniButtonRight);
+			}
+			EditorGUILayout.EndHorizontal();
+			
+			EditorGUI.EndDisabledGroup();
+		}
+		
+		/// <summary>
 		/// Draws save related buttons
 		/// </summary>
 		protected virtual void DrawSaveLoadButtons()
@@ -251,6 +322,20 @@ namespace MoreMountains.Tools
 			if (GUILayout.Button(buttonLabel, styles))
 			{
 				action.Invoke();
+			}
+			GUI.backgroundColor = _originalBackgroundColor;
+		}
+		
+		/// <summary>
+		/// Draws a button for a custom track
+		/// </summary>
+		public virtual void DrawColoredButton(string buttonLabel, Color buttonColor, MMSoundManagerCustomTrackSO customTrack, System.Action<MMSoundManagerCustomTrackSO> action, GUIStyle styles)
+		{
+			_originalBackgroundColor = GUI.backgroundColor;
+			GUI.backgroundColor = buttonColor;
+			if (GUILayout.Button(buttonLabel, styles))
+			{
+				action.Invoke(customTrack);
 			}
 			GUI.backgroundColor = _originalBackgroundColor;
 		}

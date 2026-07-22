@@ -26,8 +26,7 @@ namespace MoreMountains.Feedbacks
 		[Tooltip("the rect transform to shake the scale of. If left blank, this component will target the transform it's put on.")]
 		[MMEnumCondition("Mode", (int)Modes.RectTransform)]
 		public RectTransform TargetRectTransform;
-
-		[MMInspectorGroup("Multi-Targets", true, 48)]
+[MMInspectorGroup("Multi-Targets", true, 48)]
 		/// whether or not to use the multi-target lists below
 		[Tooltip("whether or not to use the multi-target lists below")]
 		public bool UseMultiTargets = false;
@@ -36,7 +35,7 @@ namespace MoreMountains.Feedbacks
 		[MMEnumCondition("Mode", (int)Modes.Transform)]
 		public System.Collections.Generic.List<Transform> MultiTargetTransforms;
 		/// the list of rect transforms to shake the scale of.
-		[Tooltip("the list of rect transforms to shake the rotation of.")]
+		[Tooltip("the list of rect transforms to shake the scale of.")]
 		[MMEnumCondition("Mode", (int)Modes.RectTransform)]
 		public System.Collections.Generic.List<RectTransform> MultiTargetRectTransforms;
         

@@ -73,6 +73,7 @@ namespace MoreMountains.Tools
 		protected Dictionary<AudioSource, Coroutine> _fadeOutSoundCoroutines;
 		protected Dictionary<MMSoundManagerTracks, Coroutine> _fadeTrackCoroutines;
 		protected Dictionary<MMSoundManagerTracks, bool> _pausedTracks = new Dictionary<MMSoundManagerTracks, bool>();
+		protected Dictionary<MMSoundManagerCustomTrackSO, Coroutine> _fadeCustomTrackCoroutines;
 
 		#region Initialization
 
@@ -111,6 +112,7 @@ namespace MoreMountains.Tools
 			_fadeInSoundCoroutines = new Dictionary<AudioSource, Coroutine>();
 			_fadeOutSoundCoroutines = new Dictionary<AudioSource, Coroutine>();
 			_fadeTrackCoroutines = new Dictionary<MMSoundManagerTracks, Coroutine>();
+			_fadeCustomTrackCoroutines = new Dictionary<MMSoundManagerCustomTrackSO, Coroutine>();
 		}
         
 		#endregion
@@ -125,7 +127,15 @@ namespace MoreMountains.Tools
 		/// <returns></returns>
 		public virtual AudioSource PlaySound(AudioClip audioClip, MMSoundManagerPlayOptions options)
 		{
-			return PlaySound(audioClip, options.MmSoundManagerTrack, options.Location,
+			if (options.MmSoundManagerTrack == MMSoundManagerTracks.Other 
+			    && options.CustomTrack != null 
+			    && options.AudioGroup == null 
+			    && options.CustomTrack.AudioMixerGroup != null)
+			{
+				options.AudioGroup = options.CustomTrack.AudioMixerGroup;
+			}
+			
+			AudioSource source = PlaySound(audioClip, options.MmSoundManagerTrack, options.Location,
 				options.Loop, options.Volume, options.ID,
 				options.Fade, options.FadeInitialVolume, options.FadeDuration, options.FadeTween,
 				options.Persistent,
@@ -140,6 +150,23 @@ namespace MoreMountains.Tools
 				options.UseSpatialBlendCurve, options.SpatialBlendCurve, options.UseReverbZoneMixCurve, options.ReverbZoneMixCurve, 
 				options.AudioResourceToPlay, options.InitialDelay
 			);
+			
+			// if a custom track was specified, update the stored sound's CustomTrack reference
+			if (source != null && options.CustomTrack != null)
+			{
+				for (int i = 0; i < _sounds.Count; i++)
+				{
+					if (_sounds[i].Source == source)
+					{
+						MMSoundManagerSound updatedSound = _sounds[i];
+						updatedSound.CustomTrack = options.CustomTrack;
+						_sounds[i] = updatedSound;
+						break;
+					}
+				}
+			}
+			
+			return source;
 		}
 
 		/// <summary>
@@ -207,12 +234,15 @@ namespace MoreMountains.Tools
 					Debug.LogError("There are no available audiosources, this sound won't play. You should probably consider a bigger pool size, or let your pool expand by setting PoolCanExpand to true on your MM Sound Manager.");
 					return null;
 				}
+				StopFadeSound(audioSource);
 				audioSource.clip = audioClip;
 				if ((audioSource) && (!loop))
 				{
 					recycleAudioSource = audioSource;
 					// we destroy the host after the clip has played (if it is not tagged for reusability.
-					float duration = (audioClip != null) ? audioClip.length / Mathf.Abs(pitch) : 1f;
+					float duration = (audioClip != null) ? 
+						initialDelay + audioClip.length / Mathf.Abs(pitch) 
+						: initialDelay + 1f;
 					StartCoroutine(_pool.AutoDisableAudioSource(duration, audioSource, audioClip, doNotAutoRecycleIfNotDonePlaying, playbackTime, playbackDuration));
 				}
 			}
@@ -297,6 +327,8 @@ namespace MoreMountains.Tools
 					case MMSoundManagerTracks.UI:
 						audioSource.outputAudioMixerGroup = settingsSo.UIAudioMixerGroup;
 						break;
+					case MMSoundManagerTracks.Other:
+						break;
 				}
 			}
 			if (audioGroup) { audioSource.outputAudioMixerGroup = audioGroup; }
@@ -305,6 +337,7 @@ namespace MoreMountains.Tools
 			// we start playing the sound
 			if (initialDelay > 0f)
 			{
+				audioSource.Stop();
 				audioSource.PlayDelayed(initialDelay);	
 			}
 			else
@@ -410,6 +443,7 @@ namespace MoreMountains.Tools
 		/// <param name="source"></param>
 		public virtual void FreeSound(AudioSource source)
 		{
+			StopFadeSound(source);
 			source.Stop();
 			if (!_pool.FreeSound(source))
 			{
@@ -744,6 +778,190 @@ namespace MoreMountains.Tools
 				settingsSo.SaveSoundSettings();
 			}
 		}
+		
+		/// <summary>
+		/// Mutes a custom track
+		/// </summary>
+		public virtual void MuteTrack(MMSoundManagerCustomTrackSO customTrack)
+		{
+			ControlTrack(customTrack, ControlTrackModes.Mute, 0f);
+		}
+
+		/// <summary>
+		/// Unmutes a custom track
+		/// </summary>
+		public virtual void UnmuteTrack(MMSoundManagerCustomTrackSO customTrack)
+		{
+			ControlTrack(customTrack, ControlTrackModes.Unmute, 0f);
+		}
+
+		/// <summary>
+		/// Sets the volume of a custom track
+		/// </summary>
+		public virtual void SetTrackVolume(MMSoundManagerCustomTrackSO customTrack, float volume)
+		{
+			ControlTrack(customTrack, ControlTrackModes.SetVolume, volume);
+		}
+
+		/// <summary>
+		/// Returns the current volume of a custom track
+		/// </summary>
+		public virtual float GetTrackVolume(MMSoundManagerCustomTrackSO customTrack, bool mutedVolume)
+		{
+			if (customTrack == null || settingsSo == null) { return 1f; }
+			MMSoundManagerCustomTrackState state = settingsSo.Settings.GetOrCreateCustomTrackState(customTrack);
+			if (mutedVolume)
+			{
+				return state.MutedVolume;
+			}
+			return state.Volume;
+		}
+
+		/// <summary>
+		/// Returns true if the specified custom track is muted
+		/// </summary>
+		public virtual bool IsMuted(MMSoundManagerCustomTrackSO customTrack)
+		{
+			if (customTrack == null || settingsSo == null) { return false; }
+			MMSoundManagerCustomTrackState state = settingsSo.Settings.GetOrCreateCustomTrackState(customTrack);
+			return !state.On;
+		}
+
+		/// <summary>
+		/// Controls a custom track (mute, unmute, set volume)
+		/// </summary>
+		protected virtual void ControlTrack(MMSoundManagerCustomTrackSO customTrack, ControlTrackModes trackMode, float volume = 0.5f)
+		{
+			if (customTrack == null || settingsSo == null) { return; }
+			
+			MMSoundManagerCustomTrackState state = settingsSo.Settings.GetOrCreateCustomTrackState(customTrack);
+			float savedVolume = 0f;
+			
+			if (trackMode == ControlTrackModes.Mute)
+			{
+				state.MutedVolume = settingsSo.NormalizedToMixerVolume(state.Volume);
+				state.On = false;
+			}
+			else if (trackMode == ControlTrackModes.Unmute)
+			{
+				savedVolume = state.MutedVolume;
+				state.On = true;
+			}
+			
+			switch (trackMode)
+			{
+				case ControlTrackModes.Mute:
+					settingsSo.SetTrackVolume(customTrack, 0f);
+					break;
+				case ControlTrackModes.Unmute:
+					settingsSo.SetTrackVolume(customTrack, settingsSo.MixerVolumeToNormalized(savedVolume));
+					break;
+				case ControlTrackModes.SetVolume:
+					settingsSo.SetTrackVolume(customTrack, volume);
+					break;
+			}
+			
+			settingsSo.GetTrackVolumes();
+			
+			if (settingsSo.Settings.AutoSave)
+			{
+				settingsSo.SaveSoundSettings();
+			}
+		}
+		
+		/// <summary>
+		/// Pauses all sounds on a custom track
+		/// </summary>
+		public virtual void PauseTrack(MMSoundManagerCustomTrackSO customTrack)
+		{
+			if (customTrack == null) { return; }
+			foreach (MMSoundManagerSound sound in _sounds)
+			{
+				if (sound.Track == MMSoundManagerTracks.Other && sound.CustomTrack == customTrack)
+				{
+					sound.Source.Pause();
+				}
+			}
+		}
+
+		/// <summary>
+		/// Plays or resumes all sounds on a custom track
+		/// </summary>
+		public virtual void PlayTrack(MMSoundManagerCustomTrackSO customTrack)
+		{
+			if (customTrack == null) { return; }
+			foreach (MMSoundManagerSound sound in _sounds)
+			{
+				if (sound.Track == MMSoundManagerTracks.Other && sound.CustomTrack == customTrack)
+				{
+					sound.Source.Play();
+				}
+			}
+		}
+
+		/// <summary>
+		/// Stops all sounds on a custom track
+		/// </summary>
+		public virtual void StopTrack(MMSoundManagerCustomTrackSO customTrack)
+		{
+			if (customTrack == null) { return; }
+			foreach (MMSoundManagerSound sound in _sounds)
+			{
+				if (sound.Track == MMSoundManagerTracks.Other && sound.CustomTrack == customTrack)
+				{
+					sound.Source.Stop();
+				}
+			}
+		}
+
+		/// <summary>
+		/// Returns true if sounds are currently playing on a custom track
+		/// </summary>
+		public virtual bool HasSoundsPlaying(MMSoundManagerCustomTrackSO customTrack)
+		{
+			if (customTrack == null) { return false; }
+			foreach (MMSoundManagerSound sound in _sounds)
+			{
+				if (sound.Track == MMSoundManagerTracks.Other && sound.CustomTrack == customTrack && sound.Source.isPlaying)
+				{
+					return true;
+				}
+			}
+			return false;
+		}
+
+		/// <summary>
+		/// Returns a list of sounds playing on a custom track
+		/// </summary>
+		public virtual List<MMSoundManagerSound> GetSoundsPlaying(MMSoundManagerCustomTrackSO customTrack)
+		{
+			List<MMSoundManagerSound> soundsPlaying = new List<MMSoundManagerSound>();
+			if (customTrack == null) { return soundsPlaying; }
+			foreach (MMSoundManagerSound sound in _sounds)
+			{
+				if (sound.Track == MMSoundManagerTracks.Other && sound.CustomTrack == customTrack && sound.Source.isPlaying)
+				{
+					soundsPlaying.Add(sound);
+				}
+			}
+			return soundsPlaying;
+		}
+
+		/// <summary>
+		/// Stops all sounds on a custom track and returns them to the pool
+		/// </summary>
+		public virtual void FreeTrack(MMSoundManagerCustomTrackSO customTrack)
+		{
+			if (customTrack == null) { return; }
+			foreach (MMSoundManagerSound sound in _sounds)
+			{
+				if (sound.Track == MMSoundManagerTracks.Other && sound.CustomTrack == customTrack)
+				{
+					sound.Source.Stop();
+					sound.Source.gameObject.SetActive(false);
+				}
+			}
+		}
         
 		#endregion
 
@@ -761,6 +979,16 @@ namespace MoreMountains.Tools
 		{
 			Coroutine coroutine = StartCoroutine(FadeTrackCoroutine(track, duration, initialVolume, finalVolume, tweenType));
 			_fadeTrackCoroutines[track] = coroutine;
+		}
+		
+		/// <summary>
+		/// Fades a custom track over the specified duration towards the desired finalVolume
+		/// </summary>
+		public virtual void FadeTrack(MMSoundManagerCustomTrackSO customTrack, float duration, float initialVolume = 0f, float finalVolume = 1f, MMTweenType tweenType = null)
+		{
+			if (customTrack == null) { return; }
+			Coroutine coroutine = StartCoroutine(FadeCustomTrackCoroutine(customTrack, duration, initialVolume, finalVolume, tweenType));
+			_fadeCustomTrackCoroutines[customTrack] = coroutine;
 		}
         
 		/// <summary>
@@ -827,6 +1055,20 @@ namespace MoreMountains.Tools
 				_fadeTrackCoroutines.Remove(track);
 			}
 		}
+		
+		/// <summary>
+		/// Stops any fade currently happening on the specified custom track
+		/// </summary>
+		public virtual void StopFadeTrack(MMSoundManagerCustomTrackSO customTrack)
+		{
+			if (customTrack == null) { return; }
+			Coroutine outCoroutine;
+			if (_fadeCustomTrackCoroutines.TryGetValue(customTrack, out outCoroutine))
+			{
+				StopCoroutine(outCoroutine);
+				_fadeCustomTrackCoroutines.Remove(customTrack);
+			}
+		}
 
 		/// <summary>
 		/// Stops any fade currently happening on the specified sound
@@ -877,6 +1119,26 @@ namespace MoreMountains.Tools
 				yield return null;
 			}
 			settingsSo.SetTrackVolume(track, finalVolume);
+		}
+		
+		/// <summary>
+		/// Fades a custom track over time
+		/// </summary>
+		protected virtual IEnumerator FadeCustomTrackCoroutine(MMSoundManagerCustomTrackSO customTrack, float duration, float initialVolume, float finalVolume, MMTweenType tweenType)
+		{
+			float startedAt = Time.unscaledTime;
+			if (tweenType == null)
+			{
+				tweenType = new MMTweenType(MMTween.MMTweenCurve.EaseInOutQuartic);
+			}
+			while (Time.unscaledTime - startedAt <= duration)
+			{
+				float elapsedTime = Time.unscaledTime - startedAt;
+				float newVolume = MMTween.Tween(elapsedTime, 0f, duration, initialVolume, finalVolume, tweenType);
+				settingsSo.SetTrackVolume(customTrack, newVolume);
+				yield return null;
+			}
+			settingsSo.SetTrackVolume(customTrack, finalVolume);
 		}
 
 		/// <summary>
@@ -1139,6 +1401,36 @@ namespace MoreMountains.Tools
 
 		public virtual void OnMMEvent(MMSoundManagerTrackEvent soundManagerTrackEvent)
 		{
+			// if this is a custom track event (Other track with a CustomTrack SO), route to custom track overloads
+			if (soundManagerTrackEvent.Track == MMSoundManagerTracks.Other && soundManagerTrackEvent.CustomTrack != null)
+			{
+				switch (soundManagerTrackEvent.TrackEventType)
+				{
+					case MMSoundManagerTrackEventTypes.MuteTrack:
+						MuteTrack(soundManagerTrackEvent.CustomTrack);
+						break;
+					case MMSoundManagerTrackEventTypes.UnmuteTrack:
+						UnmuteTrack(soundManagerTrackEvent.CustomTrack);
+						break;
+					case MMSoundManagerTrackEventTypes.SetVolumeTrack:
+						SetTrackVolume(soundManagerTrackEvent.CustomTrack, soundManagerTrackEvent.Volume);
+						break;
+					case MMSoundManagerTrackEventTypes.PlayTrack:
+						PlayTrack(soundManagerTrackEvent.CustomTrack);
+						break;
+					case MMSoundManagerTrackEventTypes.PauseTrack:
+						PauseTrack(soundManagerTrackEvent.CustomTrack);
+						break;
+					case MMSoundManagerTrackEventTypes.StopTrack:
+						StopTrack(soundManagerTrackEvent.CustomTrack);
+						break;
+					case MMSoundManagerTrackEventTypes.FreeTrack:
+						FreeTrack(soundManagerTrackEvent.CustomTrack);
+						break;
+				}
+				return;
+			}
+			
 			switch (soundManagerTrackEvent.TrackEventType)
 			{
 				case MMSoundManagerTrackEventTypes.MuteTrack:
@@ -1238,6 +1530,21 @@ namespace MoreMountains.Tools
         
 		public virtual void OnMMEvent(MMSoundManagerTrackFadeEvent trackFadeEvent)
 		{
+			// if this is a custom track fade event
+			if (trackFadeEvent.Track == MMSoundManagerTracks.Other && trackFadeEvent.CustomTrack != null)
+			{
+				switch (trackFadeEvent.Mode)
+				{
+					case MMSoundManagerTrackFadeEvent.Modes.PlayFade:
+						FadeTrack(trackFadeEvent.CustomTrack, trackFadeEvent.FadeDuration, settingsSo.GetTrackVolume(trackFadeEvent.CustomTrack), trackFadeEvent.FinalVolume, trackFadeEvent.FadeTween);
+						break;
+					case MMSoundManagerTrackFadeEvent.Modes.StopFade:
+						StopFadeTrack(trackFadeEvent.CustomTrack);
+						break;
+				}
+				return;
+			}
+			
 			switch (trackFadeEvent.Mode)
 			{
 				case MMSoundManagerTrackFadeEvent.Modes.PlayFade:

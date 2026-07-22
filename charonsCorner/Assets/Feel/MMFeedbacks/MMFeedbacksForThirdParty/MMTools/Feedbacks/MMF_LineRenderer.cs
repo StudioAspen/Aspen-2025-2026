@@ -79,9 +79,8 @@ namespace MoreMountains.Feedbacks
 
 			if (Active)
 			{
-				if (TargetLineRenderer == null)
+				if (!TargetExists(TargetLineRenderer, nameof(TargetLineRenderer)))
 				{
-					Debug.LogWarning("[Line Renderer Feedback] The line renderer feedback on "+Owner.name+" doesn't have a TargetLineRenderer, it won't work. You need to specify one in its inspector.");
 					return;
 				}
 				

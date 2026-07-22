@@ -192,7 +192,7 @@ namespace CharonsCorner.LevelEditor
             }
 
             Mesh mesh = pathMeshFilter.sharedMesh;
-            string expectedName = "PathMesh_" + gameObject.name + "_" + gameObject.GetInstanceID();
+            string expectedName = "PathMesh_" + gameObject.name + "_" + gameObject.GetEntityId();
             bool isPersistentAsset = false;
 #if UNITY_EDITOR
             if (mesh != null)

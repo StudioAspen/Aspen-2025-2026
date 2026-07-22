@@ -4,6 +4,7 @@ using UnityEngine.Scripting.APIUpdating;
 
 namespace MoreMountains.Feedbacks
 {
+	#if !UNITY_WEBGL
 	/// <summary>
 	/// This feedback lets you control video players in all sorts of ways (Play, Pause, Toggle, Stop, Prepare, StepForward, StepBackward, SetPlaybackSpeed, SetDirectAudioVolume, SetDirectAudioMute, GoToFrame, ToggleLoop)
 	/// </summary>
@@ -123,4 +124,5 @@ namespace MoreMountains.Feedbacks
 
 		}
 	}
+	#endif
 }

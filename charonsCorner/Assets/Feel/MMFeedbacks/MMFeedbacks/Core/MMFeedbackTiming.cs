@@ -32,8 +32,8 @@ namespace MoreMountains.Feedbacks
 		public bool ContributeToTotalDuration = true;
 
 		[Header("Delays")]
-		/// the initial delay to apply before playing the delay (in seconds)
-		[Tooltip("the initial delay to apply before playing the delay (in seconds)")]
+		/// the initial delay to apply before playing the feedback (in seconds)
+		[Tooltip("the initial delay to apply before playing the feedback (in seconds)")]
 		public float InitialDelay = 0f;
 		/// the cooldown duration mandatory between two plays
 		[Tooltip("the cooldown duration mandatory between two plays")]
@@ -97,8 +97,8 @@ namespace MoreMountains.Feedbacks
 		public PlayDirections PlayDirection = PlayDirections.FollowMMFeedbacksDirection;
 
 		[Header("Intensity")]
-		/// if this is true, intensity will be constant, even if the parent MMFeedbacks is played at a lower intensity
-		[Tooltip("if this is true, intensity will be constant, even if the parent MMFeedbacks is played at a lower intensity")]
+		/// if this is true, intensity will have a constant value of 1, even if the parent MMFeedbacks is played at a lower or higher intensity
+		[Tooltip("if this is true, intensity will have a constant value of 1, even if the parent MMFeedbacks is played at a lower or higher intensity")]
 		public bool ConstantIntensity = false;
 		/// if this is true, this feedback will only play if its intensity is higher or equal to IntensityIntervalMin and lower than IntensityIntervalMax
 		[Tooltip("if this is true, this feedback will only play if its intensity is higher or equal to IntensityIntervalMin and lower than IntensityIntervalMax")]

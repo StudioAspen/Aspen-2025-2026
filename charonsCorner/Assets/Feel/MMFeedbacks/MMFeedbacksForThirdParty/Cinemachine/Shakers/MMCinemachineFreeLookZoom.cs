@@ -86,7 +86,7 @@ namespace MoreMountains.FeedbacksForThirdParty
 		protected float _zoomStartedAt = 0f;
 
 		/// <summary>
-		/// On Awake we grab our virtual camera
+		/// On Awake we grab our CM camera
 		/// </summary>
 		protected virtual void Awake()
 		{

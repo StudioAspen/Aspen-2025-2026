@@ -53,7 +53,7 @@ namespace MoreMountains.Feedbacks
 			}
 
 			_initialState = TargetCanvasGroup.blocksRaycasts;
-			TargetCanvasGroup.blocksRaycasts = ShouldBlockRaycasts;
+			TargetCanvasGroup.blocksRaycasts = NormalPlayDirection ? ShouldBlockRaycasts : !ShouldBlockRaycasts;
 		}
 		
 		/// <summary>

@@ -70,6 +70,7 @@ namespace MoreMountains.Feedbacks
 		protected VisualElement _bottomBar;
 		protected Foldout _settingsFoldout;
 		protected Label _isPlayingLabel;
+		protected Label _durationLabel;
 		protected VisualElement _settingsInfo;
 		protected ListView _feedbacksListView;
 		protected bool _initialized = false;
@@ -142,7 +143,9 @@ namespace MoreMountains.Feedbacks
 		protected const string _automaticShakerSetupText = "Automatic Shaker Setup";
 
 		protected const string _undoText = "Modified Feedback Manager";
-		//protected const string _debugControlsText = "Debug Controls";
+		protected const string _previewText = "Preview";
+		protected const string _undoPreviewText = "Undo Preview";
+		protected const string _previewWarningTooltip = "Preview Mode is an experimental feature. It will let you test feedbacks outside of play mode, but be aware that it may break, and it may well leave your scene in an unwanted state (for example if you use a position feedback to move an object and don't reset its position). Whatever you do, make sure you have a saved version of your scene you can go back to if things go wrong.";
 
 		// property names
 		protected const string _inScriptDrivenPausePropertyName = "InScriptDrivenPause";
@@ -153,6 +156,7 @@ namespace MoreMountains.Feedbacks
 		protected const string _autoPlayOnStartPropertyName = "AutoPlayOnStart";
 		protected const string _autoPlayOnEnablePropertyName = "AutoPlayOnEnable";
 		protected const string _autoInitializationPropertyName = "AutoInitialization";
+		protected const string _logMissingTargetsPropertyName = "LogMissingTargets";
 		protected const string _directionPropertyName = "Direction";
 		protected const string _autoChangeDirectionOnEndPropertyName = "AutoChangeDirectionOnEnd";
 		protected const string _feedbacksIntensityPropertyName = "FeedbacksIntensity";
@@ -176,6 +180,8 @@ namespace MoreMountains.Feedbacks
 		protected const string _ignoreRangeEventsPropertyName = "IgnoreRangeEvents";
 		protected const string _canPlayPropertyName = "CanPlay";
 		protected const string _canPlayWhileAlreadyPlayingPropertyName = "CanPlayWhileAlreadyPlaying";
+		protected const string _playModePropertyName = "PlayMode";
+		protected const string _sequentialDelayPropertyName = "SequentialDelay";
 		protected const string _performanceModePropertyName = "PerformanceMode";
 		protected const string _stopFeedbacksOnDisablePropertyName = "StopFeedbacksOnDisable";
 		protected const string _restoreInitialValuesOnDisablePropertyName = "RestoreInitialValuesOnDisable";
@@ -255,6 +261,8 @@ namespace MoreMountains.Feedbacks
 		protected const string _feedbackContextualMenuButtonClassName = "mm-feedback-contextual-menu-button";
 		protected const string _contextMenuIconClassName = "mm-context-menu-icon";
 		protected const string _feedbackRequiredTargetLabelClassName = "mm-feedback-required-target-label";
+		protected const string _previewRowClassName = "mm-preview-row";
+		protected const string _previewWarningIconClassName = "mm-preview-warning-icon";
 
 		#region LIFE CYCLE
 
@@ -269,6 +277,11 @@ namespace MoreMountains.Feedbacks
 		{
 			Undo.undoRedoPerformed -= OnUndoRedo;
 			EditorApplication.update -= OnEditorUpdate;
+			
+			if (TargetMmfPlayer != null && TargetMmfPlayer.InPreviewMode)
+			{
+				TargetMmfPlayer.PreviewUndoPlay();
+			}
 		}
 
 		public override bool RequiresConstantRepaint() => false;
@@ -308,6 +321,40 @@ namespace MoreMountains.Feedbacks
 				}
 			}
 
+			// handle preview mode progress bars and IsPlaying label outside of play mode
+			if (!Application.isPlaying)
+			{
+				if (TargetMmfPlayer.InPreviewMode)
+				{
+					if (TargetMmfPlayer.IsPlaying)
+					{
+						foreach (var headerData in FeedbackHeaderContainersDictionary)
+						{
+							UpdatePreviewProgressBar(headerData.Value);
+						}
+					}
+					else
+					{
+						foreach (var headerData in FeedbackHeaderContainersDictionary)
+						{
+							headerData.Value.ProgressBar.style.width = 0f;
+						}
+					}
+				}
+
+				if (TargetMmfPlayer.IsPlaying != _isPlayingLastFrame)
+				{
+					_isPlayingLabel.style.display = TargetMmfPlayer.IsPlaying ? DisplayStyle.Flex : DisplayStyle.None;
+					if (!TargetMmfPlayer.IsPlaying)
+					{
+						foreach (var headerData in FeedbackHeaderContainersDictionary)
+						{
+							headerData.Value.ProgressBar.style.width = 0f;
+						}
+					}
+				}
+			}
+
 			_isPlayingLastFrame = TargetMmfPlayer.IsPlaying;
 		}
 
@@ -324,6 +371,46 @@ namespace MoreMountains.Feedbacks
 			float thisTime = data.Feedback.Timing.TimescaleMode == TimescaleModes.Scaled
 				? Time.time
 				: Time.unscaledTime;
+
+			if (totalDuration == 0f)
+			{
+				totalDuration = 0.1f;
+			}
+
+			if (startedAt == 0f)
+			{
+				startedAt = 0.001f;
+			}
+
+			if ((startedAt > 0f) && (thisTime - startedAt < totalDuration + 0.05f))
+			{
+				if (totalDuration == 0f)
+				{
+					totalDuration = 0.1f;
+				}
+
+				float percent = ((thisTime - startedAt) / totalDuration) * 100f;
+
+				_progressBarLength.value = percent;
+				data.ProgressBar.style.width = _progressBarLength;
+			}
+			else
+			{
+				data.ProgressBar.style.width = 0f;
+			}
+		}
+
+		protected virtual void UpdatePreviewProgressBar(FeedbackHeaderContainersData data)
+		{
+			if (!TargetMmfPlayer.IsPlaying)
+			{
+				data.ProgressBar.style.width = 0f;
+				return;
+			}
+
+			float totalDuration = data.Feedback.TotalDuration - data.Feedback.Timing.InitialDelay;
+			float startedAt = data.Feedback.FeedbackStartedAt;
+			float thisTime = (float)EditorApplication.timeSinceStartup;
 
 			if (totalDuration == 0f)
 			{
@@ -538,9 +625,9 @@ namespace MoreMountains.Feedbacks
 			_settingsInfo.Add(_isPlayingLabel);
 
 			// feedback duration label
-			Label durationLabel = new Label("[" + TargetMmfPlayer.TotalDuration.ToString("F2") + "s]");
-			durationLabel.AddToClassList(_settingsDurationClassName);
-			_settingsInfo.Add(durationLabel);
+			_durationLabel = new Label("[" + TargetMmfPlayer.TotalDuration.ToString("F2") + "s]");
+			_durationLabel.AddToClassList(_settingsDurationClassName);
+			_settingsInfo.Add(_durationLabel);
 
 			// direction icon
 			VisualElement directionIcon = new VisualElement();
@@ -605,6 +692,8 @@ namespace MoreMountains.Feedbacks
 				MMUIToolkit.CreateAndBindPropertyField(_autoPlayOnEnablePropertyName, serializedObject,
 					settingsInitializationFoldout);
 				MMUIToolkit.CreateAndBindPropertyField(_autoInitializationPropertyName, serializedObject,
+					settingsInitializationFoldout);
+				MMUIToolkit.CreateAndBindPropertyField(_logMissingTargetsPropertyName, serializedObject,
 					settingsInitializationFoldout);
 			}
 
@@ -711,6 +800,9 @@ namespace MoreMountains.Feedbacks
 
 			void BuildPlaySettingsFoldout()
 			{
+				PropertyField playModeField = MMUIToolkit.CreateAndBindPropertyField(_playModePropertyName, serializedObject, settingsPlaySettingsFoldout);
+				PropertyField sequentialDelayField = MMUIToolkit.CreateAndBindPropertyField(_sequentialDelayPropertyName, serializedObject, settingsPlaySettingsFoldout);
+
 				MMUIToolkit.CreateAndBindPropertyField(_canPlayPropertyName, serializedObject, settingsPlaySettingsFoldout);
 				MMUIToolkit.CreateAndBindPropertyField(_canPlayWhileAlreadyPlayingPropertyName, serializedObject, settingsPlaySettingsFoldout);
 				MMUIToolkit.CreateAndBindPropertyField(_performanceModePropertyName, serializedObject, settingsPlaySettingsFoldout);
@@ -739,6 +831,24 @@ namespace MoreMountains.Feedbacks
 					eventsFieldFoldout.AddToClassList(_foldoutClassName);
 					eventsFieldFoldout.AddToClassList(_settingsFoldoutSubClassName);
 					eventsFieldFoldout.style.borderLeftColor = new StyleColor(MMColors.CreateColor(255, 197, 8, 255));
+
+					Toggle eventsToggle = eventsFieldFoldout.Q<Toggle>();
+					if (eventsToggle != null)
+					{
+						Label eventsCountLabel = eventsToggle.Q<Label>("events-count-label");
+						if (eventsCountLabel == null)
+						{
+							eventsCountLabel = new Label();
+							eventsCountLabel.name = "events-count-label";
+							eventsCountLabel.style.unityFontStyleAndWeight = FontStyle.Normal;
+							eventsCountLabel.style.color = new StyleColor(new Color(0.6f, 0.6f, 0.6f, 1f));
+							eventsCountLabel.style.alignSelf = Align.Center;
+							eventsCountLabel.style.marginLeft = 4;
+							eventsCountLabel.style.marginRight = 10;
+							eventsToggle.Add(eventsCountLabel);
+						}
+						eventsCountLabel.text = BuildEventsCountText(serializedObject);
+					}
 				}
 
 				eventsField.Q<Toggle>()?.AddToClassList(_foldoutToggleClassName);
@@ -755,25 +865,28 @@ namespace MoreMountains.Feedbacks
 			{
 				foldout.schedule.Execute(() =>
 				{
-					if (foldout.value)
+					if (foldout.value && foldout.childCount == 0)
 					{
 						buildMethod();
 					}
 				}).ExecuteLater(1);
 
-				EventCallback<ChangeEvent<bool>> callback = null;
-				callback = evt =>
+				// we do it again after 200ms, to account for cases like exiting play mode
+				foldout.schedule.Execute(() =>
 				{
-					if (evt.newValue) // foldout opened
+					if (foldout.value && foldout.childCount == 0)
 					{
-						if (foldout.childCount == 0)
-						{
-							buildMethod();
-							foldout.UnregisterValueChangedCallback(callback);
-						}
+						buildMethod();
 					}
-				};
-				foldout.RegisterValueChangedCallback(callback);
+				}).ExecuteLater(200);
+
+				foldout.RegisterValueChangedCallback(evt =>
+				{
+					if (evt.newValue && foldout.childCount == 0)
+					{
+						buildMethod();
+					}
+				});
 			}
 
 			// creates a new settings sub foldout
@@ -789,6 +902,21 @@ namespace MoreMountains.Feedbacks
 				newFoldout.Q<Toggle>().AddToClassList(_settingsFoldoutSubToggleClassName);
 				return newFoldout;
 			}
+		}
+
+		protected virtual string BuildEventsCountText(SerializedObject so)
+		{
+			string[] eventNames = { "OnPlay", "OnPause", "OnStop", "OnResume", "OnChangeDirection", "OnComplete", "OnRestoreInitialValues", "OnSkipToTheEnd", "OnInitializationComplete", "OnEnable", "OnDisable" };
+			List<string> parts = new List<string>();
+			foreach (string eventName in eventNames)
+			{
+				SerializedProperty prop = so.FindProperty($"Events.{eventName}.m_PersistentCalls.m_Calls");
+				if (prop != null && prop.arraySize > 0)
+				{
+					parts.Add($"{prop.arraySize}x {eventName}");
+				}
+			}
+			return parts.Count > 0 ? string.Join(", ", parts) : "";
 		}
 
 		protected virtual void DrawAutomaticShakerSetupButton()
@@ -1029,6 +1157,34 @@ namespace MoreMountains.Feedbacks
 				Label toggleLabel = foldout.Q<Label>();
 				toggleLabel.focusable = false;
 				toggleLabel.AddToClassList(_feedbackFoldoutLabelClassName);
+
+				int clickCount = 0;
+				long lastClickTime = 0;
+				const long doubleClickTimeMs = 300; // in milliseconds
+				
+				toggleLabel.RegisterCallback<MouseDownEvent>(evt =>
+				{
+					if (evt.button == 0) 
+					{
+						long currentTime = System.DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
+						if (currentTime - lastClickTime < doubleClickTimeMs)
+						{
+							clickCount++;
+							if (clickCount >= 2)
+							{
+								evt.StopPropagation();
+								ProcessRenameFeedback(index, toggle, toggleLabel, foldout);
+								clickCount = 0;
+							}
+						}
+						else
+						{
+							clickCount = 1;
+						}
+						
+						lastClickTime = currentTime;
+					}
+				});
 
 				// active checkbox
 				Toggle activeCheckbox = new Toggle();
@@ -1638,6 +1794,8 @@ namespace MoreMountains.Feedbacks
 				EditorUtility.SetDirty(TargetMmfPlayer);
 			});
 
+			DrawPreviewControls(controlsContainer);
+
 			// script driven pause blinking label
 			VisualElement scriptDrivenPauseContainer = new VisualElement();
 			scriptDrivenPauseContainer.style.display = DisplayStyle.None;
@@ -1686,6 +1844,39 @@ namespace MoreMountains.Feedbacks
 				scriptDrivenPauseContainer.style.display =
 					_inScriptDrivenPause.boolValue ? DisplayStyle.Flex : DisplayStyle.None;
 			}
+		}
+
+		protected virtual void DrawPreviewControls(VisualElement container)
+		{
+			if (Application.isPlaying || !MMF_PlayerEditorSettings.MMFPlayerPreviewBarEnabled)
+			{
+				return;
+			}
+
+			VisualElement previewRow = new VisualElement();
+			previewRow.AddToClassList(_previewRowClassName);
+
+			VisualElement warningIcon = new VisualElement();
+			warningIcon.AddToClassList(_previewWarningIconClassName);
+			warningIcon.tooltip = _previewWarningTooltip;
+			previewRow.Add(warningIcon);
+
+			Button previewButton = new Button(() =>
+			{
+				TargetMmfPlayer.PreviewPlay();
+			}) { text = _previewText };
+			previewButton.style.backgroundColor = new StyleColor(new Color32(7, 162, 242, 255));
+
+			Button undoPreviewButton = new Button(() =>
+			{
+				TargetMmfPlayer.PreviewUndoPlay();
+			}) { text = _undoPreviewText };
+			undoPreviewButton.style.backgroundColor = new StyleColor(new Color32(174, 20, 28, 255));
+
+			previewRow.Add(previewButton);
+			previewRow.Add(undoPreviewButton);
+			
+			container.Add(previewRow);
 		}
 
 		#region FeedbacksControls
@@ -1834,6 +2025,98 @@ namespace MoreMountains.Feedbacks
 			SavePlayerChanges();
 			RedrawBottomBar();
 			RedrawFeedbacksList();
+		}
+
+		/// <summary>
+		/// Starts the rename process for a feedback by replacing the label with a text field in place
+		/// </summary>
+		protected virtual void ProcessRenameFeedback(int index, Toggle toggle, Label label, Foldout foldout)
+		{
+			if (index < 0 || index >= TargetMmfPlayer.FeedbacksList.Count)
+			{
+				return;
+			}
+
+			MMF_Feedback feedback = TargetMmfPlayer.FeedbacksList[index];
+			string originalLabel = feedback.Label;
+			
+			TextField renameField = new TextField();
+			renameField.value = originalLabel;
+			renameField.AddToClassList(_feedbackFoldoutLabelClassName);
+			
+			renameField.style.position = Position.Absolute;
+			renameField.style.left = label.worldBound.x - toggle.worldBound.x;
+			renameField.style.top = label.worldBound.y - toggle.worldBound.y;
+			renameField.style.minWidth = 400;
+			renameField.style.maxWidth = 1200;
+			renameField.style.height = label.worldBound.height;
+			
+			renameField.schedule.Execute(() =>
+			{
+				Label textFieldLabel = renameField.Q<Label>();
+				if (textFieldLabel != null)
+				{
+					textFieldLabel.style.display = DisplayStyle.None;
+				}
+				
+				VisualElement textInput = renameField.Q("unity-text-input");
+				if (textInput != null)
+				{
+					textInput.style.paddingLeft = 0;
+					textInput.style.paddingRight = 0;
+					textInput.style.paddingTop = 0;
+					textInput.style.paddingBottom = 0;
+					textInput.style.marginLeft = 0;
+					textInput.style.marginRight = 0;
+					textInput.style.marginTop = 0;
+					textInput.style.marginBottom = 0;
+				}
+			}).ExecuteLater(1);
+			
+			label.style.opacity = 0;
+			toggle.Add(renameField);
+			
+			renameField.schedule.Execute(() =>
+			{
+				renameField.Focus();
+				renameField.SelectAll();
+			}).ExecuteLater(1);
+			
+			void FinishRename(bool save)
+			{
+				if (save && !string.IsNullOrWhiteSpace(renameField.value))
+				{
+					Undo.RecordObject(target, "Rename Feedback");
+					feedback.Label = renameField.value.Trim();
+					
+					foldout.text = DetermineFeedbackLabel(index, feedback.GetType());
+					
+					EditorUtility.SetDirty(target);
+					serializedObject.ApplyModifiedProperties();
+				}
+				
+				renameField.RemoveFromHierarchy();
+				label.style.opacity = 1;
+			}
+			
+			renameField.RegisterCallback<KeyDownEvent>(evt =>
+			{
+				if (evt.keyCode == KeyCode.Return || evt.keyCode == KeyCode.KeypadEnter)
+				{
+					evt.StopPropagation();
+					FinishRename(true);
+				}
+				else if (evt.keyCode == KeyCode.Escape)
+				{
+					evt.StopPropagation();
+					FinishRename(false);
+				}
+			});
+			
+			renameField.RegisterCallback<BlurEvent>(evt =>
+			{
+				FinishRename(true);
+			});
 		}
 
 		#endregion

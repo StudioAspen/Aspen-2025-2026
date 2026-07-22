@@ -27,6 +27,10 @@ namespace MoreMountains.Tools
 		/// The track to change volume on
 		[Tooltip("The track to change volume on")]
 		public MMSoundManager.MMSoundManagerTracks Track;
+		/// If Track is set to Other, the custom track SO to target
+		[Tooltip("If Track is set to Other, the custom track SO to target")]
+		[MMEnumCondition("Track", (int)MMSoundManager.MMSoundManagerTracks.Other)]
+		public MMSoundManagerCustomTrackSO CustomTrack;
 		/// The volume to apply to the track when the slider is at its minimum
 		[Tooltip("The volume to apply to the track when the slider is at its minimum")]
 		public float MinVolume = 0f;
@@ -85,7 +89,15 @@ namespace MoreMountains.Tools
 		{
 			if (Mode == Modes.Read)
 			{
-				float trackVolume = MMSoundManager.Instance.GetTrackVolume(Track, false);
+				float trackVolume;
+				if (Track == MMSoundManager.MMSoundManagerTracks.Other && CustomTrack != null)
+				{
+					trackVolume = MMSoundManager.Instance.GetTrackVolume(CustomTrack, false);
+				}
+				else
+				{
+					trackVolume = MMSoundManager.Instance.GetTrackVolume(Track, false);
+				}
 				_slider.value = trackVolume; 	
 			}
 
@@ -118,7 +130,8 @@ namespace MoreMountains.Tools
 				return;
 			}
 			float newVolume = MMMaths.Remap(newValue, 0f, 1f, MinVolume, MaxVolume);
-			MMSoundManagerTrackEvent.Trigger(MMSoundManagerTrackEventTypes.SetVolumeTrack, Track, newVolume);
+			MMSoundManagerTrackEvent.Trigger(MMSoundManagerTrackEventTypes.SetVolumeTrack, Track, newVolume, CustomTrack);
+			MMSoundManagerEvent.Trigger(MMSoundManagerEventTypes.SaveSettings);
 		}
 
 		/// <summary>
@@ -138,7 +151,16 @@ namespace MoreMountains.Tools
 		/// </summary>
 		public virtual void UpdateSliderValueWithTrackVolume()
 		{
-			_slider.value = MMMaths.Remap(MMSoundManager.Instance.GetTrackVolume(Track, false), 0f, 1f, MinVolume, MaxVolume);
+			float volume;
+			if (Track == MMSoundManager.MMSoundManagerTracks.Other && CustomTrack != null)
+			{
+				volume = MMSoundManager.Instance.GetTrackVolume(CustomTrack, false);
+			}
+			else
+			{
+				volume = MMSoundManager.Instance.GetTrackVolume(Track, false);
+			}
+			_slider.value = MMMaths.Remap(volume, 0f, 1f, MinVolume, MaxVolume);
 		}
 
 		/// <summary>
@@ -147,6 +169,15 @@ namespace MoreMountains.Tools
 		/// <param name="trackEvent"></param>
 		public void OnMMEvent(MMSoundManagerTrackEvent trackEvent)
 		{
+			if (Track == MMSoundManager.MMSoundManagerTracks.Other)
+			{
+				if (trackEvent.CustomTrack != CustomTrack) return;
+			}
+			else
+			{
+				if (trackEvent.Track != Track) return;
+			}
+			
 			switch (trackEvent.TrackEventType)
 			{
 				case MMSoundManagerTrackEventTypes.MuteTrack:
@@ -176,6 +207,15 @@ namespace MoreMountains.Tools
 		/// <param name="fadeEvent"></param>
 		public void OnMMEvent(MMSoundManagerTrackFadeEvent fadeEvent)
 		{
+			if (Track == MMSoundManager.MMSoundManagerTracks.Other)
+			{
+				if (fadeEvent.CustomTrack != CustomTrack) return;
+			}
+			else
+			{
+				if (fadeEvent.Track != Track) return;
+			}
+			
 			if (ChangeModeOnTrackFade)
 			{
 				ChangeModeToRead(fadeEvent.FadeDuration + ModeSwitchBufferTime);	

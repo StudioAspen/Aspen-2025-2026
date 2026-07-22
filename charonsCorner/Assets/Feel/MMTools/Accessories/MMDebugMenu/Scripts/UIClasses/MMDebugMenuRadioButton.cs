@@ -31,7 +31,7 @@ namespace MoreMountains.Tools
 		{
 			_group = new List<MMDebugMenuRadioButton> ();
 
-			MMDebugMenuRadioButton[] radioButtons = FindObjectsByType(typeof(MMDebugMenuRadioButton), FindObjectsSortMode.None) as MMDebugMenuRadioButton[];
+			MMDebugMenuRadioButton[] radioButtons = FindObjectsByType(typeof(MMDebugMenuRadioButton)) as MMDebugMenuRadioButton[];
 			foreach (MMDebugMenuRadioButton radioButton in radioButtons) 
 			{
 				if ((radioButton.RadioButtonGroupName == RadioButtonGroupName)
