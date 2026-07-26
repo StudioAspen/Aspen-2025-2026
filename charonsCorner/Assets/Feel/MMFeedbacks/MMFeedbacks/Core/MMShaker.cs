@@ -7,11 +7,8 @@ using UnityEditor;
 
 namespace MoreMountains.Feedbacks
 {
-	[ExecuteAlways]
 	public class MMShaker : MMMonoBehaviour
 	{
-		/// the maximum delta time allowed in editor preview mode
-		public const float MaxEditorPreviewDeltaTime = 0.05f;
 		[MMInspectorGroup("Shaker Settings", true, 3)]
 		/// whether to listen on a channel defined by an int or by a MMChannel scriptable object. Ints are simple to setup but can get messy and make it harder to remember what int corresponds to what.
 		/// MMChannel scriptable objects require you to create them in advance, but come with a readable name and are more scalable
@@ -62,23 +59,11 @@ namespace MoreMountains.Feedbacks
 
 		public virtual float GetTime()
 		{
-			#if UNITY_EDITOR
-			if (!Application.isPlaying)
-			{
-				return (float)EditorApplication.timeSinceStartup;
-			}
-			#endif
 			return (TimescaleMode == TimescaleModes.Scaled) ? Time.time : Time.unscaledTime;
 		}
 		
 		public virtual float GetDeltaTime()
 		{
-			#if UNITY_EDITOR
-			if (!Application.isPlaying)
-			{
-				return Mathf.Min(Time.unscaledDeltaTime, MaxEditorPreviewDeltaTime);
-			}
-			#endif
 			return (TimescaleMode == TimescaleModes.Scaled) ? Time.deltaTime : Time.unscaledDeltaTime;
 		}
 		public virtual MMChannelData ChannelData => new MMChannelData(ChannelMode, Channel, MMChannelDefinition);
@@ -133,6 +118,11 @@ namespace MoreMountains.Feedbacks
 		/// </summary>
 		public virtual void StartShaking()
 		{
+			if (!Application.isPlaying)
+			{
+				return;
+			}
+			
 			_journey = ForwardDirection ? 0f : ShakeDuration;
 
 			if (InCooldown)
@@ -190,7 +180,7 @@ namespace MoreMountains.Feedbacks
 		/// </summary>
 		protected virtual void Update()
 		{
-			if (Shaking || PermanentShake)
+			if (Shaking || (PermanentShake && Application.isPlaying))
 			{
 				Shake();
 				_journey += ForwardDirection ? GetDeltaTime() : -GetDeltaTime();
@@ -335,12 +325,6 @@ namespace MoreMountains.Feedbacks
 				return;
 			}
 			this.enabled = true;
-			#if UNITY_EDITOR
-			if (!Application.isPlaying)
-			{
-				StartShaking();
-			}
-			#endif
 		}
 
 		/// <summary>

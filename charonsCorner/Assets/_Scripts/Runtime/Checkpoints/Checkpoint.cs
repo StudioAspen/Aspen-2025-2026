@@ -19,6 +19,8 @@ namespace CharonsCorner.Runtime
 
         public static event Action<Checkpoint> OnCheckpointHit;
 
+        private bool _hasActivated = false;
+
         private void Awake()
         {
             if (RespawnPoint == null)  
@@ -35,6 +37,9 @@ namespace CharonsCorner.Runtime
         [Button("Activate", ButtonSizes.Large)]
         public void Activate()
         {
+            if (_hasActivated) return;
+            
+            _hasActivated = true;
             OnCheckpointHit?.Invoke(this);
             OnThisCheckpoint?.Invoke();
         }

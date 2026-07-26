@@ -249,6 +249,14 @@ namespace MoreMountains.Feedbacks
 		}
 
 		/// <summary>
+		/// On enable we trigger the initialization
+		/// </summary>
+		protected virtual void OnEnable()
+		{
+			Initialization();
+		}
+
+		/// <summary>
 		/// On Start() we trigger the initialization
 		/// </summary>
 		protected virtual void Start()
@@ -261,6 +269,11 @@ namespace MoreMountains.Feedbacks
 		/// </summary>
 		public virtual void Initialization()
 		{
+			if (!Application.isPlaying)
+			{
+				return;
+			}
+			
 			if (PositionWiggleProperties == null) { PositionWiggleProperties = new WiggleProperties(); }
 			if (RotationWiggleProperties == null) { RotationWiggleProperties = new WiggleProperties(); }
 			if (ScaleWiggleProperties == null) { ScaleWiggleProperties = new WiggleProperties(); }
@@ -351,6 +364,11 @@ namespace MoreMountains.Feedbacks
 		/// </summary>
 		protected virtual void ProcessUpdate()
 		{
+			if (!Application.isPlaying)
+			{
+				return;
+			}
+
 			_positionInternalProperties.returnVector = transform.localPosition;
 			if (UpdateValue(PositionActive, PositionWiggleProperties, ref _positionInternalProperties))
 			{

@@ -4,7 +4,7 @@ using UnityEngine.Splines;
 using MoreMountains.Tools;
 using CharonsCorner.Runtime;
 
-public class SplineModelFactoryLine : MonoBehaviour
+public class SplineModelFactoryLine : MonoBehaviour, MMEventListener<MMGameEvent>
 {
     [SerializeField] private SplineContainer splineContainer;
     [SerializeField] private List<SplineContainer> extraSplines = new List<SplineContainer>();
@@ -23,6 +23,12 @@ public class SplineModelFactoryLine : MonoBehaviour
     [Range(0f, 1f)] [SerializeField] private float startPopulationPercentage = 1f;
     [SerializeField] private bool randomizeIfPossible = false;
     [SerializeField] private bool useObjectPooling = true;
+    [SerializeField] private bool useSetToBlack = false;
+
+    [Header("Start Scaling")]
+    [SerializeField] private bool useStartScaling = false;
+    [Range(0f, 1f)] [SerializeField] private float scalingEndPercentage = 0.2f;
+    [SerializeField] private AnimationCurve startScalingCurve = AnimationCurve.Linear(0, 0, 1, 1);
 
     [Header("End Scaling")]
     [SerializeField] private bool useEndScaling = false;
@@ -33,6 +39,12 @@ public class SplineModelFactoryLine : MonoBehaviour
     [SerializeField] private bool _speedPopulateFromScratch = false;
     [SerializeField] private float _speedMultiplier = 5f;
     [SerializeField] private AnimationCurve _speedPopulateCurve = AnimationCurve.Linear(0, 0, 1, 1);
+
+    [Header("Pulse")]
+    [SerializeField] private string pulseEventName = "Pulse";
+    [SerializeField] private float pulseDuration = 2f;
+    [SerializeField] private float pulseMultiplier = 2f;
+    [SerializeField] private AnimationCurve pulseCurve = new AnimationCurve(new Keyframe(0, 0), new Keyframe(0.5f, 1), new Keyframe(1, 0));
 
     public void Activate()
     {
@@ -48,10 +60,18 @@ public class SplineModelFactoryLine : MonoBehaviour
 
     public void Deactivate() => isActive = false;
 
-    private float _spawnTimer;
+    public void Pulse()
+    {
+        _pulseTimer = 0f;
+        _isPulsing = true;
+    }
+
+    private float _distanceAccumulator;
     private float _currentSpawnInterval;
     private bool _isSpeedPopulating;
     private bool _lastIsActive;
+    private bool _isPulsing;
+    private float _pulseTimer;
 
     private class MovingObject
     {
@@ -117,6 +137,24 @@ public class SplineModelFactoryLine : MonoBehaviour
         }
     }
 
+    private void OnEnable()
+    {
+        this.MMEventStartListening<MMGameEvent>();
+    }
+
+    private void OnDisable()
+    {
+        this.MMEventStopListening<MMGameEvent>();
+    }
+
+    public void OnMMEvent(MMGameEvent gameEvent)
+    {
+        if (gameEvent.EventName == pulseEventName)
+        {
+            Pulse();
+        }
+    }
+
     void Update()
     {
         if (isActive && !_lastIsActive)
@@ -163,17 +201,39 @@ public class SplineModelFactoryLine : MonoBehaviour
             }
         }
 
-        UpdateSpawning(currentSpeedMultiplier);
-        UpdateMovement(currentSpeedMultiplier);
+        if (_isPulsing)
+        {
+            _pulseTimer += Time.deltaTime;
+            float progress = Mathf.Clamp01(_pulseTimer / pulseDuration);
+            float pulseValue = pulseCurve.Evaluate(progress);
+            // Pulse multiplier goes from 1 to pulseMultiplier and back to 1 based on the curve.
+            // Usually curves are 0 to 1. If EaseInOut, it goes 0 -> 1.
+            // Wait, "easing it over x to a multiplier of y and then back down to it's base".
+            // If the curve is 0 to 1 and then back to 0, it works.
+            // If the curve is standard 0 to 1, we might need to handle the "back down" part unless the curve itself does it.
+            // Most users expect a pulse curve to represent the intensity over time.
+            float currentPulse = Mathf.Lerp(1f, pulseMultiplier, pulseValue);
+            currentSpeedMultiplier *= currentPulse;
+
+            if (progress >= 1f)
+            {
+                _isPulsing = false;
+            }
+        }
+
+        float currentSpeed = speed * currentSpeedMultiplier;
+        UpdateSpawning(currentSpeed);
+        UpdateMovement(currentSpeed);
     }
 
-    private void UpdateSpawning(float multiplier)
+    private void UpdateSpawning(float currentSpeed)
     {
-        _spawnTimer += Time.deltaTime;
-        float adjustedInterval = _currentSpawnInterval / multiplier;
-        if (_spawnTimer >= adjustedInterval)
+        _distanceAccumulator += currentSpeed * Time.deltaTime;
+        float requiredDistance = speed * _currentSpawnInterval;
+        
+        if (requiredDistance > 0 && _distanceAccumulator >= requiredDistance)
         {
-            _spawnTimer = 0f;
+            _distanceAccumulator -= requiredDistance;
             SetNextSpawnInterval();
             Spawn();
         }
@@ -219,7 +279,7 @@ public class SplineModelFactoryLine : MonoBehaviour
             }
         }
 
-        _spawnTimer = 0f;
+        _distanceAccumulator = 0f;
     }
 
     private void SpawnAt(SplineContainer container, float distance)
@@ -251,6 +311,14 @@ public class SplineModelFactoryLine : MonoBehaviour
             }
         }
 
+        if (useSetToBlack)
+        {
+            if (instance.TryGetComponent(out SetToBlack setToBlack))
+            {
+                setToBlack.Active = true;
+            }
+        }
+
         MovingObject obj = new MovingObject { Instance = instance, Distance = distance, Container = container, BaseScale = instanceScale, Poolable = poolable };
         _activeObjects.Add(obj);
         
@@ -265,10 +333,8 @@ public class SplineModelFactoryLine : MonoBehaviour
         }
     }
 
-    private void UpdateMovement(float multiplier)
+    private void UpdateMovement(float currentSpeed)
     {
-        float currentSpeed = speed * multiplier;
-
         for (int i = _activeObjects.Count - 1; i >= 0; i--)
         {
             var obj = _activeObjects[i];
@@ -320,18 +386,26 @@ public class SplineModelFactoryLine : MonoBehaviour
             obj.Instance.transform.rotation = Quaternion.LookRotation(forward, up);
         }
 
+        float currentScaleMultiplier = 1f;
+
+        if (useStartScaling)
+        {
+            if (progress <= scalingEndPercentage)
+            {
+                float scalingProgress = progress / scalingEndPercentage;
+                currentScaleMultiplier *= startScalingCurve.Evaluate(scalingProgress);
+            }
+        }
+
         if (useEndScaling)
         {
             if (progress >= scalingStartPercentage)
             {
                 float scalingProgress = (progress - scalingStartPercentage) / (1f - scalingStartPercentage);
-                float scaleMultiplier = endScalingCurve.Evaluate(scalingProgress);
-                obj.Instance.transform.localScale = obj.BaseScale * scaleMultiplier;
-            }
-            else
-            {
-                obj.Instance.transform.localScale = obj.BaseScale;
+                currentScaleMultiplier *= endScalingCurve.Evaluate(scalingProgress);
             }
         }
+
+        obj.Instance.transform.localScale = obj.BaseScale * currentScaleMultiplier;
     }
 }

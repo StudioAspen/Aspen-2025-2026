@@ -62,6 +62,9 @@ MonoBehaviour:
   Mode: 0
   TargetTransform: {fileID: 8149397255045188356}
   TargetRectTransform: {fileID: 0}
+  UseMultiTargets: 0
+  MultiTargetTransforms: []
+  MultiTargetRectTransforms: []
   ShakeSpeed: 1
   ShakeRange: 360
   ShakeMainDirection: {x: 0, y: 0, z: 1}
@@ -118,6 +121,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4825617536760973543}
   - component: {fileID: 2381991716356953455}
+  - component: {fileID: 2014781069040390145}
   m_Layer: 0
   m_Name: Bead
   m_TagString: Untagged
@@ -156,6 +160,19 @@ MonoBehaviour:
   objects:
   - {fileID: 5505602222028391421}
   - {fileID: 8342813987612366498}
+--- !u!114 &2014781069040390145
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3314570278934616333}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf94f62c91c54727a692be461d07cb41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: CharonsCorner.Runtime::CharonsCorner.Runtime.SetToBlack
+  _active: 0
 --- !u!1 &5505602222028391421
 GameObject:
   m_ObjectHideFlags: 0
@@ -167,6 +184,7 @@ GameObject:
   - component: {fileID: 913270965935012312}
   - component: {fileID: 2742297375318045369}
   - component: {fileID: 1489915694422421530}
+  - component: {fileID: 1478465988931551942}
   m_Layer: 0
   m_Name: BeadModel
   m_TagString: Untagged
@@ -217,6 +235,8 @@ MeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -239,10 +259,61 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &1478465988931551942
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5505602222028391421}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b4347e5484948cc8ea0e9da6ac7f169, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CharonsCorner.Runtime.PulseMaterial
+  _pulseEventName: Pulse
+  _pulseCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.5
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  _targetRenderer: {fileID: 1489915694422421530}
+  _materialIndex: 0
+  _glowPropertyName: _Glow
 --- !u!1 &8342813987612366498
 GameObject:
   m_ObjectHideFlags: 0
@@ -254,6 +325,7 @@ GameObject:
   - component: {fileID: 1064516379769615070}
   - component: {fileID: 3405056297521765733}
   - component: {fileID: 5546624116528487484}
+  - component: {fileID: 6197742677647753759}
   m_Layer: 0
   m_Name: BeadModel (1)
   m_TagString: Untagged
@@ -304,6 +376,8 @@ MeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -326,7 +400,58 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &6197742677647753759
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8342813987612366498}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b4347e5484948cc8ea0e9da6ac7f169, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CharonsCorner.Runtime.PulseMaterial
+  _pulseEventName: Pulse
+  _pulseCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.5
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  _targetRenderer: {fileID: 5546624116528487484}
+  _materialIndex: 0
+  _glowPropertyName: _Glow

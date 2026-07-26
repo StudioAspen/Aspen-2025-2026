@@ -21,6 +21,10 @@ namespace CharonsCorner.Runtime
         [SerializeField] AnimationCurve _ease = AnimationCurve.EaseInOut(0, 0, 1, 1);
         [SerializeField] private float _extraRespawnHeight = 7f; // optional
  
+        [Header("Contingency Death")]
+        [SerializeField] private float _deathYThreshold = -1500f;
+        [SerializeField] private CheckpointManager _checkpointManager;
+
         private bool _isRespawning;
 
         public static System.Action OnPlayerDeath;
@@ -29,6 +33,28 @@ namespace CharonsCorner.Runtime
         {
             rb = GetComponent<Rigidbody>();
             _inputManager = InputManager.Instance;
+            if (_checkpointManager == null)
+            {
+                _checkpointManager = FindAnyObjectByType<CheckpointManager>();
+            }
+        }
+
+        private void Update()
+        {
+            if (_isRespawning) return;
+
+            if (transform.position.y < _deathYThreshold)
+            {
+                if (_checkpointManager != null && _checkpointManager.CurrentCheckpoint != null)
+                {
+                    Debug.Log($"[PlayerDeathHandler] Player fell below threshold ({_deathYThreshold}). Triggering contingency respawn.");
+                    RespawnTo(_checkpointManager.CurrentCheckpoint.RespawnPoint);
+                }
+                else
+                {
+                    Debug.LogWarning("[PlayerDeathHandler] Player fell below threshold but no CheckpointManager or CurrentCheckpoint found!");
+                }
+            }
         }
 
         /// <summary>
