@@ -75,6 +75,7 @@ namespace CharonsCorner.Runtime
             if (sequence.lines != null && sequence.lines.Length > 0)
             {
                 TriggerTalkEvent(sequence.lines[CurrentDialogueIndex].speaker);
+                TriggerAnimationEvents(sequence.lines[CurrentDialogueIndex]);
                 StartLine(GetProcessedLine(sequence.lines[CurrentDialogueIndex]));
 
                 if (CurrentDialogueIndex >= sequence.lines.Length - 1)
@@ -140,6 +141,7 @@ namespace CharonsCorner.Runtime
 
             CurrentDialogueIndex++;
             TriggerTalkEvent(CurrentSequence.lines[CurrentDialogueIndex].speaker);
+            TriggerAnimationEvents(CurrentSequence.lines[CurrentDialogueIndex]);
             string nextLine = GetProcessedLine(CurrentSequence.lines[CurrentDialogueIndex]);
             StartLine(nextLine);
 
@@ -157,6 +159,19 @@ namespace CharonsCorner.Runtime
                 case Speaker.Bowley:
                     MMGameEvent.Trigger("BowleyTalk");
                     break;
+            }
+        }
+
+        private void TriggerAnimationEvents(DialogueLine line)
+        {
+            if (!string.IsNullOrEmpty(line.charonAnimation))
+            {
+                MMGameEvent.Trigger(line.charonAnimation);
+            }
+
+            if (!string.IsNullOrEmpty(line.bowleyAnimation))
+            {
+                MMGameEvent.Trigger(line.bowleyAnimation);
             }
         }
 

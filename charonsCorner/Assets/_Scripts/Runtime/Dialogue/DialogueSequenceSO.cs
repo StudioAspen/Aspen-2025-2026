@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
 
@@ -16,9 +17,42 @@ namespace CharonsCorner.Runtime
     {
         [HideLabel]
         public Speaker speaker;
+
+        [ValueDropdown("GetCharonAnimations")]
+        public string charonAnimation;
+
+        [ValueDropdown("GetBowleyAnimations")]
+        public string bowleyAnimation;
+
         [HideLabel]
         [TextArea(3, 10)]
         public string text;
+
+#if UNITY_EDITOR
+        private static IEnumerable GetCharonAnimations()
+        {
+            var guids = UnityEditor.AssetDatabase.FindAssets("t:CharonAnimationStrings");
+            if (guids.Length > 0)
+            {
+                var path = UnityEditor.AssetDatabase.GUIDToAssetPath(guids[0]);
+                var so = UnityEditor.AssetDatabase.LoadAssetAtPath<CharonAnimationStrings>(path);
+                if (so != null) return so.AnimationEvents;
+            }
+            return new List<string>();
+        }
+
+        private static IEnumerable GetBowleyAnimations()
+        {
+            var guids = UnityEditor.AssetDatabase.FindAssets("t:BowleyAnimationStrings");
+            if (guids.Length > 0)
+            {
+                var path = UnityEditor.AssetDatabase.GUIDToAssetPath(guids[0]);
+                var so = UnityEditor.AssetDatabase.LoadAssetAtPath<BowleyAnimationStrings>(path);
+                if (so != null) return so.AnimationEvents;
+            }
+            return new List<string>();
+        }
+#endif
     }
 
     [CreateAssetMenu(fileName = "DialogueSequence", menuName = "CharonsCorner/Dialogue/Dialogue Sequence", order = 2)]
