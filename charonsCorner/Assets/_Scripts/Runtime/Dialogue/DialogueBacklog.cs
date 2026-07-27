@@ -45,13 +45,6 @@ namespace CharonsCorner.Runtime
             Debug.Log($"[DialogueBacklog] Overriding with S-Rank Dialogue for Chapter {entry.ChapterIndex}");
         }
 
-        public void ClearOverrides()
-        {
-            _overriddenDialogueEntry = null;
-            _overriddenSRankEntry = null;
-            Debug.Log("[DialogueBacklog] Overrides cleared.");
-        }
-
         [Header("Alert Feedbacks")]
         [SerializeField] private MMF_Player _alertEnterFeedback;
         [SerializeField] private MMF_Player _alertExitFeedback;

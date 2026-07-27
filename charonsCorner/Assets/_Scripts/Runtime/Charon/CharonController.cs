@@ -18,9 +18,6 @@ namespace CharonsCorner.Runtime
         [Header("Config")]
         [SerializeField] private float _animatorFadeDuration = 0.2f;
 
-        [SerializeField, SerializedDictionary("Reaction", "Animation Clip")]
-        private SerializedDictionary<DialogueReaction, ClipTransition> _reactionAnimations;
-
         private void Awake()
         {
             _dialogueManager = DialogueManager.Instance;
@@ -32,7 +29,6 @@ namespace CharonsCorner.Runtime
 
         private void Start()
         {
-            _animator.Play(_reactionAnimations[DialogueReaction.Idle], _animatorFadeDuration);
         }
 
         private void OnDestroy()
@@ -65,7 +61,6 @@ namespace CharonsCorner.Runtime
             if (_dialogueManager.Owner != this)
                 return;
             
-            _animator.Play(_reactionAnimations[opener.Reaction], _animatorFadeDuration);
             opener.ApplyEffects();
         }
 
@@ -74,7 +69,6 @@ namespace CharonsCorner.Runtime
             if (_dialogueManager.Owner != this)
                 return;
             
-            _animator.Play(_reactionAnimations[dialogue.Reaction], _animatorFadeDuration);
             dialogue.ApplyEffects();
         }
 
@@ -82,8 +76,6 @@ namespace CharonsCorner.Runtime
         {
             if (_dialogueManager.Owner != this)
                 return;
-            
-            _animator.Play(_reactionAnimations[DialogueReaction.Idle], _animatorFadeDuration);
         }
 
         /// <summary>
@@ -95,31 +87,6 @@ namespace CharonsCorner.Runtime
             if (clip != null)
             {
                 _animator.Play(clip, _animatorFadeDuration);
-            }
-        }
-
-        /// <summary>
-        /// Plays an animation based on the provided index.
-        /// The index corresponds to the values in the DialogueReaction enum.
-        /// </summary>
-        /// <param name="index">The index of the DialogueReaction to play.</param>
-        public void PlayAnimationByIndex(int index)
-        {
-            if (System.Enum.IsDefined(typeof(DialogueReaction), index))
-            {
-                DialogueReaction reaction = (DialogueReaction)index;
-                if (_reactionAnimations.ContainsKey(reaction))
-                {
-                    _animator.Play(_reactionAnimations[reaction], _animatorFadeDuration);
-                }
-                else
-                {
-                    Debug.LogWarning($"[CharonController] Reaction '{reaction}' not found in _reactionAnimations dictionary.");
-                }
-            }
-            else
-            {
-                Debug.LogWarning($"[CharonController] Animation index {index} is out of range for DialogueReaction enum.");
             }
         }
     }

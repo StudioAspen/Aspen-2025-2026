@@ -90,6 +90,13 @@ namespace CharonsCorner.Runtime
                         MMGameEvent.Trigger(marker.parameters[0]);
                     }
                     break;
+                
+                case "GE":
+                    if (marker.parameters.Length > 0)
+                    {
+                        MMGameEvent.Trigger(marker.parameters[0]);
+                    }
+                    break;
 
                 case "ChangeSpeakerName":
                     if (marker.parameters.Length > 0)
