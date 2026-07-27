@@ -76,6 +76,7 @@ namespace Sirenix.OdinInspector.Modules.Addressables.Editor
     using Sirenix.Utilities.Editor;
     using Sirenix.OdinInspector.Modules.Addressables.Editor.Internal;
     using Sirenix.Reflection.Editor;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
@@ -266,19 +267,17 @@ namespace Sirenix.OdinInspector.Modules.Addressables.Editor
                     {
                         if (this.isSpriteAtlas && obj is Sprite sprite)
                         {
-                        foreach (string atlasGuid in AssetDatabase.FindAssets("t:SpriteAtlas"))
-                        {
-                            SpriteAtlas spriteAtlas = AssetDatabase.LoadAssetAtPath<SpriteAtlas>(AssetDatabase.GUIDToAssetPath(atlasGuid));
-                            if (spriteAtlas == null) continue;
-                            if (!spriteAtlas.CanBindTo(sprite))
+                            foreach (SpriteAtlas spriteAtlas in AssetDatabase_Internals.FindAssets<SpriteAtlas>(String.Empty, false, AssetDatabaseSearchArea.AllAssets))
                             {
-                                continue;
+                                if (!spriteAtlas.CanBindTo(sprite))
+                                {
+                                    continue;
+                                }
+
+                                this.SetMainAndSubAsset(spriteAtlas, sprite);
+
+                                break;
                             }
-
-                            this.SetMainAndSubAsset(spriteAtlas, sprite);
-
-                            break;
-                        }
                         }
                         else
                         {
@@ -987,9 +986,9 @@ namespace Sirenix.OdinInspector.Modules.Addressables.Editor
                     searchFilter += $"t:{filterType.Name} ";
                 }
 
-                var guids = AssetDatabase.FindAssets(searchFilter);
+                IEnumerator<AssetDatabaseAssetInfo> enumerator = AssetDatabase_Internals.EnumerateAllAssets(searchFilter, false, AssetDatabaseSearchArea.InAssetsOnly);
 
-                if (guids.Length > 0)
+                if (enumerator != null && enumerator.MoveNext())
                 {
                     var addedGuids = new HashSet<string>();
 
@@ -1007,29 +1006,28 @@ namespace Sirenix.OdinInspector.Modules.Addressables.Editor
 
                     tree.MenuItems.Add(nonAddressablesItem);
 
-                    foreach (var guid in guids)
+                    do
                     {
-                        if (addedGuids.Contains(guid))
+                        AssetDatabaseAssetInfo current = enumerator.Current;
+
+                        if (!current.IsValid)
                         {
                             continue;
                         }
-
-                        string path = AssetDatabase.GUIDToAssetPath(guid);
-                        if (string.IsNullOrEmpty(path)) continue;
-
-                        AddressableAssetEntry entry = OdinAddressableUtility.CreateFakeAddressableAssetEntry(guid);
-                        Texture icon = AssetDatabase.GetCachedIcon(path);
-                        string name = System.IO.Path.GetFileNameWithoutExtension(path);
+                        
+                        AddressableAssetEntry entry = OdinAddressableUtility.CreateFakeAddressableAssetEntry(current.Guid);
 
                         if (listMode == SelectorListMode.Flat)
                         {
-                            var item = new OdinMenuItem(tree, name, entry) {Icon = icon};
+                            var item = new OdinMenuItem(tree, current.Name, entry) {Icon = current.Icon};
 
                             nonAddressablesItem.ChildMenuItems.Add(item);
                         }
                         else
                         {
-                            if (!AssetDatabase.IsValidFolder(path))
+                            string path = current.AssetPath;
+
+                            if (!current.IsFolder)
                             {
                                 int extensionEndingIndex = GetExtensionsEndingIndex(path);
 
@@ -1041,9 +1039,9 @@ namespace Sirenix.OdinInspector.Modules.Addressables.Editor
 
                             path = RemoveBaseDirectoryFromAssetPath(path);
 
-                            tree.Add($"{NON_ADDRESSABLES_ITEM_NAME}/{path}", entry, icon);
+                            tree.Add($"{NON_ADDRESSABLES_ITEM_NAME}/{path}", entry, current.Icon);
                         }
-                    }
+                    } while (enumerator.MoveNext());
 
                     nonAddressablesItem.ChildMenuItems.SortMenuItemsByName();
                 }
@@ -1073,6 +1071,36 @@ namespace Sirenix.OdinInspector.Modules.Addressables.Editor
 
             noneItem.SdfIcon = SdfIconType.X;
             tree.MenuItems.Insert(0, noneItem);
+        }
+
+        private static T GetReflectedValue<T>(object target, string memberName, T defaultValue = default)
+        {
+            Type type = target.GetType();
+            FieldInfo field = type.GetField(memberName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+
+            if (field != null)
+            {
+                object fieldValue = field.GetValue(target);
+
+                if (fieldValue is T fieldResult)
+                {
+                    return fieldResult;
+                }
+            }
+
+            PropertyInfo property = type.GetProperty(memberName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+
+            if (property != null)
+            {
+                object propertyValue = property.GetValue(target, null);
+
+                if (propertyValue is T propertyResult)
+                {
+                    return propertyResult;
+                }
+            }
+
+            return defaultValue;
         }
 
         private static int GetExtensionsEndingIndex(string path)
