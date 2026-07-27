@@ -12,6 +12,46 @@ namespace CharonsCorner.Runtime
         [field: SerializeField] public List<ChapterSRankDialogueEntry> SRankDialogues { get; private set; } = new();
         [field: SerializeField] public DialogueOpenerSO DefaultCharonDialogueOpener { get; private set; }
         
+        [Header("Override Settings (Testing Only)")]
+        [SerializeField] private bool _overrideSaveData;
+        [SerializeField, ReadOnly, ShowIf(nameof(_overrideSaveData))] private ChapterDialogueEntry _overriddenDialogueEntry;
+        [SerializeField, ReadOnly, ShowIf(nameof(_overrideSaveData))] private ChapterSRankDialogueEntry _overriddenSRankEntry;
+
+        public void SetOverriddenDialogue(ChapterDialogueEntry entry)
+        {
+            if (!_overrideSaveData)
+            {
+                Debug.LogWarning("Cannot override dialogue because OverrideSaveData is not active.");
+                return;
+            }
+            _overriddenDialogueEntry = entry;
+            _overriddenSRankEntry = null;
+            
+            // Reset sequence index when forcing a new dialogue
+            FlagManager.Set(CurrentDialogueSequenceIndexFlag, 0);
+            
+            Debug.Log($"[DialogueBacklog] Overriding with Dialogue Entry for Chapter {entry.ChapterIndex}");
+        }
+
+        public void SetOverriddenSRankDialogue(ChapterSRankDialogueEntry entry)
+        {
+            if (!_overrideSaveData)
+            {
+                Debug.LogWarning("Cannot override dialogue because OverrideSaveData is not active.");
+                return;
+            }
+            _overriddenSRankEntry = entry;
+            _overriddenDialogueEntry = null;
+            Debug.Log($"[DialogueBacklog] Overriding with S-Rank Dialogue for Chapter {entry.ChapterIndex}");
+        }
+
+        public void ClearOverrides()
+        {
+            _overriddenDialogueEntry = null;
+            _overriddenSRankEntry = null;
+            Debug.Log("[DialogueBacklog] Overrides cleared.");
+        }
+
         [Header("Alert Feedbacks")]
         [SerializeField] private MMF_Player _alertEnterFeedback;
         [SerializeField] private MMF_Player _alertExitFeedback;
@@ -70,6 +110,44 @@ namespace CharonsCorner.Runtime
 
         public DialogueOpenerSO GetCurrentDialogueOpener()
         {
+            DialogueOpenerSO runtimeOpener;
+            if (_overrideSaveData)
+            {
+                if (_overriddenDialogueEntry != null)
+                {
+                    CurrentChapterDialogue = _overriddenDialogueEntry;
+                    CurrentSRankDialogue = null;
+                    
+                    runtimeOpener = Instantiate(_overriddenDialogueEntry.DialogueOpener);
+                    
+                    List<DialogueSequenceSO> overriddenSequences = new List<DialogueSequenceSO>();
+                    int sequenceIndex = FlagManager.Get(CurrentDialogueSequenceIndexFlag);
+                    
+                    if (sequenceIndex < _overriddenDialogueEntry.DialogueOpener.SequenceOptions.Count)
+                    {
+                        overriddenSequences.Add(_overriddenDialogueEntry.DialogueOpener.SequenceOptions[sequenceIndex]);
+                    }
+                    else if (_overriddenDialogueEntry.DialogueOpener.SequenceOptions.Count > 0)
+                    {
+                        // Play exhausted sequence (last one) if all sequences are done
+                        overriddenSequences.Add(_overriddenDialogueEntry.DialogueOpener.SequenceOptions[_overriddenDialogueEntry.DialogueOpener.SequenceOptions.Count - 1]);
+                    }
+
+                    runtimeOpener.SetSequenceOptions(overriddenSequences);
+                    return runtimeOpener;
+                }
+                
+                if (_overriddenSRankEntry != null)
+                {
+                    CurrentChapterDialogue = null;
+                    CurrentSRankDialogue = _overriddenSRankEntry;
+
+                    runtimeOpener = Instantiate(DefaultCharonDialogueOpener);
+                    runtimeOpener.SetSequenceOptions(new List<DialogueSequenceSO> { _overriddenSRankEntry.DialogueSequence });
+                    return runtimeOpener;
+                }
+            }
+
             ChapterDialogueEntry entry = null;
             int currDialogueOpenerIndex = FlagManager.Get(CurrentDialogueOpenerIndexFlag);
             
@@ -96,7 +174,6 @@ namespace CharonsCorner.Runtime
             CurrentChapterDialogue = entry;
             CurrentSRankDialogue = sRankEntry;
             
-            DialogueOpenerSO runtimeOpener;
             if (entry != null)
                 runtimeOpener = Instantiate(entry.DialogueOpener);
             else if (ChapterDialogues.Count > 0)
@@ -184,11 +261,17 @@ namespace CharonsCorner.Runtime
         /// </summary>
         public bool HasPendingDialogue()
         {
+            if (_overrideSaveData && (_overriddenDialogueEntry != null || _overriddenSRankEntry != null))
+                return true;
+            
             return HasPendingRegularDialogue() || HasPendingSRankDialogue();
         }
 
         public bool HasPendingRegularDialogue()
         {
+            if (_overrideSaveData)
+                return _overriddenDialogueEntry != null;
+
             int currentChapterIndex = FlagManager.Get(ProgressFlag.CurrentChapterIndex);
             bool hasRegularDialogue = FlagManager.Get(CurrentDialogueOpenerIndexFlag)
                                       <= currentChapterIndex;
@@ -198,6 +281,9 @@ namespace CharonsCorner.Runtime
 
         public bool HasPendingSRankDialogue()
         {
+            if (_overrideSaveData)
+                return _overriddenSRankEntry != null;
+
             bool hasSRankDialogue = FlagManager.Get(ProgressFlag.CurrentSRankDialogueIndex)
                                     < FlagManager.Get(ProgressFlag.SRankCount);
 
