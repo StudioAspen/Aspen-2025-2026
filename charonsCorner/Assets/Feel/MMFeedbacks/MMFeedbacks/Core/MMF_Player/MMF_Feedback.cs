@@ -987,6 +987,22 @@ namespace MoreMountains.Feedbacks
 		}
 
 		/// <summary>
+		/// Captures the current values of this feedback
+		/// </summary>
+		public virtual void CaptureCurrentValues()
+		{
+			CustomCaptureCurrentValues();
+		}
+
+		/// <summary>
+		/// Restores the captured values of this feedback
+		/// </summary>
+		public virtual void RestoreCapturedValues()
+		{
+			CustomRestoreCapturedValues();
+		}
+
+		/// <summary>
 		/// Calls this feedback's custom reset 
 		/// </summary>
 		public virtual void ResetFeedback()
@@ -1227,6 +1243,17 @@ namespace MoreMountains.Feedbacks
 		/// This method describes what happens when the feedback gets restored
 		/// </summary>
 		protected virtual void CustomRestoreInitialValues() { }
+
+		/// <summary>
+		/// This method describes what happens when the feedback gets captured
+		/// </summary>
+		protected virtual void CustomCaptureCurrentValues() { }
+
+		/// <summary>
+		/// This method describes what happens when the feedback gets restored from captured values
+		/// </summary>
+		protected virtual void CustomRestoreCapturedValues() { }
+
 		/// <summary>
 		/// This method describes what happens when the player this feedback belongs to completes playing
 		/// </summary>

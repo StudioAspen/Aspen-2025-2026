@@ -130,6 +130,7 @@ namespace MoreMountains.Feedbacks
 		protected Quaternion _initialRotation;
 		protected Vector3 _initialToDestinationAngles;
 		protected Quaternion _destinationRotation;
+		protected Quaternion _capturedRotation;
 		protected Coroutine _coroutine;
 
 		/// <summary>
@@ -465,6 +466,39 @@ namespace MoreMountains.Feedbacks
 			else
 			{
 				AnimateRotationTarget.localRotation= _initialRotation;	
+			}
+		}
+
+		/// <summary>
+		/// On capture, we store our target's current rotation
+		/// </summary>
+		protected override void CustomCaptureCurrentValues()
+		{
+			if (!Active || !FeedbackTypeAuthorized || (AnimateRotationTarget == null))
+			{
+				return;
+			}
+
+			_capturedRotation = (RotationSpace == Space.World) ? AnimateRotationTarget.rotation : AnimateRotationTarget.localRotation;
+		}
+
+		/// <summary>
+		/// On restore captured, we put our object back at its captured rotation
+		/// </summary>
+		protected override void CustomRestoreCapturedValues()
+		{
+			if (!Active || !FeedbackTypeAuthorized || (AnimateRotationTarget == null))
+			{
+				return;
+			}
+
+			if (RotationSpace == Space.World)
+			{
+				AnimateRotationTarget.rotation = _capturedRotation;
+			}
+			else
+			{
+				AnimateRotationTarget.localRotation = _capturedRotation;
 			}
 		}
 	}

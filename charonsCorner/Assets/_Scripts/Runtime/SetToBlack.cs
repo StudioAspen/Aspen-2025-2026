@@ -1,11 +1,15 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using MoreMountains.Tools;
 
 namespace CharonsCorner.Runtime
 {
-    public class SetToBlack : MonoBehaviour
+    public class SetToBlack : MonoBehaviour, MMEventListener<MMGameEvent>
     {
         [SerializeField] private bool _active = false;
+        [SerializeField] private string _mmGameEvent = "SetToBlack";
+        [SerializeField] private bool _altColor = false;
+        [SerializeField] private Color _altColorValue = Color.white;
 
         private struct RendererData
         {
@@ -31,6 +35,24 @@ namespace CharonsCorner.Runtime
         {
             get => _active;
             set => _active = value;
+        }
+
+        private void OnEnable()
+        {
+            this.MMEventStartListening<MMGameEvent>();
+        }
+
+        private void OnDisable()
+        {
+            this.MMEventStopListening<MMGameEvent>();
+        }
+
+        public void OnMMEvent(MMGameEvent gameEvent)
+        {
+            if (gameEvent.EventName == _mmGameEvent)
+            {
+                Active = true;
+            }
         }
 
         private void Awake()
@@ -99,7 +121,11 @@ namespace CharonsCorner.Runtime
 
                     if (data.HasMaterial1)
                     {
-                        if (data.Material1.HasProperty(_outlineColorId)) data.Material1.SetColor(_outlineColorId, Color.white);
+                        if (data.Material1.HasProperty(_outlineColorId))
+                        {
+                            Color targetColor = _altColor ? _altColorValue : Color.white;
+                            data.Material1.SetColor(_outlineColorId, targetColor);
+                        }
                     }
                 }
                 else

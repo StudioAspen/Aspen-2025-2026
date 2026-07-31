@@ -163,6 +163,7 @@ namespace MoreMountains.Feedbacks
 		protected float _remapCurveZero;
 		protected float _remapCurveOne;
 		protected Vector3 _originalPosition;
+		protected Vector3 _capturedPosition;
 
 		/// <summary>
 		/// On init, we set our initial and destination positions (transform will take precedence over vector3s)
@@ -471,6 +472,32 @@ namespace MoreMountains.Feedbacks
 			}
 			
 			SetPosition(AnimatePositionTarget.transform, _originalPosition);
+		}
+
+		/// <summary>
+		/// On capture, we store our target's current position
+		/// </summary>
+		protected override void CustomCaptureCurrentValues()
+		{
+			if (!Active || !FeedbackTypeAuthorized || (AnimatePositionTarget == null))
+			{
+				return;
+			}
+
+			_capturedPosition = GetPosition(AnimatePositionTarget.transform);
+		}
+
+		/// <summary>
+		/// On restore captured, we put our object back at its captured position
+		/// </summary>
+		protected override void CustomRestoreCapturedValues()
+		{
+			if (!Active || !FeedbackTypeAuthorized || (AnimatePositionTarget == null))
+			{
+				return;
+			}
+
+			SetPosition(AnimatePositionTarget.transform, _capturedPosition);
 		}
 
 		/// <summary>

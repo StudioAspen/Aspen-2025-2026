@@ -93,6 +93,16 @@ namespace MoreMountains.Feedbacks
 		public virtual void ResetInitialValue() { }
 		
 		/// <summary>
+		/// Captures the current value of the spring
+		/// </summary>
+		public virtual void CaptureCurrentValue() { }
+
+		/// <summary>
+		/// Restores the captured value of the spring
+		/// </summary>
+		public virtual void RestoreCapturedValue() { }
+
+		/// <summary>
 		/// Performs initialization for this spring
 		/// </summary>
 		protected virtual void Initialization() { }

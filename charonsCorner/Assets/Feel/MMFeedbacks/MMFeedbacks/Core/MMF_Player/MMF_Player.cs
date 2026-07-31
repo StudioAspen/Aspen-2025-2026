@@ -29,7 +29,9 @@ namespace MoreMountains.Feedbacks
 			SetDirectionBottomToTop,
 			RestoreInitialValues,
 			SkipToTheEnd,
-			RefreshCache
+			RefreshCache,
+			CaptureCurrentValues,
+			RestoreCapturedValues
 		}
 		
 		static MMF_PlayerEvent e;
@@ -1090,6 +1092,36 @@ namespace MoreMountains.Feedbacks
 		}
 
 		/// <summary>
+		/// Captures the current values of all feedbacks in this player
+		/// </summary>
+		public virtual void CaptureCurrentValues()
+		{
+			int count = FeedbacksList.Count;
+			for (int i = count - 1; i >= 0; i--)
+			{
+				if ((FeedbacksList[i] != null) && (FeedbacksList[i].Active))
+				{
+					FeedbacksList[i].CaptureCurrentValues();    
+				}
+			}
+		}
+
+		/// <summary>
+		/// Restores the captured values of all feedbacks in this player
+		/// </summary>
+		public virtual void RestoreCapturedValues()
+		{
+			int count = FeedbacksList.Count;
+			for (int i = count - 1; i >= 0; i--)
+			{
+				if ((FeedbacksList[i] != null) && (FeedbacksList[i].Active))
+				{
+					FeedbacksList[i].RestoreCapturedValues();    
+				}
+			}
+		}
+
+		/// <summary>
 		/// Forces initial vales on all feedbacks that support it.
 		/// For example, a position feedback that'd move a Transform from A to B would move that transform to A
 		/// </summary>
@@ -1840,6 +1872,12 @@ namespace MoreMountains.Feedbacks
 					break;
 				case MMF_PlayerEvent.Modes.RefreshCache:
 					RefreshCache();
+					break;
+				case MMF_PlayerEvent.Modes.CaptureCurrentValues:
+					CaptureCurrentValues();
+					break;
+				case MMF_PlayerEvent.Modes.RestoreCapturedValues:
+					RestoreCapturedValues();
 					break;
 				default:
 					throw new ArgumentOutOfRangeException();

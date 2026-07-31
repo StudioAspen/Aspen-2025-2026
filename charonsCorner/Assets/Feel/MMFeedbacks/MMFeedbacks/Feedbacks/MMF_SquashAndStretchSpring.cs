@@ -96,6 +96,8 @@ namespace MoreMountains.Feedbacks
 		protected Vector3 _newScale;
 		protected Vector3 _initialScale;
 		protected float _initialValue;
+		protected Vector3 _capturedScale;
+		protected float _capturedValue;
 
 		/// <summary>
 		/// On init we store our initial scale
@@ -333,8 +335,40 @@ namespace MoreMountains.Feedbacks
 			{
 				return;
 			}
-			_currentValue = GetInitialAxisValue(_initialScale);
+			_currentValue = _initialValue;
 			_targetValue = _currentValue;
+			ApplyValue();
+		}
+
+		/// <summary>
+		/// On capture, we store our target's current scale
+		/// </summary>
+		protected override void CustomCaptureCurrentValues()
+		{
+			if (!Active || !FeedbackTypeAuthorized || (AnimateScaleTarget == null))
+			{
+				return;
+			}
+
+			_capturedScale = AnimateScaleTarget.localScale;
+			_capturedValue = GetInitialAxisValue(_capturedScale);
+		}
+
+		/// <summary>
+		/// On restore captured, we put our object back at its captured scale
+		/// </summary>
+		protected override void CustomRestoreCapturedValues()
+		{
+			if (!Active || !FeedbackTypeAuthorized || (AnimateScaleTarget == null))
+			{
+				return;
+			}
+
+			_currentValue = _capturedValue;
+			_targetValue = _currentValue;
+			// We need to restore the full scale, not just the axis value, 
+			// because squash and stretch depends on the initial scale which might have changed
+			_initialScale = _capturedScale; 
 			ApplyValue();
 		}
 	}

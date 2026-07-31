@@ -293,6 +293,12 @@ namespace MoreMountains.Feedbacks
 				case SpringCommands.ResetInitialValue:
 					ResetInitialValue();
 					break;
+				case SpringCommands.CaptureCurrentValue:
+					CaptureCurrentValue();
+					break;
+				case SpringCommands.RestoreCapturedValue:
+					RestoreCapturedValue();
+					break;
 			}
 		}
 		

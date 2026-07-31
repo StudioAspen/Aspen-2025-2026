@@ -105,6 +105,7 @@ namespace MoreMountains.Feedbacks
 		protected Vector3 _initialTargetValue = Vector3.zero;
 		
 		protected Vector3 _initialPosition;
+		protected Vector3 _capturedPosition;
 		protected virtual bool LowVelocity => (Mathf.Abs(_velocity.x) + Mathf.Abs(_velocity.y) + Mathf.Abs(_velocity.z)) < _velocityLowThreshold;
 		protected Coroutine _coroutine;
 		protected float _velocityLowThreshold = 0.001f;
@@ -319,6 +320,45 @@ namespace MoreMountains.Feedbacks
 				return;
 			}
 			_currentValue = _initialPosition;
+			_targetValue = _currentValue;
+			ApplyValue();
+		}
+
+		/// <summary>
+		/// On capture, we store our target's current position
+		/// </summary>
+		protected override void CustomCaptureCurrentValues()
+		{
+			if (!Active || !FeedbackTypeAuthorized || (AnimatePositionTarget == null))
+			{
+				return;
+			}
+
+			if (Space == Spaces.World)
+			{
+				_capturedPosition = AnimatePositionTarget.position;
+			}
+			else if (Space == Spaces.RectTransform)
+			{
+				_capturedPosition = _rectTransform.anchoredPosition3D;
+			}
+			else if (Space == Spaces.Local)
+			{
+				_capturedPosition = AnimatePositionTarget.localPosition;
+			}
+		}
+
+		/// <summary>
+		/// On restore captured, we put our object back at its captured position
+		/// </summary>
+		protected override void CustomRestoreCapturedValues()
+		{
+			if (!Active || !FeedbackTypeAuthorized || (AnimatePositionTarget == null))
+			{
+				return;
+			}
+
+			_currentValue = _capturedPosition;
 			_targetValue = _currentValue;
 			ApplyValue();
 		}

@@ -125,6 +125,8 @@ namespace MoreMountains.Feedbacks
 		protected const string _editScriptText = "Edit Script";
 		protected const string _skipText = "SkipToTheEnd";
 		protected const string _restoreText = "RestoreInitialValues";
+		protected const string _captureCurrentText = "CaptureCurrentValues";
+		protected const string _restoreCapturedText = "RestoreCapturedValues";
 		protected const string _keepPlaymodeChangesText = "Keep Play Mode Changes";
 		protected const string _scriptEditLabelText = "Script";
 		protected const string _searchFeedbackPlaceholderText = "Search...";
@@ -1757,8 +1759,19 @@ namespace MoreMountains.Feedbacks
 			secondRow.Add(restoreButton);
 			secondRow.Add(changeDirectionButton);
 
+			// third row
+			VisualElement thirdRow = new VisualElement();
+			thirdRow.style.flexDirection = FlexDirection.Row;
+
+			Button captureButton = new Button(() => TargetMmfPlayer.CaptureCurrentValues()) { text = _captureCurrentText };
+			Button restoreCapturedButton = new Button(() => TargetMmfPlayer.RestoreCapturedValues()) { text = _restoreCapturedText };
+
+			thirdRow.Add(captureButton);
+			thirdRow.Add(restoreCapturedButton);
+
 			controlsContainer.Add(firstRow);
 			controlsContainer.Add(secondRow);
+			controlsContainer.Add(thirdRow);
 
 			// disable buttons if not in play mode
 			if (!Application.isPlaying)
@@ -1769,6 +1782,8 @@ namespace MoreMountains.Feedbacks
 				resetButton.SetEnabled(false);
 				skipButton.SetEnabled(false);
 				restoreButton.SetEnabled(false);
+				captureButton.SetEnabled(false);
+				restoreCapturedButton.SetEnabled(false);
 			}
 
 			// keep playmode changes button

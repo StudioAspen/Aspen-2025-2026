@@ -116,6 +116,7 @@ namespace MoreMountains.Feedbacks
 		
 		protected Vector3 _initialScale;
 		protected Vector3 _newScale;
+		protected Vector3 _capturedScale;
 		protected Coroutine _coroutine;
 
 		/// <summary>

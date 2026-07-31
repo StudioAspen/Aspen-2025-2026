@@ -95,6 +95,7 @@ namespace MoreMountains.Feedbacks
 		protected Vector3 _velocity = Vector3.zero;
 		
 		protected Vector3 _initialScale;
+		protected Vector3 _capturedScale;
 		protected virtual bool LowVelocity => (Mathf.Abs(_velocity.x) + Mathf.Abs(_velocity.y) + Mathf.Abs(_velocity.z)) < _velocityLowThreshold;
 		protected Coroutine _coroutine;
 		protected float _velocityLowThreshold = 0.001f;
@@ -262,6 +263,34 @@ namespace MoreMountains.Feedbacks
 				return;
 			}
 			_currentValue = _initialScale;
+			_targetValue = _currentValue;
+			ApplyValue();
+		}
+
+		/// <summary>
+		/// On capture, we store our target's current scale
+		/// </summary>
+		protected override void CustomCaptureCurrentValues()
+		{
+			if (!Active || !FeedbackTypeAuthorized || (AnimateScaleTarget == null))
+			{
+				return;
+			}
+
+			_capturedScale = AnimateScaleTarget.localScale;
+		}
+
+		/// <summary>
+		/// On restore captured, we put our object back at its captured scale
+		/// </summary>
+		protected override void CustomRestoreCapturedValues()
+		{
+			if (!Active || !FeedbackTypeAuthorized || (AnimateScaleTarget == null))
+			{
+				return;
+			}
+
+			_currentValue = _capturedScale;
 			_targetValue = _currentValue;
 			ApplyValue();
 		}

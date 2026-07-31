@@ -19,7 +19,7 @@ namespace MoreMountains.Feedbacks
 	/// RestoreInitialValue : restores the spring's initial value
 	/// ResetInitialValue : resets the spring's initial value to its current value
 	/// </summary>
-	public enum SpringCommands { MoveTo, MoveToAdditive, MoveToSubtractive, MoveToRandom, MoveToInstant, Bump, BumpRandom, Stop, Finish, RestoreInitialValue, ResetInitialValue }
+	public enum SpringCommands { MoveTo, MoveToAdditive, MoveToSubtractive, MoveToRandom, MoveToInstant, Bump, BumpRandom, Stop, Finish, RestoreInitialValue, ResetInitialValue, CaptureCurrentValue, RestoreCapturedValue }
 	
 	/// <summary>
 	/// An event used to pilot a MMSpringColor component
@@ -296,6 +296,12 @@ namespace MoreMountains.Feedbacks
 					break;
 				case SpringCommands.ResetInitialValue:
 					ResetInitialValue();
+					break;
+				case SpringCommands.CaptureCurrentValue:
+					CaptureCurrentValue();
+					break;
+				case SpringCommands.RestoreCapturedValue:
+					RestoreCapturedValue();
 					break;
 			}
 		}

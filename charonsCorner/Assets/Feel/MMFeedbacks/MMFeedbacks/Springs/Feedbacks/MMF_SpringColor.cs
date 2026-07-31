@@ -132,5 +132,31 @@ namespace MoreMountains.Feedbacks
 			_eventChannelData = (TargetSpring == null) ? ChannelData : null;
 			MMSpringColorEvent.Trigger(SpringCommands.RestoreInitialValue, TargetSpring, _eventChannelData);
 		}
+
+		/// <summary>
+		/// On capture, triggers a spring CaptureCurrentValue event
+		/// </summary>
+		protected override void CustomCaptureCurrentValues()
+		{
+			if (!Active || !FeedbackTypeAuthorized)
+			{
+				return;
+			}
+			_eventChannelData = (TargetSpring == null) ? ChannelData : null;
+			MMSpringColorEvent.Trigger(SpringCommands.CaptureCurrentValue, TargetSpring, _eventChannelData);
+		}
+
+		/// <summary>
+		/// On restore captured, triggers a spring RestoreCapturedValue event
+		/// </summary>
+		protected override void CustomRestoreCapturedValues()
+		{
+			if (!Active || !FeedbackTypeAuthorized)
+			{
+				return;
+			}
+			_eventChannelData = (TargetSpring == null) ? ChannelData : null;
+			MMSpringColorEvent.Trigger(SpringCommands.RestoreCapturedValue, TargetSpring, _eventChannelData);
+		}
 	}
 }
