@@ -52,6 +52,7 @@ MonoBehaviour:
   AutoChangeDirectionOnEnd: 0
   AutoPlayOnStart: 0
   AutoPlayOnEnable: 0
+  LogMissingTargets: 1
   ForceTimescaleMode: 0
   ForcedTimescaleMode: 1
   DurationMultiplier: 1
@@ -166,11 +167,14 @@ MonoBehaviour:
   - rid: 1261838346308550900
   - rid: 1261838346308550901
   - rid: 1261838346308550902
+  PlayMode: 0
+  SequentialDelay: 0
   KeepPlayModeChanges: 0
   PerformanceMode: 0
   RestoreInitialValuesOnDisable: 0
   StopFeedbacksOnDisable: 0
   PlayCount: 0
+  InPreviewMode: 0
   MMF_ChannelMode: 0
   MMF_Channel: 0
   MMF_ChannelDefinition: {fileID: 0}
@@ -4895,7 +4899,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1063725758275238617}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6da43522623d4704e979466dc7650b65, type: 3}
   m_Name: 
@@ -4908,6 +4912,7 @@ MonoBehaviour:
   AutoChangeDirectionOnEnd: 0
   AutoPlayOnStart: 0
   AutoPlayOnEnable: 0
+  LogMissingTargets: 1
   ForceTimescaleMode: 0
   ForcedTimescaleMode: 1
   DurationMultiplier: 1
@@ -5003,8 +5008,8 @@ MonoBehaviour:
   DebugActive: 0
   InScriptDrivenPause: 0
   FeedbacksList:
-  - rid: 1261838346308550863
   - rid: 1261838346308550864
+  - rid: 1261838346308550863
   - rid: 1261838346308550865
   - rid: 1261838346308550866
   - rid: 1261838346308550867
@@ -5024,11 +5029,14 @@ MonoBehaviour:
   - rid: 1261838346308550881
   - rid: 1261838346308550882
   - rid: 1261838346308550883
+  PlayMode: 0
+  SequentialDelay: 0
   KeepPlayModeChanges: 0
   PerformanceMode: 0
   RestoreInitialValuesOnDisable: 0
   StopFeedbacksOnDisable: 0
   PlayCount: 0
+  InPreviewMode: 0
   MMF_ChannelMode: 0
   MMF_Channel: 0
   MMF_ChannelDefinition: {fileID: 0}
@@ -5118,9 +5126,9 @@ MonoBehaviour:
         FrequencyY: 8
         DampingZ: 0.5
         FrequencyZ: 1
-        Mode: 1
-        MoveToRotationMin: {x: 0, y: 0, z: -90}
-        MoveToRotationMax: {x: 0, y: 0, z: -90}
+        Mode: 0
+        MoveToRotationMin: {x: 0, y: 15.596, z: 0}
+        MoveToRotationMax: {x: 0, y: 15.596, z: 0}
         BumpRotationMin: {x: 2000, y: 2000, z: 0}
         BumpRotationMax: {x: 3000, y: 3000, z: 0}
     - rid: 1261838346308550864
@@ -9901,8 +9909,9 @@ GameObject:
   m_Component:
   - component: {fileID: 3440623619273599106}
   - component: {fileID: 427030687853657028}
+  - component: {fileID: 3272721696847774523}
   m_Layer: 0
-  m_Name: Feedback (1)
+  m_Name: Setter
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9930,19 +9939,20 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3188040794732427725}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6da43522623d4704e979466dc7650b65, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   Feedbacks: []
-  InitializationMode: 2
+  InitializationMode: 1
   AutoInitialization: 1
   SafeMode: 3
   Direction: 0
   AutoChangeDirectionOnEnd: 0
   AutoPlayOnStart: 1
   AutoPlayOnEnable: 0
+  LogMissingTargets: 1
   ForceTimescaleMode: 0
   ForcedTimescaleMode: 1
   DurationMultiplier: 1
@@ -10028,11 +10038,14 @@ MonoBehaviour:
   FeedbacksList:
   - rid: 1261838248498954402
   - rid: 1261838346308550766
+  PlayMode: 0
+  SequentialDelay: 0
   KeepPlayModeChanges: 0
   PerformanceMode: 0
   RestoreInitialValuesOnDisable: 0
   StopFeedbacksOnDisable: 0
   PlayCount: 0
+  InPreviewMode: 0
   MMF_ChannelMode: 0
   MMF_Channel: 0
   MMF_ChannelDefinition: {fileID: 0}
@@ -10216,6 +10229,18 @@ MonoBehaviour:
         StateOnSkip: 1
         SetStateOnPlayerComplete: 0
         StateOnPlayerComplete: 1
+--- !u!114 &3272721696847774523
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3188040794732427725}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c30f050338d14b8e8d3d5cfd2c79e9b0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: CharonsCorner.Runtime::CharonsCorner.Runtime.PlayFeedbacksOnStart
 --- !u!1 &5506642648186307532
 GameObject:
   m_ObjectHideFlags: 0
