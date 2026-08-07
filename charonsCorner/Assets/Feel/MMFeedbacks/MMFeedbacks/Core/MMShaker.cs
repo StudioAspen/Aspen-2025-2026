@@ -123,6 +123,12 @@ namespace MoreMountains.Feedbacks
 				return;
 			}
 			
+			if (PermanentShake && Shaking)
+			{
+				this.enabled = true;
+				return;
+			}
+
 			_journey = ForwardDirection ? 0f : ShakeDuration;
 
 			if (InCooldown)
@@ -309,7 +315,7 @@ namespace MoreMountains.Feedbacks
 		/// </summary>
 		protected virtual void OnDisable()
 		{
-			if (Shaking)
+			if (Shaking && !PermanentShake)
 			{
 				ShakeComplete();
 			}

@@ -25,18 +25,19 @@ RectTransform:
   m_GameObject: {fileID: 285762755062279931}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.01, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3402885233442078731}
   - {fileID: 2551195110375286433}
   - {fileID: 7824912911331523215}
   - {fileID: 3470146207351637094}
+  - {fileID: 9031080423127270778}
   m_Father: {fileID: 3647225101751774402}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -394}
+  m_AnchoredPosition: {x: 0, y: -1000}
   m_SizeDelta: {x: 2048, y: 463}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &312703642756483687
@@ -303,11 +304,12 @@ Transform:
   m_GameObject: {fileID: 693966824043733535}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: -1140.8816, y: -167.68665, z: 167.88568}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 2578655354948334968}
+  m_Children:
+  - {fileID: 2578655354948334968}
+  m_Father: {fileID: 3470146207351637094}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &3050068651083203208
 MonoBehaviour:
@@ -417,6 +419,7 @@ MonoBehaviour:
   - rid: 2046481030522077331
   - rid: 2046481030522077332
   - rid: 2046481030522077333
+  - rid: 4043403608591433835
   PlayMode: 0
   SequentialDelay: 0
   KeepPlayModeChanges: 0
@@ -766,6 +769,88 @@ MonoBehaviour:
         OnlyTriggerPlayersInRange: 0
         EventRange: 100
         EventOriginTransform: {fileID: 85258805919502143}
+    - rid: 4043403608591433835
+      type: {class: MMF_Pause, ns: MoreMountains.Feedbacks, asm: MoreMountains.Tools}
+      data:
+        Active: 1
+        UniqueID: -1676418394
+        Label: Pause
+        OriginalLabel: Pause
+        ChannelMode: 0
+        Channel: 0
+        MMChannelDefinition: {fileID: 0}
+        Chance: 100
+        Timing:
+          TimescaleMode: 0
+          ExcludeFromHoldingPauses: 0
+          ContributeToTotalDuration: 1
+          InitialDelay: 0
+          CooldownDuration: 0
+          InterruptsOnStop: 1
+          NumberOfRepeats: 0
+          RepeatForever: 0
+          DelayBetweenRepeats: 1
+          PlayCount: 2
+          LimitPlayCount: 0
+          MaxPlayCount: 3
+          SetPlayCountToZeroOnReset: 0
+          MMFeedbacksDirectionCondition: 0
+          PlayDirection: 0
+          ConstantIntensity: 0
+          UseIntensityInterval: 0
+          IntensityIntervalMin: 0
+          IntensityIntervalMax: 0
+          Sequence: {fileID: 0}
+          TrackID: 0
+          Quantized: 0
+          TargetBPM: 120
+        AutomatedTargetAcquisition:
+          Mode: 0
+          ChildIndex: 0
+        RandomizeOutput: 0
+        RandomMultiplier: {x: 0.8, y: 1}
+        RandomizeDuration: 0
+        RandomDurationMultiplier: {x: 0.5, y: 2}
+        UseRange: 0
+        RangeDistance: 5
+        UseRangeFalloff: 0
+        RangeFalloff:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          - serializedVersion: 3
+            time: 1
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        RemapRangeFalloff: {x: 0, y: 1}
+        AutomaticShakerSetupButton:
+          ButtonText: 
+        Owner: {fileID: 3050068651083203208}
+        DebugActive: 0
+        PauseDuration: 0.1
+        RandomizePauseDuration: 0
+        MinPauseDuration: 1
+        MaxPauseDuration: 3
+        RandomizeOnEachPlay: 1
+        ScriptDriven: 0
+        AutoResume: 0
+        AutoResumeAfter: 0.25
 --- !u!1 &1414557690030949273
 GameObject:
   m_ObjectHideFlags: 0
@@ -792,12 +877,11 @@ Transform:
   m_GameObject: {fileID: 1414557690030949273}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1140.8816, y: -167.68665, z: 167.88568}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 6909597668077020934}
-  m_Father: {fileID: 3470146207351637094}
+  m_Children: []
+  m_Father: {fileID: 6909597668077020934}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1341285072935776555
 MonoBehaviour:
@@ -1174,13 +1258,13 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 50
-  m_fontSizeBase: 50
+  m_fontSize: 60
+  m_fontSizeBase: 60
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 0
+  m_fontStyle: 32
   m_HorizontalAlignment: 1
   m_VerticalAlignment: 256
   m_textAlignment: 65535
@@ -1235,7 +1319,8 @@ MonoBehaviour:
     isResettingTimeOnNewText: 1
     defaultEffectsMode: 1
     timeScale: 0
-    defaultBehaviorTags: []
+    defaultBehaviorTags:
+    - wiggle a=.1 s =.025
     defaultAppearanceTags:
     - incr a=0 s=10
     defaultDisappearanceTags: []
@@ -1556,11 +1641,12 @@ Transform:
   m_GameObject: {fileID: 2230237366920455474}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: -1140.8816, y: -167.68665, z: 167.88568}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 3070855192557058815}
+  m_Children:
+  - {fileID: 3070855192557058815}
+  m_Father: {fileID: 3470146207351637094}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8594873224940426566
 MonoBehaviour:
@@ -2571,7 +2657,6 @@ GameObject:
   - component: {fileID: 7788056794794913941}
   - component: {fileID: 4127524684187639075}
   - component: {fileID: 2528607975301542561}
-  - component: {fileID: 8547335381198858187}
   m_Layer: 5
   m_Name: NameText
   m_TagString: Untagged
@@ -2628,8 +2713,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Charon
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: c81dcf159888b884083ffc9833e26727, type: 2}
-  m_sharedMaterial: {fileID: 9217806192126503333, guid: c81dcf159888b884083ffc9833e26727, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: dd376d344feebdd46b65bfcb1e66a314, type: 2}
+  m_sharedMaterial: {fileID: 9217806192126503333, guid: dd376d344feebdd46b65bfcb1e66a314, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -2653,12 +2738,12 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 150
+  m_fontSize: 140
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
   m_fontSizeMin: 18
-  m_fontSizeMax: 150
+  m_fontSizeMax: 140
   m_fontStyle: 1
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 4096
@@ -2715,9 +2800,8 @@ MonoBehaviour:
     defaultEffectsMode: 1
     timeScale: 0
     defaultBehaviorTags:
-    - wave
-    defaultAppearanceTags:
-    - incr a=0 s=10
+    - wave a=.5 s=.5
+    defaultAppearanceTags: []
     defaultDisappearanceTags: []
     isAnimatingBehaviors: 1
     isAnimatingAppearances: 1
@@ -2728,52 +2812,6 @@ MonoBehaviour:
   animationLoop: 0
   databaseEffects: {fileID: 0}
   styleSheet: {fileID: 0}
---- !u!114 &8547335381198858187
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4946687167489620051}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ac6b0a2b8ddbab342ad54b5409ccffec, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  timingsScriptableBase: {fileID: 11400000, guid: 77caa896d258a3943a4c7e4600502fef, type: 2}
-  actionsDatabase: {fileID: 0}
-  localSettings:
-    useTypeWriter: 1
-    startTypewriterMode: -1
-    hideAppearancesOnSkip: 0
-    hideDisappearancesOnSkip: 0
-    triggerEventsOnSkip: 0
-    resetTypingSpeedAtStartup: 1
-    disappearanceOrientation: 0
-    triggerShowedAfterEffectsEnd: 0
-    triggerDisappearedAfterEffectsEnd: 0
-  sharedSettings: {fileID: 0}
-  onTextShowed:
-    m_PersistentCalls:
-      m_Calls: []
-  onTypewriterStart:
-    m_PersistentCalls:
-      m_Calls: []
-  onTextDisappeared:
-    m_PersistentCalls:
-      m_Calls: []
-  onCharacterVisible:
-    m_PersistentCalls:
-      m_Calls: []
-  onCharacterWaitStarted:
-    m_PersistentCalls:
-      m_Calls: []
-  onCharacterWaitFinished:
-    m_PersistentCalls:
-      m_Calls: []
-  onMessage:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!1 &5101605731086097360
 GameObject:
   m_ObjectHideFlags: 0
@@ -2800,7 +2838,7 @@ RectTransform:
   m_GameObject: {fileID: 5101605731086097360}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 8572386651462506148}
@@ -2920,8 +2958,8 @@ RectTransform:
   - {fileID: 7545637409837346827}
   - {fileID: 2221855731476862403}
   - {fileID: 3955692732175963136}
-  - {fileID: 3070855192557058815}
-  - {fileID: 2578655354948334968}
+  - {fileID: 6909597668077020934}
+  - {fileID: 85258805919502143}
   - {fileID: 2174208121313611083}
   - {fileID: 8847552603346883721}
   m_Father: {fileID: 7680319930190412736}
@@ -3194,15 +3232,15 @@ RectTransform:
   m_GameObject: {fileID: 5999939725540870661}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_LocalScale: {x: 0.7, y: 0.7, z: 0.7}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 1157015455157998056}
-  m_Father: {fileID: 7511597109899536013}
+  m_Father: {fileID: 7680319930190412736}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 860.6, y: -488.9}
+  m_AnchoredPosition: {x: 845.8, y: -56.9}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &6279836399440808219
@@ -3231,12 +3269,11 @@ Transform:
   m_GameObject: {fileID: 6279836399440808219}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1140.8816, y: -167.68665, z: 167.88568}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 85258805919502143}
-  m_Father: {fileID: 3470146207351637094}
+  m_Children: []
+  m_Father: {fileID: 85258805919502143}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &7581590243817115652
 MonoBehaviour:
@@ -3551,9 +3588,11 @@ MonoBehaviour:
   <IsAdditive>k__BackingField: 0
   <EnablePlayerActions>k__BackingField: 1
   _fadeDuration: 1
-  _useFadeTransition: 1
-  _openUIFeedbacks: []
-  _closeUIFeedbacks: []
+  _useFadeTransition: 0
+  _openUIFeedbacks:
+  - {fileID: 8594873224940426566}
+  _closeUIFeedbacks:
+  - {fileID: 3050068651083203208}
   <DefaultSelected>k__BackingField: {fileID: 0}
   OnFocused:
     m_PersistentCalls:
@@ -3907,7 +3946,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3647225101751774402}
-  - {fileID: 9031080423127270778}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -4010,9 +4048,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _dialogueManager: {fileID: 1678477179770310826}
   _dialoguePanel: {fileID: 5596921457669400815}
-  _nameText: {fileID: 0}
-  _dialogueTextTypewriter: {fileID: 0}
+  _nameText: {fileID: 4127524684187639075}
+  _dialogueText: {fileID: 3869021390221408909}
+  _inputText: {fileID: 9050580838986559066}
+  _recoloredImages:
+  - {fileID: 8614456348445731315}
+  - {fileID: 6147251793228134603}
+  - {fileID: 4486539533720089513}
+  _dialogueTextTypewriter: {fileID: 8083528212395439630}
   _inputInteraction: {fileID: 8823902868163603331}
+  _charonColor: {r: 1, g: 0.81446534, b: 0.81446534, a: 1}
+  _bowleyColor: {r: 0.96648145, g: 1, b: 0.75686276, a: 1}
+  _mementoColor: {r: 0.78930813, g: 0.881875, b: 1, a: 1}
+  _dialogueNextFeedback: {fileID: 3750046807309127464}
+  _nameBoxChangeFeedback: {fileID: 3594130687088838220}
 --- !u!114 &554839199913482662
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4025,8 +4074,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9733f4c446874f53b1bf7fb0d0ee0469, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  typewriter: {fileID: 0}
-  speakerNameText: {fileID: 0}
+  typewriter: {fileID: 8083528212395439630}
+  speakerNameText: {fileID: 4127524684187639075}
   speakerNameTypewriter: {fileID: 0}
 --- !u!1 &8975550546798515342
 GameObject:
@@ -4174,6 +4223,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 4249680665130411492, guid: 41a702d3c5bca4646951f91e1f446c69, type: 3}
   m_PrefabInstance: {fileID: 3096063535200203788}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &4486539533720089513 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1491833383297484709, guid: 41a702d3c5bca4646951f91e1f446c69, type: 3}
+  m_PrefabInstance: {fileID: 3096063535200203788}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &8823902868163603331 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5801658358605078415, guid: 41a702d3c5bca4646951f91e1f446c69, type: 3}
@@ -4183,5 +4243,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 00499248c41d4325ad1c0392dacd3fa9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &9050580838986559066 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6299817019804342870, guid: 41a702d3c5bca4646951f91e1f446c69, type: 3}
+  m_PrefabInstance: {fileID: 3096063535200203788}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

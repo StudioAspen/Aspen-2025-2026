@@ -8,6 +8,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using Febucci.TextAnimatorForUnity.TextMeshPro;
 using MoreMountains.Tools;
+using MoreMountains.Feedbacks;
+using Cysharp.Threading.Tasks;
 
 namespace CharonsCorner.Runtime
 {
@@ -19,10 +21,24 @@ namespace CharonsCorner.Runtime
 
         [Header("UI Elements")]
         [SerializeField] private TMP_Text _nameText;
+        [SerializeField] private TMP_Text _dialogueText;
+        [SerializeField] private TMP_Text _inputText;
+        [SerializeField] private List<Image> _recoloredImages;
         [SerializeField] private TypewriterComponent _dialogueTextTypewriter;
         [SerializeField] private InputInteraction _inputInteraction;
 
+        [Header("Colors")]
+        [SerializeField] private Color _charonColor;
+        [SerializeField] private Color _bowleyColor;
+        [SerializeField] private Color _mementoColor;
+
+        [Header("Feedbacks")]
+        [SerializeField] private MMF_Player _dialogueNextFeedback;
+        [SerializeField] private MMF_Player _nameBoxChangeFeedback;
+
         private bool _isTyping;
+        private string _lastSpeakerName;
+        private bool _isClosing;
         
         private void Awake()
         {
@@ -72,7 +88,7 @@ namespace CharonsCorner.Runtime
 
         private void HandleInteract()
         {
-            if (!_dialoguePanel.gameObject.activeInHierarchy)
+            if (!_dialoguePanel.gameObject.activeInHierarchy || _isClosing)
                 return;
 
             if (_isTyping)
@@ -99,12 +115,14 @@ namespace CharonsCorner.Runtime
             }
             else
             {
+                if (_dialogueNextFeedback != null) _dialogueNextFeedback.PlayFeedbacks();
                 _dialogueManager.StartNextDialogueInSequence();
             }
         }
 
         private void DialogueManager_OnDialogueOpenerStarted(DialogueOpenerSO opener)
         {
+            _isClosing = false;
             UIPanel.Focus(_dialoguePanel);
             
             ClearUI();
@@ -119,6 +137,8 @@ namespace CharonsCorner.Runtime
         {
             ClearUI(false);
 
+            CheckSpeakerChange(dialogue.SpeakerName);
+
             _nameText.text = dialogue.SpeakerName;
             _isTyping = true;
             _dialogueTextTypewriter.ShowText(dialogue.Text);
@@ -128,12 +148,62 @@ namespace CharonsCorner.Runtime
         {
             ClearUI(false);
 
-            // Keep the name of the opener speaker if we are in a sequence
-            if (_dialogueManager.CurrentOpener != null && string.IsNullOrEmpty(_nameText.text))
-                _nameText.text = _dialogueManager.CurrentOpener.SpeakerName;
+            string currentSpeakerName = "";
+            // Mapping Speaker enum to string as in DialogueManager.GetProcessedLine
+            if (_dialogueManager.CurrentSequence != null && _dialogueManager.CurrentDialogueIndex < _dialogueManager.CurrentSequence.lines.Length)
+            {
+                Speaker speaker = _dialogueManager.CurrentSequence.lines[_dialogueManager.CurrentDialogueIndex].speaker;
+                currentSpeakerName = speaker switch
+                {
+                    Speaker.Charon => "Charon",
+                    Speaker.Bowley => "Bowley",
+                    Speaker.Unknown => "???",
+                    _ => "???"
+                };
+            }
+            else if (_dialogueManager.CurrentOpener != null)
+            {
+                currentSpeakerName = _dialogueManager.CurrentOpener.SpeakerName;
+            }
+
+            CheckSpeakerChange(currentSpeakerName);
+
+            if (!string.IsNullOrEmpty(currentSpeakerName))
+                _nameText.text = currentSpeakerName;
             
             _isTyping = true;
             _dialogueTextTypewriter.ShowText(line);
+        }
+
+        private void CheckSpeakerChange(string newSpeakerName)
+        {
+            if (_lastSpeakerName != newSpeakerName)
+            {
+                if (_nameBoxChangeFeedback != null) _nameBoxChangeFeedback.PlayFeedbacks();
+                UpdateNameBoxColor(newSpeakerName);
+            }
+            _lastSpeakerName = newSpeakerName;
+        }
+
+        private void UpdateNameBoxColor(string speakerName)
+        {
+            if (_recoloredImages == null || _recoloredImages.Count == 0) return;
+
+            Color targetColor = speakerName switch
+            {
+                "Charon" => _charonColor,
+                "Bowley" => _bowleyColor,
+                "???" => _mementoColor,
+                _ => _recoloredImages[0].color
+            };
+
+            foreach (var image in _recoloredImages)
+            {
+                if (image != null) image.color = targetColor;
+            }
+
+            if (_dialogueText != null) _dialogueText.color = targetColor;
+            if (_inputText != null) _inputText.outlineColor = targetColor;
         }
 
         private void DialogueManager_OnDialogueSequenceEndReached(DialogueSequenceSO sequence, string line)
@@ -159,14 +229,27 @@ namespace CharonsCorner.Runtime
         {
             _isTyping = false;
             if (_inputInteraction != null) _inputInteraction.Disappear();
-            if (clearName) _nameText.text = "";
+            if (clearName)
+            {
+                _nameText.text = "";
+                _lastSpeakerName = "";
+            }
             _dialogueTextTypewriter.TextAnimator.SetText("");
         }
 
         public void CloseUI()
         {
+            CloseUIAsync().Forget();
+        }
+
+        private async UniTaskVoid CloseUIAsync()
+        {
+            if (_isClosing) return;
+            _isClosing = true;
+
             GameManager.Instance.ChangeGameState(GameState.Gameplay);
             _dialoguePanel.BackOrClose();
+            _isClosing = false;
         }
     }
 }
