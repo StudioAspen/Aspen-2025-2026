@@ -66,9 +66,9 @@ namespace HierarchyDesigner
         }
 
         private static Dictionary<string, HD_CustomMainIconData> customMainIcons = new();
-        private static Dictionary<string, Texture2D> cachedIcons = new();
-        private static Dictionary<string, Texture2D> cachedAlternativeIcons = new();
-        private static Dictionary<string, Texture2D> cachedRecursiveIcons = new();
+        private static readonly Dictionary<string, Texture2D> cachedIcons = new();
+        private static readonly Dictionary<string, Texture2D> cachedAlternativeIcons = new();
+        private static readonly Dictionary<string, Texture2D> cachedRecursiveIcons = new();
         #endregion
 
         #region Initialization
@@ -82,9 +82,11 @@ namespace HierarchyDesigner
         public static void SetCustomMainIconData(string scriptName, string iconGuid, string builtinIconName, bool isBuiltin, Color iconColor, string prefabAlternativeIconGuid, string prefabAlternativeBuiltinIconName, bool prefabAlternativeIsBuiltin, Color prefabAlternativeIconColor, string recursiveAlternativeIconGuid, string recursiveAlternativeBuiltinIconName, bool recursiveAlternativeIsBuiltin, Color recursiveAlternativeIconColor)
         {
             customMainIcons[scriptName] = new HD_CustomMainIconData(scriptName, iconGuid, builtinIconName, isBuiltin, iconColor, prefabAlternativeIconGuid, prefabAlternativeBuiltinIconName, prefabAlternativeIsBuiltin, prefabAlternativeIconColor, recursiveAlternativeIconGuid, recursiveAlternativeBuiltinIconName, recursiveAlternativeIsBuiltin, recursiveAlternativeIconColor);
-            cachedIcons.Remove(scriptName);
-            cachedAlternativeIcons.Remove(scriptName);
-            cachedRecursiveIcons.Remove(scriptName);
+            
+            if (cachedIcons.TryGetValue(scriptName, out Texture2D icon)) { DestroyTexture(icon); cachedIcons.Remove(scriptName); }
+            if (cachedAlternativeIcons.TryGetValue(scriptName, out Texture2D altIcon)) { DestroyTexture(altIcon); cachedAlternativeIcons.Remove(scriptName); }
+            if (cachedRecursiveIcons.TryGetValue(scriptName, out Texture2D recIcon)) { DestroyTexture(recIcon); cachedRecursiveIcons.Remove(scriptName); }
+            
             SaveSettings();
             HD_Manager.ClearGameObjectDataCache();
         }
@@ -100,9 +102,7 @@ namespace HierarchyDesigner
                 }
             }
             customMainIcons = orderedIcons;
-            cachedIcons.Clear();
-            cachedAlternativeIcons.Clear();
-            cachedRecursiveIcons.Clear();
+            ClearIconCache();
             SaveSettings();
             HD_Manager.ClearGameObjectDataCache();
         }
@@ -126,9 +126,9 @@ namespace HierarchyDesigner
         {
             if (customMainIcons.Remove(scriptName))
             {
-                cachedIcons.Remove(scriptName);
-                cachedAlternativeIcons.Remove(scriptName);
-                cachedRecursiveIcons.Remove(scriptName);
+                if (cachedIcons.TryGetValue(scriptName, out Texture2D icon)) { DestroyTexture(icon); cachedIcons.Remove(scriptName); }
+                if (cachedAlternativeIcons.TryGetValue(scriptName, out Texture2D altIcon)) { DestroyTexture(altIcon); cachedAlternativeIcons.Remove(scriptName); }
+                if (cachedRecursiveIcons.TryGetValue(scriptName, out Texture2D recIcon)) { DestroyTexture(recIcon); cachedRecursiveIcons.Remove(scriptName); }
                 SaveSettings();
                 HD_Manager.ClearGameObjectDataCache();
                 return true;
@@ -256,7 +256,10 @@ namespace HierarchyDesigner
             GL.Clear(true, true, Color.clear);
             Graphics.Blit(original, rt);
 
-            Texture2D result = new Texture2D(original.width, original.height, TextureFormat.ARGB32, false);
+            Texture2D result = new Texture2D(original.width, original.height, TextureFormat.ARGB32, false)
+            {
+                hideFlags = HideFlags.HideAndDontSave
+            };
             result.ReadPixels(new Rect(0, 0, original.width, original.height), 0, 0);
 
             Color[] pixels = result.GetPixels();
@@ -283,9 +286,7 @@ namespace HierarchyDesigner
                 string json = File.ReadAllText(dataFilePath);
                 HD_Serializable<HD_CustomMainIconData> loadedIcons = JsonUtility.FromJson<HD_Serializable<HD_CustomMainIconData>>(json);
                 customMainIcons.Clear();
-                cachedIcons.Clear();
-                cachedAlternativeIcons.Clear();
-                cachedRecursiveIcons.Clear();
+                ClearIconCache();
                 if (loadedIcons != null && loadedIcons.items != null)
                 {
                     foreach (HD_CustomMainIconData data in loadedIcons.items)
@@ -298,6 +299,25 @@ namespace HierarchyDesigner
             else
             {
                 customMainIcons = new();
+            }
+        }
+
+        private static void ClearIconCache()
+        {
+            foreach (Texture2D tex in cachedIcons.Values) { DestroyTexture(tex); }
+            foreach (Texture2D tex in cachedAlternativeIcons.Values) { DestroyTexture(tex); }
+            foreach (Texture2D tex in cachedRecursiveIcons.Values) { DestroyTexture(tex); }
+            cachedIcons.Clear();
+            cachedAlternativeIcons.Clear();
+            cachedRecursiveIcons.Clear();
+        }
+
+        private static void DestroyTexture(Texture2D tex)
+        {
+            if (tex != null)
+            {
+                if (Application.isPlaying) { Object.Destroy(tex); }
+                else { Object.DestroyImmediate(tex); }
             }
         }
         #endregion
