@@ -231,7 +231,26 @@ namespace CharonsCorner.Runtime
         /// <summary>
         /// Helper method to switch back to the hub scene and set the game state to Gameplay.
         /// </summary>
-        public void ReturnToHub() => SwitchScenes(_hubScene, GameState.Title).Forget();
+        public void ReturnToHub() => SwitchScenes(_hubScene, GameState.Gameplay).Forget();
+
+        /// <summary>
+        /// Helper method to switch back to the hub scene using a special cut sequence.
+        /// </summary>
+        public void ReturnToHubSpecial()
+        {
+            EnterGameplaySequence.QueueSpecialSequence();
+            ReturnToHub();
+        }
+
+        private async UniTaskVoid ReturnToHubAsync(bool useSpecialSequence)
+        {
+            if (useSpecialSequence)
+            {
+                EnterGameplaySequence.QueueSpecialSequence();
+            }
+            
+            await SwitchScenes(_hubScene, GameState.Gameplay);
+        }
 
         /// <summary>
         /// Resets all progression and returns the player to the hub scene.

@@ -69,6 +69,11 @@ public class FlashbackEventSubscriber : MonoBehaviour
             Debug.LogWarning($"[FlashbackEventSubscriber] Scene is not assigned or invalid.");
         }
     }
+
+    public void ReturnToHubSpecial()
+    {
+        GameManager.Instance.ReturnToHubSpecial();
+    }
     
 // inside your script
     [SerializeField] TypewriterComponent typewriter;
@@ -129,6 +134,9 @@ public class FlashbackEventSubscriber : MonoBehaviour
                 break;
             case "GoToCredits":
                 SwitchToLevel(creditsScene);
+                break;
+            case "GoToHubSpecial":
+                GameManager.Instance.ReturnToHubSpecial();
                 break;
             case "CamToBowley":
                 cameraSwitcher.SwitchCamera(camToBowley);
