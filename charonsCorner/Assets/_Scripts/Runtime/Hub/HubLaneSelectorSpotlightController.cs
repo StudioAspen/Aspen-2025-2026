@@ -69,6 +69,12 @@ namespace CharonsCorner.Runtime
         
         public void FlickerLight(int lightIndex)
         {
+            if (lightIndex < 0 || lightIndex >= _spotlightObjects.Count)
+            {
+                Debug.LogError($"[HubLaneSelectorSpotlightController] lightIndex {lightIndex} is out of range of _spotlightObjects (Count: {_spotlightObjects.Count}).");
+                return;
+            }
+
             if (_flickerCoroutine != null)
             {
                 StopCoroutine(_flickerCoroutine);
@@ -86,6 +92,7 @@ namespace CharonsCorner.Runtime
             lightObject.SetActive(true);
             for (int i = 0; i < _flickerCount * 2; i++)
             {
+                if (lightObject == null) break;
                 lightObject.SetActive(!lightObject.activeInHierarchy);
                 yield return new WaitForSeconds(_flickerInterval / 2f);
             }
@@ -93,7 +100,11 @@ namespace CharonsCorner.Runtime
             _flickerCoroutine = null;
             
             OnFlickerEndedIndex?.Invoke(lightIndex);
-            OnFlickerEndedData?.Invoke(_hubLaneSelector.LaneData[lightIndex]);
+
+            if (_hubLaneSelector != null && lightIndex < _hubLaneSelector.LaneData.Count)
+            {
+                OnFlickerEndedData?.Invoke(_hubLaneSelector.LaneData[lightIndex]);
+            }
         }
     }
 }

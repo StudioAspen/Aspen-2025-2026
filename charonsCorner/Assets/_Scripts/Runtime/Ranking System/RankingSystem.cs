@@ -93,7 +93,15 @@ public class RankingSystem : MonoBehaviour
         {
             if (_useAlternativeEndScene && _alternativeEndScene != null && !string.IsNullOrEmpty(_alternativeEndScene.Name))
             {
-                GameManager.Instance.SwitchScenes(_alternativeEndScene, GameState.Gameplay).Forget();
+                if (FlagManager.Get(ProgressFlag.SeenAlternativeEndScene) == 0)
+                {
+                    FlagManager.Set(ProgressFlag.SeenAlternativeEndScene, 1);
+                    GameManager.Instance.SwitchScenes(_alternativeEndScene, GameState.Gameplay).Forget();
+                }
+                else
+                {
+                    GameManager.Instance.ReturnToHub();
+                }
             }
             else
             {

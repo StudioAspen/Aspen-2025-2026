@@ -21,6 +21,7 @@ namespace CharonsCorner.Runtime
         [Header("References")]
         [SerializeField] private SceneReference _flashbackScene;
         [SerializeField] private MMF_Player _bowlingStarter;
+        [SerializeField] private float _unfadeDuration = 2f;
         [SerializeField, ReadOnly] private LevelDataSO _currentLevelData;
 
         [SerializeField, ReadOnly] private bool _isOpen;
@@ -78,6 +79,12 @@ namespace CharonsCorner.Runtime
 
             _isStartingLevel = true;
 
+            // Fade to black before starting the sequence
+            if (LoadingCanvas.Instance != null)
+            {
+                await LoadingCanvas.Instance.FadeIn();
+            }
+
             Debug.Log($"[HubLevelSelectController] Starting level sequence for: {_currentLevelData.LevelTitle}");
 
             if (_bowlingStarter != null)
@@ -91,6 +98,13 @@ namespace CharonsCorner.Runtime
                 }
 
                 _bowlingStarter.PlayFeedbacks();
+
+                // Start unfading shortly after feedback starts to reveal the cutscene
+                if (LoadingCanvas.Instance != null)
+                {
+                    // Using a dummy panel or null to just fade out
+                    LoadingCanvas.Instance.FadeOut(null).Forget();
+                }
 
                 // Wait until feedback is done or player interacts
                 await UniTask.WaitUntil(() => !_bowlingStarter.IsPlaying || skipped);

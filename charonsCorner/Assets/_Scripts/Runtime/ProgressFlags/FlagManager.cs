@@ -12,7 +12,8 @@ namespace CharonsCorner.Runtime
         CurrentSRankDialogueIndex,
         SRankCount,
         CurrentMomentoDialogueOpenerIndex,
-        CurrentMomentoDialogueSequenceIndex
+        CurrentMomentoDialogueSequenceIndex,
+        SeenAlternativeEndScene
     }
 
     /// <summary>
