@@ -19,6 +19,7 @@ namespace CharonsCorner.Runtime
 
         //Editor references
         [Header("References")]
+        [SerializeField] private InputInteraction _inputInteraction;
         [SerializeField] private SceneReference _flashbackScene;
         [SerializeField] private MMF_Player _bowlingStarter;
         [SerializeField] private float _unfadeDuration = 2f;
@@ -26,7 +27,7 @@ namespace CharonsCorner.Runtime
 
         [SerializeField, ReadOnly] private bool _isOpen;
         [SerializeField, ReadOnly] private bool _isStartingLevel;
-
+        
         public bool IsOpen => _isOpen;
         
         public void OpenLevelSelect(LevelDataSO data)
@@ -36,6 +37,10 @@ namespace CharonsCorner.Runtime
 
             _currentLevelData = data;
             _isOpen = true;
+
+            if (_inputInteraction != null)
+                _inputInteraction.Appear();
+
             OnLevelSelectOpen?.Invoke(_currentLevelData);
         }
         
@@ -47,6 +52,10 @@ namespace CharonsCorner.Runtime
 
             _currentLevelData = null;
             _isOpen = false;
+
+            if (_inputInteraction != null)
+                _inputInteraction.Disappear();
+
             OnLevelSelectClose?.Invoke();
             // Debug.Log("[HubLevelSelectController] Closed level select.");
         }
@@ -78,6 +87,9 @@ namespace CharonsCorner.Runtime
                 return;
 
             _isStartingLevel = true;
+
+            if (_inputInteraction != null)
+                _inputInteraction.Disappear();
 
             // Fade to black before starting the sequence
             if (LoadingCanvas.Instance != null)

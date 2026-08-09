@@ -26,6 +26,9 @@ namespace CharonsCorner.Runtime
         [SerializeField] private SkyboxRotator _skyboxRotator;
         [SerializeField] private Material _baseSkybox;
 
+        [Header("Input Prompt")]
+        [SerializeField] private InputInteraction _inputInteraction;
+
         private InputManager _input;
         private InputAction _moveAction;
         private Coroutine _moveCoroutine;
@@ -73,6 +76,9 @@ namespace CharonsCorner.Runtime
             if (_skyboxRotator != null)
                 _skyboxRotator.Rotate(1f);
 
+            if (_inputInteraction != null)
+                _inputInteraction.Appear();
+
             UpdateArrowStates();
 
             OnEnter.Invoke();
@@ -88,6 +94,9 @@ namespace CharonsCorner.Runtime
                 _input.Exit -= OnExit;
                 _input.Interact -= OnInteract;
             }
+
+            if (_inputInteraction != null)
+                _inputInteraction.Disappear();
 
             StopMoveCoroutine();
         }
@@ -140,6 +149,10 @@ namespace CharonsCorner.Runtime
             {
                 RenderSettings.skybox = _baseSkybox;
             }
+            
+            if (_inputInteraction != null)
+                _inputInteraction.Disappear();
+            
             OnLeave.Invoke();
         }
 
@@ -165,6 +178,9 @@ namespace CharonsCorner.Runtime
                 return;
             }
 
+            if (_inputInteraction != null)
+                _inputInteraction.Disappear();
+
             OnLaneInteracted?.Invoke(selectedLaneData);
             OnLaneInteractedIndex?.Invoke(CurrentLaneIndex);
         }
@@ -176,6 +192,9 @@ namespace CharonsCorner.Runtime
 
             CurrentLaneIndex = index;
             OnLaneSelected.Invoke(CurrentLaneIndex);
+            
+            if (_inputInteraction != null)
+                _inputInteraction.Appear();
             
             UpdateArrowStates();
         }
@@ -221,23 +240,31 @@ namespace CharonsCorner.Runtime
             int nextIndex = CurrentLaneIndex + 1;
             int currentChapterIndex = FlagManager.Get(ProgressFlag.CurrentChapterIndex);
 
-            if (_levelSelectUI != null)
-                _levelSelectUI.OnRightArrowPressed();
-
+            int targetIndex = -1;
             while (nextIndex < LaneData.Count)
             {
                 if (LaneData[nextIndex].ChapterInWhichUnlocked <= currentChapterIndex)
                 {
-                    SelectLane(nextIndex);
-                    if (_spinRight != null)
-                        _spinRight.PlayFeedbacks();
-
-                    if (_skyboxRotator != null)
-                        _skyboxRotator.Rotate(1f);
-                    return;
+                    targetIndex = nextIndex;
+                    break;
                 }
                 nextIndex++;
             }
+
+            if (targetIndex == -1) return;
+
+            if (_levelSelectUI != null)
+                _levelSelectUI.OnRightArrowPressed();
+
+            if (_inputInteraction != null)
+                _inputInteraction.Disappear();
+
+            SelectLane(targetIndex);
+            if (_spinRight != null)
+                _spinRight.PlayFeedbacks();
+
+            if (_skyboxRotator != null)
+                _skyboxRotator.Rotate(1f);
         }
 
         public void SelectPreviousLane()
@@ -245,23 +272,31 @@ namespace CharonsCorner.Runtime
             int prevIndex = CurrentLaneIndex - 1;
             int currentChapterIndex = FlagManager.Get(ProgressFlag.CurrentChapterIndex);
 
-            if (_levelSelectUI != null)
-                _levelSelectUI.OnLeftArrowPressed();
-
+            int targetIndex = -1;
             while (prevIndex >= 0)
             {
                 if (LaneData[prevIndex].ChapterInWhichUnlocked <= currentChapterIndex)
                 {
-                    SelectLane(prevIndex);
-                    if (_spinLeft != null)
-                        _spinLeft.PlayFeedbacks();
-
-                    if (_skyboxRotator != null)
-                        _skyboxRotator.Rotate(-1f);
-                    return;
+                    targetIndex = prevIndex;
+                    break;
                 }
                 prevIndex--;
             }
+
+            if (targetIndex == -1) return;
+
+            if (_levelSelectUI != null)
+                _levelSelectUI.OnLeftArrowPressed();
+
+            if (_inputInteraction != null)
+                _inputInteraction.Disappear();
+
+            SelectLane(targetIndex);
+            if (_spinLeft != null)
+                _spinLeft.PlayFeedbacks();
+
+            if (_skyboxRotator != null)
+                _skyboxRotator.Rotate(-1f);
         }
 
         public LevelDataSO GetCurrentLevelData() => LaneData[CurrentLaneIndex];

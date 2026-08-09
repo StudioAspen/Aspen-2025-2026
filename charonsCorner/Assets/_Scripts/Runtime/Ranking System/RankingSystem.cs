@@ -17,7 +17,9 @@ public class RankingSystem : MonoBehaviour
     [SerializeField] Eflatun.SceneReference.SceneReference _alternativeEndScene;
 
     [Header("UI Settings")]
-    [SerializeField] GameObject _interactIcon;
+    [SerializeField] private InputInteraction _inputInteraction;
+    [SerializeField] private float _uiAppearDelay = 1f;
+    [SerializeField] private float _sceneTransitionDelay = 0.5f;
     // Debug Feature
     [SerializeField] TextMeshProUGUI _rankText;
     [SerializeField] TextMeshProUGUI _nextRankText;
@@ -41,6 +43,7 @@ public class RankingSystem : MonoBehaviour
     // Checks
     bool _hasPlayerStarted;
     bool _hasPlayerFinished;
+    bool _canInteract;
 
     private void OnEnable()
     {
@@ -89,24 +92,41 @@ public class RankingSystem : MonoBehaviour
 
     private void HandleInteract()
     {
-        if (_hasPlayerFinished)
+        if (_hasPlayerFinished && _canInteract)
         {
-            if (_useAlternativeEndScene && _alternativeEndScene != null && !string.IsNullOrEmpty(_alternativeEndScene.Name))
+            HandleInteractAsync().Forget();
+        }
+    }
+
+    private async UniTaskVoid HandleInteractAsync()
+    {
+        _canInteract = false;
+
+        if (_inputInteraction != null)
+        {
+            _inputInteraction.Disappear();
+        }
+
+        if (_sceneTransitionDelay > 0)
+        {
+            await UniTask.Delay(System.TimeSpan.FromSeconds(_sceneTransitionDelay));
+        }
+
+        if (_useAlternativeEndScene && _alternativeEndScene != null && !string.IsNullOrEmpty(_alternativeEndScene.Name))
+        {
+            if (FlagManager.Get(ProgressFlag.SeenAlternativeEndScene) == 0)
             {
-                if (FlagManager.Get(ProgressFlag.SeenAlternativeEndScene) == 0)
-                {
-                    FlagManager.Set(ProgressFlag.SeenAlternativeEndScene, 1);
-                    GameManager.Instance.SwitchScenes(_alternativeEndScene, GameState.Gameplay).Forget();
-                }
-                else
-                {
-                    GameManager.Instance.ReturnToHub();
-                }
+                FlagManager.Set(ProgressFlag.SeenAlternativeEndScene, 1);
+                GameManager.Instance.SwitchScenes(_alternativeEndScene, GameState.Gameplay, Color.white).Forget();
             }
             else
             {
                 GameManager.Instance.ReturnToHub();
             }
+        }
+        else
+        {
+            GameManager.Instance.ReturnToHub();
         }
     }
 
@@ -115,10 +135,11 @@ public class RankingSystem : MonoBehaviour
         _timer = 0f;
         _hasPlayerStarted = false;
         _hasPlayerFinished = false;
+        _canInteract = false;
 
-        if (_interactIcon != null)
+        if (_inputInteraction != null)
         {
-            _interactIcon.SetActive(false);
+            _inputInteraction.Disappear();
         }
 
         if (GameManager.Instance != null)
@@ -154,10 +175,22 @@ public class RankingSystem : MonoBehaviour
             _endLevelSequence.PlayFeedbacks();
         }
 
-        if (_interactIcon != null)
+        PlayerEndAsync().Forget();
+    }
+
+    private async UniTaskVoid PlayerEndAsync()
+    {
+        if (_uiAppearDelay > 0)
         {
-            _interactIcon.SetActive(true);
+            await UniTask.Delay(System.TimeSpan.FromSeconds(_uiAppearDelay));
         }
+
+        if (_inputInteraction != null)
+        {
+            _inputInteraction.Appear();
+        }
+
+        _canInteract = true;
     }
 
     void FinalRank()

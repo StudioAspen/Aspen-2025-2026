@@ -21,9 +21,18 @@ namespace CharonsCorner.Runtime
 
         public bool IsLoaded { get; private set; } = true;
 
-        public async UniTask FadeIn()
+        public async UniTask FadeIn(Color? color = null)
         {
             IsLoaded = false;
+
+            if (color.HasValue)
+            {
+                _image.color = color.Value;
+            }
+            else
+            {
+                _image.color = Color.black;
+            }
 
             if (!DOTween.IsTweening(_image))
                 _image.SetImageAlpha(0f);
@@ -37,9 +46,14 @@ namespace CharonsCorner.Runtime
             });
         }
 
-        public async UniTask FadeOut(UIPanel nextPanel)
+        public async UniTask FadeOut(UIPanel nextPanel, Color? color = null)
         {
             IsLoaded = false;
+
+            if (color.HasValue)
+            {
+                _image.color = color.Value;
+            }
 
             if (!DOTween.IsTweening(_image))
                 _image.SetImageAlpha(1f);

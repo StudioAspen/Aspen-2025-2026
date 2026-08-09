@@ -9,6 +9,7 @@ namespace CharonsCorner.Runtime
 {
     public class HubLaneSelectController : MonoBehaviour
     {
+        [SerializeField] private InputInteraction _inputInteraction;
         [ShowInInspector, ReadOnly] public bool IsSelectingLevel { get; private set; }
         
         public UnityEvent OnLevelSelectStarted = new UnityEvent();
@@ -22,6 +23,9 @@ namespace CharonsCorner.Runtime
             
             IsSelectingLevel = true;
             
+            if (_inputInteraction != null)
+                _inputInteraction.Appear();
+            
             OnLevelSelectStarted.Invoke();
         }
 
@@ -32,6 +36,9 @@ namespace CharonsCorner.Runtime
                 return;
             
             IsSelectingLevel = false;
+            
+            if (_inputInteraction != null)
+                _inputInteraction.Disappear();
             
             OnLevelSelectEnded.Invoke();
         }

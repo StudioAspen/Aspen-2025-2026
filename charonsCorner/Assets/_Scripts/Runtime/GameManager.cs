@@ -188,10 +188,10 @@ namespace CharonsCorner.Runtime
         /// <param name="scene"></param>
         /// <param name="afterState"></param>
         /// <returns></returns>
-        public async UniTask SwitchScenes(SceneReference scene, GameState afterState)
+        public async UniTask SwitchScenes(SceneReference scene, GameState afterState, Color? fadeColor = null)
         {
             ChangeGameState(GameState.Loading);
-            await LoadingCanvas.Instance.FadeIn();
+            await LoadingCanvas.Instance.FadeIn(fadeColor);
             
             Debug.Log($"[GameManager] Switching to scene: {scene.Name}. Clearing UIPanel.ActivePanel (excluding Loading).");
             await UIPanel.CloseAllAsync(false);
@@ -206,7 +206,7 @@ namespace CharonsCorner.Runtime
 
             ChangeGameState(afterState);
 
-            await LoadingCanvas.Instance.FadeOut(null);
+            await LoadingCanvas.Instance.FadeOut(null, fadeColor);
         }
 
         /// <summary>
