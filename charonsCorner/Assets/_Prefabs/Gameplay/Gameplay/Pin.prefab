@@ -61,6 +61,8 @@ MeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -83,9 +85,11 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &716581851023467208
 GameObject:
@@ -4846,7 +4850,7 @@ ParticleSystem:
     vectorLabel1_3: W
 --- !u!199 &7740481299722742370
 ParticleSystemRenderer:
-  serializedVersion: 6
+  serializedVersion: 7
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -4865,6 +4869,8 @@ ParticleSystemRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -4886,9 +4892,11 @@ ParticleSystemRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_RenderMode: 4
   m_MeshDistribution: 0
   m_SortMode: 0
@@ -4920,7 +4928,6 @@ ParticleSystemRenderer:
   m_MeshWeighting1: 1
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
-  m_MaskInteraction: 0
 --- !u!114 &541961313433165827
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5020,6 +5027,7 @@ MonoBehaviour:
   AutoChangeDirectionOnEnd: 0
   AutoPlayOnStart: 0
   AutoPlayOnEnable: 0
+  LogMissingTargets: 1
   ForceTimescaleMode: 0
   ForcedTimescaleMode: 1
   DurationMultiplier: 1
@@ -5106,11 +5114,14 @@ MonoBehaviour:
   - rid: 1261838176824590541
   - rid: 1261838176824590542
   - rid: 1261838206840340560
+  PlayMode: 0
+  SequentialDelay: 0
   KeepPlayModeChanges: 0
   PerformanceMode: 0
   RestoreInitialValuesOnDisable: 0
   StopFeedbacksOnDisable: 0
   PlayCount: 0
+  InPreviewMode: 0
   MMF_ChannelMode: 0
   MMF_Channel: 0
   MMF_ChannelDefinition: {fileID: 0}
@@ -10223,7 +10234,7 @@ ParticleSystem:
     vectorLabel1_3: W
 --- !u!199 &2404859442719283385
 ParticleSystemRenderer:
-  serializedVersion: 6
+  serializedVersion: 7
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -10242,6 +10253,8 @@ ParticleSystemRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -10263,9 +10276,11 @@ ParticleSystemRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_RenderMode: 0
   m_MeshDistribution: 0
   m_SortMode: 4
@@ -10297,7 +10312,6 @@ ParticleSystemRenderer:
   m_MeshWeighting1: 1
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
-  m_MaskInteraction: 0
 --- !u!1 &4656215712459389219
 GameObject:
   m_ObjectHideFlags: 0
@@ -10350,6 +10364,7 @@ MonoBehaviour:
   AutoChangeDirectionOnEnd: 0
   AutoPlayOnStart: 0
   AutoPlayOnEnable: 0
+  LogMissingTargets: 1
   ForceTimescaleMode: 0
   ForcedTimescaleMode: 1
   DurationMultiplier: 1
@@ -10436,11 +10451,14 @@ MonoBehaviour:
   - rid: 1261838176824590541
   - rid: 1261838176824590542
   - rid: 5535770931855622219
+  PlayMode: 0
+  SequentialDelay: 0
   KeepPlayModeChanges: 0
   PerformanceMode: 0
   RestoreInitialValuesOnDisable: 0
   StopFeedbacksOnDisable: 0
   PlayCount: 0
+  InPreviewMode: 0
   MMF_ChannelMode: 0
   MMF_Channel: 0
   MMF_ChannelDefinition: {fileID: 0}
@@ -10703,6 +10721,7 @@ MonoBehaviour:
         MinPitch: 1
         MaxPitch: 1
         MmSoundManagerTrack: 0
+        CustomTrack: {fileID: 0}
         ID: 0
         AudioGroup: {fileID: -3165942800488051908, guid: 7e984f512e89b60468e829489e8883e3, type: 2}
         RecycleAudioSource: {fileID: 0}
@@ -10886,6 +10905,7 @@ MonoBehaviour:
   AutoChangeDirectionOnEnd: 0
   AutoPlayOnStart: 1
   AutoPlayOnEnable: 0
+  LogMissingTargets: 1
   ForceTimescaleMode: 0
   ForcedTimescaleMode: 1
   DurationMultiplier: 1
@@ -10972,11 +10992,14 @@ MonoBehaviour:
   - rid: 1261838176824590530
   - rid: 1261838176824590531
   - rid: 1261838176824590532
+  PlayMode: 0
+  SequentialDelay: 0
   KeepPlayModeChanges: 0
   PerformanceMode: 0
   RestoreInitialValuesOnDisable: 0
   StopFeedbacksOnDisable: 0
   PlayCount: 0
+  InPreviewMode: 0
   MMF_ChannelMode: 0
   MMF_Channel: 0
   MMF_ChannelDefinition: {fileID: 0}
@@ -11342,10 +11365,10 @@ Rigidbody:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5922651236421371388}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -11374,6 +11397,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 518a718305222654c9ccab22f93697d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _stareAtPlayer: 1
   _impulseMagnitude: 100
   _secondsToSubtract: 1
   _secondsToSubtractPinHit: 1
@@ -11392,6 +11416,11 @@ MonoBehaviour:
   _impactGlow: 10
   _impactGlowDuration: 0.1
   _renderer: {fileID: 8510145052892013983}
+  _groundLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  _alignmentRayLength: 2
+  _snapOffset: 0.01
 --- !u!114 &2931707133553808767
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11454,14 +11483,14 @@ Light:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6355152683528075119}
   m_Enabled: 1
-  serializedVersion: 11
+  serializedVersion: 13
   m_Type: 2
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Intensity: 0
   m_Range: 13.39
   m_SpotAngle: 95.639244
   m_InnerSpotAngle: 21.80208
-  m_CookieSize: 10
+  m_CookieSize2D: {x: 10, y: 10}
   m_Shadows:
     m_Type: 0
     m_Resolution: -1
@@ -11506,7 +11535,7 @@ Light:
   m_UseBoundingSphereOverride: 0
   m_UseViewFrustumForShadowCasterCull: 1
   m_ForceVisible: 0
-  m_ShadowRadius: 0
+  m_ShapeRadius: 0
   m_ShadowAngle: 0
   m_LightUnit: 1
   m_LuxAtDistance: 1
@@ -11523,17 +11552,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Version: 3
   m_UsePipelineSettings: 1
   m_AdditionalLightsShadowResolutionTier: 2
-  m_LightLayerMask: 1
-  m_RenderingLayers: 1
   m_CustomShadowLayers: 0
-  m_ShadowLayerMask: 1
-  m_ShadowRenderingLayers: 1
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
   m_SoftShadowQuality: 0
+  m_RenderingLayersMask:
+    serializedVersion: 0
+    m_Bits: 1
+  m_ShadowRenderingLayersMask:
+    serializedVersion: 0
+    m_Bits: 1
+  m_Version: 4
+  m_LightLayerMask: 1
+  m_ShadowLayerMask: 1
+  m_RenderingLayers: 1
+  m_ShadowRenderingLayers: 1
 --- !u!114 &8830264601518029601
 MonoBehaviour:
   m_ObjectHideFlags: 0

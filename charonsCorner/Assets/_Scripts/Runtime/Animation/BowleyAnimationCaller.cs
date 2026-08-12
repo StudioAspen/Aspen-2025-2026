@@ -29,7 +29,43 @@ namespace CharonsCorner.Runtime
         }
 
         [SerializeField] private MMRotationShaker bowleyRotationShaker;
+        [SerializeField] private AnimationStringsSO _animationStrings;
         [SerializeField] private List<BowleyAnimation> animations = new List<BowleyAnimation>();
+
+        [Button("Update Scriptable Object List")]
+        private void UpdateScriptableObjectList()
+        {
+            if (_animationStrings == null)
+            {
+                Debug.LogWarning("[BowleyAnimationCaller] No AnimationStringsSO assigned!");
+                return;
+            }
+
+            bool changed = false;
+            foreach (var anim in animations)
+            {
+                if (string.IsNullOrEmpty(anim.MMGameEvent)) continue;
+
+                if (!_animationStrings.AnimationEvents.Contains(anim.MMGameEvent))
+                {
+                    _animationStrings.AnimationEvents.Add(anim.MMGameEvent);
+                    changed = true;
+                    Debug.Log($"[BowleyAnimationCaller] Added '{anim.MMGameEvent}' to {_animationStrings.name}");
+                }
+            }
+
+            if (changed)
+            {
+#if UNITY_EDITOR
+                UnityEditor.EditorUtility.SetDirty(_animationStrings);
+                UnityEditor.AssetDatabase.SaveAssets();
+#endif
+            }
+            else
+            {
+                Debug.Log("[BowleyAnimationCaller] No new animation events to add.");
+            }
+        }
 
         private void OnEnable()
         {

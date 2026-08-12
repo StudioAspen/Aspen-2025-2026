@@ -10,6 +10,7 @@ namespace CharonsCorner.Runtime
     {
         [SerializeField] private GameObject _parentObject;
         [SerializeField] private string _turnOnEventName;
+        [SerializeField] private bool _darkenOnAwake = true;
 
         [Header("Flicker Settings")]
         [SerializeField] private bool _flickerOn = false;
@@ -42,6 +43,11 @@ namespace CharonsCorner.Runtime
             }
             
             InitializeGlowData();
+
+            if (_darkenOnAwake)
+            {
+                TurnOff();
+            }
         }
 
         private void OnEnable()

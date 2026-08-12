@@ -3,9 +3,13 @@ using UnityEngine;
 
 namespace CharonsCorner.Runtime
 {
-    [CreateAssetMenu(fileName = "CharonAnimationStrings", menuName = "CharonsCorner/Animation/Charon Animation Strings")]
-    public class CharonAnimationStrings : ScriptableObject
+    public abstract class AnimationStringsSO : ScriptableObject
     {
         public List<string> AnimationEvents = new List<string>();
+    }
+
+    [CreateAssetMenu(fileName = "CharonAnimationStrings", menuName = "CharonsCorner/Animation/Charon Animation Strings")]
+    public class CharonAnimationStrings : AnimationStringsSO
+    {
     }
 }

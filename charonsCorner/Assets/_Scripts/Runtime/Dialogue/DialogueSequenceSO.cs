@@ -21,6 +21,9 @@ namespace CharonsCorner.Runtime
         [ValueDropdown("GetCharonAnimations")]
         public string charonAnimation;
 
+        [ValueDropdown("GetCharonStareAnimations")]
+        public string charonStareAnimation;
+
         [ValueDropdown("GetBowleyAnimations")]
         public string bowleyAnimation;
 
@@ -36,6 +39,18 @@ namespace CharonsCorner.Runtime
             {
                 var path = UnityEditor.AssetDatabase.GUIDToAssetPath(guids[0]);
                 var so = UnityEditor.AssetDatabase.LoadAssetAtPath<CharonAnimationStrings>(path);
+                if (so != null) return so.AnimationEvents;
+            }
+            return new List<string>();
+        }
+
+        private static IEnumerable GetCharonStareAnimations()
+        {
+            var guids = UnityEditor.AssetDatabase.FindAssets("t:CharonStareAnimationStrings");
+            if (guids.Length > 0)
+            {
+                var path = UnityEditor.AssetDatabase.GUIDToAssetPath(guids[0]);
+                var so = UnityEditor.AssetDatabase.LoadAssetAtPath<CharonStareAnimationStrings>(path);
                 if (so != null) return so.AnimationEvents;
             }
             return new List<string>();

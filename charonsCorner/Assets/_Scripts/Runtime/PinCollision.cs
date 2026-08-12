@@ -8,6 +8,7 @@ using Sirenix.OdinInspector;
 public class PinCollision : MonoBehaviour
 {
     [Header("Collision")]
+    [SerializeField] private bool _stareAtPlayer = false;
     [SerializeField] private float _impulseMagnitude = 10f;
     [SerializeField] private float _secondsToSubtract = 1f;
     [SerializeField] private float _secondsToSubtractPinHit = 0.5f;
@@ -80,6 +81,34 @@ public class PinCollision : MonoBehaviour
         if (_hasBeenHit || _player == null) return;
 
         UpdateGlow();
+        UpdateStareAtPlayer();
+    }
+
+    private void UpdateStareAtPlayer()
+    {
+        if (!_stareAtPlayer) return;
+
+        Vector3 directionToPlayer = _player.transform.position - transform.position;
+
+        // The user states Z is the vertical axis.
+        // We want to rotate around Z so that the reverse of the X vector (-transform.right) looks at the player.
+        // Project direction onto the plane perpendicular to the pin's local Z axis.
+        Vector3 localDirection = transform.InverseTransformDirection(directionToPlayer);
+        localDirection.z = 0; // Lock Z to keep it in the "horizontal" plane of the pin.
+
+        if (localDirection.sqrMagnitude > 0.001f)
+        {
+            // We want -transform.right to point at the player.
+            // In local space, -right is (-1, 0, 0).
+            // Atan2(y, x) gives the angle from the local X axis.
+            float angle = Mathf.Atan2(localDirection.y, localDirection.x) * Mathf.Rad2Deg;
+
+            // angle is the rotation needed to align local X (1,0,0) with localDirection.
+            // We want -X (-1,0,0) to align with localDirection.
+            // -X is 180 degrees away from X.
+            // So we add 180 to the angle.
+            transform.Rotate(0, 0, angle + 180f, Space.Self);
+        }
     }
 
     private void UpdateGlow()

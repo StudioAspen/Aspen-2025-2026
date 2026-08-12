@@ -4,8 +4,7 @@ using UnityEngine;
 namespace CharonsCorner.Runtime
 {
     [CreateAssetMenu(fileName = "BowleyAnimationStrings", menuName = "CharonsCorner/Animation/Bowley Animation Strings")]
-    public class BowleyAnimationStrings : ScriptableObject
+    public class BowleyAnimationStrings : AnimationStringsSO
     {
-        public List<string> AnimationEvents = new List<string>();
     }
 }
