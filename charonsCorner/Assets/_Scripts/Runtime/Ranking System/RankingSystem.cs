@@ -5,6 +5,7 @@ using MoreMountains.Feedbacks;
 using CharonsCorner.Runtime;
 using UnityEngine.InputSystem;
 using Cysharp.Threading.Tasks;
+using MoreMountains.Tools;
 
 public class RankingSystem : MonoBehaviour
 {
@@ -23,6 +24,7 @@ public class RankingSystem : MonoBehaviour
     // Debug Feature
     [SerializeField] TextMeshProUGUI _rankText;
     [SerializeField] TextMeshProUGUI _nextRankText;
+    [SerializeField] TextMeshProUGUI _timeText;
     [SerializeField] GameObject _pinUIPrefab;
     [SerializeField] GameObject _minusTextPrefab;
     [SerializeField] float _uiDestroyDelay = 3f;
@@ -35,6 +37,8 @@ public class RankingSystem : MonoBehaviour
     [Header("Feedbacks Settings")]
     [SerializeField] MMF_Player _endLevelSequence;
     [SerializeField] MMF_Player _subtractFeedback;
+    [SerializeField] private string _sRankIncrementEventName = "SRankIncrementEvent";
+    [SerializeField] private string _sRankEnterEventName = "SRankEnterEvent";
 
     // Time
     float _timer;
@@ -44,6 +48,7 @@ public class RankingSystem : MonoBehaviour
     bool _hasPlayerStarted;
     bool _hasPlayerFinished;
     bool _canInteract;
+    bool _isNewSRank;
 
     private void OnEnable()
     {
@@ -193,6 +198,15 @@ public class RankingSystem : MonoBehaviour
         _canInteract = true;
     }
 
+    public void PlaySRankIfPossible()
+    {
+        if (_rankScore != null && _rankScore.GetFinakRank() == Ranks.S)
+        {
+            string eventName = _isNewSRank ? _sRankIncrementEventName : _sRankEnterEventName;
+            MMGameEvent.Trigger(eventName);
+        }
+    }
+
     void FinalRank()
     {
         if (_rankScore == null)
@@ -204,6 +218,7 @@ public class RankingSystem : MonoBehaviour
         List<float> times = new List<float>();
         foreach (var time in _rankScore.Ranks) times.Add(time.Key);
         _rankText.gameObject.SetActive(true);
+        UpdateTimeDisplay();
 
         Ranks currentRank;
         // Note: Refactor to a cleaner check & elimate boundary error
@@ -284,6 +299,17 @@ public class RankingSystem : MonoBehaviour
         _nextRankText.text = $"Get {string.Format("{0:0}:{1:00}", minutes, seconds)} to get an {rankName}-rank!";
     }
 
+    private void UpdateTimeDisplay()
+    {
+        if (_timeText == null) return;
+
+        int minutes = Mathf.FloorToInt(_timer / 60f);
+        int seconds = Mathf.FloorToInt(_timer % 60f);
+        float centiseconds = (_timer * 100f) % 100f;
+
+        _timeText.text = $"TIME: {minutes:00}:{seconds:00}.{centiseconds:00}";
+    }
+
     void CheckPlayerEnd()
     {
         if (_hasPlayerFinished) return;
@@ -329,6 +355,11 @@ public class RankingSystem : MonoBehaviour
             list.Add(_chapterIndex);
             SaveManager.GameStore.SetList(DialogueSaveKeys.SRankAchievedListKey, list);
             FlagManager.Increment(ProgressFlag.SRankCount);
+            _isNewSRank = true;
+        }
+        else
+        {
+            _isNewSRank = false;
         }
     }
 

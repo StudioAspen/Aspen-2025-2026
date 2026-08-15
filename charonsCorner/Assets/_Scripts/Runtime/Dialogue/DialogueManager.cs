@@ -19,7 +19,26 @@ namespace CharonsCorner.Runtime
         [field: SerializeField, ReadOnly] public int CurrentDialogueIndex { get; private set; }
         [field: SerializeField, ReadOnly] public DialogueSO CurrentDialogue { get; private set; }
         [field: SerializeField, ReadOnly] public string CurrentLine { get; private set; }
-        public bool IsSRankActive { get; set; }
+        
+        [Header("S-Rank Events")]
+        [SerializeField] private string _sRankUIEnterEventName = "SRankUIEnter";
+        [SerializeField] private string _sRankUIExitEventName = "SRankUIExit";
+        
+        private bool _isSRankActive;
+        public bool IsSRankActive 
+        { 
+            get => _isSRankActive;
+            set
+            {
+                if (_isSRankActive == value) return;
+                _isSRankActive = value;
+                if (_isSRankActive)
+                {
+                    MMGameEvent.Trigger(_sRankUIEnterEventName);
+                }
+            }
+        }
+        
         public event Action<DialogueSO> OnDialogueStarted = delegate { };
         public event Action<string> OnLineStarted = delegate { };
 
@@ -185,6 +204,7 @@ namespace CharonsCorner.Runtime
         {
             if (IsSRankActive)
             {
+                MMGameEvent.Trigger(_sRankUIExitEventName);
                 IsSRankActive = false;
                 MMGameEvent.Trigger("SRankEnd");
             }
