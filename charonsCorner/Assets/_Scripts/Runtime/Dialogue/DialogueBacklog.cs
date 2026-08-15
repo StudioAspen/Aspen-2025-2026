@@ -54,6 +54,7 @@ namespace CharonsCorner.Runtime
         /// </summary>
         public ChapterDialogueEntry CurrentChapterDialogue { get; private set; }
         public ChapterSRankDialogueEntry CurrentSRankDialogue { get; private set; }
+        public bool IsCurrentSequenceSRank { get; private set; }
         
         [field: SerializeField] public ProgressFlag CurrentDialogueOpenerIndexFlag { get; private set; } = ProgressFlag.CurrentDialogueOpenerIndex;
         [field: SerializeField] public ProgressFlag CurrentDialogueSequenceIndexFlag { get; private set; } = ProgressFlag.CurrentDialogueSequenceIndex;
@@ -110,7 +111,13 @@ namespace CharonsCorner.Runtime
                 {
                     CurrentChapterDialogue = _overriddenDialogueEntry;
                     CurrentSRankDialogue = null;
+                    IsCurrentSequenceSRank = false;
                     
+                    if (_overriddenDialogueEntry.DialogueOpener == null)
+                    {
+                        Debug.LogError("[DialogueBacklog] OverriddenDialogueEntry.DialogueOpener is null!");
+                        return null;
+                    }
                     runtimeOpener = Instantiate(_overriddenDialogueEntry.DialogueOpener);
                     
                     List<DialogueSequenceSO> overriddenSequences = new List<DialogueSequenceSO>();
@@ -134,6 +141,13 @@ namespace CharonsCorner.Runtime
                 {
                     CurrentChapterDialogue = null;
                     CurrentSRankDialogue = _overriddenSRankEntry;
+                    IsCurrentSequenceSRank = true;
+
+                    if (DefaultCharonDialogueOpener == null)
+                    {
+                        Debug.LogError("[DialogueBacklog] DefaultCharonDialogueOpener is null! Cannot instantiate it.");
+                        return null;
+                    }
 
                     runtimeOpener = Instantiate(DefaultCharonDialogueOpener);
                     runtimeOpener.SetSequenceOptions(new List<DialogueSequenceSO> { _overriddenSRankEntry.DialogueSequence });
@@ -168,15 +182,34 @@ namespace CharonsCorner.Runtime
             CurrentSRankDialogue = sRankEntry;
             
             if (entry != null)
+            {
+                if (entry.DialogueOpener == null)
+                {
+                    Debug.LogError($"[DialogueBacklog] DialogueOpener is null for chapter {entry.ChapterIndex}!");
+                    return null;
+                }
                 runtimeOpener = Instantiate(entry.DialogueOpener);
+            }
             else if (ChapterDialogues.Count > 0)
             {
                 // If we finished all chapter dialogues, we use the most recent one's exhausted sequence
                 int lastIndex = Mathf.Clamp(currDialogueOpenerIndex - 1, 0, ChapterDialogues.Count - 1);
+                if (ChapterDialogues[lastIndex].DialogueOpener == null)
+                {
+                    Debug.LogError($"[DialogueBacklog] DialogueOpener is null for chapter {ChapterDialogues[lastIndex].ChapterIndex} (fallback)!");
+                    return null;
+                }
                 runtimeOpener = Instantiate(ChapterDialogues[lastIndex].DialogueOpener);
             }
             else
+            {
+                if (DefaultCharonDialogueOpener == null)
+                {
+                    Debug.LogError("[DialogueBacklog] DefaultCharonDialogueOpener is null (fallback)!");
+                    return null;
+                }
                 runtimeOpener = Instantiate(DefaultCharonDialogueOpener);
+            }
 
             List<DialogueSequenceSO> sequencesToPlay = new List<DialogueSequenceSO>();
 
@@ -194,6 +227,11 @@ namespace CharonsCorner.Runtime
             if (sRankEntry != null && sequencesToPlay.Count == 0)
             {
                 sequencesToPlay.Add(sRankEntry.DialogueSequence);
+                IsCurrentSequenceSRank = true;
+            }
+            else
+            {
+                IsCurrentSequenceSRank = false;
             }
 
             // 3. Exhausted Sequence (if no new regular or S-rank sequences are available)

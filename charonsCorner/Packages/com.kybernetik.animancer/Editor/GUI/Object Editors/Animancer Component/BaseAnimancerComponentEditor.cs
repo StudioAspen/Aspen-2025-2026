@@ -63,6 +63,9 @@ namespace Animancer.Editor
         /// <summary>Draws the rest of the Inspector fields after the Animator field.</summary>
         protected void DoSerializedFieldsGUI()
         {
+            if (Targets == null || Targets.Length == 0 || Targets[0] == null || (Targets[0] is UnityEngine.Object obj && obj == null))
+                return;
+
             var property = serializedObject.GetIterator();
 
             if (!property.NextVisible(true))

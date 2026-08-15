@@ -21,6 +21,8 @@ namespace CharonsCorner.Runtime
         [SerializeField] private TMPro.TMP_Text speakerNameText;
         [SerializeField] private TypewriterComponent speakerNameTypewriter;
         [SerializeField] private CameraSwitcher cameraSwitcher;
+        [SerializeField] private CinemachineCamera lookAtMementoCam;
+        [SerializeField] private CinemachineCamera defaultDialogueCam;
 
         [Header("Feedbacks")]
         [SerializeField] private MMF_Player genericFeedback;
@@ -33,6 +35,7 @@ namespace CharonsCorner.Runtime
         [SerializeField] private MMChannelModes shakeChannelMode = MMChannelModes.Int;
         [SerializeField] private int shakeChannelInt = 0;
         [SerializeField] private MMChannel shakeChannelDefinition = null;
+        [MMInspectorButton("TestShake")] public bool testShake;
 
         private void OnEnable()
         {
@@ -80,7 +83,7 @@ namespace CharonsCorner.Runtime
                     HandleFeedback(marker);
                     break;
 
-                case "Shake":
+                case "CameraShake":
                     MMCameraShakeEvent.Trigger(shakeDuration, shakeAmplitude, shakeFrequency, 0f, 0f, 0f, false, new MMChannelData(shakeChannelMode, shakeChannelInt, shakeChannelDefinition));
                     break;
 
@@ -102,6 +105,20 @@ namespace CharonsCorner.Runtime
                     if (marker.parameters.Length > 0)
                     {
                         DialogueManager.Instance.ChangeSpeakerName(speakerNameText, speakerNameTypewriter, marker.parameters[0]);
+                    }
+                    break;
+
+                case "LookAtMementoCam":
+                    if (cameraSwitcher != null && lookAtMementoCam != null)
+                    {
+                        cameraSwitcher.SwitchCamera(lookAtMementoCam);
+                    }
+                    break;
+
+                case "DefaultDialogueCam":
+                    if (cameraSwitcher != null && defaultDialogueCam != null)
+                    {
+                        cameraSwitcher.SwitchCamera(defaultDialogueCam);
                     }
                     break;
 
@@ -138,6 +155,11 @@ namespace CharonsCorner.Runtime
         private void HandleDialogueEnded()
         {
             // Reset state if necessary when dialogue finishes
+        }
+
+        private void TestShake()
+        {
+            MMCameraShakeEvent.Trigger(shakeDuration, shakeAmplitude, shakeFrequency, 0f, 0f, 0f, false, new MMChannelData(shakeChannelMode, shakeChannelInt, shakeChannelDefinition));
         }
     }
 }

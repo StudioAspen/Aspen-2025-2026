@@ -3,6 +3,7 @@ using UnityEngine;
 using MoreMountains.Tools;
 using Cysharp.Threading.Tasks;
 using Sirenix.OdinInspector;
+using CharonsCorner.Runtime.VFX;
 
 namespace CharonsCorner.Runtime
 {
@@ -10,18 +11,18 @@ namespace CharonsCorner.Runtime
     {
         [SerializeField] private GameObject _parentObject;
         [SerializeField] private string _turnOnEventName;
+        [SerializeField] private string _flickerOffEventName;
         [SerializeField] private bool _darkenOnAwake = true;
 
         [Header("Flicker Settings")]
         [SerializeField] private bool _flickerOn = false;
-        [SerializeField, ShowIf("_flickerOn")] private float _flickerRate = 0.1f;
-        [SerializeField, ShowIf("_flickerOn")] private float _flickerDuration = 1.0f;
+        [SerializeField, ShowIf("_flickerOn")] private FlickerSettingsSO _flickerSettings;
 
         [Header("Shadow Settings")]
         [SerializeField] private bool _editShadowColorAsWell = false;
         [SerializeField, ShowIf("_editShadowColorAsWell")] private Color _targetShadowColor = Color.black;
         
-        private bool _isGlowing;
+        private bool _isGlowing = true;
         private readonly List<RendererData> _renderers = new();
         private const string GlowPropertyName = "_Glow";
         private static readonly int GlowPropertyId = Shader.PropertyToID(GlowPropertyName);
@@ -71,6 +72,13 @@ namespace CharonsCorner.Runtime
                 if (!_isGlowing)
                 {
                     TurnOn();
+                }
+            }
+            else if (!string.IsNullOrEmpty(_flickerOffEventName) && gameEvent.EventName == _flickerOffEventName)
+            {
+                if (_isGlowing)
+                {
+                    FlickerOff();
                 }
             }
         }
@@ -144,12 +152,34 @@ namespace CharonsCorner.Runtime
             }
         }
 
+        public void FlickerOff()
+        {
+            if (!_isGlowing) return;
+
+            if (_flickerOn)
+            {
+                FlickerOffAsync().Forget();
+            }
+            else
+            {
+                ApplyTurnOff();
+            }
+        }
+
         private async UniTaskVoid FlickerOnAsync()
         {
+            if (_flickerSettings == null)
+            {
+                ApplyTurnOn();
+                return;
+            }
+
             float elapsed = 0f;
             bool isOn = false;
+            float duration = _flickerSettings.FlickerLength;
+            float rate = _flickerSettings.FlickerRate;
 
-            while (elapsed < _flickerDuration)
+            while (elapsed < duration)
             {
                 isOn = !isOn;
                 if (isOn)
@@ -161,8 +191,8 @@ namespace CharonsCorner.Runtime
                     ApplyTurnOff();
                 }
 
-                await UniTask.Delay((int)(_flickerRate * 1000));
-                elapsed += _flickerRate;
+                await UniTask.Delay((int)(rate * 1000));
+                elapsed += rate;
             }
 
             ApplyTurnOn();
@@ -218,6 +248,38 @@ namespace CharonsCorner.Runtime
 
         public void TurnOff()
         {
+            ApplyTurnOff();
+        }
+
+        private async UniTaskVoid FlickerOffAsync()
+        {
+            if (_flickerSettings == null)
+            {
+                ApplyTurnOff();
+                return;
+            }
+
+            float elapsed = 0f;
+            bool isOn = true;
+            float duration = _flickerSettings.FlickerLength;
+            float rate = _flickerSettings.FlickerRate;
+
+            while (elapsed < duration)
+            {
+                isOn = !isOn;
+                if (isOn)
+                {
+                    ApplyTurnOn();
+                }
+                else
+                {
+                    ApplyTurnOff();
+                }
+
+                await UniTask.Delay((int)(rate * 1000));
+                elapsed += rate;
+            }
+
             ApplyTurnOff();
         }
     }

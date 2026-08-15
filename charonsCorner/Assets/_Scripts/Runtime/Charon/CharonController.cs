@@ -1,6 +1,5 @@
 using System.Collections.Generic;
-using Animancer;
-using AYellowpaper.SerializedCollections;
+using MoreMountains.Tools;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -12,11 +11,7 @@ namespace CharonsCorner.Runtime
 
         [Header("References")]
         [SerializeField, Required] private DialogueBacklog _backlog;
-        [SerializeField, Required] private AnimancerComponent _animator;
         [SerializeField, Required] private DialogueOpener _dialogueOpener;
-
-        [Header("Config")]
-        [SerializeField] private float _animatorFadeDuration = 0.2f;
 
         private void Awake()
         {
@@ -44,6 +39,14 @@ namespace CharonsCorner.Runtime
         public void StartCharonDialogue()
         {
             DialogueOpenerSO currentOpener = _backlog.GetCurrentDialogueOpener();
+            
+            bool isSRank = _backlog.IsCurrentSequenceSRank;
+            _dialogueManager.IsSRankActive = isSRank;
+            if (isSRank)
+            {
+                MMGameEvent.Trigger("SRankStart");
+            }
+
             if (currentOpener == null)
             {
                 _dialogueOpener.StartOpener(_backlog.DefaultCharonDialogueOpener);
@@ -76,18 +79,6 @@ namespace CharonsCorner.Runtime
         {
             if (_dialogueManager.Owner != this)
                 return;
-        }
-
-        /// <summary>
-        /// Plays the provided animation clip using Animancer.
-        /// </summary>
-        /// <param name="clip">The clip to play.</param>
-        public void PlayAnimation(ClipTransition clip)
-        {
-            if (clip != null)
-            {
-                _animator.Play(clip, _animatorFadeDuration);
-            }
         }
     }
 }

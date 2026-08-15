@@ -40,6 +40,10 @@ namespace Animancer.Editor
 
         private void DoAnimatorGUI(SerializedProperty property, GUIContent label)
         {
+            var target = Targets[0];
+            if (target == null || (target is Object obj && obj == null))
+                return;
+
             var animator = property.objectReferenceValue as Animator;
 
             var color = GUI.color;

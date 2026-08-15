@@ -1,12 +1,18 @@
 ﻿using UnityEngine;
 using Sirenix.OdinInspector;
+using MoreMountains.Tools;
+using CharonsCorner.Runtime.VFX;
 
 namespace CharonsCorner.Runtime
 {
-    public class LerpMaterialOnDistance : MonoBehaviour
+    public class LerpMaterialOnDistance : MonoBehaviour, MMEventListener<MMGameEvent>
     {
         [Header("Settings")]
         [SerializeField] private bool _active = true;
+        [SerializeField] private string _flickerOnEventName;
+        [SerializeField] private string _flickerOffEventName;
+        [SerializeField] private bool _flickerOn = false;
+        [SerializeField, ShowIf("_flickerOn")] private FlickerSettingsSO _flickerSettings;
         [SerializeField] private bool _forceX = false;
         [SerializeField] private bool _forceY = false;
         [SerializeField] private Renderer _renderer;
@@ -58,6 +64,70 @@ namespace CharonsCorner.Runtime
             }
             
             _wasActive = _active;
+        }
+
+        private void OnEnable()
+        {
+            this.MMEventStartListening<MMGameEvent>();
+        }
+
+        private void OnDisable()
+        {
+            this.MMEventStopListening<MMGameEvent>();
+        }
+
+        public void OnMMEvent(MMGameEvent gameEvent)
+        {
+            if (gameEvent.EventName == "Darken")
+            {
+                SetActive(false);
+            }
+            else if (!string.IsNullOrEmpty(_flickerOnEventName) && gameEvent.EventName == _flickerOnEventName)
+            {
+                if (_flickerOn)
+                {
+                    FlickerAsync(true).Forget();
+                }
+                else
+                {
+                    SetActive(true);
+                }
+            }
+            else if (!string.IsNullOrEmpty(_flickerOffEventName) && gameEvent.EventName == _flickerOffEventName)
+            {
+                if (_flickerOn)
+                {
+                    FlickerAsync(false).Forget();
+                }
+                else
+                {
+                    SetActive(false);
+                }
+            }
+        }
+
+        private async Cysharp.Threading.Tasks.UniTaskVoid FlickerAsync(bool targetState)
+        {
+            if (_flickerSettings == null)
+            {
+                SetActive(targetState);
+                return;
+            }
+
+            float elapsed = 0f;
+            bool currentToggle = _active;
+            float duration = _flickerSettings.FlickerLength;
+            float rate = _flickerSettings.FlickerRate;
+
+            while (elapsed < duration)
+            {
+                currentToggle = !currentToggle;
+                SetActive(currentToggle);
+                await Cysharp.Threading.Tasks.UniTask.Delay((int)(rate * 1000));
+                elapsed += rate;
+            }
+
+            SetActive(targetState);
         }
 
         private void Update()

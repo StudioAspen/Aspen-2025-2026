@@ -19,6 +19,7 @@ namespace CharonsCorner.Runtime
         [field: SerializeField, ReadOnly] public int CurrentDialogueIndex { get; private set; }
         [field: SerializeField, ReadOnly] public DialogueSO CurrentDialogue { get; private set; }
         [field: SerializeField, ReadOnly] public string CurrentLine { get; private set; }
+        public bool IsSRankActive { get; set; }
         public event Action<DialogueSO> OnDialogueStarted = delegate { };
         public event Action<string> OnLineStarted = delegate { };
 
@@ -169,6 +170,11 @@ namespace CharonsCorner.Runtime
                 MMGameEvent.Trigger(line.charonAnimation);
             }
 
+            if (!string.IsNullOrEmpty(line.charonStareAnimation))
+            {
+                MMGameEvent.Trigger(line.charonStareAnimation);
+            }
+
             if (!string.IsNullOrEmpty(line.bowleyAnimation))
             {
                 MMGameEvent.Trigger(line.bowleyAnimation);
@@ -177,6 +183,12 @@ namespace CharonsCorner.Runtime
 
         public void EndDialogue()
         {
+            if (IsSRankActive)
+            {
+                IsSRankActive = false;
+                MMGameEvent.Trigger("SRankEnd");
+            }
+
             OnDialogueEnded.Invoke();
             MMGameEvent.Trigger("OnDialogueEnd");
             MMGameEvent.Trigger("BowleyBase");
