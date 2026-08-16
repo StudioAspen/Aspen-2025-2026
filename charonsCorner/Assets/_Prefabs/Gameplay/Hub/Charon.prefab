@@ -89,7 +89,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2525259457620172694}
-  - component: {fileID: 6389980833563918837}
   m_Layer: 0
   m_Name: HeadJoint
   m_TagString: Untagged
@@ -113,29 +112,37 @@ Transform:
   - {fileID: 5680943426431253675}
   m_Father: {fileID: 3780742976513122610}
   m_LocalEulerAnglesHint: {x: -0.771, y: 180, z: -0.021}
---- !u!114 &6389980833563918837
-MonoBehaviour:
+--- !u!1 &361327904867388985
+GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 229663710410708629}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 56673d0ec8ad42dcb3107f0f9247bd0c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CharonHeadJoint
-  staringItems:
-  - startEventName: CharonStareAtPlayer
-    targetTransform: {fileID: 0}
-  - startEventName: CharonStareAtBowley
-    targetTransform: {fileID: 0}
-  stopEventName: CharonStopStaring
-  jawOverrider: {fileID: 554115019294429471}
-  animationStrings: {fileID: 0}
-  rotationSpeed: 5
-  defaultRotation: {x: 0, y: 0, z: 0}
-  headObject: {fileID: 2525259457620172694}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7086420717189739739}
+  m_Layer: 0
+  m_Name: BowleyStareObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7086420717189739739
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 361327904867388985}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -1.2799997, y: 0.20000002, z: -3.8069146}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 690380284546170625}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &380810489579541467
 GameObject:
   m_ObjectHideFlags: 0
@@ -1826,6 +1833,281 @@ Transform:
   m_Children: []
   m_Father: {fileID: 6700277207410068833}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2900609353502335010
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5659760206003066353}
+  - component: {fileID: 1194575992170672393}
+  - component: {fileID: 3755061912934901829}
+  m_Layer: 8
+  m_Name: CharonCameraZoomOut
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5659760206003066353
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2900609353502335010}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1480377022541311623}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1194575992170672393
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2900609353502335010}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6da43522623d4704e979466dc7650b65, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MoreMountains.Tools::MoreMountains.Feedbacks.MMF_Player
+  Feedbacks: []
+  InitializationMode: 2
+  AutoInitialization: 1
+  SafeMode: 3
+  Direction: 0
+  AutoChangeDirectionOnEnd: 0
+  AutoPlayOnStart: 0
+  AutoPlayOnEnable: 0
+  LogMissingTargets: 1
+  ForceTimescaleMode: 0
+  ForcedTimescaleMode: 1
+  DurationMultiplier: 1
+  TimescaleMultiplier: 1
+  RandomizeDuration: 0
+  RandomDurationMultiplier: {x: 0.5, y: 1.5}
+  DisplayFullDurationDetails: 0
+  PlayerTimescaleMode: 0
+  OnlyPlayIfWithinRange: 0
+  RangeCenter: {fileID: 0}
+  RangeDistance: 5
+  UseRangeFalloff: 0
+  RangeFalloff:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  RemapRangeFalloff: {x: 0, y: 1}
+  IgnoreRangeEvents: 0
+  CooldownDuration: 0
+  InitialDelay: 0
+  CanPlay: 1
+  CanPlayWhileAlreadyPlaying: 1
+  ChanceToPlay: 100
+  FeedbacksIntensity: 1
+  Events:
+    TriggerMMFeedbacksEvents: 0
+    TriggerUnityEvents: 1
+    OnPlay:
+      m_PersistentCalls:
+        m_Calls: []
+    OnPause:
+      m_PersistentCalls:
+        m_Calls: []
+    OnStop:
+      m_PersistentCalls:
+        m_Calls: []
+    OnResume:
+      m_PersistentCalls:
+        m_Calls: []
+    OnChangeDirection:
+      m_PersistentCalls:
+        m_Calls: []
+    OnComplete:
+      m_PersistentCalls:
+        m_Calls: []
+    OnRestoreInitialValues:
+      m_PersistentCalls:
+        m_Calls: []
+    OnSkipToTheEnd:
+      m_PersistentCalls:
+        m_Calls: []
+    OnInitializationComplete:
+      m_PersistentCalls:
+        m_Calls: []
+    OnEnable:
+      m_PersistentCalls:
+        m_Calls: []
+    OnDisable:
+      m_PersistentCalls:
+        m_Calls: []
+  DebugActive: 0
+  InScriptDrivenPause: 0
+  FeedbacksList:
+  - rid: 4043403726672363620
+  PlayMode: 0
+  SequentialDelay: 0
+  KeepPlayModeChanges: 0
+  PerformanceMode: 0
+  RestoreInitialValuesOnDisable: 0
+  StopFeedbacksOnDisable: 0
+  PlayCount: 2
+  InPreviewMode: 0
+  MMF_ChannelMode: 0
+  MMF_Channel: 0
+  MMF_ChannelDefinition: {fileID: 0}
+  references:
+    version: 2
+    RefIds:
+    - rid: 4043403726672363620
+      type: {class: MMF_CameraZoom, ns: MoreMountains.Feedbacks, asm: MoreMountains.Tools}
+      data:
+        Active: 1
+        UniqueID: -750284453
+        Label: Camera Zoom
+        OriginalLabel: Camera Zoom
+        ChannelMode: 1
+        Channel: 0
+        MMChannelDefinition: {fileID: 11400000, guid: af79b9dfdafd131428e312a6da5d56c7, type: 2}
+        Chance: 100
+        Timing:
+          TimescaleMode: 0
+          ExcludeFromHoldingPauses: 0
+          ContributeToTotalDuration: 1
+          InitialDelay: 0
+          CooldownDuration: 0
+          InterruptsOnStop: 1
+          NumberOfRepeats: 0
+          RepeatForever: 0
+          DelayBetweenRepeats: 1
+          PlayCount: 3
+          LimitPlayCount: 0
+          MaxPlayCount: 3
+          SetPlayCountToZeroOnReset: 0
+          MMFeedbacksDirectionCondition: 0
+          PlayDirection: 0
+          ConstantIntensity: 0
+          UseIntensityInterval: 0
+          IntensityIntervalMin: 0
+          IntensityIntervalMax: 0
+          Sequence: {fileID: 0}
+          TrackID: 0
+          Quantized: 0
+          TargetBPM: 120
+        AutomatedTargetAcquisition:
+          Mode: 0
+          ChildIndex: 0
+        RandomizeOutput: 0
+        RandomMultiplier: {x: 0.8, y: 1}
+        RandomizeDuration: 0
+        RandomDurationMultiplier: {x: 0.5, y: 2}
+        UseRange: 0
+        RangeDistance: 5
+        UseRangeFalloff: 0
+        RangeFalloff:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          - serializedVersion: 3
+            time: 1
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        RemapRangeFalloff: {x: 0, y: 1}
+        AutomaticShakerSetupButton:
+          ButtonText: Automatic Shaker Setup
+        Owner: {fileID: 1194575992170672393}
+        DebugActive: 0
+        ZoomMode: 1
+        ZoomFieldOfView: 35
+        ZoomTransitionDuration: 1
+        ZoomDuration: 0
+        RelativeFieldOfView: 0
+        ZoomTween:
+          MMTweenDefinitionType: 1
+          MMTweenCurve: 4
+          Curve:
+            serializedVersion: 2
+            m_Curve:
+            - serializedVersion: 3
+              time: 0
+              value: 0
+              inSlope: 0
+              outSlope: 0
+              tangentMode: 0
+              weightedMode: 0
+              inWeight: 0
+              outWeight: 0
+            - serializedVersion: 3
+              time: 1
+              value: 1
+              inSlope: 0
+              outSlope: 0
+              tangentMode: 0
+              weightedMode: 0
+              inWeight: 0
+              outWeight: 0
+            m_PreInfinity: 2
+            m_PostInfinity: 2
+            m_RotationOrder: 4
+          Initialized: 0
+          ConditionPropertyName: 
+          EnumConditionPropertyName: 
+          EnumConditions: 0000000000000000000000000000000000000000000000000000000000000000
+--- !u!114 &3755061912934901829
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2900609353502335010}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e64565eacda0418c9d5293a06879f1b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: CharonsCorner.Runtime::CharonsCorner.Runtime.PlayFeedbacksOnMMGameEvent
+  _eventName: CharonCameraZoomOut
 --- !u!1 &2928373884023762012
 GameObject:
   m_ObjectHideFlags: 0
@@ -1897,10 +2179,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: CharonsCorner.Runtime::CharonsCorner.Runtime.GlowController
   _parentObject: {fileID: 2928373884023762012}
   _turnOnEventName: CharonFlickerOn
+  _flickerOffEventName: 
   _darkenOnAwake: 1
   _flickerOn: 1
-  _flickerRate: 0.04
-  _flickerDuration: 0.3
+  _flickerSettings: {fileID: 11400000, guid: c7802328a1383b242a10c19911b7ac8f, type: 2}
   _editShadowColorAsWell: 1
   _targetShadowColor: {r: 0, g: 0, b: 0, a: 1}
 --- !u!1 &2955431748250609100
@@ -1935,6 +2217,66 @@ Transform:
   - {fileID: 8070418101359234930}
   m_Father: {fileID: 633091370748700848}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2985235342893650215
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 690380284546170625}
+  - component: {fileID: 4619233400847689280}
+  m_Layer: 0
+  m_Name: CharonHeadController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &690380284546170625
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2985235342893650215}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 2566207366433961301}
+  - {fileID: 7086420717189739739}
+  - {fileID: 3345362041598853879}
+  m_Father: {fileID: 4330120544472715104}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4619233400847689280
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2985235342893650215}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56673d0ec8ad42dcb3107f0f9247bd0c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CharonHeadJoint
+  staringItems:
+  - startEventName: CharonStareAtPlayer
+    targetTransform: {fileID: 2566207366433961301}
+  - startEventName: CharonStareAtBowley
+    targetTransform: {fileID: 7086420717189739739}
+  - startEventName: CharonStareUp
+    targetTransform: {fileID: 3345362041598853879}
+  stopEventName: CharonStopStaring
+  jawOverrider: {fileID: 554115019294429471}
+  animationStrings: {fileID: 11400000, guid: 928efc7c38b3e504cbe03d8468998df5, type: 2}
+  rotationSpeed: 5
+  defaultRotation: {x: -0.771, y: 180, z: -0.021}
+  headObject: {fileID: 2525259457620172694}
 --- !u!1 &2999997812206625177
 GameObject:
   m_ObjectHideFlags: 0
@@ -2125,13 +2467,13 @@ GameObject:
   - component: {fileID: 3071377622202203597}
   - component: {fileID: 1237692140379531003}
   - component: {fileID: 1869440743056354465}
-  - component: {fileID: 2251239428750671827}
   - component: {fileID: 67755824260414207}
   - component: {fileID: 982842141562552837}
   - component: {fileID: 2567514452136509396}
   - component: {fileID: 4990830105630046188}
   - component: {fileID: 5754126812159164109}
   - component: {fileID: 409879350017515605}
+  - component: {fileID: 7618100740115806779}
   m_Layer: 8
   m_Name: Charon
   m_TagString: Untagged
@@ -2157,6 +2499,7 @@ Transform:
   - {fileID: 1480377022541311623}
   - {fileID: 7705557094564438621}
   - {fileID: 5627564561470263197}
+  - {fileID: 690380284546170625}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &3071377622202203597
@@ -2172,9 +2515,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _backlog: {fileID: 67755824260414207}
-  _animator: {fileID: 2251239428750671827}
   _dialogueOpener: {fileID: 1869440743056354465}
-  _animatorFadeDuration: 0.2
 --- !u!114 &1237692140379531003
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2253,21 +2594,6 @@ MonoBehaviour:
   _useCamera: 1
   _cinemachineCamera: {fileID: 5454533530177445654}
   _endingDialogueCinemachineCamera: {fileID: 0}
---- !u!114 &2251239428750671827
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3239045656199082840}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0ad50f81b1d25c441943c37a89ba23f6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _Animator: {fileID: 6946327341801236790}
-  _Transitions: {fileID: 0}
-  _ActionOnDisable: 0
 --- !u!114 &67755824260414207
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2287,6 +2613,14 @@ MonoBehaviour:
     DialogueOpener: {fileID: 11400000, guid: ecb6b1a7d6e9ca24084592cd279b2b45, type: 2}
   - ChapterIndex: 2
     DialogueOpener: {fileID: 11400000, guid: 37fdc8ae466d6a14eb9c505ccc311a05, type: 2}
+  - ChapterIndex: 3
+    DialogueOpener: {fileID: 11400000, guid: d2ddacbf63b1dc44fa5870ae20440a51, type: 2}
+  - ChapterIndex: 4
+    DialogueOpener: {fileID: 11400000, guid: 2155f632f90fa904dab35c6e41d3237b, type: 2}
+  - ChapterIndex: 5
+    DialogueOpener: {fileID: 11400000, guid: 49f027a28c2cc84419bab453bed7d8a1, type: 2}
+  - ChapterIndex: 6
+    DialogueOpener: {fileID: 11400000, guid: 97aa5bf1b95484b4d98db65b5a7c79b8, type: 2}
   <SRankDialogues>k__BackingField:
   - ChapterIndex: 1
     DialogueSequence: {fileID: 11400000, guid: ea2ed8854843b97409f37748151c0f10, type: 2}
@@ -2303,8 +2637,8 @@ MonoBehaviour:
   <DefaultCharonDialogueOpener>k__BackingField: {fileID: 11400000, guid: 579f4c408a9292840b8dc05c489ace15, type: 2}
   _overrideSaveData: 0
   _overriddenDialogueEntry:
-    ChapterIndex: 0
-    DialogueOpener: {fileID: 11400000, guid: eda3a049e73e60a4487faca03e5ac7a5, type: 2}
+    ChapterIndex: 1
+    DialogueOpener: {fileID: 11400000, guid: ecb6b1a7d6e9ca24084592cd279b2b45, type: 2}
   _overriddenSRankEntry:
     ChapterIndex: 0
     DialogueSequence: {fileID: 0}
@@ -2327,15 +2661,18 @@ MonoBehaviour:
   typewriter: {fileID: 0}
   speakerNameText: {fileID: 0}
   speakerNameTypewriter: {fileID: 0}
-  cameraSwitcher: {fileID: 0}
+  cameraSwitcher: {fileID: 7618100740115806779}
+  lookAtMementoCam: {fileID: 0}
+  defaultDialogueCam: {fileID: 5454533530177445654}
   genericFeedback: {fileID: 0}
   alternativeFeedback: {fileID: 0}
-  shakeDuration: 0.5
-  shakeAmplitude: 1
-  shakeFrequency: 1
-  shakeChannelMode: 0
+  shakeDuration: 0.4
+  shakeAmplitude: 2
+  shakeFrequency: 100
+  shakeChannelMode: 1
   shakeChannelInt: 0
-  shakeChannelDefinition: {fileID: 0}
+  shakeChannelDefinition: {fileID: 11400000, guid: 88a69d7473dc12143ac4e4b12a635267, type: 2}
+  testShake: 0
 --- !u!65 &2567514452136509396
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2370,6 +2707,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _active: 0
+  _flickerOnEventName: CharonLerpMaterialFlickerOn
+  _flickerOffEventName: CharonLerpMaterialFlickerOff
+  _flickerOn: 1
+  _flickerSettings: {fileID: 11400000, guid: c7802328a1383b242a10c19911b7ac8f, type: 2}
   _forceX: 0
   _forceY: 0
   _renderer: {fileID: 2177249804768941444}
@@ -2564,6 +2905,20 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &7618100740115806779
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3239045656199082840}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd9d37bf1edb4f6384a67759cb9f7ccd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: CharonsCorner.Runtime::CharonsCorner.Runtime.CameraSwitcher
+  _blendType: 3
+  _blendDuration: 0.5
 --- !u!1 &3292577159738782774
 GameObject:
   m_ObjectHideFlags: 0
@@ -2840,6 +3195,8 @@ GameObject:
   - component: {fileID: 1480377022541311623}
   - component: {fileID: 5454533530177445654}
   - component: {fileID: 7472168937278455272}
+  - component: {fileID: 4484507370282805374}
+  - component: {fileID: 5780320680685094103}
   m_Layer: 8
   m_Name: CharonDialogueCamera
   m_TagString: Untagged
@@ -2859,7 +3216,9 @@ Transform:
   m_LocalPosition: {x: -0.13126945, y: 1.48508, z: -3.972404}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 5519932671999240764}
+  - {fileID: 5659760206003066353}
   m_Father: {fileID: 4330120544472715104}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &5454533530177445654
@@ -2922,6 +3281,82 @@ MonoBehaviour:
   AmplitudeGain: 0
   FrequencyGain: 0
   m_NoiseOffsets: {x: -339.92325, y: 724.92786, z: 914.73486}
+--- !u!114 &4484507370282805374
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4453639542151982260}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d66462bf720d28469c8db4b2e52720c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ChannelMode: 1
+  Channel: 0
+  MMChannelDefinition: {fileID: 11400000, guid: 88a69d7473dc12143ac4e4b12a635267, type: 2}
+  DefaultShakeAmplitude: 0.5
+  DefaultShakeFrequency: 10
+  IdleAmplitude: 0
+  IdleFrequency: 0
+  LerpSpeed: 5
+  TestDuration: 0.3
+  TestAmplitude: 2
+  TestFrequency: 20
+  TestShakeButton: 0
+--- !u!114 &5780320680685094103
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4453639542151982260}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51662a222e352d74a8ad12e5843f7501, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MoreMountains.Tools::MoreMountains.FeedbacksForThirdParty.MMCinemachineZoom
+  ChannelMode: 1
+  Channel: 0
+  MMChannelDefinition: {fileID: 11400000, guid: af79b9dfdafd131428e312a6da5d56c7, type: 2}
+  Interruptable: 0
+  ZoomTween:
+    MMTweenDefinitionType: 1
+    MMTweenCurve: 4
+    Curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    Initialized: 0
+    ConditionPropertyName: 
+    EnumConditionPropertyName: 
+    EnumConditions: 0000000000000000000000000000000000000000000000000000000000000000
+  TestMode: 1
+  TestFieldOfView: 25
+  TestTransitionDuration: 0.1
+  TestDuration: 0.05
+  TestZoomButton: 0
 --- !u!1 &4471861929886120694
 GameObject:
   m_ObjectHideFlags: 0
@@ -2985,6 +3420,281 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1210514248968705923}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4875873681481110868
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5519932671999240764}
+  - component: {fileID: 7314366433386692949}
+  - component: {fileID: 171692235772372183}
+  m_Layer: 8
+  m_Name: CharonCameraZoomIn
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5519932671999240764
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4875873681481110868}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1480377022541311623}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7314366433386692949
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4875873681481110868}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6da43522623d4704e979466dc7650b65, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MoreMountains.Tools::MoreMountains.Feedbacks.MMF_Player
+  Feedbacks: []
+  InitializationMode: 2
+  AutoInitialization: 1
+  SafeMode: 3
+  Direction: 0
+  AutoChangeDirectionOnEnd: 0
+  AutoPlayOnStart: 0
+  AutoPlayOnEnable: 0
+  LogMissingTargets: 1
+  ForceTimescaleMode: 0
+  ForcedTimescaleMode: 1
+  DurationMultiplier: 1
+  TimescaleMultiplier: 1
+  RandomizeDuration: 0
+  RandomDurationMultiplier: {x: 0.5, y: 1.5}
+  DisplayFullDurationDetails: 0
+  PlayerTimescaleMode: 0
+  OnlyPlayIfWithinRange: 0
+  RangeCenter: {fileID: 0}
+  RangeDistance: 5
+  UseRangeFalloff: 0
+  RangeFalloff:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  RemapRangeFalloff: {x: 0, y: 1}
+  IgnoreRangeEvents: 0
+  CooldownDuration: 0
+  InitialDelay: 0
+  CanPlay: 1
+  CanPlayWhileAlreadyPlaying: 1
+  ChanceToPlay: 100
+  FeedbacksIntensity: 1
+  Events:
+    TriggerMMFeedbacksEvents: 0
+    TriggerUnityEvents: 1
+    OnPlay:
+      m_PersistentCalls:
+        m_Calls: []
+    OnPause:
+      m_PersistentCalls:
+        m_Calls: []
+    OnStop:
+      m_PersistentCalls:
+        m_Calls: []
+    OnResume:
+      m_PersistentCalls:
+        m_Calls: []
+    OnChangeDirection:
+      m_PersistentCalls:
+        m_Calls: []
+    OnComplete:
+      m_PersistentCalls:
+        m_Calls: []
+    OnRestoreInitialValues:
+      m_PersistentCalls:
+        m_Calls: []
+    OnSkipToTheEnd:
+      m_PersistentCalls:
+        m_Calls: []
+    OnInitializationComplete:
+      m_PersistentCalls:
+        m_Calls: []
+    OnEnable:
+      m_PersistentCalls:
+        m_Calls: []
+    OnDisable:
+      m_PersistentCalls:
+        m_Calls: []
+  DebugActive: 0
+  InScriptDrivenPause: 0
+  FeedbacksList:
+  - rid: 4043403726672363619
+  PlayMode: 0
+  SequentialDelay: 0
+  KeepPlayModeChanges: 0
+  PerformanceMode: 0
+  RestoreInitialValuesOnDisable: 0
+  StopFeedbacksOnDisable: 0
+  PlayCount: 1
+  InPreviewMode: 0
+  MMF_ChannelMode: 0
+  MMF_Channel: 0
+  MMF_ChannelDefinition: {fileID: 0}
+  references:
+    version: 2
+    RefIds:
+    - rid: 4043403726672363619
+      type: {class: MMF_CameraZoom, ns: MoreMountains.Feedbacks, asm: MoreMountains.Tools}
+      data:
+        Active: 1
+        UniqueID: -750284453
+        Label: Camera Zoom
+        OriginalLabel: Camera Zoom
+        ChannelMode: 1
+        Channel: 0
+        MMChannelDefinition: {fileID: 11400000, guid: af79b9dfdafd131428e312a6da5d56c7, type: 2}
+        Chance: 100
+        Timing:
+          TimescaleMode: 0
+          ExcludeFromHoldingPauses: 0
+          ContributeToTotalDuration: 1
+          InitialDelay: 0
+          CooldownDuration: 0
+          InterruptsOnStop: 1
+          NumberOfRepeats: 0
+          RepeatForever: 0
+          DelayBetweenRepeats: 1
+          PlayCount: 6
+          LimitPlayCount: 0
+          MaxPlayCount: 3
+          SetPlayCountToZeroOnReset: 0
+          MMFeedbacksDirectionCondition: 0
+          PlayDirection: 0
+          ConstantIntensity: 0
+          UseIntensityInterval: 0
+          IntensityIntervalMin: 0
+          IntensityIntervalMax: 0
+          Sequence: {fileID: 0}
+          TrackID: 0
+          Quantized: 0
+          TargetBPM: 120
+        AutomatedTargetAcquisition:
+          Mode: 0
+          ChildIndex: 0
+        RandomizeOutput: 0
+        RandomMultiplier: {x: 0.8, y: 1}
+        RandomizeDuration: 0
+        RandomDurationMultiplier: {x: 0.5, y: 2}
+        UseRange: 0
+        RangeDistance: 5
+        UseRangeFalloff: 0
+        RangeFalloff:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          - serializedVersion: 3
+            time: 1
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        RemapRangeFalloff: {x: 0, y: 1}
+        AutomaticShakerSetupButton:
+          ButtonText: Automatic Shaker Setup
+        Owner: {fileID: 7314366433386692949}
+        DebugActive: 0
+        ZoomMode: 1
+        ZoomFieldOfView: 20
+        ZoomTransitionDuration: 1
+        ZoomDuration: 0
+        RelativeFieldOfView: 0
+        ZoomTween:
+          MMTweenDefinitionType: 1
+          MMTweenCurve: 4
+          Curve:
+            serializedVersion: 2
+            m_Curve:
+            - serializedVersion: 3
+              time: 0
+              value: 0
+              inSlope: 0
+              outSlope: 0
+              tangentMode: 0
+              weightedMode: 0
+              inWeight: 0
+              outWeight: 0
+            - serializedVersion: 3
+              time: 1
+              value: 1
+              inSlope: 0
+              outSlope: 0
+              tangentMode: 0
+              weightedMode: 0
+              inWeight: 0
+              outWeight: 0
+            m_PreInfinity: 2
+            m_PostInfinity: 2
+            m_RotationOrder: 4
+          Initialized: 0
+          ConditionPropertyName: 
+          EnumConditionPropertyName: 
+          EnumConditions: 0000000000000000000000000000000000000000000000000000000000000000
+--- !u!114 &171692235772372183
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4875873681481110868}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e64565eacda0418c9d5293a06879f1b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: CharonsCorner.Runtime::CharonsCorner.Runtime.PlayFeedbacksOnMMGameEvent
+  _eventName: CharonCameraZoomIn
 --- !u!1 &4899994414463495546
 GameObject:
   m_ObjectHideFlags: 0
@@ -3016,6 +3726,37 @@ Transform:
   m_Children:
   - {fileID: 3752887755076956438}
   m_Father: {fileID: 6374327138501219205}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4923612500996601415
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2566207366433961301}
+  m_Layer: 0
+  m_Name: PlayerStareObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2566207366433961301
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4923612500996601415}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.15999985, y: 0.27, z: -3.8069146}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 690380284546170625}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4954540975488575128
 GameObject:
@@ -3240,6 +3981,37 @@ Transform:
   m_Children:
   - {fileID: 7680407807301359937}
   m_Father: {fileID: 6545084253704783198}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &5838232026580755015
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3345362041598853879}
+  m_Layer: 0
+  m_Name: UpStareObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3345362041598853879
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5838232026580755015}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.36, y: 3.58, z: -3.8069146}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 690380284546170625}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6077578787279733033
 GameObject:
@@ -4737,132 +5509,46 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f435e38739c4f5f8883a1e9ffa63c43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: CharonsCorner.Runtime::CharonsCorner.Runtime.AnimationCaller
-  _animancer: {fileID: 2251239428750671827}
-  _fadeDuration: 0.5
-  _seatedIdle:
-    _FadeDuration: 0.25
-    _Speed: 1
-    _Events:
-      _NormalizedTimes: []
-      _Callbacks: []
-      _Names: []
-    _Clip: {fileID: 7400000, guid: 8c489b28cfe6d5d41af10b3778c04116, type: 2}
-    _NormalizedStartTime: NaN
+  _animator: {fileID: 6946327341801236790}
+  _seatedIdleParameter: SeatedIdle
   _animationStrings: {fileID: 11400000, guid: b110df25a2e48c54d9c61c43e0fdc8dd, type: 2}
   _animations:
   - MMGameEvent: CharonSeatedIdle
-    AnimationClip:
-      _FadeDuration: 0.25
-      _Speed: 1
-      _Events:
-        _NormalizedTimes: []
-        _Callbacks: []
-        _Names: []
-      _Clip: {fileID: 7400000, guid: 8c489b28cfe6d5d41af10b3778c04116, type: 2}
-      _NormalizedStartTime: NaN
-    returnToSeatedIdle: 0
-  - MMGameEvent: CharonChickenDance
-    AnimationClip:
-      _FadeDuration: 0.25
-      _Speed: 1
-      _Events:
-        _NormalizedTimes: []
-        _Callbacks: []
-        _Names: []
-      _Clip: {fileID: 7400000, guid: 382c7b1e80a004f4190509bb00bcaa2e, type: 2}
-      _NormalizedStartTime: NaN
+    animationParameter: Idle
+    isTrigger: 1
     returnToSeatedIdle: 0
   - MMGameEvent: CharonTalkingToBowley
-    AnimationClip:
-      _FadeDuration: 0.25
-      _Speed: 1
-      _Events:
-        _NormalizedTimes: []
-        _Callbacks: []
-        _Names: []
-      _Clip: {fileID: 7400000, guid: b1c7eccb5aa4ad74094e41d03aa5fa0b, type: 2}
-      _NormalizedStartTime: NaN
+    animationParameter: TalkingToBowley
+    isTrigger: 1
     returnToSeatedIdle: 0
   - MMGameEvent: CharonClapping
-    AnimationClip:
-      _FadeDuration: 0.25
-      _Speed: 1
-      _Events:
-        _NormalizedTimes: []
-        _Callbacks: []
-        _Names: []
-      _Clip: {fileID: 7400000, guid: 93466b26d19ca83498fb45add1ea0db6, type: 2}
-      _NormalizedStartTime: NaN
+    animationParameter: Clapping
+    isTrigger: 1
     returnToSeatedIdle: 0
   - MMGameEvent: CharonPointToAlley
-    AnimationClip:
-      _FadeDuration: 0.25
-      _Speed: 1
-      _Events:
-        _NormalizedTimes: []
-        _Callbacks: []
-        _Names: []
-      _Clip: {fileID: 7400000, guid: 370d3b7672f15ac4a94a7a6ca6265802, type: 2}
-      _NormalizedStartTime: NaN
+    animationParameter: PointToAlley
+    isTrigger: 1
     returnToSeatedIdle: 1
   - MMGameEvent: CharonScavengeInDesk
-    AnimationClip:
-      _FadeDuration: 0.25
-      _Speed: 1
-      _Events:
-        _NormalizedTimes: []
-        _Callbacks: []
-        _Names: []
-      _Clip: {fileID: 7400000, guid: 18e50eb26976850479c5fa31d6860cf2, type: 2}
-      _NormalizedStartTime: NaN
+    animationParameter: ScavengeInDesk
+    isTrigger: 1
     returnToSeatedIdle: 0
   - MMGameEvent: CharonVictory
-    AnimationClip:
-      _FadeDuration: 0.25
-      _Speed: 1
-      _Events:
-        _NormalizedTimes: []
-        _Callbacks: []
-        _Names: []
-      _Clip: {fileID: 7400000, guid: 38c509f281ec69544b9d4b7ace9db891, type: 2}
-      _NormalizedStartTime: NaN
+    animationParameter: Victory
+    isTrigger: 1
     returnToSeatedIdle: 1
   - MMGameEvent: CharonComeOn
-    AnimationClip:
-      _FadeDuration: 0.25
-      _Speed: 1
-      _Events:
-        _NormalizedTimes: []
-        _Callbacks: []
-        _Names: []
-      _Clip: {fileID: 7400000, guid: ee598f909069a1749931224890127368, type: 2}
-      _NormalizedStartTime: NaN
+    animationParameter: ComeOn
+    isTrigger: 1
     returnToSeatedIdle: 1
   - MMGameEvent: CharonPointAtPlayer
-    AnimationClip:
-      _FadeDuration: 0.25
-      _Speed: 1
-      _Events:
-        _NormalizedTimes: []
-        _Callbacks: []
-        _Names: []
-      _Clip: {fileID: 7400000, guid: be0341d8b56d8c042bfed5e9aa9639a3, type: 2}
-      _NormalizedStartTime: NaN
+    animationParameter: PointAtPlayer
+    isTrigger: 1
     returnToSeatedIdle: 1
   - MMGameEvent: CharonStandUp
-    AnimationClip:
-      _FadeDuration: 0.25
-      _Speed: 1
-      _Events:
-        _NormalizedTimes: []
-        _Callbacks: []
-        _Names: []
-      _Clip: {fileID: 7400000, guid: 0b5b3ccc46f19914f8ead39c216b811e, type: 2}
-      _NormalizedStartTime: NaN
+    animationParameter: StandUp
+    isTrigger: 1
     returnToSeatedIdle: 0
-  references:
-    version: 2
-    RefIds: []
 --- !u!1 &8920896507986809003
 GameObject:
   m_ObjectHideFlags: 0

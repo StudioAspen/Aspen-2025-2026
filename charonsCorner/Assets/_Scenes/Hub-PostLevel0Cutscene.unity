@@ -4020,6 +4020,10 @@ MonoBehaviour:
   _scenePrefabInstances:
   - _gameObject: {fileID: 4309455093057115009}
     _prefab: Assets/_Prefabs/Gameplay/Hub/Charon.prefab
+  - _gameObject: {fileID: 4309455093057115011}
+    _prefab: Assets/_Prefabs/WorldSpaceInteractionIconCanvas.prefab
+  - _gameObject: {fileID: 4309455093057115010}
+    _prefab: Assets/_Prefabs/FlashbackInputInteraction.prefab
   - _gameObject: {fileID: 736193056}
     _prefab: Assets/_Art/models/characters/Chapter_1_Memento_Character/Chapter_1_Memento_Character.fbx
   - _gameObject: {fileID: 767986231}
@@ -4958,12 +4962,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 365414426}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.21646085, y: -0.67316025, z: -0.67316025, w: 0.21646088}
-  m_LocalPosition: {x: -0.040899903, y: 0.073500104, z: 0.10095005}
-  m_LocalScale: {x: 0.044924006, y: 0.027479997, z: 0.0008080005}
+  m_LocalRotation: {x: -0.002676144, y: -0.951956, z: 0.008322417, w: 0.30611014}
+  m_LocalPosition: {x: -0.040899903, y: 0.09964957, z: -0.07525383}
+  m_LocalScale: {x: 0.04492401, y: 0.027479997, z: 0.00080800056}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 3479311698097240095}
+  m_Father: {fileID: 1319361788895618293}
   m_LocalEulerAnglesHint: {x: -54.349, y: -90, z: -90}
 --- !u!23 &365414428
 MeshRenderer:
@@ -13181,6 +13185,7 @@ MonoBehaviour:
   - rid: 1261838425231196283
   - rid: 1261838425231196276
   - rid: 1261838425231196280
+  - rid: 4043403814385221722
   - rid: 1261838425231196281
   - rid: 1261838425231196282
   PlayMode: 0
@@ -15190,7 +15195,7 @@ MonoBehaviour:
     - rid: 1261838425231196276
       type: {class: MMF_Light, ns: MoreMountains.Feedbacks, asm: MoreMountains.Tools}
       data:
-        Active: 1
+        Active: 0
         UniqueID: 1454791943
         Label: Light
         OriginalLabel: Light
@@ -15641,7 +15646,7 @@ MonoBehaviour:
     - rid: 1261838425231196280
       type: {class: MMF_Material, ns: MoreMountains.Feedbacks, asm: MoreMountains.Tools}
       data:
-        Active: 1
+        Active: 0
         UniqueID: 487181842
         Label: Material
         OriginalLabel: Material
@@ -16142,6 +16147,86 @@ MonoBehaviour:
         StateOnSkip: 1
         SetStateOnPlayerComplete: 0
         StateOnPlayerComplete: 1
+    - rid: 4043403814385221722
+      type: {class: MMF_MMGameEvent, ns: MoreMountains.Feedbacks, asm: MoreMountains.Tools}
+      data:
+        Active: 1
+        UniqueID: -1877396700
+        Label: MMGameEvent
+        OriginalLabel: MMGameEvent
+        ChannelMode: 0
+        Channel: 0
+        MMChannelDefinition: {fileID: 0}
+        Chance: 100
+        Timing:
+          TimescaleMode: 0
+          ExcludeFromHoldingPauses: 0
+          ContributeToTotalDuration: 1
+          InitialDelay: 0
+          CooldownDuration: 0
+          InterruptsOnStop: 1
+          NumberOfRepeats: 0
+          RepeatForever: 0
+          DelayBetweenRepeats: 1
+          PlayCount: 1
+          LimitPlayCount: 0
+          MaxPlayCount: 3
+          SetPlayCountToZeroOnReset: 0
+          MMFeedbacksDirectionCondition: 0
+          PlayDirection: 0
+          ConstantIntensity: 0
+          UseIntensityInterval: 0
+          IntensityIntervalMin: 0
+          IntensityIntervalMax: 0
+          Sequence: {fileID: 0}
+          TrackID: 0
+          Quantized: 0
+          TargetBPM: 120
+        AutomatedTargetAcquisition:
+          Mode: 0
+          ChildIndex: 0
+        RandomizeOutput: 0
+        RandomMultiplier: {x: 0.8, y: 1}
+        RandomizeDuration: 0
+        RandomDurationMultiplier: {x: 0.5, y: 2}
+        UseRange: 0
+        RangeDistance: 5
+        UseRangeFalloff: 0
+        RangeFalloff:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          - serializedVersion: 3
+            time: 1
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        RemapRangeFalloff: {x: 0, y: 1}
+        AutomaticShakerSetupButton:
+          ButtonText: 
+        Owner: {fileID: 907555310}
+        DebugActive: 0
+        MMGameEventName: FlickerOn
+        IntParameter: 0
+        Vector2Parameter: {x: 0, y: 0}
+        Vector3Parameter: {x: 0, y: 0, z: 0}
+        BoolParameter: 0
+        StringParameter: 
 --- !u!114 &907555311
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16918,7 +17003,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &977883370
 Transform:
   m_ObjectHideFlags: 0
@@ -24477,6 +24562,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1595021168}
+  - component: {fileID: 1595021169}
   m_Layer: 0
   m_Name: BowleyParent
   m_TagString: Untagged
@@ -24500,6 +24586,26 @@ Transform:
   - {fileID: 543450653252978472}
   m_Father: {fileID: 1412849843}
   m_LocalEulerAnglesHint: {x: 22.2, y: -45, z: 0}
+--- !u!114 &1595021169
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1595021167}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f60607a28e541caab60049d55eab602, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: CharonsCorner.Runtime::CharonsCorner.Runtime.GlowController
+  _parentObject: {fileID: 1595021167}
+  _turnOnEventName: 
+  _flickerOffEventName: 
+  _darkenOnAwake: 0
+  _flickerOn: 1
+  _flickerSettings: {fileID: 11400000, guid: c7802328a1383b242a10c19911b7ac8f, type: 2}
+  _editShadowColorAsWell: 0
+  _targetShadowColor: {r: 0, g: 0, b: 0, a: 1}
 --- !u!1 &1600106052
 GameObject:
   m_ObjectHideFlags: 0
@@ -24526,12 +24632,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1600106052}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.22260779, y: -0.67115253, z: -0.67115265, w: -0.22260776}
-  m_LocalPosition: {x: 0.039999858, y: 0.07259992, z: 0.10090003}
-  m_LocalScale: {x: 0.044924017, y: 0.027480004, z: 0.00080800016}
+  m_LocalRotation: {x: 0.0027521395, y: -0.94911677, z: 0.008297501, w: -0.31480286}
+  m_LocalPosition: {x: 0.039999858, y: 0.0996153, z: -0.07435291}
+  m_LocalScale: {x: 0.04492403, y: 0.027480004, z: 0.0008080004}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 3479311698097240095}
+  m_Father: {fileID: 1319361788895618293}
   m_LocalEulerAnglesHint: {x: -126.699005, y: -90, z: -90}
 --- !u!23 &1600106054
 MeshRenderer:
@@ -25267,6 +25373,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1627253988}
   - component: {fileID: 1627253987}
+  - component: {fileID: 1627253989}
   m_Layer: 0
   m_Name: SpotlightParent
   m_TagString: Untagged
@@ -25307,6 +25414,26 @@ Transform:
   - {fileID: 1202525507}
   m_Father: {fileID: 816609446}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1627253989
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1627253986}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e800d59b0a4a4863ace444e2dbf353d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: CharonsCorner.Runtime::CharonsCorner.Runtime.FlickerLighting
+  _lights:
+  - {fileID: 977883372}
+  - {fileID: 1104358859}
+  _flickerOnEventName: FlickerOn
+  _flickerOffEventName: 
+  _turnOffOnAwake: 1
+  _useFlicker: 1
+  _flickerSettings: {fileID: 11400000, guid: c7802328a1383b242a10c19911b7ac8f, type: 2}
 --- !u!1 &1656047217
 GameObject:
   m_ObjectHideFlags: 0
@@ -29809,8 +29936,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2102514284}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.019848917, y: 0.122282915, z: -0.0024462272, w: 0.99229383}
-  m_LocalPosition: {x: 2.0898323, y: 3.271822, z: -1.3054199}
+  m_LocalRotation: {x: 0.15238701, y: -0.38133797, z: 0.0638885, w: 0.90954816}
+  m_LocalPosition: {x: -7.59354, y: 2.2725375, z: 3.1695676}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -30761,6 +30888,8 @@ Transform:
   m_Children:
   - {fileID: 8990705107977353112}
   - {fileID: 409389310}
+  - {fileID: 365414427}
+  - {fileID: 1600106053}
   m_Father: {fileID: 133681100}
   m_LocalEulerAnglesHint: {x: 91.002014, y: 0, z: 0}
 --- !u!4 &1394679034589948105
@@ -31072,9 +31201,7 @@ Transform:
   m_LocalPosition: {x: -0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
-  m_Children:
-  - {fileID: 365414427}
-  - {fileID: 1600106053}
+  m_Children: []
   m_Father: {fileID: 543450653252978472}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &3577381094580283609
@@ -31835,6 +31962,10 @@ PrefabInstance:
       propertyPath: _targetCamera
       value: 
       objectReference: {fileID: 2102514287}
+    - target: {fileID: 1520395722562554706, guid: b9ad386496e658946b9eec54a042476c, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1869440743056354465, guid: b9ad386496e658946b9eec54a042476c, type: 3}
       propertyPath: _endingDialogueCinemachineCamera
       value: 
@@ -31883,6 +32014,30 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4579813985787995771, guid: b9ad386496e658946b9eec54a042476c, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4990830105630046188, guid: b9ad386496e658946b9eec54a042476c, type: 3}
+      propertyPath: _alternativeTarget
+      value: 
+      objectReference: {fileID: 1595021168}
+    - target: {fileID: 4990830105630046188, guid: b9ad386496e658946b9eec54a042476c, type: 3}
+      propertyPath: _flickerOnEventName
+      value: FlickerOn
+      objectReference: {fileID: 0}
+    - target: {fileID: 6593130146141211094, guid: b9ad386496e658946b9eec54a042476c, type: 3}
+      propertyPath: _darkenOnAwake
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6593130146141211094, guid: b9ad386496e658946b9eec54a042476c, type: 3}
+      propertyPath: _turnOnEventName
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 7086420717189739739, guid: b9ad386496e658946b9eec54a042476c, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -3.26
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 4222030149569433524, guid: b9ad386496e658946b9eec54a042476c, type: 3}
@@ -31892,6 +32047,16 @@ PrefabInstance:
 --- !u!1 &4309455093057115009 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3239045656199082840, guid: b9ad386496e658946b9eec54a042476c, type: 3}
+  m_PrefabInstance: {fileID: 4309455093057115008}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &4309455093057115010 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6598723405828721363, guid: b9ad386496e658946b9eec54a042476c, type: 3}
+  m_PrefabInstance: {fileID: 4309455093057115008}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &4309455093057115011 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4579813985787995771, guid: b9ad386496e658946b9eec54a042476c, type: 3}
   m_PrefabInstance: {fileID: 4309455093057115008}
   m_PrefabAsset: {fileID: 0}
 --- !u!224 &4491316530441395801
@@ -32488,9 +32653,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _backlog: {fileID: 5732898311041148176}
-  _animator: {fileID: 5783164422495363132}
   _dialogueOpener: {fileID: 6237055852240319310}
-  _animatorFadeDuration: 0.2
 --- !u!224 &7592435223205812517
 RectTransform:
   m_ObjectHideFlags: 0

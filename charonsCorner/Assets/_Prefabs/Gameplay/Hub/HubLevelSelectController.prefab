@@ -458,6 +458,7 @@ MonoBehaviour:
   AutoChangeDirectionOnEnd: 0
   AutoPlayOnStart: 0
   AutoPlayOnEnable: 0
+  LogMissingTargets: 1
   ForceTimescaleMode: 0
   ForcedTimescaleMode: 1
   DurationMultiplier: 1
@@ -542,11 +543,14 @@ MonoBehaviour:
   InScriptDrivenPause: 0
   FeedbacksList:
   - rid: 2046480601633521749
+  PlayMode: 0
+  SequentialDelay: 0
   KeepPlayModeChanges: 0
   PerformanceMode: 0
   RestoreInitialValuesOnDisable: 0
   StopFeedbacksOnDisable: 0
   PlayCount: 0
+  InPreviewMode: 0
   MMF_ChannelMode: 0
   MMF_Channel: 0
   MMF_ChannelDefinition: {fileID: 0}
@@ -684,14 +688,14 @@ Light:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1395518484709256584}
   m_Enabled: 1
-  serializedVersion: 11
+  serializedVersion: 13
   m_Type: 2
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Intensity: 10
   m_Range: 35.1
   m_SpotAngle: 179
   m_InnerSpotAngle: 57.723404
-  m_CookieSize: 10
+  m_CookieSize2D: {x: 10, y: 10}
   m_Shadows:
     m_Type: 0
     m_Resolution: -1
@@ -736,7 +740,7 @@ Light:
   m_UseBoundingSphereOverride: 0
   m_UseViewFrustumForShadowCasterCull: 1
   m_ForceVisible: 0
-  m_ShadowRadius: 0
+  m_ShapeRadius: 0
   m_ShadowAngle: 0
   m_LightUnit: 1
   m_LuxAtDistance: 1
@@ -753,17 +757,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Version: 3
   m_UsePipelineSettings: 1
   m_AdditionalLightsShadowResolutionTier: 2
-  m_LightLayerMask: 1
-  m_RenderingLayers: 1
   m_CustomShadowLayers: 0
-  m_ShadowLayerMask: 1
-  m_ShadowRenderingLayers: 1
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
   m_SoftShadowQuality: 0
+  m_RenderingLayersMask:
+    serializedVersion: 0
+    m_Bits: 1
+  m_ShadowRenderingLayersMask:
+    serializedVersion: 0
+    m_Bits: 1
+  m_Version: 4
+  m_LightLayerMask: 1
+  m_ShadowLayerMask: 1
+  m_RenderingLayers: 1
+  m_ShadowRenderingLayers: 1
 --- !u!114 &6449727964501844323
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -895,6 +905,7 @@ MonoBehaviour:
   AutoChangeDirectionOnEnd: 0
   AutoPlayOnStart: 0
   AutoPlayOnEnable: 0
+  LogMissingTargets: 1
   ForceTimescaleMode: 0
   ForcedTimescaleMode: 1
   DurationMultiplier: 1
@@ -979,11 +990,14 @@ MonoBehaviour:
   InScriptDrivenPause: 0
   FeedbacksList:
   - rid: 2046480601633521749
+  PlayMode: 0
+  SequentialDelay: 0
   KeepPlayModeChanges: 0
   PerformanceMode: 0
   RestoreInitialValuesOnDisable: 0
   StopFeedbacksOnDisable: 0
   PlayCount: 0
+  InPreviewMode: 0
   MMF_ChannelMode: 0
   MMF_Channel: 0
   MMF_ChannelDefinition: {fileID: 0}
@@ -1136,6 +1150,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 0
+  m_UseReflectionProbes: 0
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
@@ -1261,6 +1276,8 @@ MeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -1282,9 +1299,11 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!114 &9007779857879703202
 MonoBehaviour:
@@ -1546,6 +1565,7 @@ MonoBehaviour:
   AutoChangeDirectionOnEnd: 0
   AutoPlayOnStart: 0
   AutoPlayOnEnable: 0
+  LogMissingTargets: 1
   ForceTimescaleMode: 0
   ForcedTimescaleMode: 1
   DurationMultiplier: 1
@@ -1631,11 +1651,14 @@ MonoBehaviour:
   FeedbacksList:
   - rid: 885602847668830467
   - rid: 885602847668830468
+  PlayMode: 0
+  SequentialDelay: 0
   KeepPlayModeChanges: 0
   PerformanceMode: 0
   RestoreInitialValuesOnDisable: 0
   StopFeedbacksOnDisable: 0
   PlayCount: 0
+  InPreviewMode: 0
   MMF_ChannelMode: 0
   MMF_Channel: 0
   MMF_ChannelDefinition: {fileID: 0}
@@ -1863,6 +1886,7 @@ MonoBehaviour:
   AutoChangeDirectionOnEnd: 0
   AutoPlayOnStart: 0
   AutoPlayOnEnable: 0
+  LogMissingTargets: 1
   ForceTimescaleMode: 0
   ForcedTimescaleMode: 1
   DurationMultiplier: 1
@@ -1947,11 +1971,14 @@ MonoBehaviour:
   InScriptDrivenPause: 0
   FeedbacksList:
   - rid: 2046480601633521749
+  PlayMode: 0
+  SequentialDelay: 0
   KeepPlayModeChanges: 0
   PerformanceMode: 0
   RestoreInitialValuesOnDisable: 0
   StopFeedbacksOnDisable: 0
   PlayCount: 0
+  InPreviewMode: 0
   MMF_ChannelMode: 0
   MMF_Channel: 0
   MMF_ChannelDefinition: {fileID: 0}
@@ -2097,6 +2124,7 @@ MonoBehaviour:
   AutoChangeDirectionOnEnd: 0
   AutoPlayOnStart: 0
   AutoPlayOnEnable: 0
+  LogMissingTargets: 1
   ForceTimescaleMode: 0
   ForcedTimescaleMode: 1
   DurationMultiplier: 1
@@ -2181,11 +2209,14 @@ MonoBehaviour:
   InScriptDrivenPause: 0
   FeedbacksList:
   - rid: 2046480601633521749
+  PlayMode: 0
+  SequentialDelay: 0
   KeepPlayModeChanges: 0
   PerformanceMode: 0
   RestoreInitialValuesOnDisable: 0
   StopFeedbacksOnDisable: 0
   PlayCount: 0
+  InPreviewMode: 0
   MMF_ChannelMode: 0
   MMF_Channel: 0
   MMF_ChannelDefinition: {fileID: 0}
@@ -2331,6 +2362,7 @@ MonoBehaviour:
   AutoChangeDirectionOnEnd: 0
   AutoPlayOnStart: 0
   AutoPlayOnEnable: 0
+  LogMissingTargets: 1
   ForceTimescaleMode: 0
   ForcedTimescaleMode: 1
   DurationMultiplier: 1
@@ -2415,11 +2447,14 @@ MonoBehaviour:
   InScriptDrivenPause: 0
   FeedbacksList:
   - rid: 2046480601633521749
+  PlayMode: 0
+  SequentialDelay: 0
   KeepPlayModeChanges: 0
   PerformanceMode: 0
   RestoreInitialValuesOnDisable: 0
   StopFeedbacksOnDisable: 0
   PlayCount: 0
+  InPreviewMode: 0
   MMF_ChannelMode: 0
   MMF_Channel: 0
   MMF_ChannelDefinition: {fileID: 0}
@@ -2706,6 +2741,7 @@ MonoBehaviour:
   AutoChangeDirectionOnEnd: 0
   AutoPlayOnStart: 0
   AutoPlayOnEnable: 0
+  LogMissingTargets: 1
   ForceTimescaleMode: 0
   ForcedTimescaleMode: 1
   DurationMultiplier: 1
@@ -2791,11 +2827,14 @@ MonoBehaviour:
   FeedbacksList:
   - rid: 885602847668830469
   - rid: 885602847668830470
+  PlayMode: 0
+  SequentialDelay: 0
   KeepPlayModeChanges: 0
   PerformanceMode: 0
   RestoreInitialValuesOnDisable: 0
   StopFeedbacksOnDisable: 0
   PlayCount: 0
+  InPreviewMode: 0
   MMF_ChannelMode: 0
   MMF_Channel: 0
   MMF_ChannelDefinition: {fileID: 0}
@@ -3545,10 +3584,12 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  _inputInteraction: {fileID: 0}
   _flashbackScene:
     asset: {fileID: 102900000, guid: d0c883d916a920541b36f3821becabb2, type: 3}
     guid: d0c883d916a920541b36f3821becabb2
   _bowlingStarter: {fileID: 0}
+  _unfadeDuration: 2
   _currentLevelData: {fileID: 0}
   _isOpen: 0
   _isStartingLevel: 0
@@ -3564,6 +3605,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac014aebef845154ba0000645ddaec3c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _inputInteraction: {fileID: 0}
   OnLevelSelectStarted:
     m_PersistentCalls:
       m_Calls:
@@ -3839,6 +3881,7 @@ MonoBehaviour:
   _levelSelectUI: {fileID: 8900273961510030294}
   _skyboxRotator: {fileID: 7785202933647586646}
   _baseSkybox: {fileID: 2100000, guid: ae0f694050fa35347856100907203f9d, type: 2}
+  _inputInteraction: {fileID: 0}
   OnEnter:
     m_PersistentCalls:
       m_Calls: []
@@ -3996,6 +4039,7 @@ MonoBehaviour:
   AutoChangeDirectionOnEnd: 0
   AutoPlayOnStart: 0
   AutoPlayOnEnable: 0
+  LogMissingTargets: 1
   ForceTimescaleMode: 0
   ForcedTimescaleMode: 1
   DurationMultiplier: 1
@@ -4080,11 +4124,14 @@ MonoBehaviour:
   InScriptDrivenPause: 0
   FeedbacksList:
   - rid: 2046480601633521749
+  PlayMode: 0
+  SequentialDelay: 0
   KeepPlayModeChanges: 0
   PerformanceMode: 0
   RestoreInitialValuesOnDisable: 0
   StopFeedbacksOnDisable: 0
   PlayCount: 0
+  InPreviewMode: 0
   MMF_ChannelMode: 0
   MMF_Channel: 0
   MMF_ChannelDefinition: {fileID: 0}
@@ -4305,10 +4352,6 @@ PrefabInstance:
       propertyPath: _laneSelector
       value: 
       objectReference: {fileID: 573634015020855248}
-    - target: {fileID: 1770833800668393751, guid: a6addaf543339d94b96395bd30ebff03, type: 3}
-      propertyPath: _levelSelectController
-      value: 
-      objectReference: {fileID: 1218423375257724636}
     - target: {fileID: 2461481676956630147, guid: a6addaf543339d94b96395bd30ebff03, type: 3}
       propertyPath: m_VersionIndex
       value: 2440
@@ -4395,6 +4438,22 @@ PrefabInstance:
       propertyPath: _laneSelector
       value: 
       objectReference: {fileID: 573634015020855248}
+    - target: {fileID: 1770833800668393751, guid: a6addaf543339d94b96395bd30ebff03, type: 3}
+      propertyPath: _levelColorSettings.Array.data[1].Prefab
+      value: 
+      objectReference: {fileID: 4100285881703935003, guid: 6ea1dd2dc81ea7d4ebd0350b360094c5, type: 3}
+    - target: {fileID: 1770833800668393751, guid: a6addaf543339d94b96395bd30ebff03, type: 3}
+      propertyPath: _levelColorSettings.Array.data[1].Skybox
+      value: 
+      objectReference: {fileID: 2100000, guid: 57a9b2f9f73f9ca4985fc5077cec722a, type: 2}
+    - target: {fileID: 1770833800668393751, guid: a6addaf543339d94b96395bd30ebff03, type: 3}
+      propertyPath: _levelColorSettings.Array.data[2].Prefab
+      value: 
+      objectReference: {fileID: 4100285881703935003, guid: 11e0430090947d6499f6865d452ba900, type: 3}
+    - target: {fileID: 1770833800668393751, guid: a6addaf543339d94b96395bd30ebff03, type: 3}
+      propertyPath: _levelColorSettings.Array.data[3].Prefab
+      value: 
+      objectReference: {fileID: 4100285881703935003, guid: 6c1000a2602085648b137d4c4b2fa54d, type: 3}
     - target: {fileID: 2386726395850194393, guid: a6addaf543339d94b96395bd30ebff03, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -4773,10 +4832,6 @@ PrefabInstance:
       propertyPath: _laneSelector
       value: 
       objectReference: {fileID: 573634015020855248}
-    - target: {fileID: 1770833800668393751, guid: a6addaf543339d94b96395bd30ebff03, type: 3}
-      propertyPath: _levelSelectController
-      value: 
-      objectReference: {fileID: 1218423375257724636}
     - target: {fileID: 2461481676956630147, guid: a6addaf543339d94b96395bd30ebff03, type: 3}
       propertyPath: m_VersionIndex
       value: 2440
@@ -4855,10 +4910,6 @@ PrefabInstance:
       propertyPath: _laneSelector
       value: 
       objectReference: {fileID: 573634015020855248}
-    - target: {fileID: 1770833800668393751, guid: a6addaf543339d94b96395bd30ebff03, type: 3}
-      propertyPath: _levelSelectController
-      value: 
-      objectReference: {fileID: 1218423375257724636}
     - target: {fileID: 2461481676956630147, guid: a6addaf543339d94b96395bd30ebff03, type: 3}
       propertyPath: m_VersionIndex
       value: 2440

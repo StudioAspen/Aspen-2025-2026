@@ -9,6 +9,7 @@ public class CharonTalk : MonoBehaviour, MMEventListener<MMGameEvent>
     [SerializeField] private float lerpBackSpeed = 5f;
     [SerializeField] private Vector3 rotationAxis = Vector3.right;
     [SerializeField] private float maxRotationAngle = 20f;
+    [SerializeField] private bool _perpetualTalk = false;
 
     private bool _isTalking = false;
     private bool _isStopping = false;
@@ -51,7 +52,9 @@ public class CharonTalk : MonoBehaviour, MMEventListener<MMGameEvent>
     {
         if (jawObject == null) return;
 
-        if (_isTalking)
+        bool currentlyTalking = _isTalking || _perpetualTalk;
+
+        if (currentlyTalking)
         {
             _currentTime += Time.deltaTime * speed;
             // Wrap the time to keep it within the curve's range if needed, or let it repeat
@@ -59,6 +62,7 @@ public class CharonTalk : MonoBehaviour, MMEventListener<MMGameEvent>
             float curveValue = jawCurve.Evaluate(curveTime);
             
             jawObject.localRotation = _initialRotation * Quaternion.AngleAxis(curveValue * maxRotationAngle, rotationAxis);
+            _isStopping = true; // Set to true so if talking stops, it lerps back
         }
         else if (_isStopping)
         {

@@ -28,6 +28,7 @@ public class CharonHeadJoint : MonoBehaviour, MMEventListener<MMGameEvent>
     }
 
     [SerializeField] private List<StaringItem> staringItems;
+    [SerializeField] private Transform _startingTarget;
     [SerializeField] private string stopEventName;
     [SerializeField] private JawOverride jawOverrider;
     [SerializeField] private AnimationStringsSO animationStrings;
@@ -75,6 +76,14 @@ public class CharonHeadJoint : MonoBehaviour, MMEventListener<MMGameEvent>
     private void Awake()
     {
         _defaultQuaternion = Quaternion.Euler(defaultRotation);
+    }
+
+    private void Start()
+    {
+        if (_startingTarget != null)
+        {
+            StartStaring(new StaringItem { targetTransform = _startingTarget });
+        }
     }
 
     [Button("Set Current As Default")]

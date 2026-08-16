@@ -16,6 +16,7 @@ namespace CharonsCorner.Runtime
         [SerializeField] private bool _forceX = false;
         [SerializeField] private bool _forceY = false;
         [SerializeField] private Renderer _renderer;
+        [SerializeField] private Transform _alternativeTarget;
         [SerializeField] private float _minDistance = 2f;
         [SerializeField] private float _maxDistance = 10f;
 
@@ -184,13 +185,24 @@ namespace CharonsCorner.Runtime
             }
             else
             {
-                if (_playerController == null)
+                Transform target = _alternativeTarget;
+
+                if (target == null)
                 {
-                    _playerController = Object.FindAnyObjectByType<HubPlayerController>();
-                    if (_playerController == null) return;
+                    if (_playerController == null)
+                    {
+                        _playerController = Object.FindAnyObjectByType<HubPlayerController>();
+                    }
+
+                    if (_playerController != null)
+                    {
+                        target = _playerController.transform;
+                    }
                 }
 
-                float distance = Vector3.Distance(transform.position, _playerController.transform.position);
+                if (target == null) return;
+
+                float distance = Vector3.Distance(transform.position, target.position);
 
                 // min distance: closer = 100% X
                 // max distance: further = 100% Y

@@ -222,6 +222,12 @@ public class FlashbackEventSubscriber : MonoBehaviour
                     FadeToBlack(duration).Forget();
                 }
                 break;
+            case "GE":
+                if (marker.parameters.Length > 0)
+                {
+                    MMGameEvent.Trigger(marker.parameters[0]);
+                }
+                break;
         }
     }
 
