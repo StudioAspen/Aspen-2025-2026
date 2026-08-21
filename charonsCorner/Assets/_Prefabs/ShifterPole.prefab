@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8946987316070298677}
   - component: {fileID: 7753852920480399127}
+  - component: {fileID: 7550899556247712657}
   m_Layer: 0
   m_Name: ShifterPole
   m_TagString: Untagged
@@ -47,43 +48,104 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21a3a2fb0b29413890e78256a1fbb1f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: CharonsCorner.Runtime::CharonsCorner.Runtime.ShifterEnemy
-  _waypointPositions:
-  - {x: 40, y: 10, z: 10}
-  - {x: 40, y: 10, z: 0}
-  - {x: 40, y: 10, z: -10}
-  _moveDuration: 1
-  _delayBetweenShifts: 1
-  _movementTween:
-    MMTweenDefinitionType: 0
-    MMTweenCurve: 16
-    Curve:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 1
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    Initialized: 0
-    ConditionPropertyName: 
-    EnumConditionPropertyName: 
-    EnumConditions: 0000000000000000000000000000000000000000000000000000000000000000
+  _startZ: 10
+  _endZ: -10
+  _moveDuration: 0.1
+  _movementCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!114 &7550899556247712657
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5568364142450545894}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f009572b4d918346b24337ef83f88c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MoreMountains.Tools::MoreMountains.Tools.MMAutoRotate
+  Rotating: 1
+  RotationSpace: 1
+  UpdateMode: 0
+  RotationSpeed: {x: 200, y: 0, z: 0}
+  RandomizeRotationSpeed: 1
+  RotationSpeedMin: {x: 200, y: 0, z: 0}
+  RotationSpeedMax: {x: 300, y: 0, z: 0}
+  RandomInitialDelay: {x: 0, y: 0}
+  Orbiting: 0
+  AdditiveOrbitRotation: 0
+  OrbitCenterTransform: {fileID: 0}
+  OrbitCenterOffset: {x: 0, y: 0, z: 0}
+  OrbitRotationAxis: {x: 0, y: 1, z: 0}
+  OrbitRotationSpeed: 10
+  OrbitRadius: 3
+  OrbitCorrectionSpeed: 10
+  DrawGizmos: 1
+  OrbitPlaneColor: {r: 54, g: 169, b: 225, a: 0.02}
+  OrbitLineColor: {r: 225, g: 225, b: 225, a: 0.1}
+  PulseEventName: 
+  PulseDuration: 2
+  PulseMultiplier: 2
+  PulseCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.5
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  _orbitCenter: {x: 0, y: 0, z: 0}
+  _worldRotationAxis: {x: 0, y: 0, z: 0}
+  _snappedPosition: {x: 0, y: 0, z: 0}
+  _radius: {x: 0, y: 0, z: 0}
 --- !u!1001 &180284148859089422
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -92,18 +154,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 8946987316070298677}
     m_Modifications:
-    - target: {fileID: 1199920650136723725, guid: b5ee4747b8373b84389dc049b4724dad, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1199920650136723725, guid: b5ee4747b8373b84389dc049b4724dad, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1199920650136723725, guid: b5ee4747b8373b84389dc049b4724dad, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 1199920650136723725, guid: b5ee4747b8373b84389dc049b4724dad, type: 3}
       propertyPath: m_LocalPosition.x
       value: -25
@@ -144,64 +194,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2010383755091383483, guid: b5ee4747b8373b84389dc049b4724dad, type: 3}
-      propertyPath: m_Mesh
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 2010383755091383483, guid: b5ee4747b8373b84389dc049b4724dad, type: 3}
-      propertyPath: m_VersionIndex
-      value: 34
-      objectReference: {fileID: 0}
-    - target: {fileID: 3975494530150263313, guid: b5ee4747b8373b84389dc049b4724dad, type: 3}
-      propertyPath: _waypointPositions.Array.size
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 3975494530150263313, guid: b5ee4747b8373b84389dc049b4724dad, type: 3}
-      propertyPath: _waypointPositions.Array.data[0].x
-      value: -25
-      objectReference: {fileID: 0}
-    - target: {fileID: 3975494530150263313, guid: b5ee4747b8373b84389dc049b4724dad, type: 3}
-      propertyPath: _waypointPositions.Array.data[0].y
-      value: 21
-      objectReference: {fileID: 0}
-    - target: {fileID: 3975494530150263313, guid: b5ee4747b8373b84389dc049b4724dad, type: 3}
-      propertyPath: _waypointPositions.Array.data[0].z
-      value: -60
-      objectReference: {fileID: 0}
-    - target: {fileID: 3975494530150263313, guid: b5ee4747b8373b84389dc049b4724dad, type: 3}
-      propertyPath: _waypointPositions.Array.data[1].x
-      value: -50
-      objectReference: {fileID: 0}
-    - target: {fileID: 3975494530150263313, guid: b5ee4747b8373b84389dc049b4724dad, type: 3}
-      propertyPath: _waypointPositions.Array.data[1].y
-      value: 21
-      objectReference: {fileID: 0}
-    - target: {fileID: 3975494530150263313, guid: b5ee4747b8373b84389dc049b4724dad, type: 3}
-      propertyPath: _waypointPositions.Array.data[1].z
-      value: -60
-      objectReference: {fileID: 0}
-    - target: {fileID: 3975494530150263313, guid: b5ee4747b8373b84389dc049b4724dad, type: 3}
-      propertyPath: _waypointPositions.Array.data[2].x
-      value: -75
-      objectReference: {fileID: 0}
-    - target: {fileID: 3975494530150263313, guid: b5ee4747b8373b84389dc049b4724dad, type: 3}
-      propertyPath: _waypointPositions.Array.data[2].y
-      value: 21
-      objectReference: {fileID: 0}
-    - target: {fileID: 3975494530150263313, guid: b5ee4747b8373b84389dc049b4724dad, type: 3}
-      propertyPath: _waypointPositions.Array.data[2].z
-      value: -60
-      objectReference: {fileID: 0}
     - target: {fileID: 6314279624328237806, guid: b5ee4747b8373b84389dc049b4724dad, type: 3}
       propertyPath: m_Name
       value: Shifter_2
       objectReference: {fileID: 0}
-    - target: {fileID: 9144029010456900467, guid: b5ee4747b8373b84389dc049b4724dad, type: 3}
-      propertyPath: m_Mesh
-      value: 
-      objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 3975494530150263313, guid: b5ee4747b8373b84389dc049b4724dad, type: 3}
+    m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -220,18 +217,6 @@ PrefabInstance:
     m_TransformParent: {fileID: 8946987316070298677}
     m_Modifications:
     - target: {fileID: 1199920650136723725, guid: b5ee4747b8373b84389dc049b4724dad, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1199920650136723725, guid: b5ee4747b8373b84389dc049b4724dad, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1199920650136723725, guid: b5ee4747b8373b84389dc049b4724dad, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1199920650136723725, guid: b5ee4747b8373b84389dc049b4724dad, type: 3}
       propertyPath: m_LocalPosition.x
       value: 25
       objectReference: {fileID: 0}
@@ -271,36 +256,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2010383755091383483, guid: b5ee4747b8373b84389dc049b4724dad, type: 3}
-      propertyPath: m_Mesh
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 2010383755091383483, guid: b5ee4747b8373b84389dc049b4724dad, type: 3}
-      propertyPath: m_VersionIndex
-      value: 34
-      objectReference: {fileID: 0}
-    - target: {fileID: 3975494530150263313, guid: b5ee4747b8373b84389dc049b4724dad, type: 3}
-      propertyPath: _waypointPositions.Array.data[0].x
-      value: 75
-      objectReference: {fileID: 0}
-    - target: {fileID: 3975494530150263313, guid: b5ee4747b8373b84389dc049b4724dad, type: 3}
-      propertyPath: _waypointPositions.Array.data[1].x
-      value: 50
-      objectReference: {fileID: 0}
-    - target: {fileID: 3975494530150263313, guid: b5ee4747b8373b84389dc049b4724dad, type: 3}
-      propertyPath: _waypointPositions.Array.data[2].x
-      value: 25
-      objectReference: {fileID: 0}
     - target: {fileID: 6314279624328237806, guid: b5ee4747b8373b84389dc049b4724dad, type: 3}
       propertyPath: m_Name
       value: Shifter
       objectReference: {fileID: 0}
-    - target: {fileID: 9144029010456900467, guid: b5ee4747b8373b84389dc049b4724dad, type: 3}
-      propertyPath: m_Mesh
-      value: 
-      objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 3975494530150263313, guid: b5ee4747b8373b84389dc049b4724dad, type: 3}
+    m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -319,18 +279,6 @@ PrefabInstance:
     m_TransformParent: {fileID: 8946987316070298677}
     m_Modifications:
     - target: {fileID: 1199920650136723725, guid: b5ee4747b8373b84389dc049b4724dad, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1199920650136723725, guid: b5ee4747b8373b84389dc049b4724dad, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1199920650136723725, guid: b5ee4747b8373b84389dc049b4724dad, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1199920650136723725, guid: b5ee4747b8373b84389dc049b4724dad, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -370,48 +318,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2010383755091383483, guid: b5ee4747b8373b84389dc049b4724dad, type: 3}
-      propertyPath: m_Mesh
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 2010383755091383483, guid: b5ee4747b8373b84389dc049b4724dad, type: 3}
-      propertyPath: m_VersionIndex
-      value: 34
-      objectReference: {fileID: 0}
-    - target: {fileID: 3975494530150263313, guid: b5ee4747b8373b84389dc049b4724dad, type: 3}
-      propertyPath: _waypointPositions.Array.size
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 3975494530150263313, guid: b5ee4747b8373b84389dc049b4724dad, type: 3}
-      propertyPath: _waypointPositions.Array.data[0].x
-      value: 25
-      objectReference: {fileID: 0}
-    - target: {fileID: 3975494530150263313, guid: b5ee4747b8373b84389dc049b4724dad, type: 3}
-      propertyPath: _waypointPositions.Array.data[1].x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3975494530150263313, guid: b5ee4747b8373b84389dc049b4724dad, type: 3}
-      propertyPath: _waypointPositions.Array.data[2].x
-      value: -25
-      objectReference: {fileID: 0}
-    - target: {fileID: 3975494530150263313, guid: b5ee4747b8373b84389dc049b4724dad, type: 3}
-      propertyPath: _waypointPositions.Array.data[2].y
-      value: 21
-      objectReference: {fileID: 0}
-    - target: {fileID: 3975494530150263313, guid: b5ee4747b8373b84389dc049b4724dad, type: 3}
-      propertyPath: _waypointPositions.Array.data[2].z
-      value: -60
-      objectReference: {fileID: 0}
     - target: {fileID: 6314279624328237806, guid: b5ee4747b8373b84389dc049b4724dad, type: 3}
       propertyPath: m_Name
       value: Shifter_1
       objectReference: {fileID: 0}
-    - target: {fileID: 9144029010456900467, guid: b5ee4747b8373b84389dc049b4724dad, type: 3}
-      propertyPath: m_Mesh
-      value: 
-      objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 3975494530150263313, guid: b5ee4747b8373b84389dc049b4724dad, type: 3}
+    m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

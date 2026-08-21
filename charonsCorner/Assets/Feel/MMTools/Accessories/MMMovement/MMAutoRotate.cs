@@ -7,7 +7,7 @@ namespace MoreMountains.Tools
 	/// Add this class to a GameObject to make it rotate on itself
 	/// </summary>
 	[AddComponentMenu("More Mountains/Tools/Movement/MM Auto Rotate")]
-	public class MMAutoRotate : MonoBehaviour
+	public class MMAutoRotate : MonoBehaviour, MMEventListener<MMGameEvent>
 	{
 		public enum UpdateModes { Update, LateUpdate, FixedUpdate }
 
@@ -68,6 +68,16 @@ namespace MoreMountains.Tools
 		[MMCondition("DrawGizmos", true)]
 		/// the color of the orbit line
 		public Color OrbitLineColor = new Color(225f, 225f, 225f, 0.1f);
+
+		[Header("Pulse")]
+		/// the name of the pulse event to listen to
+		public string PulseEventName = "Pulse";
+		/// the duration of the pulse, in seconds
+		public float PulseDuration = 2f;
+		/// the multiplier to apply to the rotation speed during the pulse
+		public float PulseMultiplier = 2f;
+		/// the curve to apply to the pulse multiplier over the duration
+		public AnimationCurve PulseCurve = new AnimationCurve(new Keyframe(0, 0), new Keyframe(0.5f, 1), new Keyframe(1, 0));
         
 		[HideInInspector]
 		public Vector3 _orbitCenter;
@@ -86,6 +96,9 @@ namespace MoreMountains.Tools
 		protected float _initialDelay = 0f;
 		private Vector3 _previousPosition;
 		protected float _startTime = 0f;
+		protected bool _isPulsing = false;
+		protected float _pulseTimer = 0f;
+		protected float _currentPulseMultiplier = 1f;
 
 		/// <summary>
 		/// On start, we initialize our plane
@@ -107,6 +120,43 @@ namespace MoreMountains.Tools
 		}
 
 		/// <summary>
+		/// On enable, we start listening for pulse events
+		/// </summary>
+		protected virtual void OnEnable()
+		{
+			this.MMEventStartListening<MMGameEvent>();
+		}
+
+		/// <summary>
+		/// On disable, we stop listening for pulse events
+		/// </summary>
+		protected virtual void OnDisable()
+		{
+			this.MMEventStopListening<MMGameEvent>();
+		}
+
+		/// <summary>
+		/// When a MMGameEvent is triggered, we check if it's the one we're looking for
+		/// </summary>
+		/// <param name="gameEvent"></param>
+		public virtual void OnMMEvent(MMGameEvent gameEvent)
+		{
+			if (gameEvent.EventName == PulseEventName)
+			{
+				Pulse();
+			}
+		}
+
+		/// <summary>
+		/// Starts the pulse
+		/// </summary>
+		public virtual void Pulse()
+		{
+			_pulseTimer = 0f;
+			_isPulsing = true;
+		}
+
+		/// <summary>
 		/// Makes the object rotate on its center at Update 
 		/// </summary>
 		protected virtual void Update()
@@ -114,6 +164,24 @@ namespace MoreMountains.Tools
 			if (Time.time - _startTime < _initialDelay)
 			{
 				return;
+			}
+
+			if (_isPulsing)
+			{
+				_pulseTimer += Time.deltaTime;
+				float progress = Mathf.Clamp01(_pulseTimer / PulseDuration);
+				float pulseValue = PulseCurve.Evaluate(progress);
+				_currentPulseMultiplier = Mathf.Lerp(1f, PulseMultiplier, pulseValue);
+
+				if (progress >= 1f)
+				{
+					_isPulsing = false;
+					_currentPulseMultiplier = 1f;
+				}
+			}
+			else
+			{
+				_currentPulseMultiplier = 1f;
 			}
 			
 			if (UpdateMode == UpdateModes.Update)
@@ -169,7 +237,7 @@ namespace MoreMountains.Tools
 		{
 			if (Rotating)
 			{
-				transform.Rotate(RotationSpeed * Time.deltaTime, RotationSpace);
+				transform.Rotate(RotationSpeed * _currentPulseMultiplier * Time.deltaTime, RotationSpace);
 			}
 
 			if (Orbiting)
@@ -186,7 +254,7 @@ namespace MoreMountains.Tools
 				_rotationPlane.SetNormalAndPosition(_worldRotationAxis.normalized, _orbitCenter);
 				_snappedPosition = _rotationPlane.ClosestPointOnPlane(this.transform.position);
 				_radius = OrbitRadius * Vector3.Normalize(_snappedPosition - _orbitCenter);
-				_newRotation = Quaternion.AngleAxis(OrbitRotationSpeed * Time.deltaTime, _worldRotationAxis);
+				_newRotation = Quaternion.AngleAxis(OrbitRotationSpeed * _currentPulseMultiplier * Time.deltaTime, _worldRotationAxis);
 				_desiredOrbitPosition = _orbitCenter + _newRotation * _radius;
 				this.transform.position = Vector3.Lerp(this.transform.position, _desiredOrbitPosition, OrbitCorrectionSpeed * Time.deltaTime);
 				_previousPosition = _desiredOrbitPosition;
