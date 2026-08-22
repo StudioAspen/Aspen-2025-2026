@@ -18,6 +18,8 @@ namespace CharonsCorner.Runtime
         [Tooltip("The sequence to play when a special cut to gameplay is requested.")]
         [SerializeField] private MMF_Player _specialCutToGameplaySequence;
 
+        public static bool IsSpecialSequenceQueued => _useSpecialSequenceNext;
+
         private bool _hasBeenCalled;
         private static bool _useSpecialSequenceNext;
 

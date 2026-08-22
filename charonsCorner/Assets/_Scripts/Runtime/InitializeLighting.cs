@@ -7,6 +7,7 @@ namespace CharonsCorner.Runtime
         [Header("Settings")]
         [SerializeField] private Light _light;
         [SerializeField] private float _intensity = 1f;
+        [SerializeField] private float _specialIntensity = 1f;
 
         private void Start()
         {
@@ -17,7 +18,14 @@ namespace CharonsCorner.Runtime
 
             if (_light != null)
             {
-                _light.intensity = _intensity;
+                float targetIntensity = _intensity;
+
+                if (EnterGameplaySequence.IsSpecialSequenceQueued)
+                {
+                    targetIntensity = _specialIntensity;
+                }
+
+                _light.intensity = targetIntensity;
             }
             else
             {

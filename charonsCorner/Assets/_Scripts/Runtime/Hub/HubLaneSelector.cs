@@ -57,18 +57,18 @@ namespace CharonsCorner.Runtime
             }
 
             int currentChapterIndex = FlagManager.Get(ProgressFlag.CurrentChapterIndex);
-            if (LaneData.Count > 0 && LaneData[CurrentLaneIndex].ChapterInWhichUnlocked > currentChapterIndex)
+            
+            // Find the last unlocked lane
+            int lastUnlockedIndex = 0;
+            for (int i = LaneData.Count - 1; i >= 0; i--)
             {
-                // Current lane is locked, find the first unlocked one
-                for (int i = 0; i < LaneData.Count; i++)
+                if (LaneData[i].ChapterInWhichUnlocked <= currentChapterIndex)
                 {
-                    if (LaneData[i].ChapterInWhichUnlocked <= currentChapterIndex)
-                    {
-                        CurrentLaneIndex = i;
-                        break;
-                    }
+                    lastUnlockedIndex = i;
+                    break;
                 }
             }
+            CurrentLaneIndex = lastUnlockedIndex;
 
             if (_spinRight != null)
                 _spinRight.PlayFeedbacks();
