@@ -211,7 +211,6 @@ namespace CharonsCorner.Runtime
 
             OnDialogueEnded.Invoke();
             MMGameEvent.Trigger("OnDialogueEnd");
-            MMGameEvent.Trigger("BowleyBase");
             
             CurrentOpener = null;
             CurrentSequence = null;
