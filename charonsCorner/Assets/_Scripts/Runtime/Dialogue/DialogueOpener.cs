@@ -36,6 +36,7 @@ namespace CharonsCorner.Runtime
 
         public void StartOpener(DialogueOpenerSO opener)
         {
+            Debug.Log($"[DialogueOpener] Starting dialogue opener: {opener.name}");
             GameManager.Instance.ChangeGameState(GameState.Dialogue);
             _dialogueManager.StartDialogueOpener(opener);
 

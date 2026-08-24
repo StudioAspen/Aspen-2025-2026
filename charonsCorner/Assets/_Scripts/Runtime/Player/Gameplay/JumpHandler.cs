@@ -33,9 +33,6 @@ namespace CharonsCorner.Runtime
         [Tooltip("Maximum upward velocity after bounce")]
         [SerializeField] private float _maxBounceVelocity = 20f; // cap the maximum bounce velocity
         
-        [Header("Debug")]
-        [SerializeField] private bool _showDebug = false;
-        
         [Header("Audio Settings")]
         [SerializeField] private AudioClip _jumpSound;
         [SerializeField] private AudioClip _bounceSound;
@@ -60,9 +57,10 @@ namespace CharonsCorner.Runtime
             // Reset _hasJumped when grounded and enough time has passed since the last jump.
             // On slopes, the upward velocity might be positive when moving uphill (due to gravity cancellation), 
             // so we don't strictly check for negative/zero vertical velocity if we are on a slope.
+            // We also allow reset if we JustLanded confirmed by GameplayPlayerController.
             bool velocityCondition = _player.Rb.linearVelocity.y <= 0.01f || _player.SlopeSensor.IsOnSlope;
             
-            if (_player.IsGrounded && velocityCondition && Time.time > _lastJumpTime + _jumpGroundedResetDelay)
+            if ((_player.IsGrounded && velocityCondition || _player.JustLanded) && Time.time > _lastJumpTime + _jumpGroundedResetDelay)
             {
                 _hasJumped = false;
             }
@@ -97,8 +95,6 @@ namespace CharonsCorner.Runtime
             _jumpIsHeld = true;
             if (_hasJumped)
             {
-                if(_showDebug)
-                    Debug.LogWarning($"Jump failed because player has jumped already");
                 return;
             }
             
@@ -106,21 +102,15 @@ namespace CharonsCorner.Runtime
             {
                 if (_player.AirSuperState.InAirTime <= _coyoteTimeDuration)
                 {
-                    if(_showDebug)
-                        Debug.LogWarning($"Performing coyote jump after in air for {_player.AirSuperState.InAirTime}s/{_coyoteTimeDuration}s");
                     Jump();
                     return;
                 }
                 
-                if(_showDebug)
-                    Debug.LogWarning($"Jump failed because coyote time has passed and player is in air");
                 return;
             }
 
             if (_player.StateMachine.CurrentState != _player.GroundSuperState)
             {
-                if(_showDebug)
-                    Debug.LogWarning($"Jump failed because player is not in Ground State and not in Coyote window");
                 return;
             }
             

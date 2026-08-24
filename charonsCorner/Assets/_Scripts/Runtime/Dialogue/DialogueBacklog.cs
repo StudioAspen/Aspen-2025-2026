@@ -59,6 +59,9 @@ namespace CharonsCorner.Runtime
         [field: SerializeField] public ProgressFlag CurrentDialogueOpenerIndexFlag { get; private set; } = ProgressFlag.CurrentDialogueOpenerIndex;
         [field: SerializeField] public ProgressFlag CurrentDialogueSequenceIndexFlag { get; private set; } = ProgressFlag.CurrentDialogueSequenceIndex;
 
+        [Header("Debug")]
+        [SerializeField] private bool _showDebug = false;
+
         private void Start()
         {
             if (GameManager.Instance != null)
@@ -105,10 +108,27 @@ namespace CharonsCorner.Runtime
         public DialogueOpenerSO GetCurrentDialogueOpener()
         {
             DialogueOpenerSO runtimeOpener;
+            if (_showDebug)
+            {
+                int currentChapterIndex = FlagManager.Get(ProgressFlag.CurrentChapterIndex);
+                int currDialogueOpenerIndex = FlagManager.Get(CurrentDialogueOpenerIndexFlag);
+                int sequenceIndex = FlagManager.Get(CurrentDialogueSequenceIndexFlag);
+                int currSRankIndex = FlagManager.Get(ProgressFlag.CurrentSRankDialogueIndex);
+
+                Debug.Log($"[DialogueBacklog] Getting dialogue opener. " +
+                          $"CurrentChapterIndex: {currentChapterIndex}, " +
+                          $"CurrentDialogueOpenerIndex: {currDialogueOpenerIndex}, " +
+                          $"CurrentDialogueSequenceIndex: {sequenceIndex}, " +
+                          $"CurrentSRankDialogueIndex: {currSRankIndex}, " +
+                          $"HasPendingRegular: {HasPendingRegularDialogue()}, " +
+                          $"HasPendingSRank: {HasPendingSRankDialogue()}");
+            }
+
             if (_overrideSaveData)
             {
                 if (_overriddenDialogueEntry != null)
                 {
+                    if (_showDebug) Debug.Log($"[DialogueBacklog] Using Overridden Dialogue Entry for Chapter {_overriddenDialogueEntry.ChapterIndex}");
                     CurrentChapterDialogue = _overriddenDialogueEntry;
                     CurrentSRankDialogue = null;
                     IsCurrentSequenceSRank = false;
@@ -125,10 +145,12 @@ namespace CharonsCorner.Runtime
                     
                     if (sequenceIndex < _overriddenDialogueEntry.DialogueOpener.SequenceOptions.Count)
                     {
+                        if (_showDebug) Debug.Log($"[DialogueBacklog] Selecting sequence index {sequenceIndex} from overridden opener.");
                         overriddenSequences.Add(_overriddenDialogueEntry.DialogueOpener.SequenceOptions[sequenceIndex]);
                     }
                     else if (_overriddenDialogueEntry.DialogueOpener.SequenceOptions.Count > 0)
                     {
+                        if (_showDebug) Debug.Log($"[DialogueBacklog] Sequence index {sequenceIndex} out of bounds for overridden opener. Selecting exhausted sequence.");
                         // Play exhausted sequence (last one) if all sequences are done
                         overriddenSequences.Add(_overriddenDialogueEntry.DialogueOpener.SequenceOptions[_overriddenDialogueEntry.DialogueOpener.SequenceOptions.Count - 1]);
                     }
@@ -139,6 +161,7 @@ namespace CharonsCorner.Runtime
                 
                 if (_overriddenSRankEntry != null)
                 {
+                    if (_showDebug) Debug.Log($"[DialogueBacklog] Using Overridden S-Rank Entry for Chapter {_overriddenSRankEntry.ChapterIndex}");
                     CurrentChapterDialogue = null;
                     CurrentSRankDialogue = _overriddenSRankEntry;
                     IsCurrentSequenceSRank = true;
@@ -156,13 +179,24 @@ namespace CharonsCorner.Runtime
             }
 
             ChapterDialogueEntry entry = null;
-            int currDialogueOpenerIndex = FlagManager.Get(CurrentDialogueOpenerIndexFlag);
+            int currentOpenerIndex = FlagManager.Get(CurrentDialogueOpenerIndexFlag);
+            int globalChapterIndex = FlagManager.Get(ProgressFlag.CurrentChapterIndex);
             
             if (HasPendingRegularDialogue())
             {
-                entry = ChapterDialogues.Find(e => e.ChapterIndex == currDialogueOpenerIndex);
+                // Find the first entry that is within the range [currentOpenerIndex, globalChapterIndex]
+                entry = ChapterDialogues
+                    .FindAll(e => e.ChapterIndex >= currentOpenerIndex && e.ChapterIndex <= globalChapterIndex)
+                    .Find(e => true); // Get the first one in the list order that matches criteria
+                
                 if (entry == null)
-                    Debug.LogWarning($"No dialogue entry found for ChapterIndex {currDialogueOpenerIndex}");
+                    Debug.LogWarning($"No dialogue entry found for ChapterIndex >= {currentOpenerIndex}");
+                else if (entry.ChapterIndex > currentOpenerIndex)
+                {
+                    if (_showDebug) Debug.Log($"[DialogueBacklog] Skipping to next available chapter dialogue: {entry.ChapterIndex}");
+                    FlagManager.Set(CurrentDialogueOpenerIndexFlag, entry.ChapterIndex);
+                    currentOpenerIndex = entry.ChapterIndex;
+                }
             }
             
             ChapterSRankDialogueEntry sRankEntry = null;
@@ -183,6 +217,7 @@ namespace CharonsCorner.Runtime
             
             if (entry != null)
             {
+                if (_showDebug) Debug.Log($"[DialogueBacklog] Found regular dialogue entry for Chapter {entry.ChapterIndex}. Selecting its opener: {entry.DialogueOpener.name}");
                 if (entry.DialogueOpener == null)
                 {
                     Debug.LogError($"[DialogueBacklog] DialogueOpener is null for chapter {entry.ChapterIndex}!");
@@ -193,16 +228,29 @@ namespace CharonsCorner.Runtime
             else if (ChapterDialogues.Count > 0)
             {
                 // If we finished all chapter dialogues, we use the most recent one's exhausted sequence
-                int lastIndex = Mathf.Clamp(currDialogueOpenerIndex - 1, 0, ChapterDialogues.Count - 1);
-                if (ChapterDialogues[lastIndex].DialogueOpener == null)
+                ChapterDialogueEntry lastEntry = ChapterDialogues
+                    .FindAll(e => e.ChapterIndex <= globalChapterIndex)
+                    .FindLast(e => true);
+
+                if (lastEntry != null)
                 {
-                    Debug.LogError($"[DialogueBacklog] DialogueOpener is null for chapter {ChapterDialogues[lastIndex].ChapterIndex} (fallback)!");
-                    return null;
+                    if (_showDebug) Debug.Log($"[DialogueBacklog] No pending regular dialogue. Using fallback from Chapter {lastEntry.ChapterIndex}.");
+                    if (lastEntry.DialogueOpener == null)
+                    {
+                        Debug.LogError($"[DialogueBacklog] DialogueOpener is null for chapter {lastEntry.ChapterIndex} (fallback)!");
+                        return null;
+                    }
+                    runtimeOpener = Instantiate(lastEntry.DialogueOpener);
                 }
-                runtimeOpener = Instantiate(ChapterDialogues[lastIndex].DialogueOpener);
+                else
+                {
+                    if (_showDebug) Debug.Log("[DialogueBacklog] No past chapter dialogues available. Using DefaultCharonDialogueOpener.");
+                    runtimeOpener = Instantiate(DefaultCharonDialogueOpener);
+                }
             }
             else
             {
+                if (_showDebug) Debug.Log("[DialogueBacklog] No chapter dialogues available. Using DefaultCharonDialogueOpener.");
                 if (DefaultCharonDialogueOpener == null)
                 {
                     Debug.LogError("[DialogueBacklog] DefaultCharonDialogueOpener is null (fallback)!");
@@ -219,13 +267,19 @@ namespace CharonsCorner.Runtime
                 int sequenceIndex = FlagManager.Get(CurrentDialogueSequenceIndexFlag);
                 if (sequenceIndex < entry.DialogueOpener.SequenceOptions.Count)
                 {
+                    if (_showDebug) Debug.Log($"[DialogueBacklog] Adding regular sequence at index {sequenceIndex}: {entry.DialogueOpener.SequenceOptions[sequenceIndex].name}");
                     sequencesToPlay.Add(entry.DialogueOpener.SequenceOptions[sequenceIndex]);
+                }
+                else
+                {
+                    if (_showDebug) Debug.Log($"[DialogueBacklog] Regular sequences for Chapter {entry.ChapterIndex} are exhausted (Index: {sequenceIndex}).");
                 }
             }
 
             // 2. S-Rank Sequences (only if regular sequences for the current chapter are done)
             if (sRankEntry != null && sequencesToPlay.Count == 0)
             {
+                if (_showDebug) Debug.Log($"[DialogueBacklog] Adding S-Rank sequence: {sRankEntry.DialogueSequence.name}");
                 sequencesToPlay.Add(sRankEntry.DialogueSequence);
                 IsCurrentSequenceSRank = true;
             }
@@ -239,7 +293,9 @@ namespace CharonsCorner.Runtime
             {
                 if (runtimeOpener.SequenceOptions.Count > 0)
                 {
-                    sequencesToPlay.Add(runtimeOpener.SequenceOptions[runtimeOpener.SequenceOptions.Count - 1]);
+                    var exhaustedSequence = runtimeOpener.SequenceOptions[runtimeOpener.SequenceOptions.Count - 1];
+                    if (_showDebug) Debug.Log($"[DialogueBacklog] No new sequences available. Playing exhausted sequence: {exhaustedSequence.name}");
+                    sequencesToPlay.Add(exhaustedSequence);
                 }
             }
 
@@ -275,7 +331,14 @@ namespace CharonsCorner.Runtime
 
         public void CompleteCurrentDialogueSet()
         {
-            FlagManager.Increment(CurrentDialogueOpenerIndexFlag);
+            int currentOpenerIndex = FlagManager.Get(CurrentDialogueOpenerIndexFlag);
+            int globalChapterIndex = FlagManager.Get(ProgressFlag.CurrentChapterIndex);
+
+            if (currentOpenerIndex < globalChapterIndex)
+            {
+                FlagManager.Increment(CurrentDialogueOpenerIndexFlag);
+            }
+            
             FlagManager.Set(CurrentDialogueSequenceIndexFlag, 0);
             CurrentChapterDialogue = null;
         }
@@ -303,9 +366,15 @@ namespace CharonsCorner.Runtime
             if (_overrideSaveData)
                 return _overriddenDialogueEntry != null;
 
+            int currentDialogueOpenerIndex = FlagManager.Get(CurrentDialogueOpenerIndexFlag);
+            
+            // We have pending dialogue if there's any entry in the list whose ChapterIndex is 
+            // greater than or equal to the CurrentDialogueOpenerIndex, 
+            // AND that ChapterIndex is less than or equal to the current overall progress.
             int currentChapterIndex = FlagManager.Get(ProgressFlag.CurrentChapterIndex);
-            bool hasRegularDialogue = FlagManager.Get(CurrentDialogueOpenerIndexFlag)
-                                      <= currentChapterIndex;
+
+            bool hasRegularDialogue = ChapterDialogues.Exists(e => 
+                e.ChapterIndex >= currentDialogueOpenerIndex && e.ChapterIndex <= currentChapterIndex);
 
             return hasRegularDialogue;
         }

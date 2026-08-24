@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Splines;
+using MoreMountains.Feedbacks;
 
 
 namespace CharonsCorner.Runtime
@@ -19,6 +20,7 @@ namespace CharonsCorner.Runtime
         [field: SerializeField] public SplineContainer SplinePath { get; private set; }
         [field: SerializeField] public float MoveDistance { get; private set; } = 10f;
         [field: SerializeField] public float Speed { get; private set; } = 10f;
+        [SerializeField] private MMSpringScale _orbSpringScale;
         [SerializeField] private float _transitionDuration = 0.5f; // Duration for smoothing between splines
 
         [Header("Shader Variables")]
@@ -104,6 +106,11 @@ namespace CharonsCorner.Runtime
                     {
                         _currentSplineIndex = SplinePath.Splines.Count - 1;
                         _progress = 1f;
+
+                        if (_orbSpringScale != null)
+                        {
+                            _orbSpringScale.MoveTo(Vector3.zero);
+                        }
                     }
                     else
                     {
