@@ -45,8 +45,6 @@ namespace CharonsCorner.Runtime
                 _laneSelector.OnLaneSelected.AddListener(OnLaneSelected);
                 _laneSelector.OnEnter.AddListener(OnSelectorEnter);
                 _laneSelector.OnLeave.AddListener(OnSelectorLeave);
-                // Initialize with current lane
-                UpdateTextImmediately(_laneSelector.CurrentLaneIndex);
             }
         }
 
@@ -69,6 +67,25 @@ namespace CharonsCorner.Runtime
         private void OnSelectorLeave()
         {
             _isSelectorActive = false;
+
+            if (_typewriter != null)
+            {
+                _typewriter.ShowText("");
+            }
+            else if (_displayText != null)
+            {
+                _displayText.text = "";
+            }
+
+            if (_rankTypewriter != null)
+            {
+                _rankTypewriter.ShowText("");
+            }
+            else if (_rankTimeText != null)
+            {
+                _rankTimeText.text = "";
+            }
+
             if (_currentLevelPrefab != null)
             {
                 Destroy(_currentLevelPrefab);
@@ -85,7 +102,7 @@ namespace CharonsCorner.Runtime
             int currentChapterIndex = FlagManager.Get(ProgressFlag.CurrentChapterIndex);
             
             string newName = data.LevelTitle;
-            if (data.ChapterInWhichUnlocked == currentChapterIndex)
+            if (data.ChapterInWhichUnlocked > currentChapterIndex)
             {
                 newName = "???";
             }
@@ -210,7 +227,7 @@ namespace CharonsCorner.Runtime
                 int currentChapterIndex = FlagManager.Get(ProgressFlag.CurrentChapterIndex);
 
                 string newName = data.LevelTitle;
-                if (data.ChapterInWhichUnlocked == currentChapterIndex)
+                if (data.ChapterInWhichUnlocked > currentChapterIndex)
                 {
                     newName = "???";
                 }

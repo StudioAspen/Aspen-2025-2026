@@ -4044,6 +4044,8 @@ MonoBehaviour:
     _prefab: Assets/_Prefabs/Level0.prefab
   - _gameObject: {fileID: 1827029883}
     _prefab: Assets/_Art/models/props/PL_Sunglasses/source/PL_Sunglasses.fbx
+  - _gameObject: {fileID: 1838360500}
+    _prefab: Assets/_Prefabs/Lanes.prefab
   - _gameObject: {fileID: 1936851124}
     _prefab: Assets/_Prefabs/BaseLevel.prefab
   - _gameObject: {fileID: 1160382295}
@@ -4052,6 +4054,8 @@ MonoBehaviour:
     _prefab: Assets/_Prefabs/Level0.prefab
   - _gameObject: {fileID: 1559785079}
     _prefab: Assets/_Art/models/props/PL_Sunglasses/source/PL_Sunglasses.fbx
+  - _gameObject: {fileID: 1160382295}
+    _prefab: Assets/_Prefabs/Lanes.prefab
   - _gameObject: {fileID: 673438119}
     _prefab: Assets/_Prefabs/BaseLevel.prefab
   - _gameObject: {fileID: 1491976133}
@@ -4060,6 +4064,8 @@ MonoBehaviour:
     _prefab: Assets/_Prefabs/Level0.prefab
   - _gameObject: {fileID: 2055325145}
     _prefab: Assets/_Art/models/props/PL_Sunglasses/source/PL_Sunglasses.fbx
+  - _gameObject: {fileID: 1491976133}
+    _prefab: Assets/_Prefabs/Lanes.prefab
   - _gameObject: {fileID: 1235694380}
     _prefab: Assets/_Prefabs/BaseLevel.prefab
   - _gameObject: {fileID: 1149033767}
@@ -4068,6 +4074,8 @@ MonoBehaviour:
     _prefab: Assets/_Prefabs/Level0.prefab
   - _gameObject: {fileID: 914399931}
     _prefab: Assets/_Art/models/props/PL_Sunglasses/source/PL_Sunglasses.fbx
+  - _gameObject: {fileID: 1149033767}
+    _prefab: Assets/_Prefabs/Lanes.prefab
   - _gameObject: {fileID: 366149796}
     _prefab: Assets/_Prefabs/BaseLevel.prefab
   - _gameObject: {fileID: 76044348}
@@ -15195,7 +15203,7 @@ MonoBehaviour:
     - rid: 1261838425231196276
       type: {class: MMF_Light, ns: MoreMountains.Feedbacks, asm: MoreMountains.Tools}
       data:
-        Active: 0
+        Active: 1
         UniqueID: 1454791943
         Label: Light
         OriginalLabel: Light
@@ -15646,7 +15654,7 @@ MonoBehaviour:
     - rid: 1261838425231196280
       type: {class: MMF_Material, ns: MoreMountains.Feedbacks, asm: MoreMountains.Tools}
       data:
-        Active: 0
+        Active: 1
         UniqueID: 487181842
         Label: Material
         OriginalLabel: Material
@@ -16150,7 +16158,7 @@ MonoBehaviour:
     - rid: 4043403814385221722
       type: {class: MMF_MMGameEvent, ns: MoreMountains.Feedbacks, asm: MoreMountains.Tools}
       data:
-        Active: 1
+        Active: 0
         UniqueID: -1877396700
         Label: MMGameEvent
         OriginalLabel: MMGameEvent
@@ -25431,9 +25439,36 @@ MonoBehaviour:
   - {fileID: 1104358859}
   _flickerOnEventName: FlickerOn
   _flickerOffEventName: 
+  _lightingGrowEventName: 
+  _lightingShrinkEventName: 
   _turnOffOnAwake: 1
   _useFlicker: 1
   _flickerSettings: {fileID: 11400000, guid: c7802328a1383b242a10c19911b7ac8f, type: 2}
+  _transitionDuration: 1
+  _transitionCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 1
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 1
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &1656047217
 GameObject:
   m_ObjectHideFlags: 0
@@ -32251,6 +32286,7 @@ MonoBehaviour:
   _alertExitFeedback: {fileID: 0}
   <CurrentDialogueOpenerIndexFlag>k__BackingField: 5
   <CurrentDialogueSequenceIndexFlag>k__BackingField: 3
+  _showDebug: 0
 --- !u!114 &5783164422495363132
 MonoBehaviour:
   m_ObjectHideFlags: 0

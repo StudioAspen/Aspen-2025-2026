@@ -153,20 +153,32 @@ namespace CharonsCorner.Runtime
                 return;
             }
 
-            if (CurrentDialogueIndex + 1 >= CurrentSequence.lines.Length)
+            if (CurrentDialogueIndex + 1 < CurrentSequence.lines.Length)
             {
-                Debug.LogWarning("End of dialogue sequence reached. Cannot start next dialogue in sequence.");
-                return;
+                CurrentDialogueIndex++;
+                TriggerTalkEvent(CurrentSequence.lines[CurrentDialogueIndex].speaker);
+                TriggerAnimationEvents(CurrentSequence.lines[CurrentDialogueIndex]);
+                string nextLine = GetProcessedLine(CurrentSequence.lines[CurrentDialogueIndex]);
+                StartLine(nextLine);
+
+                if(CurrentDialogueIndex >= CurrentSequence.lines.Length - 1)
+                    OnDialogueSequenceEndReached.Invoke(CurrentSequence, nextLine);
             }
-
-            CurrentDialogueIndex++;
-            TriggerTalkEvent(CurrentSequence.lines[CurrentDialogueIndex].speaker);
-            TriggerAnimationEvents(CurrentSequence.lines[CurrentDialogueIndex]);
-            string nextLine = GetProcessedLine(CurrentSequence.lines[CurrentDialogueIndex]);
-            StartLine(nextLine);
-
-            if(CurrentDialogueIndex >= CurrentSequence.lines.Length - 1)
-                OnDialogueSequenceEndReached.Invoke(CurrentSequence, nextLine);
+            else
+            {
+                // End of current sequence. Check if there's another sequence in the opener.
+                if (CurrentOpener != null)
+                {
+                    int nextSequenceIndex = CurrentOpener.SequenceOptions.IndexOf(CurrentSequence) + 1;
+                    if (nextSequenceIndex > 0 && nextSequenceIndex < CurrentOpener.SequenceOptions.Count)
+                    {
+                        StartDialogueSequence(CurrentOpener.SequenceOptions[nextSequenceIndex]);
+                        return;
+                    }
+                }
+                
+                Debug.LogWarning("End of all dialogue sequences reached.");
+            }
         }
 
         private void TriggerTalkEvent(Speaker speaker)

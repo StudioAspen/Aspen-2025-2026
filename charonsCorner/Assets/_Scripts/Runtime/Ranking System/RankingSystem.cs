@@ -32,6 +32,7 @@ public class RankingSystem : MonoBehaviour
 
     [Header("Score Settings")]
     [SerializeField] RankScoreSO _rankScore;
+    [SerializeField] int _levelIndex;
     [SerializeField] int _chapterIndex;
 
     [Header("Feedbacks Settings")]
@@ -40,6 +41,9 @@ public class RankingSystem : MonoBehaviour
     [SerializeField] private string _sRankIncrementEventName = "SRankIncrementEvent";
     [SerializeField] private string _sRankEnterEventName = "SRankEnterEvent";
 
+    public int LevelIndex => _levelIndex;
+    public int ChapterIndex => _chapterIndex;
+    
     // Time
     float _timer;
     public float LevelTimeSeconds => _timer;
@@ -47,6 +51,7 @@ public class RankingSystem : MonoBehaviour
     // Checks
     bool _hasPlayerStarted;
     bool _hasPlayerFinished;
+    bool _hasRanked;
     bool _canInteract;
     bool _isNewSRank;
 
@@ -140,6 +145,7 @@ public class RankingSystem : MonoBehaviour
         _timer = 0f;
         _hasPlayerStarted = false;
         _hasPlayerFinished = false;
+        _hasRanked = false;
         _canInteract = false;
 
         if (_inputInteraction != null)
@@ -163,7 +169,7 @@ public class RankingSystem : MonoBehaviour
         if (!_hasPlayerFinished) Timer();
         CheckPlayerEnd();
 
-        if (_hasPlayerFinished) FinalRank();
+        if (!_hasRanked && _hasPlayerFinished) FinalRank();
     }
 
     public void PlayerEnd()
@@ -209,6 +215,9 @@ public class RankingSystem : MonoBehaviour
 
     void FinalRank()
     {
+        if (_hasRanked) return;
+        _hasRanked = true;
+
         if (_rankScore == null)
         {
             Debug.LogError("Rank Score has not been assigned");
@@ -265,7 +274,7 @@ public class RankingSystem : MonoBehaviour
 
     private void SaveBestStats(Ranks rank, float time)
     {
-        string levelKey = $"Level_{_chapterIndex}"; 
+        string levelKey = $"Level_{_levelIndex}"; 
         string bestRankKey = $"{levelKey}_BestRank";
         string bestTimeKey = $"{levelKey}_BestTime";
 
@@ -350,9 +359,9 @@ public class RankingSystem : MonoBehaviour
     private void UpdateSRankProgression()
     {
         var list = SaveManager.GameStore.GetList<int>(DialogueSaveKeys.SRankAchievedListKey, new());
-        if (!list.Contains(_chapterIndex))
+        if (!list.Contains(_levelIndex))
         {
-            list.Add(_chapterIndex);
+            list.Add(_levelIndex);
             SaveManager.GameStore.SetList(DialogueSaveKeys.SRankAchievedListKey, list);
             FlagManager.Increment(ProgressFlag.SRankCount);
             _isNewSRank = true;

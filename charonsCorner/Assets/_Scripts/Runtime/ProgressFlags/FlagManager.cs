@@ -13,7 +13,9 @@ namespace CharonsCorner.Runtime
         SRankCount,
         CurrentMomentoDialogueOpenerIndex,
         CurrentMomentoDialogueSequenceIndex,
-        SeenAlternativeEndScene
+        SeenAlternativeEndScene,
+        SeenAllDialogueForThisChapter,
+        SeenAllMementoDialogueForThisChapter
     }
 
     /// <summary>
@@ -70,9 +72,11 @@ namespace CharonsCorner.Runtime
         /// </summary>
         public static void ResetAll()
         {
+            SaveManager.GameStore.DeleteAll();
+
             foreach (ProgressFlag flag in Enum.GetValues(typeof(ProgressFlag)))
             {
-                Set(flag, 0);
+                OnFlagChanged?.Invoke(flag, 0);
             }
         }
         

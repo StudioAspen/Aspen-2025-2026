@@ -26,11 +26,23 @@ public class ProgressFlagViewerWindow : EditorWindow
         {
             if (EditorUtility.DisplayDialog(
                     "Reset All Flags",
-                    "Are you sure you want to reset ALL progress flags?",
+                    "Are you sure you want to reset ALL progress flags and game data?",
                     "Reset",
                     "Cancel"))
             {
                 FlagManager.ResetAll();
+            }
+        }
+
+        if (GUILayout.Button("Reset Settings"))
+        {
+            if (EditorUtility.DisplayDialog(
+                    "Reset Settings",
+                    "Are you sure you want to reset all game settings?",
+                    "Reset",
+                    "Cancel"))
+            {
+                SaveManager.SettingsStore.DeleteAll();
             }
         }
 

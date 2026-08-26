@@ -15,6 +15,9 @@ namespace CharonsCorner.Runtime
         [SerializeField] private MMF_Player _rightExitFeedback;
         [SerializeField] private MMF_Player _rightSquishFeedback;
 
+        [Header("General Feedbacks")]
+        [SerializeField] private MMF_Player _scaleDownFeedback;
+
         private bool _leftArrowActive;
         private bool _rightArrowActive;
 
@@ -73,6 +76,17 @@ namespace CharonsCorner.Runtime
             if (_rightArrowActive && _rightSquishFeedback != null)
             {
                 _rightSquishFeedback.PlayFeedbacks();
+            }
+        }
+
+        /// <summary>
+        /// Plays the scale down feedback for the entire Level Select UI.
+        /// </summary>
+        public void PlayScaleDownFeedback()
+        {
+            if (_scaleDownFeedback != null)
+            {
+                _scaleDownFeedback.PlayFeedbacks();
             }
         }
     }

@@ -80,8 +80,9 @@ namespace CharonsCorner.Runtime
                 _inputInteraction.Appear();
 
             UpdateArrowStates();
-
+            
             OnEnter.Invoke();
+            OnLaneSelected.Invoke(CurrentLaneIndex);
         }
 
         private void OnDisable()
@@ -152,6 +153,9 @@ namespace CharonsCorner.Runtime
             
             if (_inputInteraction != null)
                 _inputInteraction.Disappear();
+
+            if (_levelSelectUI != null)
+                _levelSelectUI.PlayScaleDownFeedback();
             
             OnLeave.Invoke();
         }
@@ -180,6 +184,9 @@ namespace CharonsCorner.Runtime
 
             if (_inputInteraction != null)
                 _inputInteraction.Disappear();
+
+            if (_levelSelectUI != null)
+                _levelSelectUI.PlayScaleDownFeedback();
 
             OnLaneInteracted?.Invoke(selectedLaneData);
             OnLaneInteractedIndex?.Invoke(CurrentLaneIndex);
