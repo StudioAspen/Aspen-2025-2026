@@ -54,23 +54,6 @@ namespace CharonsCorner.Runtime
             {
                 RestartGameFromScratch();
             }
-            if (Keyboard.current != null && Keyboard.current.equalsKey.wasPressedThisFrame)
-            {
-                ReturnToMenu();
-            }
-            if (Keyboard.current != null && Keyboard.current.commaKey.wasPressedThisFrame)
-            {
-                SwitchScenes(_hubScene, GameState.Gameplay).Forget();
-            }
-            if (Keyboard.current != null && Keyboard.current.digit1Key.wasPressedThisFrame)
-            {
-                SwitchScenes(_numkey1Scene, GameState.Gameplay).Forget();
-            }
-
-            if (Keyboard.current != null && Keyboard.current.rightBracketKey.wasPressedThisFrame)
-            {
-                ToggleDebugUI();
-            }
         }
 
         private void ToggleDebugUI()
