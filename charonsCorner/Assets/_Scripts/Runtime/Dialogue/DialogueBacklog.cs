@@ -1,12 +1,13 @@
 using System;
 using System.Collections.Generic;
 using MoreMountains.Feedbacks;
+using MoreMountains.Tools;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace CharonsCorner.Runtime
 {
-    public class DialogueBacklog : MonoBehaviour
+    public class DialogueBacklog : MonoBehaviour, MMEventListener<MMGameEvent>
     {
         [Header("Dialogue Config")]
         [SerializeField] private bool _isMementoBacklog;
@@ -19,6 +20,11 @@ namespace CharonsCorner.Runtime
         [SerializeField] private bool _overrideSaveData;
         [SerializeField, ReadOnly, ShowIf(nameof(_overrideSaveData))] private ChapterDialogueEntry _overriddenDialogueEntry;
         [SerializeField, ReadOnly, ShowIf(nameof(_overrideSaveData))] private ChapterSRankDialogueEntry _overriddenSRankEntry;
+
+        [Header("Memento Cutscene Settings")]
+        [SerializeField] private bool _playMementoCutsceneAfterExitingThisDialogue = false;
+        [SerializeField] private string _mementoTriggerEventName = "TriggerMementoCutscene";
+        [SerializeField] private MMF_Player _mementoCutscene;
 
         public void SetOverriddenDialogue(ChapterDialogueEntry entry)
         {
@@ -101,6 +107,7 @@ namespace CharonsCorner.Runtime
         private void OnEnable()
         {
             InitializeForScene();
+            this.MMEventStartListening<MMGameEvent>();
 
             if (GameManager.Instance != null)
             {
@@ -132,6 +139,7 @@ namespace CharonsCorner.Runtime
 
         private void OnDisable()
         {
+            this.MMEventStopListening<MMGameEvent>();
             if (GameManager.Instance != null)
             {
                 GameManager.Instance.OnGameStateChanged -= GameManager_OnGameStateChanged;
@@ -391,6 +399,38 @@ namespace CharonsCorner.Runtime
         {
             SaveManager.GameStore.SetList(DialogueSaveKeys.SRankAchievedListKey, new List<int>());
             FlagManager.Set(ProgressFlag.SRankCount, 0);
+        }
+
+        public void OnMMEvent(MMGameEvent gameEvent)
+        {
+            if (gameEvent.EventName == _mementoTriggerEventName)
+            {
+                if (_showDebug) Debug.Log($"[DialogueBacklog] Received trigger event: {_mementoTriggerEventName}. Setting _playMementoCutsceneAfterExitingThisDialogue to true.");
+                _playMementoCutsceneAfterExitingThisDialogue = true;
+            }
+            else if (gameEvent.EventName == "OnDialogueEnd")
+            {
+                if (_playMementoCutsceneAfterExitingThisDialogue)
+                {
+                    if (_showDebug) Debug.Log("[DialogueBacklog] Dialogue ended and memento cutscene is pending. Playing cutscene and changing state.");
+                    _playMementoCutsceneAfterExitingThisDialogue = false;
+
+                    if (GameManager.Instance != null)
+                    {
+                        GameManager.Instance.ChangeGameState(GameState.Cutscene);
+                    }
+
+                    if (_mementoCutscene != null)
+                    {
+                        _mementoCutscene.PlayFeedbacks();
+                        FlagManager.Set(ProgressFlag.SeenMementoCutscene, 1);
+                    }
+                    else
+                    {
+                        Debug.LogWarning("[DialogueBacklog] _mementoCutscene is null, but was supposed to play.");
+                    }
+                }
+            }
         }
     }
 }

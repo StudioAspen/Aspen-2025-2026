@@ -15,7 +15,8 @@ namespace CharonsCorner.Runtime
         CurrentMomentoDialogueSequenceIndex,
         SeenAlternativeEndScene,
         SeenAllDialogueForThisChapter,
-        SeenAllMementoDialogueForThisChapter
+        SeenAllMementoDialogueForThisChapter,
+        SeenMementoCutscene
     }
 
     /// <summary>

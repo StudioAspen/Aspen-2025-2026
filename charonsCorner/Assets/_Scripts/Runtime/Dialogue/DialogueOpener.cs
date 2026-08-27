@@ -43,7 +43,7 @@ namespace CharonsCorner.Runtime
             _dialogueManager.OnDialogueEnded += DialogueManager_OnDialogueEnded;
 
             if (_useCamera)
-                CameraManager.Instance.ChangeActiveCamera(_cinemachineCamera);
+                CameraManager.Instance.ChangeActiveCamera(_cinemachineCamera, CinemachineBlendDefinition.Styles.EaseIn, .5f);
         }
 
         private void DialogueManager_OnDialogueEnded()
@@ -51,7 +51,7 @@ namespace CharonsCorner.Runtime
             _dialogueManager.OnDialogueEnded -= DialogueManager_OnDialogueEnded;
 
             if(_useCamera)
-                CameraManager.Instance.ChangeActiveCamera(_endingDialogueCinemachineCamera);
+                CameraManager.Instance.ChangeActiveCamera(_endingDialogueCinemachineCamera, CinemachineBlendDefinition.Styles.EaseOut, .5f);
         }
     }
 }

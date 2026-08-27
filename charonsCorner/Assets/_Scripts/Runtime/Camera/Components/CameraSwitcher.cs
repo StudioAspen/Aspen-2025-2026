@@ -26,7 +26,7 @@ namespace CharonsCorner.Runtime
         public void ReturnToDefaultCamera()
         {
             Debug.Log($"[CameraSwitcher] {gameObject.name} returning to default camera.");
-            CameraManager.Instance.ResetActiveCamera();
+            CameraManager.Instance.ResetActiveCamera(_blendType, _blendDuration);
         }
     }
 }

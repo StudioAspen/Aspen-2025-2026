@@ -19,8 +19,7 @@ namespace CharonsCorner.Runtime
         [field: SerializeField] public Transform Player { get; private set; }
         [field: SerializeField] public SplineContainer SplinePath { get; private set; }
         [field: SerializeField] public float MoveDistance { get; private set; } = 10f;
-        [SerializeField] private float _lookAheadDistance = 5f;
-        [SerializeField] private float _followSpeed = 5f;
+        [field: SerializeField] public float Speed { get; private set; } = 10f;
         [SerializeField] private MMSpringScale _orbSpringScale;
         [SerializeField] private float _transitionDuration = 0.5f; // Duration for smoothing between splines
 
@@ -77,6 +76,91 @@ namespace CharonsCorner.Runtime
 
         private void Update()
         {
+            float distance = Vector3.Distance(transform.position, Player.position);
+
+            if (distance <= MoveDistance && SplinePath != null && SplinePath.Splines.Count > 0)
+            {
+                if (_isTransitioning)
+                {
+                    _transitionTimer += Time.deltaTime;
+                    float t = Mathf.Clamp01(_transitionTimer / _transitionDuration);
+                    transform.position = Vector3.Lerp(_transitionStartPos, _transitionEndPos, t);
+                    transform.rotation = Quaternion.Slerp(_transitionStartRot, _transitionEndRot, t);
+                    if (t >= 1f)
+                        _isTransitioning = false;
+
+                    UpdateShader();
+                    return;
+                }
+
+                Spline currentSpline = SplinePath.Splines[_currentSplineIndex];
+
+                if (_cachedSplineLength == 0f)
+                    _cachedSplineLength = SplineUtility.CalculateLength(currentSpline, SplinePath.transform.localToWorldMatrix);
+
+                _progress += (Speed * Time.deltaTime) / _cachedSplineLength;
+
+                if (_progress > 1f)
+                {
+                    int nextSplineIndex = _currentSplineIndex + 1;
+                    if (nextSplineIndex >= SplinePath.Splines.Count)
+                    {
+                        _currentSplineIndex = SplinePath.Splines.Count - 1;
+                        _progress = 1f;
+
+                        if (_orbSpringScale != null)
+                        {
+                            _orbSpringScale.MoveTo(Vector3.zero);
+                        }
+                    }
+                    else
+                    {
+                        // Prepare for smooth transition
+                        Spline nextSpline = SplinePath.Splines[nextSplineIndex];
+                        Vector3 endPos = currentSpline.EvaluatePosition(1f);
+                        Vector3 endTangent = currentSpline.EvaluateTangent(1f);
+                        endPos = SplinePath.transform.TransformPoint(endPos);
+                        endTangent = SplinePath.transform.TransformDirection(endTangent);
+                        Quaternion endRot = Quaternion.LookRotation(endTangent);
+
+                        Vector3 startPos = nextSpline.EvaluatePosition(0f);
+                        Vector3 startTangent = nextSpline.EvaluateTangent(0f);
+                        startPos = SplinePath.transform.TransformPoint(startPos);
+                        startTangent = SplinePath.transform.TransformDirection(startTangent);
+                        Quaternion startRot = Quaternion.LookRotation(startTangent);
+
+                        _transitionStartPos = endPos;
+                        _transitionStartRot = endRot;
+                        _transitionEndPos = startPos;
+                        _transitionEndRot = startRot;
+                        _transitionTimer = 0f;
+                        _isTransitioning = true;
+
+                        _currentSplineIndex = nextSplineIndex;
+                        _progress = 0f;
+                        _cachedSplineLength = 0f;
+                        UpdateShader();
+                        return;
+                    }
+                }
+
+                Vector3 position = currentSpline.EvaluatePosition(_progress);
+                Vector3 tangent = currentSpline.EvaluateTangent(_progress);
+
+                position = SplinePath.transform.TransformPoint(position);
+                tangent = SplinePath.transform.TransformDirection(tangent);
+
+                transform.position = position;
+                transform.rotation = Quaternion.LookRotation(tangent);
+            }
+
+            UpdateShader();
+        }
+
+        /*
+        // PLAYER-RELATIVE PROJECTION LOGIC (Work in Progress)
+        private void UpdatePlayerRelative()
+        {
             if (SplinePath == null || SplinePath.Splines.Count == 0 || Player == null)
             {
                 UpdateShader();
@@ -110,7 +194,6 @@ namespace CharonsCorner.Runtime
             float targetT = Mathf.Clamp01(playerT + lookAheadT);
 
             // 3. Smoothly move orb progress towards target
-            // We use Lerp for simplicity, or we could use SmoothDamp for more control
             _progress = Mathf.Lerp(_progress, targetT, Time.deltaTime * _followSpeed);
 
             // 4. Handle spline transitions
@@ -142,6 +225,7 @@ namespace CharonsCorner.Runtime
 
             UpdateShader();
         }
+        */
 
         private void PrepareTransition(int nextSplineIndex)
         {

@@ -92,8 +92,12 @@ namespace CharonsCorner.Runtime
             // Change blend type optionally
             if (blendType.HasValue)
             {
-                if (Camera.main != null && Camera.main.TryGetComponent(out CinemachineBrain brain))
-                    brain.DefaultBlend = new CinemachineBlendDefinition(blendType.Value, blendDuration);
+                for (int i = 0; i < CinemachineBrain.ActiveBrainCount; ++i)
+                {
+                    var brain = CinemachineBrain.GetActiveBrain(i);
+                    if (brain != null)
+                        brain.DefaultBlend = new CinemachineBlendDefinition(blendType.Value, blendDuration);
+                }
             }
             
             _maxPriority++;
@@ -107,7 +111,7 @@ namespace CharonsCorner.Runtime
         /// <summary>
         /// Switches the current camera back to the default one.
         /// </summary>
-        public void ResetActiveCamera()
+        public void ResetActiveCamera(CinemachineBlendDefinition.Styles? blendType = null, float blendDuration = 0)
         {
             Debug.Log("[CameraManager] Resetting to Default Camera.");
             if (SceneDefaultCamera == null)
@@ -116,7 +120,7 @@ namespace CharonsCorner.Runtime
                 return;
             }
 
-            ChangeActiveCamera(SceneDefaultCamera);
+            ChangeActiveCamera(SceneDefaultCamera, blendType, blendDuration);
         }
 
         private void Update()
