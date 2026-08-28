@@ -1,11 +1,15 @@
 using MoreMountains.Feedbacks;
+using MoreMountains.Tools;
 using UnityEngine;
 
-public class AppearUponRadius : MonoBehaviour
+public class AppearUponRadius : MonoBehaviour, MMEventListener<MMGameEvent>
 {
     [SerializeField] private MMSpringScale _springScale;
     [SerializeField] private float _radius = 5f;
     [SerializeField] private LayerMask _playerLayer;
+
+    [Header("Events")]
+    [SerializeField] private string _eventName = "";
 
     private Vector3 _startingScale;
     private bool _activated = false;
@@ -49,11 +53,38 @@ public class AppearUponRadius : MonoBehaviour
         {
             if (col.CompareTag("Player"))
             {
-                _springScale.MoveTo(_startingScale);
-                _activated = true;
+                TriggerAppear();
                 break;
             }
         }
+    }
+
+    private void TriggerAppear()
+    {
+        if (_activated || _springScale == null) return;
+
+        _springScale.MoveTo(_startingScale);
+        _activated = true;
+    }
+
+    public void OnMMEvent(MMGameEvent gameEvent)
+    {
+        if (string.IsNullOrEmpty(_eventName)) return;
+
+        if (gameEvent.EventName == _eventName)
+        {
+            TriggerAppear();
+        }
+    }
+
+    private void OnEnable()
+    {
+        this.MMEventStartListening<MMGameEvent>();
+    }
+
+    private void OnDisable()
+    {
+        this.MMEventStopListening<MMGameEvent>();
     }
 
     private void OnDrawGizmosSelected()
