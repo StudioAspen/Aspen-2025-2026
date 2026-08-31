@@ -115,6 +115,7 @@ namespace CharonsCorner.Runtime
                 Speaker.Charon => "Charon",
                 Speaker.Bowley => "Bowley",
                 Speaker.Unknown => "???",
+                Speaker.LostMemento => "???",
                 _ => "???"
             };
 

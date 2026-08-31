@@ -9,7 +9,8 @@ namespace CharonsCorner.Runtime
     {
         Charon,
         Bowley,
-        Unknown // Mapping ??? to Unknown in code for better naming, but will display as ??? in inspector if possible or just use string mapping
+        Unknown, // Mapping ??? to Unknown in code for better naming, but will display as ??? in inspector if possible or just use string mapping
+        LostMemento
     }
 
     [System.Serializable]

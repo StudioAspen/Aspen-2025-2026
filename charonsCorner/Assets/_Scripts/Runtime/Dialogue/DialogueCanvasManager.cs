@@ -31,6 +31,7 @@ namespace CharonsCorner.Runtime
         [SerializeField] private Color _charonColor;
         [SerializeField] private Color _bowleyColor;
         [SerializeField] private Color _mementoColor;
+        [SerializeField] private Color _lostMementoColor;
 
         [Header("Feedbacks")]
         [SerializeField] private MMF_Player _dialogueNextFeedback;
@@ -149,15 +150,18 @@ namespace CharonsCorner.Runtime
             ClearUI(false);
 
             string currentSpeakerName = "";
+            Speaker? currentSpeaker = null;
+
             // Mapping Speaker enum to string as in DialogueManager.GetProcessedLine
             if (_dialogueManager.CurrentSequence != null && _dialogueManager.CurrentDialogueIndex < _dialogueManager.CurrentSequence.lines.Length)
             {
-                Speaker speaker = _dialogueManager.CurrentSequence.lines[_dialogueManager.CurrentDialogueIndex].speaker;
-                currentSpeakerName = speaker switch
+                currentSpeaker = _dialogueManager.CurrentSequence.lines[_dialogueManager.CurrentDialogueIndex].speaker;
+                currentSpeakerName = currentSpeaker switch
                 {
                     Speaker.Charon => "Charon",
                     Speaker.Bowley => "Bowley",
                     Speaker.Unknown => "???",
+                    Speaker.LostMemento => "???",
                     _ => "???"
                 };
             }
@@ -166,7 +170,7 @@ namespace CharonsCorner.Runtime
                 currentSpeakerName = _dialogueManager.CurrentOpener.SpeakerName;
             }
 
-            CheckSpeakerChange(currentSpeakerName);
+            CheckSpeakerChange(currentSpeakerName, currentSpeaker);
 
             if (!string.IsNullOrEmpty(currentSpeakerName))
                 _nameText.text = currentSpeakerName;
@@ -175,27 +179,43 @@ namespace CharonsCorner.Runtime
             _dialogueTextTypewriter.ShowText(line);
         }
 
-        private void CheckSpeakerChange(string newSpeakerName)
+        private void CheckSpeakerChange(string newSpeakerName, Speaker? speaker = null)
         {
             if (_lastSpeakerName != newSpeakerName)
             {
                 if (_nameBoxChangeFeedback != null) _nameBoxChangeFeedback.PlayFeedbacks();
-                UpdateNameBoxColor(newSpeakerName);
+                UpdateNameBoxColor(newSpeakerName, speaker);
             }
             _lastSpeakerName = newSpeakerName;
         }
 
-        private void UpdateNameBoxColor(string speakerName)
+        private void UpdateNameBoxColor(string speakerName, Speaker? speaker = null)
         {
             if (_recoloredImages == null || _recoloredImages.Count == 0) return;
 
-            Color targetColor = speakerName switch
+            Color targetColor;
+
+            if (speaker.HasValue)
             {
-                "Charon" => _charonColor,
-                "Bowley" => _bowleyColor,
-                "???" => _mementoColor,
-                _ => _recoloredImages[0].color
-            };
+                targetColor = speaker.Value switch
+                {
+                    Speaker.Charon => _charonColor,
+                    Speaker.Bowley => _bowleyColor,
+                    Speaker.Unknown => _mementoColor,
+                    Speaker.LostMemento => _lostMementoColor,
+                    _ => _recoloredImages[0].color
+                };
+            }
+            else
+            {
+                targetColor = speakerName switch
+                {
+                    "Charon" => _charonColor,
+                    "Bowley" => _bowleyColor,
+                    "???" => _mementoColor,
+                    _ => _recoloredImages[0].color
+                };
+            }
 
             foreach (var image in _recoloredImages)
             {
