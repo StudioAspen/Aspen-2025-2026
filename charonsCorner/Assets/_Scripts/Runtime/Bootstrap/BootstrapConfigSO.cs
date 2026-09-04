@@ -17,7 +17,7 @@ namespace CharonsCorner.Runtime
     public class BootstrapConfigSO : ScriptableObject
     {
         [InfoBox("Set the initial GameState for each scene. If a scene is not listed, it defaults to Gameplay.")]
-        [SerializeField, SerializedDictionary("Scene", "Initial Game State")]
+        [SerializeField, SerializedDictionary("Scene", "Initial Game State"), DrawWithUnity]
         private SerializedDictionary<SceneReference, GameState> _sceneInitialStates = new();
 
         /// <summary>

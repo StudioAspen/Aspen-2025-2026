@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Animancer;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using MoreMountains.Feedbacks;
@@ -27,6 +28,11 @@ namespace CharonsCorner.Runtime
 
         [SerializeField] private float _fadeDuration = 1f;
         [SerializeField] private bool _useFadeTransition = false;
+        [SerializeField] private float _initialEntranceDelay = 0f;
+        [Header("Audio")]
+        [SerializeField] private StringAsset _openAudio;
+        [SerializeField] private StringAsset _closeAudio;
+        [Header("Feedbacks")]
         [SerializeField] private List<MMF_Player> _openUIFeedbacks;
         [SerializeField] private List<MMF_Player> _closeUIFeedbacks;
         [ShowInInspector, ReadOnly] public static Selectable TargetSelectedObject { get; private set; }
@@ -37,11 +43,12 @@ namespace CharonsCorner.Runtime
         [field: SerializeField] public Selectable DefaultSelected { get; private set; }
 
         [Header("Events")]
-        public UnityEvent OnFocused = new();
-        public UnityEvent OnUnfocused = new();
+        public UnityEngine.Events.UnityEvent OnFocused = new();
+        public UnityEngine.Events.UnityEvent OnUnfocused = new();
 
         private CanvasGroup _group = null;
         private System.Threading.CancellationTokenSource _cts;
+        private bool _hasEnteredBefore = false;
 
         public CanvasGroup Group
         {
@@ -232,11 +239,26 @@ namespace CharonsCorner.Runtime
             _cts = new System.Threading.CancellationTokenSource();
             var token = _cts.Token;
 
+            if (!_hasEnteredBefore && _initialEntranceDelay > 0)
+            {
+                await UniTask.Delay(TimeSpan.FromSeconds(_initialEntranceDelay), cancellationToken: token);
+                _hasEnteredBefore = true;
+            }
+            else
+            {
+                _hasEnteredBefore = true;
+            }
+
             DOTween.Kill(Group);
             Group.interactable = true;
             Group.blocksRaycasts = true; // Ensure raycasts are enabled when focused
             gameObject.SetActive(true);
             ActivePanel = this;
+
+            if (_openAudio != null)
+            {
+                AudioManager.Instance.Play(_openAudio);
+            }
 
             if (_openUIFeedbacks != null)
             {
@@ -284,6 +306,11 @@ namespace CharonsCorner.Runtime
             DOTween.Kill(Group);
             Group.interactable = false;
             
+            if (_closeAudio != null)
+            {
+                AudioManager.Instance.Play(_closeAudio);
+            }
+
             if (ActivePanel == this)
             {
                 ActivePanel = null;

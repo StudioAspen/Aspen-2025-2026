@@ -1,4 +1,5 @@
 using AYellowpaper.SerializedCollections;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -14,7 +15,7 @@ namespace CharonsCorner.Runtime
         /// A collection of required progress flags and their minimum values.
         /// All conditions must be met for the object to be considered unlocked.
         /// </summary>
-        [SerializeField, SerializedDictionary("Progress Flag", "Required Value")]
+        [SerializeField, SerializedDictionary("Progress Flag", "Required Value"), DrawWithUnity]
         private SerializedDictionary<ProgressFlag, int> _requiredFlags =
             new SerializedDictionary<ProgressFlag, int>();
 

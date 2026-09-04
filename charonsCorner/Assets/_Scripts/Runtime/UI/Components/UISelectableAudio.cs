@@ -1,3 +1,4 @@
+using Animancer;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -9,6 +10,8 @@ namespace CharonsCorner.Runtime
     {
         private Selectable _selectable;
     
+        [SerializeField] private StringAsset _hoverAndSelectAudio;
+        [SerializeField] private StringAsset _clickAndSubmitAudio;
         [SerializeField] private FloatRange _hoverPitchRange = new FloatRange(0.9f, 1.1f); 
 
         private void Awake()
@@ -21,8 +24,11 @@ namespace CharonsCorner.Runtime
             if (!_selectable.interactable)
                 return;
         
-            Debug.Assert(AudioManager.Instance != null);
-            // AudioManager.Instance.Play("SFX_Hover", AudioManager.MixerTarget.UI, null, _hoverPitchRange.RandomValue());
+            if (_hoverAndSelectAudio != null)
+            {
+                Debug.Assert(AudioManager.Instance != null);
+                AudioManager.Instance.Play(_hoverAndSelectAudio, AudioManager.MixerTarget.UI, null, _hoverPitchRange.RandomValue());
+            }
         }
     
         public void OnPointerEnter(PointerEventData eventData)
@@ -32,8 +38,11 @@ namespace CharonsCorner.Runtime
 
         public void OnSubmit(BaseEventData eventData)
         {
-            
-            // AudioManager.Instance.Play("SFX_Click", AudioManager.MixerTarget.UI, null, 1f, true);
+            if (_clickAndSubmitAudio != null)
+            {
+                Debug.Assert(AudioManager.Instance != null);
+                AudioManager.Instance.Play(_clickAndSubmitAudio, AudioManager.MixerTarget.UI, null, 1f, true);
+            }
         }
 
         public void OnPointerClick(PointerEventData eventData)

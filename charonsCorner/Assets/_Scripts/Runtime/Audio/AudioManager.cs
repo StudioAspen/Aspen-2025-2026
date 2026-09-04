@@ -24,9 +24,9 @@ namespace CharonsCorner.Runtime
         public static readonly string MusicVolumeParam = "MusicVolume";
     
         [Space]
-        [SerializeField, SerializedDictionary("Audio ID", "Audio Clip")]
+        [SerializeField]
         private AudioBankSO _soundBank;
-        [SerializeField, SerializedDictionary("Audio ID", "Audio Clip")]
+        [SerializeField]
         private AudioBankSO _musicBank;
     
         private readonly Dictionary<StringAsset, int> _lastPlayedFrame = new();
@@ -36,7 +36,8 @@ namespace CharonsCorner.Runtime
             None,
             Default,
             SFX,
-            UI
+            UI,
+            Music
         }
 
         public enum DefaultMixerTarget
@@ -46,7 +47,7 @@ namespace CharonsCorner.Runtime
             UI = MixerTarget.UI
         }
         
-        public void Play(StringAsset clip, MixerTarget mixerTarget, Vector3? position = null, float pitch = 1f, bool persistAcrossScenes = false)
+        public void Play(StringAsset clip, MixerTarget mixerTarget = MixerTarget.Default, Vector3? position = null, float pitch = 1f, bool persistAcrossScenes = false)
         {
             // Prevent same sound from playing twice in the same frame
             int frame = Time.frameCount;
@@ -54,7 +55,7 @@ namespace CharonsCorner.Runtime
                 return;
             _lastPlayedFrame[clip] = frame;
             
-            if (_soundBank.Bank.TryGetValue(clip, out AudioClip audioClip))
+            if (_soundBank.Bank.TryGetValue(clip, out AudioEntry entry))
             {
                 GameObject clipObject = new GameObject(clip, typeof(AudioDestroyer));
                 if(persistAcrossScenes)
@@ -68,9 +69,14 @@ namespace CharonsCorner.Runtime
                     source.maxDistance = 20f;
                     source.dopplerLevel = 0f;
                 }
-                source.clip = audioClip;
+                source.clip = entry.Clip;
                 source.pitch = pitch;
-                source.outputAudioMixerGroup = GetMixerGroup(mixerTarget);
+                source.volume = entry.Volume;
+
+                // Resolve mixer: Use provided override, otherwise use bank setting
+                MixerTarget finalTarget = mixerTarget == MixerTarget.Default ? entry.Mixer : mixerTarget;
+                source.outputAudioMixerGroup = GetMixerGroup(finalTarget);
+                
                 source.Play();
             }
             else
@@ -79,14 +85,11 @@ namespace CharonsCorner.Runtime
             }
         }
         
-        public void Play(StringAsset clip, Vector3? position = null, float pitch = 1.0f)
-        {
-            Play(clip, MixerTarget.Default, position, pitch);
-        }
+        // Removed old Play overload to avoid ambiguity with default parameters
 
-        public void PlayAndFollow(StringAsset clip, Transform target, MixerTarget mixerTarget)
+        public void PlayAndFollow(StringAsset clip, Transform target, MixerTarget mixerTarget = MixerTarget.Default)
         {
-            if (_soundBank.Bank.TryGetValue(clip, out AudioClip audioClip))
+            if (_soundBank.Bank.TryGetValue(clip, out AudioEntry entry))
             {
                 GameObject clipObject = new GameObject(clip, typeof(AudioDestroyer));
                 AudioSource source = clipObject.AddComponent<AudioSource>();
@@ -95,8 +98,13 @@ namespace CharonsCorner.Runtime
                 source.rolloffMode = AudioRolloffMode.Linear;
                 source.maxDistance = 50f;
                 source.dopplerLevel = 0f;
-                source.clip = audioClip;
-                source.outputAudioMixerGroup = GetMixerGroup(mixerTarget);
+                source.clip = entry.Clip;
+                source.volume = entry.Volume;
+
+                // Resolve mixer: Use provided override, otherwise use bank setting
+                MixerTarget finalTarget = mixerTarget == MixerTarget.Default ? entry.Mixer : mixerTarget;
+                source.outputAudioMixerGroup = GetMixerGroup(finalTarget);
+
                 followTarget.Init(target, FollowTarget.UpdateMode.Late);
                 source.Play();
             }
@@ -111,9 +119,22 @@ namespace CharonsCorner.Runtime
             if (music == null)
                 return;
 
-            if (_musicBank.Bank.TryGetValue(music, out AudioClip audioClip))
+            if (_musicBank.Bank.TryGetValue(music, out AudioEntry entry))
             {
-                _musicSource.clip = audioClip;
+                _musicSource.clip = entry.Clip;
+                _musicSource.volume = entry.Volume;
+                
+                // Resolve mixer: Use bank setting if it's not Default, otherwise keep current MusicSource setting
+                if (entry.Mixer != MixerTarget.Default && entry.Mixer != MixerTarget.None)
+                {
+                    _musicSource.outputAudioMixerGroup = GetMixerGroup(entry.Mixer);
+                }
+                else if (entry.Mixer == MixerTarget.Default && _musicSource.outputAudioMixerGroup == null)
+                {
+                    // Fallback to MusicMixer if source has no mixer and entry is Default
+                    _musicSource.outputAudioMixerGroup = MusicMixer;
+                }
+                
                 _musicSource.Play();
             }
             else
@@ -138,6 +159,7 @@ namespace CharonsCorner.Runtime
             if (target == MixerTarget.Default) return GetMixerGroup((MixerTarget)_defaultMixer);
             if (target == MixerTarget.SFX) return SfxMixer;
             if (target == MixerTarget.UI) return UiMixer;
+            if (target == MixerTarget.Music) return MusicMixer;
             throw new System.Exception("Invalid MixerTarget");
         }
         
@@ -165,6 +187,15 @@ namespace CharonsCorner.Runtime
         }
         
         public bool TryGetClip(StringAsset id, out AudioClip clip)
-            => _soundBank.Bank.TryGetValue(id, out clip);
+        {
+            if (_soundBank.Bank.TryGetValue(id, out AudioEntry entry))
+            {
+                clip = entry.Clip;
+                return true;
+            }
+
+            clip = null;
+            return false;
+        }
     }
 }

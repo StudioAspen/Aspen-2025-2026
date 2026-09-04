@@ -1,4 +1,5 @@
-﻿using MoreMountains.Feedbacks;
+﻿using Animancer;
+using MoreMountains.Feedbacks;
 using UnityEngine;
 using TMPro;
 
@@ -6,8 +7,13 @@ namespace CharonsCorner.Runtime
 {
     public class InputInteraction : MonoBehaviour
     {
+        [Header("Feedbacks")]
         [SerializeField] private MMF_Player _enterFeedback;
         [SerializeField] private MMF_Player _exitFeedback;
+
+        [Header("Audio")]
+        [SerializeField] private StringAsset _appearSfx;
+        [SerializeField] private StringAsset _disappearSfx;
 
         [Header("Blinking Effect")]
         [SerializeField] private TMP_Text _textComponent;
@@ -26,6 +32,11 @@ namespace CharonsCorner.Runtime
 
         public void Appear()
         {
+            if (_appearSfx != null)
+            {
+                AudioManager.Instance.Play(_appearSfx);
+            }
+            
             if (_enterFeedback != null)
             {
                 _enterFeedback.PlayFeedbacks();
@@ -34,6 +45,11 @@ namespace CharonsCorner.Runtime
 
         public void Disappear()
         {
+            if (_disappearSfx != null)
+            {
+                AudioManager.Instance.Play(_disappearSfx);
+            }
+            
             if (_exitFeedback != null)
             {
                 _exitFeedback.PlayFeedbacks();

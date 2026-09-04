@@ -51,7 +51,7 @@ namespace CharonsCorner.Runtime
         {
             if (_partyPopperSfx != null)
             {
-                AudioManager.Instance.Play(_partyPopperSfx, AudioManager.MixerTarget.SFX);
+                AudioManager.Instance.Play(_partyPopperSfx);
             }
         }
     }
