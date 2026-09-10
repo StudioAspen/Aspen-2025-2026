@@ -4,6 +4,7 @@ using MoreMountains.Tools;
 using Cysharp.Threading.Tasks;
 using Sirenix.OdinInspector;
 using CharonsCorner.Runtime.VFX;
+using Animancer;
 
 namespace CharonsCorner.Runtime
 {
@@ -26,6 +27,14 @@ namespace CharonsCorner.Runtime
         [Header("Transition Settings")]
         [SerializeField] private float _transitionDuration = 1f;
         [SerializeField] private AnimationCurve _transitionCurve = AnimationCurve.Linear(0, 0, 1, 1);
+
+        [Header("Audio Settings")]
+        [SerializeField] private StringAsset _flickerOnAudio;
+        [SerializeField] private StringAsset _flickerOffAudio;
+        [SerializeField] private StringAsset _lightingGrowAudio;
+        [SerializeField] private StringAsset _lightingShrinkAudio;
+        [SerializeField] private bool _playAtPosition = true;
+        [SerializeField] private float _audioRange = 20f;
 
         private Dictionary<Light, float> _initialIntensities = new();
         private bool _isOn = true;
@@ -87,6 +96,7 @@ namespace CharonsCorner.Runtime
         [Button]
         public void TurnOn()
         {
+            PlayEventAudio(_flickerOnAudio);
             CancelTransition();
             if (_isTransitioning) return;
             _isOn = true;
@@ -106,6 +116,7 @@ namespace CharonsCorner.Runtime
         [Button]
         public void TurnOff()
         {
+            PlayEventAudio(_flickerOffAudio);
             CancelTransition();
             if (_isTransitioning) return;
             _isOn = false;
@@ -125,6 +136,7 @@ namespace CharonsCorner.Runtime
         [Button]
         public void Grow()
         {
+            PlayEventAudio(_lightingGrowAudio);
             CancelTransition();
             _isOn = true;
             _isTransitioning = true;
@@ -135,6 +147,7 @@ namespace CharonsCorner.Runtime
         [Button]
         public void Shrink()
         {
+            PlayEventAudio(_lightingShrinkAudio);
             CancelTransition();
             _isOn = false;
             _isTransitioning = true;
@@ -281,6 +294,21 @@ namespace CharonsCorner.Runtime
                 {
                     light.intensity = 0f;
                     light.enabled = false;
+                }
+            }
+        }
+
+        private void PlayEventAudio(StringAsset audioId)
+        {
+            if (audioId != null && AudioManager.Instance != null)
+            {
+                if (_playAtPosition)
+                {
+                    AudioManager.Instance.Play(audioId, position: transform.position, maxDistance: _audioRange);
+                }
+                else
+                {
+                    AudioManager.Instance.Play(audioId);
                 }
             }
         }

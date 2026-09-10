@@ -181,6 +181,7 @@ public class FlashbackEventSubscriber : MonoBehaviour
                 break;
             case "ShakeCamera":
                 MMCameraShakeEvent.Trigger(shakeDuration, shakeAmplitude, shakeFrequency, 0f, 0f, 0f, false, new MMChannelData(shakeChannelMode, shakeChannelInt, shakeChannelDefinition));
+                MMGameEvent.Trigger("CameraShakeAudio");
                 break;
             case "MovePlayerFeedback":
                 if (movePlayerFeedback != null) movePlayerFeedback.PlayFeedbacks();

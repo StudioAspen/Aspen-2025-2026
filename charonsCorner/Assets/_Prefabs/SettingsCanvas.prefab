@@ -169,7 +169,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1049939455038642930}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6da43522623d4704e979466dc7650b65, type: 3}
   m_Name: 
@@ -182,6 +182,7 @@ MonoBehaviour:
   AutoChangeDirectionOnEnd: 0
   AutoPlayOnStart: 0
   AutoPlayOnEnable: 0
+  LogMissingTargets: 1
   ForceTimescaleMode: 1
   ForcedTimescaleMode: 1
   DurationMultiplier: 1
@@ -277,22 +278,106 @@ MonoBehaviour:
   DebugActive: 0
   InScriptDrivenPause: 0
   FeedbacksList:
+  - rid: 6001494230130491506
   - rid: 8454844218438582363
   - rid: 8454844218438582365
   - rid: 8454844218438582353
   - rid: 8454844218438582364
   - rid: 8454844218438582360
+  PlayMode: 0
+  SequentialDelay: 0
   KeepPlayModeChanges: 0
   PerformanceMode: 0
   RestoreInitialValuesOnDisable: 0
   StopFeedbacksOnDisable: 0
   PlayCount: 0
+  InPreviewMode: 0
   MMF_ChannelMode: 0
   MMF_Channel: 0
   MMF_ChannelDefinition: {fileID: 0}
   references:
     version: 2
     RefIds:
+    - rid: 6001494230130491506
+      type: {class: MMF_PlayCharonAudio, ns: MoreMountains.Feedbacks, asm: CharonsCorner.Runtime}
+      data:
+        Active: 1
+        UniqueID: 1247205583
+        Label: Play Charon Audio
+        OriginalLabel: Play Charon Audio
+        ChannelMode: 0
+        Channel: 0
+        MMChannelDefinition: {fileID: 0}
+        Chance: 100
+        Timing:
+          TimescaleMode: 0
+          ExcludeFromHoldingPauses: 0
+          ContributeToTotalDuration: 1
+          InitialDelay: 0
+          CooldownDuration: 0
+          InterruptsOnStop: 1
+          NumberOfRepeats: 0
+          RepeatForever: 0
+          DelayBetweenRepeats: 1
+          PlayCount: 0
+          LimitPlayCount: 0
+          MaxPlayCount: 3
+          SetPlayCountToZeroOnReset: 0
+          MMFeedbacksDirectionCondition: 0
+          PlayDirection: 0
+          ConstantIntensity: 0
+          UseIntensityInterval: 0
+          IntensityIntervalMin: 0
+          IntensityIntervalMax: 0
+          Sequence: {fileID: 0}
+          TrackID: 0
+          Quantized: 0
+          TargetBPM: 120
+        AutomatedTargetAcquisition:
+          Mode: 0
+          ChildIndex: 0
+        RandomizeOutput: 0
+        RandomMultiplier: {x: 0.8, y: 1}
+        RandomizeDuration: 0
+        RandomDurationMultiplier: {x: 0.5, y: 2}
+        UseRange: 0
+        RangeDistance: 5
+        UseRangeFalloff: 0
+        RangeFalloff:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          - serializedVersion: 3
+            time: 1
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        RemapRangeFalloff: {x: 0, y: 1}
+        AutomaticShakerSetupButton:
+          ButtonText: 
+        Owner: {fileID: 4812111299356571226}
+        DebugActive: 0
+        AudioId: {fileID: 11400000, guid: 8ddac57a31298f84aab35a00988311e0, type: 2}
+        RandomAudioIds: []
+        MixerOverride: 1
+        Pitch: 1
+        PlayAtPosition: 0
+        Range: 20
     - rid: 8454844218438582353
       type: {class: MMF_SpringVector3, ns: MoreMountains.Feedbacks, asm: MoreMountains.Tools}
       data:
@@ -1188,6 +1273,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -1517,8 +1603,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <IsAdditive>k__BackingField: 0
+  <EnablePlayerActions>k__BackingField: 0
   _fadeDuration: 1
   _useFadeTransition: 0
+  _initialEntranceDelay: 0
+  _openAudio: {fileID: 0}
+  _closeAudio: {fileID: 0}
   _openUIFeedbacks:
   - {fileID: 3232959485347669566}
   _closeUIFeedbacks:
@@ -1677,6 +1767,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 0
+  m_UseReflectionProbes: 0
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
@@ -1884,6 +1975,9 @@ MonoBehaviour:
   Mode: 1
   TargetTransform: {fileID: 0}
   TargetRectTransform: {fileID: 0}
+  UseMultiTargets: 0
+  MultiTargetTransforms: []
+  MultiTargetRectTransforms: []
   ShakeSpeed: 0.5
   ShakeRange: 0.025
   ShakeMainDirection: {x: 1, y: 1, z: 0}
@@ -1973,7 +2067,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8655704419428578356}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6da43522623d4704e979466dc7650b65, type: 3}
   m_Name: 
@@ -1986,6 +2080,7 @@ MonoBehaviour:
   AutoChangeDirectionOnEnd: 0
   AutoPlayOnStart: 0
   AutoPlayOnEnable: 0
+  LogMissingTargets: 1
   ForceTimescaleMode: 1
   ForcedTimescaleMode: 1
   DurationMultiplier: 1
@@ -2069,23 +2164,107 @@ MonoBehaviour:
   DebugActive: 0
   InScriptDrivenPause: 0
   FeedbacksList:
+  - rid: 6001494230130491505
   - rid: 8454844218438582362
   - rid: 8454844218438582366
   - rid: 8454844218438582353
   - rid: 8454844218438582367
   - rid: 8454844218438582358
   - rid: 8454844218438582354
+  PlayMode: 0
+  SequentialDelay: 0
   KeepPlayModeChanges: 0
   PerformanceMode: 0
   RestoreInitialValuesOnDisable: 0
   StopFeedbacksOnDisable: 0
   PlayCount: 0
+  InPreviewMode: 0
   MMF_ChannelMode: 0
   MMF_Channel: 0
   MMF_ChannelDefinition: {fileID: 0}
   references:
     version: 2
     RefIds:
+    - rid: 6001494230130491505
+      type: {class: MMF_PlayCharonAudio, ns: MoreMountains.Feedbacks, asm: CharonsCorner.Runtime}
+      data:
+        Active: 1
+        UniqueID: -573487611
+        Label: Play Charon Audio
+        OriginalLabel: Play Charon Audio
+        ChannelMode: 0
+        Channel: 0
+        MMChannelDefinition: {fileID: 0}
+        Chance: 100
+        Timing:
+          TimescaleMode: 0
+          ExcludeFromHoldingPauses: 0
+          ContributeToTotalDuration: 1
+          InitialDelay: 0
+          CooldownDuration: 0
+          InterruptsOnStop: 1
+          NumberOfRepeats: 0
+          RepeatForever: 0
+          DelayBetweenRepeats: 1
+          PlayCount: 0
+          LimitPlayCount: 0
+          MaxPlayCount: 3
+          SetPlayCountToZeroOnReset: 0
+          MMFeedbacksDirectionCondition: 0
+          PlayDirection: 0
+          ConstantIntensity: 0
+          UseIntensityInterval: 0
+          IntensityIntervalMin: 0
+          IntensityIntervalMax: 0
+          Sequence: {fileID: 0}
+          TrackID: 0
+          Quantized: 0
+          TargetBPM: 120
+        AutomatedTargetAcquisition:
+          Mode: 0
+          ChildIndex: 0
+        RandomizeOutput: 0
+        RandomMultiplier: {x: 0.8, y: 1}
+        RandomizeDuration: 0
+        RandomDurationMultiplier: {x: 0.5, y: 2}
+        UseRange: 0
+        RangeDistance: 5
+        UseRangeFalloff: 0
+        RangeFalloff:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          - serializedVersion: 3
+            time: 1
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        RemapRangeFalloff: {x: 0, y: 1}
+        AutomaticShakerSetupButton:
+          ButtonText: 
+        Owner: {fileID: 3232959485347669566}
+        DebugActive: 0
+        AudioId: {fileID: 11400000, guid: 50936dc741816194194ca09740245bc1, type: 2}
+        RandomAudioIds: []
+        MixerOverride: 1
+        Pitch: 1
+        PlayAtPosition: 0
+        Range: 20
     - rid: 8454844218438582353
       type: {class: MMF_SpringVector3, ns: MoreMountains.Feedbacks, asm: MoreMountains.Tools}
       data:
@@ -2621,6 +2800,10 @@ PrefabInstance:
       propertyPath: FloatSpring.SpringDebug.CurrentValue
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2219574508811046961, guid: 9c7c5ed8a0631ad46b80d6e8eb2dda2e, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3024220450858968522, guid: 9c7c5ed8a0631ad46b80d6e8eb2dda2e, type: 3}
       propertyPath: _hoverTags
       value: <wave a*1.5 s*2><incr a*.75>
@@ -2725,6 +2908,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7808053994826948892, guid: 9c7c5ed8a0631ad46b80d6e8eb2dda2e, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 9173411630554894093, guid: 9c7c5ed8a0631ad46b80d6e8eb2dda2e, type: 3}
       propertyPath: m_fontSize
       value: 81.7
@@ -2740,14 +2927,39 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 14636067258929212, guid: 9c7c5ed8a0631ad46b80d6e8eb2dda2e, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3953294086544791671}
   m_SourcePrefab: {fileID: 100100000, guid: 9c7c5ed8a0631ad46b80d6e8eb2dda2e, type: 3}
+--- !u!1 &545526797873212012 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 14636067258929212, guid: 9c7c5ed8a0631ad46b80d6e8eb2dda2e, type: 3}
+  m_PrefabInstance: {fileID: 549974443012717136}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &3953294086544791671
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 545526797873212012}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1025ffd4e024ece87523ccddfd56b41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: CharonsCorner.Runtime::CharonsCorner.Runtime.UISelectableAudio
+  _hoverAndSelectAudio: {fileID: 11400000, guid: 47c6519b5c57c3047827df100499364e, type: 2}
+  _clickAndSubmitAudio: {fileID: 11400000, guid: 0527ce0e6b06e194c81ce6e792cf4918, type: 2}
+  _hoverPitchRange:
+    Min: 0.9
+    Max: 1.1
 --- !u!114 &3030339998224443068 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3291015305211649260, guid: 9c7c5ed8a0631ad46b80d6e8eb2dda2e, type: 3}
   m_PrefabInstance: {fileID: 549974443012717136}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 545526797873212012}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
@@ -2820,7 +3032,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4198316945943568534, guid: 6370a3f82f4ff114dbbe3095530df1b7, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4198316945943568534, guid: 6370a3f82f4ff114dbbe3095530df1b7, type: 3}
       propertyPath: m_AnchorMin.x
@@ -2828,7 +3040,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4198316945943568534, guid: 6370a3f82f4ff114dbbe3095530df1b7, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4198316945943568534, guid: 6370a3f82f4ff114dbbe3095530df1b7, type: 3}
       propertyPath: m_SizeDelta.x
@@ -2962,7 +3174,32 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 4814970798000426229, guid: 6370a3f82f4ff114dbbe3095530df1b7, type: 3}
       insertIndex: -1
       addedObject: {fileID: 7023439635394772303}
+    - targetCorrespondingSourceObject: {fileID: 2472001928591158226, guid: 6370a3f82f4ff114dbbe3095530df1b7, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3593791555992046296}
   m_SourcePrefab: {fileID: 100100000, guid: 6370a3f82f4ff114dbbe3095530df1b7, type: 3}
+--- !u!1 &3084788358538095088 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2472001928591158226, guid: 6370a3f82f4ff114dbbe3095530df1b7, type: 3}
+  m_PrefabInstance: {fileID: 612786431020876322}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &3593791555992046296
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3084788358538095088}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1025ffd4e024ece87523ccddfd56b41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: CharonsCorner.Runtime::CharonsCorner.Runtime.UISelectableAudio
+  _hoverAndSelectAudio: {fileID: 11400000, guid: 47c6519b5c57c3047827df100499364e, type: 2}
+  _clickAndSubmitAudio: {fileID: 11400000, guid: 0527ce0e6b06e194c81ce6e792cf4918, type: 2}
+  _hoverPitchRange:
+    Min: 0.9
+    Max: 1.1
 --- !u!224 &3657596931897942708 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 4198316945943568534, guid: 6370a3f82f4ff114dbbe3095530df1b7, type: 3}
@@ -3005,7 +3242,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8382709017609458414, guid: 6370a3f82f4ff114dbbe3095530df1b7, type: 3}
   m_PrefabInstance: {fileID: 612786431020876322}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 3084788358538095088}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
@@ -3684,12 +3921,37 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8275718222146902151, guid: 89363bea33292f745965ace0a6da0857, type: 3}
       insertIndex: 1
       addedObject: {fileID: 6827216894531654623}
+    - targetCorrespondingSourceObject: {fileID: 4746989733869409106, guid: 89363bea33292f745965ace0a6da0857, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6635642447023131663}
   m_SourcePrefab: {fileID: 100100000, guid: 89363bea33292f745965ace0a6da0857, type: 3}
 --- !u!224 &1909091549172360565 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 740873520007017700, guid: 89363bea33292f745965ace0a6da0857, type: 3}
   m_PrefabInstance: {fileID: 1168235694617563537}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &5897140659905282755 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4746989733869409106, guid: 89363bea33292f745965ace0a6da0857, type: 3}
+  m_PrefabInstance: {fileID: 1168235694617563537}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &6635642447023131663
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5897140659905282755}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1025ffd4e024ece87523ccddfd56b41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: CharonsCorner.Runtime::CharonsCorner.Runtime.UISelectableAudio
+  _hoverAndSelectAudio: {fileID: 11400000, guid: 47c6519b5c57c3047827df100499364e, type: 2}
+  _clickAndSubmitAudio: {fileID: 11400000, guid: 0527ce0e6b06e194c81ce6e792cf4918, type: 2}
+  _hoverPitchRange:
+    Min: 0.9
+    Max: 1.1
 --- !u!1 &7128962695257622806 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8275718222146902151, guid: 89363bea33292f745965ace0a6da0857, type: 3}
@@ -3727,7 +3989,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8976973080910891373, guid: 89363bea33292f745965ace0a6da0857, type: 3}
   m_PrefabInstance: {fileID: 1168235694617563537}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 5897140659905282755}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7b743370ac3e4ec2a1668f5455a8ef8a, type: 3}
@@ -3744,6 +4006,10 @@ PrefabInstance:
     - target: {fileID: 268924883242106301, guid: 9c7c5ed8a0631ad46b80d6e8eb2dda2e, type: 3}
       propertyPath: m_Name
       value: ApplyButton
+      objectReference: {fileID: 0}
+    - target: {fileID: 2219574508811046961, guid: 9c7c5ed8a0631ad46b80d6e8eb2dda2e, type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3291015305211649260, guid: 9c7c5ed8a0631ad46b80d6e8eb2dda2e, type: 3}
       propertyPath: m_Navigation.m_SelectOnRight
@@ -3877,6 +4143,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7808053994826948892, guid: 9c7c5ed8a0631ad46b80d6e8eb2dda2e, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 9173411630554894093, guid: 9c7c5ed8a0631ad46b80d6e8eb2dda2e, type: 3}
       propertyPath: m_text
       value: apply
@@ -3896,7 +4166,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 14636067258929212, guid: 9c7c5ed8a0631ad46b80d6e8eb2dda2e, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3527015975826604517}
   m_SourcePrefab: {fileID: 100100000, guid: 9c7c5ed8a0631ad46b80d6e8eb2dda2e, type: 3}
 --- !u!114 &438223237137002165 stripped
 MonoBehaviour:
@@ -3909,12 +4182,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e08cd56fd2838f45bb3577428403529, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1221521709251699522 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 14636067258929212, guid: 9c7c5ed8a0631ad46b80d6e8eb2dda2e, type: 3}
+  m_PrefabInstance: {fileID: 1207044866647831422}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &3527015975826604517
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1221521709251699522}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1025ffd4e024ece87523ccddfd56b41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: CharonsCorner.Runtime::CharonsCorner.Runtime.UISelectableAudio
+  _hoverAndSelectAudio: {fileID: 11400000, guid: 47c6519b5c57c3047827df100499364e, type: 2}
+  _clickAndSubmitAudio: {fileID: 11400000, guid: 0527ce0e6b06e194c81ce6e792cf4918, type: 2}
+  _hoverPitchRange:
+    Min: 0.9
+    Max: 1.1
 --- !u!114 &4425982983895461778 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3291015305211649260, guid: 9c7c5ed8a0631ad46b80d6e8eb2dda2e, type: 3}
   m_PrefabInstance: {fileID: 1207044866647831422}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 1221521709251699522}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
@@ -4193,7 +4488,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4198316945943568534, guid: 6370a3f82f4ff114dbbe3095530df1b7, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4198316945943568534, guid: 6370a3f82f4ff114dbbe3095530df1b7, type: 3}
       propertyPath: m_AnchorMin.x
@@ -4201,7 +4496,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4198316945943568534, guid: 6370a3f82f4ff114dbbe3095530df1b7, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4198316945943568534, guid: 6370a3f82f4ff114dbbe3095530df1b7, type: 3}
       propertyPath: m_SizeDelta.x
@@ -4337,12 +4632,37 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 4814970798000426229, guid: 6370a3f82f4ff114dbbe3095530df1b7, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2910164225938854215}
+    - targetCorrespondingSourceObject: {fileID: 2472001928591158226, guid: 6370a3f82f4ff114dbbe3095530df1b7, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8939054616384799004}
   m_SourcePrefab: {fileID: 100100000, guid: 6370a3f82f4ff114dbbe3095530df1b7, type: 3}
 --- !u!224 &2923012537938151250 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 4198316945943568534, guid: 6370a3f82f4ff114dbbe3095530df1b7, type: 3}
   m_PrefabInstance: {fileID: 1356651587495864260}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &3503127361772620822 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2472001928591158226, guid: 6370a3f82f4ff114dbbe3095530df1b7, type: 3}
+  m_PrefabInstance: {fileID: 1356651587495864260}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &8939054616384799004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3503127361772620822}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1025ffd4e024ece87523ccddfd56b41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: CharonsCorner.Runtime::CharonsCorner.Runtime.UISelectableAudio
+  _hoverAndSelectAudio: {fileID: 11400000, guid: 47c6519b5c57c3047827df100499364e, type: 2}
+  _clickAndSubmitAudio: {fileID: 11400000, guid: 0527ce0e6b06e194c81ce6e792cf4918, type: 2}
+  _hoverPitchRange:
+    Min: 0.9
+    Max: 1.1
 --- !u!1 &5765167175628811057 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4814970798000426229, guid: 6370a3f82f4ff114dbbe3095530df1b7, type: 3}
@@ -4380,7 +4700,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8382709017609458414, guid: 6370a3f82f4ff114dbbe3095530df1b7, type: 3}
   m_PrefabInstance: {fileID: 1356651587495864260}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 3503127361772620822}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
@@ -4791,6 +5111,15 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 7998450739702697973, guid: c76f780856ef9794b8ace46dc612110d, type: 3}
       insertIndex: 1
       addedObject: {fileID: 1316635009835280933}
+    - targetCorrespondingSourceObject: {fileID: 7870447345368421292, guid: c76f780856ef9794b8ace46dc612110d, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 504719241858321058}
+    - targetCorrespondingSourceObject: {fileID: 984527297359243455, guid: c76f780856ef9794b8ace46dc612110d, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6897519241679250680}
+    - targetCorrespondingSourceObject: {fileID: 4485694987625597889, guid: c76f780856ef9794b8ace46dc612110d, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2937364696556737024}
   m_SourcePrefab: {fileID: 100100000, guid: c76f780856ef9794b8ace46dc612110d, type: 3}
 --- !u!224 &334529088556700826 stripped
 RectTransform:
@@ -4808,6 +5137,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &2205826795033960371 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 984527297359243455, guid: c76f780856ef9794b8ace46dc612110d, type: 3}
+  m_PrefabInstance: {fileID: 1384036186637235980}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &6897519241679250680
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2205826795033960371}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1025ffd4e024ece87523ccddfd56b41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: CharonsCorner.Runtime::CharonsCorner.Runtime.UISelectableAudio
+  _hoverAndSelectAudio: {fileID: 11400000, guid: 47c6519b5c57c3047827df100499364e, type: 2}
+  _clickAndSubmitAudio: {fileID: 11400000, guid: 0527ce0e6b06e194c81ce6e792cf4918, type: 2}
+  _hoverPitchRange:
+    Min: 0.9
+    Max: 1.1
 --- !u!114 &2983981854708662416 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4205286986465114012, guid: c76f780856ef9794b8ace46dc612110d, type: 3}
@@ -4819,12 +5170,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &3275654351714057421 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4485694987625597889, guid: c76f780856ef9794b8ace46dc612110d, type: 3}
+  m_PrefabInstance: {fileID: 1384036186637235980}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2937364696556737024
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3275654351714057421}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1025ffd4e024ece87523ccddfd56b41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: CharonsCorner.Runtime::CharonsCorner.Runtime.UISelectableAudio
+  _hoverAndSelectAudio: {fileID: 11400000, guid: 47c6519b5c57c3047827df100499364e, type: 2}
+  _clickAndSubmitAudio: {fileID: 11400000, guid: 0527ce0e6b06e194c81ce6e792cf4918, type: 2}
+  _hoverPitchRange:
+    Min: 0.9
+    Max: 1.1
 --- !u!114 &3843086188957966337 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2765341093934454541, guid: c76f780856ef9794b8ace46dc612110d, type: 3}
   m_PrefabInstance: {fileID: 1384036186637235980}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 2205826795033960371}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9085046f02f69544eb97fd06b6048fe2, type: 3}
@@ -4846,7 +5219,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6727470969910843695, guid: c76f780856ef9794b8ace46dc612110d, type: 3}
   m_PrefabInstance: {fileID: 1384036186637235980}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 3275654351714057421}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9085046f02f69544eb97fd06b6048fe2, type: 3}
@@ -4879,7 +5252,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8811687111771735063, guid: c76f780856ef9794b8ace46dc612110d, type: 3}
   m_PrefabInstance: {fileID: 1384036186637235980}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 9082748611704759456}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9085046f02f69544eb97fd06b6048fe2, type: 3}
@@ -4950,6 +5323,28 @@ MonoBehaviour:
   - {fileID: 8312479326144559243}
   - {fileID: 3906817223466579255}
   - {fileID: 1226920129897001764}
+--- !u!1 &9082748611704759456 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7870447345368421292, guid: c76f780856ef9794b8ace46dc612110d, type: 3}
+  m_PrefabInstance: {fileID: 1384036186637235980}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &504719241858321058
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9082748611704759456}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1025ffd4e024ece87523ccddfd56b41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: CharonsCorner.Runtime::CharonsCorner.Runtime.UISelectableAudio
+  _hoverAndSelectAudio: {fileID: 11400000, guid: 47c6519b5c57c3047827df100499364e, type: 2}
+  _clickAndSubmitAudio: {fileID: 11400000, guid: 0527ce0e6b06e194c81ce6e792cf4918, type: 2}
+  _hoverPitchRange:
+    Min: 0.9
+    Max: 1.1
 --- !u!1001 &1435295281295046381
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5097,7 +5492,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6395907092232300804, guid: 7ff423065b6eb6d428d19a1068b3e210, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3066983527251947340}
   m_SourcePrefab: {fileID: 100100000, guid: 7ff423065b6eb6d428d19a1068b3e210, type: 3}
 --- !u!114 &3271584494452763306 stripped
 MonoBehaviour:
@@ -5110,12 +5508,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &5416109517874847721 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6395907092232300804, guid: 7ff423065b6eb6d428d19a1068b3e210, type: 3}
+  m_PrefabInstance: {fileID: 1435295281295046381}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &3066983527251947340
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5416109517874847721}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1025ffd4e024ece87523ccddfd56b41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: CharonsCorner.Runtime::CharonsCorner.Runtime.UISelectableAudio
+  _hoverAndSelectAudio: {fileID: 11400000, guid: 47c6519b5c57c3047827df100499364e, type: 2}
+  _clickAndSubmitAudio: {fileID: 11400000, guid: 0527ce0e6b06e194c81ce6e792cf4918, type: 2}
+  _hoverPitchRange:
+    Min: 0.9
+    Max: 1.1
 --- !u!114 &6963660888021957437 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8307124647442697680, guid: 7ff423065b6eb6d428d19a1068b3e210, type: 3}
   m_PrefabInstance: {fileID: 1435295281295046381}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 5416109517874847721}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
@@ -5511,8 +5931,33 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6395907092232300804, guid: 7ff423065b6eb6d428d19a1068b3e210, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7906360379706150663}
   m_SourcePrefab: {fileID: 100100000, guid: 7ff423065b6eb6d428d19a1068b3e210, type: 3}
+--- !u!1 &4825776353877478386 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6395907092232300804, guid: 7ff423065b6eb6d428d19a1068b3e210, type: 3}
+  m_PrefabInstance: {fileID: 1889903926165152502}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &7906360379706150663
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4825776353877478386}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1025ffd4e024ece87523ccddfd56b41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: CharonsCorner.Runtime::CharonsCorner.Runtime.UISelectableAudio
+  _hoverAndSelectAudio: {fileID: 11400000, guid: 47c6519b5c57c3047827df100499364e, type: 2}
+  _clickAndSubmitAudio: {fileID: 11400000, guid: 0527ce0e6b06e194c81ce6e792cf4918, type: 2}
+  _hoverPitchRange:
+    Min: 0.9
+    Max: 1.1
 --- !u!224 &7439771326540430202 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 9008651714066422156, guid: 7ff423065b6eb6d428d19a1068b3e210, type: 3}
@@ -5523,7 +5968,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8307124647442697680, guid: 7ff423065b6eb6d428d19a1068b3e210, type: 3}
   m_PrefabInstance: {fileID: 1889903926165152502}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 4825776353877478386}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
@@ -5710,7 +6155,10 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 5950016322890127195, guid: b49c618bed5bd6643b37abb833f0751e, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4310863768826074515}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 5399386992660216995, guid: b49c618bed5bd6643b37abb833f0751e, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7547230784919258961}
   m_SourcePrefab: {fileID: 100100000, guid: b49c618bed5bd6643b37abb833f0751e, type: 3}
 --- !u!224 &5555117717457409330 stripped
 RectTransform:
@@ -5722,6 +6170,28 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 5805173584017459758, guid: b49c618bed5bd6643b37abb833f0751e, type: 3}
   m_PrefabInstance: {fileID: 2271233078517252713}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &6155140512685965002 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5399386992660216995, guid: b49c618bed5bd6643b37abb833f0751e, type: 3}
+  m_PrefabInstance: {fileID: 2271233078517252713}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &7547230784919258961
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6155140512685965002}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1025ffd4e024ece87523ccddfd56b41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: CharonsCorner.Runtime::CharonsCorner.Runtime.UISelectableAudio
+  _hoverAndSelectAudio: {fileID: 11400000, guid: 47c6519b5c57c3047827df100499364e, type: 2}
+  _clickAndSubmitAudio: {fileID: 11400000, guid: 0527ce0e6b06e194c81ce6e792cf4918, type: 2}
+  _hoverPitchRange:
+    Min: 0.9
+    Max: 1.1
 --- !u!1001 &3538987392278831377
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5892,7 +6362,10 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 5950016322890127195, guid: b49c618bed5bd6643b37abb833f0751e, type: 3}
       insertIndex: -1
       addedObject: {fileID: 3371903674389894875}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 5399386992660216995, guid: b49c618bed5bd6643b37abb833f0751e, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1670883918657476915}
   m_SourcePrefab: {fileID: 100100000, guid: b49c618bed5bd6643b37abb833f0751e, type: 3}
 --- !u!224 &7029306300916443967 stripped
 RectTransform:
@@ -5904,6 +6377,28 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 5950016322890127195, guid: b49c618bed5bd6643b37abb833f0751e, type: 3}
   m_PrefabInstance: {fileID: 3538987392278831377}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &8931618364732595634 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5399386992660216995, guid: b49c618bed5bd6643b37abb833f0751e, type: 3}
+  m_PrefabInstance: {fileID: 3538987392278831377}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1670883918657476915
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8931618364732595634}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1025ffd4e024ece87523ccddfd56b41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: CharonsCorner.Runtime::CharonsCorner.Runtime.UISelectableAudio
+  _hoverAndSelectAudio: {fileID: 11400000, guid: 47c6519b5c57c3047827df100499364e, type: 2}
+  _clickAndSubmitAudio: {fileID: 11400000, guid: 0527ce0e6b06e194c81ce6e792cf4918, type: 2}
+  _hoverPitchRange:
+    Min: 0.9
+    Max: 1.1
 --- !u!1001 &3822287743110603981
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6946,6 +7441,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8275718222146902151, guid: 89363bea33292f745965ace0a6da0857, type: 3}
       insertIndex: 1
       addedObject: {fileID: 1627037392729672505}
+    - targetCorrespondingSourceObject: {fileID: 4746989733869409106, guid: 89363bea33292f745965ace0a6da0857, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8457707125921919462}
   m_SourcePrefab: {fileID: 100100000, guid: 89363bea33292f745965ace0a6da0857, type: 3}
 --- !u!224 &3561333913057074519 stripped
 RectTransform:
@@ -6968,7 +7466,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8976973080910891373, guid: 89363bea33292f745965ace0a6da0857, type: 3}
   m_PrefabInstance: {fileID: 4261666222943463859}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 8846416409348356833}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7b743370ac3e4ec2a1668f5455a8ef8a, type: 3}
@@ -6995,6 +7493,28 @@ MonoBehaviour:
   _dirtyColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   _cleanColor: {r: 1, g: 1, b: 1, a: 1}
   _windowModeDropdown: {fileID: 5165883506099970270}
+--- !u!1 &8846416409348356833 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4746989733869409106, guid: 89363bea33292f745965ace0a6da0857, type: 3}
+  m_PrefabInstance: {fileID: 4261666222943463859}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &8457707125921919462
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8846416409348356833}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1025ffd4e024ece87523ccddfd56b41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: CharonsCorner.Runtime::CharonsCorner.Runtime.UISelectableAudio
+  _hoverAndSelectAudio: {fileID: 11400000, guid: 47c6519b5c57c3047827df100499364e, type: 2}
+  _clickAndSubmitAudio: {fileID: 11400000, guid: 0527ce0e6b06e194c81ce6e792cf4918, type: 2}
+  _hoverPitchRange:
+    Min: 0.9
+    Max: 1.1
 --- !u!1001 &4692467577012722236
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7017,31 +7537,31 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 708717118681229432, guid: 6370a3f82f4ff114dbbe3095530df1b7, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 708717118681229432, guid: 6370a3f82f4ff114dbbe3095530df1b7, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3027016838080999299, guid: 6370a3f82f4ff114dbbe3095530df1b7, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3027016838080999299, guid: 6370a3f82f4ff114dbbe3095530df1b7, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3027016838080999299, guid: 6370a3f82f4ff114dbbe3095530df1b7, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 0
+      value: 300
       objectReference: {fileID: 0}
     - target: {fileID: 3027016838080999299, guid: 6370a3f82f4ff114dbbe3095530df1b7, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 1047.0901
       objectReference: {fileID: 0}
     - target: {fileID: 3027016838080999299, guid: 6370a3f82f4ff114dbbe3095530df1b7, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -25
       objectReference: {fileID: 0}
     - target: {fileID: 4198316945943568534, guid: 6370a3f82f4ff114dbbe3095530df1b7, type: 3}
       propertyPath: m_Pivot.x
@@ -7057,7 +7577,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4198316945943568534, guid: 6370a3f82f4ff114dbbe3095530df1b7, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4198316945943568534, guid: 6370a3f82f4ff114dbbe3095530df1b7, type: 3}
       propertyPath: m_AnchorMin.x
@@ -7065,7 +7585,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4198316945943568534, guid: 6370a3f82f4ff114dbbe3095530df1b7, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4198316945943568534, guid: 6370a3f82f4ff114dbbe3095530df1b7, type: 3}
       propertyPath: m_SizeDelta.x
@@ -7173,23 +7693,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8709851822681323782, guid: 6370a3f82f4ff114dbbe3095530df1b7, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8709851822681323782, guid: 6370a3f82f4ff114dbbe3095530df1b7, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8709851822681323782, guid: 6370a3f82f4ff114dbbe3095530df1b7, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 0
+      value: 750
       objectReference: {fileID: 0}
     - target: {fileID: 8709851822681323782, guid: 6370a3f82f4ff114dbbe3095530df1b7, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 475
       objectReference: {fileID: 0}
     - target: {fileID: 8709851822681323782, guid: 6370a3f82f4ff114dbbe3095530df1b7, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -25
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 3396014061699690699, guid: 6370a3f82f4ff114dbbe3095530df1b7, type: 3}
@@ -7199,6 +7719,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 4814970798000426229, guid: 6370a3f82f4ff114dbbe3095530df1b7, type: 3}
       insertIndex: -1
       addedObject: {fileID: 3039409139908801513}
+    - targetCorrespondingSourceObject: {fileID: 2472001928591158226, guid: 6370a3f82f4ff114dbbe3095530df1b7, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7363304196292945771}
   m_SourcePrefab: {fileID: 100100000, guid: 6370a3f82f4ff114dbbe3095530df1b7, type: 3}
 --- !u!1 &273813615479379657 stripped
 GameObject:
@@ -7237,12 +7760,34 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8382709017609458414, guid: 6370a3f82f4ff114dbbe3095530df1b7, type: 3}
   m_PrefabInstance: {fileID: 4692467577012722236}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 7156412009324491246}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &7156412009324491246 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2472001928591158226, guid: 6370a3f82f4ff114dbbe3095530df1b7, type: 3}
+  m_PrefabInstance: {fileID: 4692467577012722236}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &7363304196292945771
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7156412009324491246}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1025ffd4e024ece87523ccddfd56b41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: CharonsCorner.Runtime::CharonsCorner.Runtime.UISelectableAudio
+  _hoverAndSelectAudio: {fileID: 11400000, guid: 47c6519b5c57c3047827df100499364e, type: 2}
+  _clickAndSubmitAudio: {fileID: 11400000, guid: 0527ce0e6b06e194c81ce6e792cf4918, type: 2}
+  _hoverPitchRange:
+    Min: 0.9
+    Max: 1.1
 --- !u!224 &8889425490031000234 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 4198316945943568534, guid: 6370a3f82f4ff114dbbe3095530df1b7, type: 3}
@@ -7775,13 +8320,25 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 7998450739702697973, guid: c76f780856ef9794b8ace46dc612110d, type: 3}
       insertIndex: 1
       addedObject: {fileID: 4643303919515375108}
+    - targetCorrespondingSourceObject: {fileID: 7870447345368421292, guid: c76f780856ef9794b8ace46dc612110d, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7665184000115461356}
+    - targetCorrespondingSourceObject: {fileID: 984527297359243455, guid: c76f780856ef9794b8ace46dc612110d, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5546588445928747712}
+    - targetCorrespondingSourceObject: {fileID: 4485694987625597889, guid: c76f780856ef9794b8ace46dc612110d, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1834224487362871837}
+    - targetCorrespondingSourceObject: {fileID: 399597038698799135, guid: c76f780856ef9794b8ace46dc612110d, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8677937554804641669}
   m_SourcePrefab: {fileID: 100100000, guid: c76f780856ef9794b8ace46dc612110d, type: 3}
 --- !u!114 &1672763887385175084 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6727470969910843695, guid: c76f780856ef9794b8ace46dc612110d, type: 3}
   m_PrefabInstance: {fileID: 5362132187237334275}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 8370640312327255746}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9085046f02f69544eb97fd06b6048fe2, type: 3}
@@ -7792,7 +8349,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6748537896632154008, guid: c76f780856ef9794b8ace46dc612110d, type: 3}
   m_PrefabInstance: {fileID: 5362132187237334275}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 5756085978180132124}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9085046f02f69544eb97fd06b6048fe2, type: 3}
@@ -7842,6 +8399,28 @@ MonoBehaviour:
   - {fileID: 8027884951387914040}
   - {fileID: 5213459861114534187}
   _targetCamera: {fileID: 0}
+--- !u!1 &2833728410585525935 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7870447345368421292, guid: c76f780856ef9794b8ace46dc612110d, type: 3}
+  m_PrefabInstance: {fileID: 5362132187237334275}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &7665184000115461356
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2833728410585525935}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1025ffd4e024ece87523ccddfd56b41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: CharonsCorner.Runtime::CharonsCorner.Runtime.UISelectableAudio
+  _hoverAndSelectAudio: {fileID: 11400000, guid: 47c6519b5c57c3047827df100499364e, type: 2}
+  _clickAndSubmitAudio: {fileID: 11400000, guid: 0527ce0e6b06e194c81ce6e792cf4918, type: 2}
+  _hoverPitchRange:
+    Min: 0.9
+    Max: 1.1
 --- !u!114 &3027774249938694788 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6948718272444600199, guid: c76f780856ef9794b8ace46dc612110d, type: 3}
@@ -7869,7 +8448,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8811687111771735063, guid: c76f780856ef9794b8ace46dc612110d, type: 3}
   m_PrefabInstance: {fileID: 5362132187237334275}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 2833728410585525935}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9085046f02f69544eb97fd06b6048fe2, type: 3}
@@ -7886,6 +8465,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &5171153323868149180 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 984527297359243455, guid: c76f780856ef9794b8ace46dc612110d, type: 3}
+  m_PrefabInstance: {fileID: 5362132187237334275}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &5546588445928747712
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5171153323868149180}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1025ffd4e024ece87523ccddfd56b41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: CharonsCorner.Runtime::CharonsCorner.Runtime.UISelectableAudio
+  _hoverAndSelectAudio: {fileID: 11400000, guid: 47c6519b5c57c3047827df100499364e, type: 2}
+  _clickAndSubmitAudio: {fileID: 11400000, guid: 0527ce0e6b06e194c81ce6e792cf4918, type: 2}
+  _hoverPitchRange:
+    Min: 0.9
+    Max: 1.1
 --- !u!114 &5213459861114534187 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 158735186463622184, guid: c76f780856ef9794b8ace46dc612110d, type: 3}
@@ -7897,6 +8498,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &5756085978180132124 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 399597038698799135, guid: c76f780856ef9794b8ace46dc612110d, type: 3}
+  m_PrefabInstance: {fileID: 5362132187237334275}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &8677937554804641669
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5756085978180132124}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1025ffd4e024ece87523ccddfd56b41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: CharonsCorner.Runtime::CharonsCorner.Runtime.UISelectableAudio
+  _hoverAndSelectAudio: {fileID: 11400000, guid: 47c6519b5c57c3047827df100499364e, type: 2}
+  _clickAndSubmitAudio: {fileID: 11400000, guid: 0527ce0e6b06e194c81ce6e792cf4918, type: 2}
+  _hoverPitchRange:
+    Min: 0.9
+    Max: 1.1
 --- !u!224 &6772137494138936981 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1698255062036997014, guid: c76f780856ef9794b8ace46dc612110d, type: 3}
@@ -7907,7 +8530,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2765341093934454541, guid: c76f780856ef9794b8ace46dc612110d, type: 3}
   m_PrefabInstance: {fileID: 5362132187237334275}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 5171153323868149180}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9085046f02f69544eb97fd06b6048fe2, type: 3}
@@ -7935,6 +8558,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &8370640312327255746 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4485694987625597889, guid: c76f780856ef9794b8ace46dc612110d, type: 3}
+  m_PrefabInstance: {fileID: 5362132187237334275}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1834224487362871837
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8370640312327255746}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1025ffd4e024ece87523ccddfd56b41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: CharonsCorner.Runtime::CharonsCorner.Runtime.UISelectableAudio
+  _hoverAndSelectAudio: {fileID: 11400000, guid: 47c6519b5c57c3047827df100499364e, type: 2}
+  _clickAndSubmitAudio: {fileID: 11400000, guid: 0527ce0e6b06e194c81ce6e792cf4918, type: 2}
+  _hoverPitchRange:
+    Min: 0.9
+    Max: 1.1
 --- !u!1001 &5716048569411190319
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7997,7 +8642,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4198316945943568534, guid: 6370a3f82f4ff114dbbe3095530df1b7, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4198316945943568534, guid: 6370a3f82f4ff114dbbe3095530df1b7, type: 3}
       propertyPath: m_AnchorMin.x
@@ -8005,7 +8650,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4198316945943568534, guid: 6370a3f82f4ff114dbbe3095530df1b7, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4198316945943568534, guid: 6370a3f82f4ff114dbbe3095530df1b7, type: 3}
       propertyPath: m_SizeDelta.x
@@ -8139,6 +8784,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 4814970798000426229, guid: 6370a3f82f4ff114dbbe3095530df1b7, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1497558170637808428}
+    - targetCorrespondingSourceObject: {fileID: 2472001928591158226, guid: 6370a3f82f4ff114dbbe3095530df1b7, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4085149724123668997}
   m_SourcePrefab: {fileID: 100100000, guid: 6370a3f82f4ff114dbbe3095530df1b7, type: 3}
 --- !u!114 &474922712835657869 stripped
 MonoBehaviour:
@@ -8177,12 +8825,34 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8382709017609458414, guid: 6370a3f82f4ff114dbbe3095530df1b7, type: 3}
   m_PrefabInstance: {fileID: 5716048569411190319}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 7862488128658052605}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &7862488128658052605 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2472001928591158226, guid: 6370a3f82f4ff114dbbe3095530df1b7, type: 3}
+  m_PrefabInstance: {fileID: 5716048569411190319}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &4085149724123668997
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7862488128658052605}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1025ffd4e024ece87523ccddfd56b41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: CharonsCorner.Runtime::CharonsCorner.Runtime.UISelectableAudio
+  _hoverAndSelectAudio: {fileID: 11400000, guid: 47c6519b5c57c3047827df100499364e, type: 2}
+  _clickAndSubmitAudio: {fileID: 11400000, guid: 0527ce0e6b06e194c81ce6e792cf4918, type: 2}
+  _hoverPitchRange:
+    Min: 0.9
+    Max: 1.1
 --- !u!224 &8435260687929450169 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 4198316945943568534, guid: 6370a3f82f4ff114dbbe3095530df1b7, type: 3}
@@ -8355,6 +9025,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1561131411851864868, guid: 6af0b66b83ae0d84980be463a22707a0, type: 3}
       insertIndex: 1
       addedObject: {fileID: 4043041337234674939}
+    - targetCorrespondingSourceObject: {fileID: 1698708114843055997, guid: 6af0b66b83ae0d84980be463a22707a0, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8429389897465522315}
   m_SourcePrefab: {fileID: 100100000, guid: 6af0b66b83ae0d84980be463a22707a0, type: 3}
 --- !u!224 &4166521876581320129 stripped
 RectTransform:
@@ -8382,6 +9055,28 @@ MonoBehaviour:
   _dirtyColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   _cleanColor: {r: 1, g: 1, b: 1, a: 1}
   _vsyncToggle: {fileID: 6055787702408028736}
+--- !u!1 &4862319969798895099 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1698708114843055997, guid: 6af0b66b83ae0d84980be463a22707a0, type: 3}
+  m_PrefabInstance: {fileID: 6118536227112977030}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &8429389897465522315
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4862319969798895099}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1025ffd4e024ece87523ccddfd56b41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: CharonsCorner.Runtime::CharonsCorner.Runtime.UISelectableAudio
+  _hoverAndSelectAudio: {fileID: 11400000, guid: 47c6519b5c57c3047827df100499364e, type: 2}
+  _clickAndSubmitAudio: {fileID: 11400000, guid: 0527ce0e6b06e194c81ce6e792cf4918, type: 2}
+  _hoverPitchRange:
+    Min: 0.9
+    Max: 1.1
 --- !u!114 &5356229963186539509 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2214731437438142835, guid: 6af0b66b83ae0d84980be463a22707a0, type: 3}
@@ -8398,7 +9093,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 63915244150857926, guid: 6af0b66b83ae0d84980be463a22707a0, type: 3}
   m_PrefabInstance: {fileID: 6118536227112977030}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 4862319969798895099}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9085046f02f69544eb97fd06b6048fe2, type: 3}
@@ -8551,14 +9246,17 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6395907092232300804, guid: 7ff423065b6eb6d428d19a1068b3e210, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2019950875167754671}
   m_SourcePrefab: {fileID: 100100000, guid: 7ff423065b6eb6d428d19a1068b3e210, type: 3}
 --- !u!114 &1591039031919648980 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8307124647442697680, guid: 7ff423065b6eb6d428d19a1068b3e210, type: 3}
   m_PrefabInstance: {fileID: 7303805378715512068}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 4440135637873755136}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
@@ -8569,6 +9267,28 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 9008651714066422156, guid: 7ff423065b6eb6d428d19a1068b3e210, type: 3}
   m_PrefabInstance: {fileID: 7303805378715512068}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &4440135637873755136 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6395907092232300804, guid: 7ff423065b6eb6d428d19a1068b3e210, type: 3}
+  m_PrefabInstance: {fileID: 7303805378715512068}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2019950875167754671
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4440135637873755136}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1025ffd4e024ece87523ccddfd56b41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: CharonsCorner.Runtime::CharonsCorner.Runtime.UISelectableAudio
+  _hoverAndSelectAudio: {fileID: 11400000, guid: 47c6519b5c57c3047827df100499364e, type: 2}
+  _clickAndSubmitAudio: {fileID: 11400000, guid: 0527ce0e6b06e194c81ce6e792cf4918, type: 2}
+  _hoverPitchRange:
+    Min: 0.9
+    Max: 1.1
 --- !u!114 &6615899988885385539 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4507031992124759111, guid: 7ff423065b6eb6d428d19a1068b3e210, type: 3}
@@ -8755,6 +9475,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8275718222146902151, guid: 89363bea33292f745965ace0a6da0857, type: 3}
       insertIndex: 1
       addedObject: {fileID: 8063283002996007619}
+    - targetCorrespondingSourceObject: {fileID: 4746989733869409106, guid: 89363bea33292f745965ace0a6da0857, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6313976167132314114}
   m_SourcePrefab: {fileID: 100100000, guid: 89363bea33292f745965ace0a6da0857, type: 3}
 --- !u!1 &1490116797356627209 stripped
 GameObject:
@@ -8782,7 +9505,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8976973080910891373, guid: 89363bea33292f745965ace0a6da0857, type: 3}
   m_PrefabInstance: {fileID: 7382724379991592334}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 2851911844794572508}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7b743370ac3e4ec2a1668f5455a8ef8a, type: 3}
@@ -8799,6 +9522,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &2851911844794572508 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4746989733869409106, guid: 89363bea33292f745965ace0a6da0857, type: 3}
+  m_PrefabInstance: {fileID: 7382724379991592334}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &6313976167132314114
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2851911844794572508}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1025ffd4e024ece87523ccddfd56b41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: CharonsCorner.Runtime::CharonsCorner.Runtime.UISelectableAudio
+  _hoverAndSelectAudio: {fileID: 11400000, guid: 47c6519b5c57c3047827df100499364e, type: 2}
+  _clickAndSubmitAudio: {fileID: 11400000, guid: 0527ce0e6b06e194c81ce6e792cf4918, type: 2}
+  _hoverPitchRange:
+    Min: 0.9
+    Max: 1.1
 --- !u!224 &7799293646850832746 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 740873520007017700, guid: 89363bea33292f745965ace0a6da0857, type: 3}

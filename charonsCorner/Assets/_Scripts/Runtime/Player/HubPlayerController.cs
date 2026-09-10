@@ -26,6 +26,9 @@ namespace CharonsCorner.Runtime
         [Header("Lock Points")]
         [SerializeField] private float _minX = -10f;
         [SerializeField] private float _maxX = 10f;
+
+        [Header("Audio")]
+        [SerializeField] private AudioSource _rollingAudioSource;
         
         private void Awake()
         {
@@ -50,6 +53,11 @@ namespace CharonsCorner.Runtime
         private void GameManager_OnGameStateChanged(GameState newState)
         {
             SetState(newState);
+        }
+
+        private void Update()
+        {
+            HandleRollingAudio();
         }
 
         private void FixedUpdate()
@@ -134,6 +142,28 @@ namespace CharonsCorner.Runtime
         {
             _rigidBody.linearVelocity = Vector3.zero;
             _rigidBody.angularVelocity = Vector3.zero;
+        }
+
+        private void HandleRollingAudio()
+        {
+            if (_rollingAudioSource == null) return;
+
+            bool isProvidingInput = false;
+            if (_currentState == GameState.Gameplay && _input != null)
+            {
+                isProvidingInput = Mathf.Abs(_input.MoveDirection.x) > 0.01f;
+            }
+
+            if (isProvidingInput)
+            {
+                if (!_rollingAudioSource.isPlaying)
+                    _rollingAudioSource.Play();
+            }
+            else
+            {
+                if (_rollingAudioSource.isPlaying)
+                    _rollingAudioSource.Stop();
+            }
         }
     }
 }

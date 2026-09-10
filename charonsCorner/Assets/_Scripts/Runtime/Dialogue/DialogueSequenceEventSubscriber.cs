@@ -85,6 +85,7 @@ namespace CharonsCorner.Runtime
 
                 case "CameraShake":
                     MMCameraShakeEvent.Trigger(shakeDuration, shakeAmplitude, shakeFrequency, 0f, 0f, 0f, false, new MMChannelData(shakeChannelMode, shakeChannelInt, shakeChannelDefinition));
+                    MMGameEvent.Trigger("CameraShakeAudio");
                     break;
 
                 case "GameEvent":

@@ -63,6 +63,8 @@ MeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -85,9 +87,11 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!114 &9091050285433948766
 MonoBehaviour:
@@ -117,6 +121,9 @@ MonoBehaviour:
   Mode: 0
   TargetTransform: {fileID: 5955787734657757885}
   TargetRectTransform: {fileID: 0}
+  UseMultiTargets: 0
+  MultiTargetTransforms: []
+  MultiTargetRectTransforms: []
   ShakeSpeed: 2
   ShakeRange: 10
   ShakeMainDirection: {x: 1, y: 1, z: 1}
@@ -240,6 +247,9 @@ MonoBehaviour:
   _targetScale: {x: 0.01, y: 0.01, z: 0.01}
   _springScale: {fileID: 8891040819256873496}
   _glowController: {fileID: 4985933387040213704}
+  _burstAudioId: {fileID: 11400000, guid: 368e9747ed00b2e47a0172ad50a00b54, type: 2}
+  _playAtPosition: 1
+  _burstAudioRange: 1000
 --- !u!114 &8891040819256873496
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -361,6 +371,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _parentObject: {fileID: 5579789253155436805}
   _turnOnEventName: 
+  _flickerOffEventName: 
+  _darkenOnAwake: 1
+  _flickerOn: 0
+  _flickerSettings: {fileID: 0}
+  _editShadowColorAsWell: 0
+  _targetShadowColor: {r: 0, g: 0, b: 0, a: 1}
 --- !u!1 &5590530118834380024
 GameObject:
   m_ObjectHideFlags: 0
@@ -424,6 +440,8 @@ MeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -446,9 +464,11 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!114 &4670100122111552738
 MonoBehaviour:
@@ -478,6 +498,9 @@ MonoBehaviour:
   Mode: 0
   TargetTransform: {fileID: 3994597178981926237}
   TargetRectTransform: {fileID: 0}
+  UseMultiTargets: 0
+  MultiTargetTransforms: []
+  MultiTargetRectTransforms: []
   ShakeSpeed: 2
   ShakeRange: 10
   ShakeMainDirection: {x: 1, y: 1, z: 1}
@@ -610,6 +633,9 @@ MonoBehaviour:
   Mode: 0
   TargetTransform: {fileID: 6026663448170132630}
   TargetRectTransform: {fileID: 0}
+  UseMultiTargets: 0
+  MultiTargetTransforms: []
+  MultiTargetRectTransforms: []
   ShakeSpeed: 2
   ShakeRange: 10
   ShakeMainDirection: {x: 1, y: 1, z: 1}

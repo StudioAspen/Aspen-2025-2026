@@ -1,5 +1,6 @@
 using UnityEngine;
 using MoreMountains.Feedbacks;
+using Animancer;
 
 namespace CharonsCorner.Runtime
 {
@@ -7,6 +8,9 @@ namespace CharonsCorner.Runtime
     {
         [SerializeField] private MMSpringScale _springScale;
         [SerializeField] private GlowController _glowController;
+        [SerializeField] private StringAsset _burstAudioId;
+        [SerializeField] private bool _playAtPosition = true;
+        [SerializeField] private float _burstAudioRange = 20f;
         
         private Vector3 _originalScale;
 
@@ -22,6 +26,18 @@ namespace CharonsCorner.Runtime
 
         public void Burst()
         {
+            if (_burstAudioId != null && AudioManager.Instance != null)
+            {
+                if (_playAtPosition)
+                {
+                    AudioManager.Instance.Play(_burstAudioId, position: transform.position, maxDistance: _burstAudioRange);
+                }
+                else
+                {
+                    AudioManager.Instance.Play(_burstAudioId);
+                }
+            }
+
             if (_springScale != null)
             {
                 _springScale.MoveTo(_originalScale);

@@ -105,6 +105,7 @@ MonoBehaviour:
   AutoChangeDirectionOnEnd: 0
   AutoPlayOnStart: 0
   AutoPlayOnEnable: 0
+  LogMissingTargets: 1
   ForceTimescaleMode: 1
   ForcedTimescaleMode: 1
   DurationMultiplier: 1
@@ -191,11 +192,14 @@ MonoBehaviour:
   - rid: 2821658648671158416
   - rid: 2821658648671158417
   - rid: 2821658648671158418
+  PlayMode: 0
+  SequentialDelay: 0
   KeepPlayModeChanges: 0
   PerformanceMode: 0
   RestoreInitialValuesOnDisable: 0
   StopFeedbacksOnDisable: 0
   PlayCount: 0
+  InPreviewMode: 0
   MMF_ChannelMode: 0
   MMF_Channel: 0
   MMF_ChannelDefinition: {fileID: 0}
@@ -472,6 +476,7 @@ GameObject:
   - component: {fileID: 3316832291281408067}
   - component: {fileID: 5740519605815675697}
   - component: {fileID: 3050056132777716069}
+  - component: {fileID: 2505234310865440677}
   m_Layer: 0
   m_Name: Button
   m_TagString: Untagged
@@ -621,12 +626,31 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _button: {fileID: 3316832291281408067}
+  _animator: {fileID: 0}
   _textAnimator: {fileID: 6010553522343429280}
   _startTags: <wave>
+  _hoverTags: 
   _springScale: {fileID: 6343133685801187917}
   _hoverScale: {x: 1.1, y: 1.1, z: 1.1}
   _normalScale: {x: 1, y: 1, z: 1}
   _rotationShaker: {fileID: 4551798684754574996}
+--- !u!114 &2505234310865440677
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 259017393617804435}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1025ffd4e024ece87523ccddfd56b41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: CharonsCorner.Runtime::CharonsCorner.Runtime.UISelectableAudio
+  _hoverAndSelectAudio: {fileID: 11400000, guid: 044348a17a2aa8a41a58b2d4a77d9db0, type: 2}
+  _clickAndSubmitAudio: {fileID: 11400000, guid: cb5624ccbc5d33f488f72e7361fab995, type: 2}
+  _hoverPitchRange:
+    Min: 0.9
+    Max: 1.1
 --- !u!1 &4084126550064328404
 GameObject:
   m_ObjectHideFlags: 0
@@ -691,6 +715,9 @@ MonoBehaviour:
   Mode: 0
   TargetTransform: {fileID: 6475394382272082575}
   TargetRectTransform: {fileID: 0}
+  UseMultiTargets: 0
+  MultiTargetTransforms: []
+  MultiTargetRectTransforms: []
   ShakeSpeed: 20
   ShakeRange: 10
   ShakeMainDirection: {x: 0, y: 0, z: 1}
@@ -793,6 +820,7 @@ MonoBehaviour:
   AutoChangeDirectionOnEnd: 0
   AutoPlayOnStart: 0
   AutoPlayOnEnable: 0
+  LogMissingTargets: 1
   ForceTimescaleMode: 1
   ForcedTimescaleMode: 1
   DurationMultiplier: 1
@@ -878,11 +906,14 @@ MonoBehaviour:
   FeedbacksList:
   - rid: 2821658648671158417
   - rid: 2821658648671158418
+  PlayMode: 0
+  SequentialDelay: 0
   KeepPlayModeChanges: 0
   PerformanceMode: 0
   RestoreInitialValuesOnDisable: 0
   StopFeedbacksOnDisable: 0
   PlayCount: 0
+  InPreviewMode: 0
   MMF_ChannelMode: 0
   MMF_Channel: 0
   MMF_ChannelDefinition: {fileID: 0}
@@ -1167,6 +1198,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0

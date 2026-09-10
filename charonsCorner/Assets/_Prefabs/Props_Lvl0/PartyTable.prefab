@@ -524,6 +524,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _parentObject: {fileID: 5346639394730326597}
   _turnOnEventName: Section1
+  _flickerOffEventName: 
+  _darkenOnAwake: 1
+  _flickerOn: 0
+  _flickerSettings: {fileID: 0}
+  _editShadowColorAsWell: 0
+  _targetShadowColor: {r: 0, g: 0, b: 0, a: 1}
 --- !u!1 &6072512482669443961
 GameObject:
   m_ObjectHideFlags: 0
@@ -776,10 +782,12 @@ MonoBehaviour:
   - rid: 1261838232486674512
   - rid: 1261838176824590480
   - rid: 1261838176824590481
+  - rid: 6001494230130491492
   - rid: 1261838176824590482
   - rid: 1261838176824590483
   - rid: 1261838176824590484
   - rid: 1261838176824590485
+  - rid: 6001494230130491493
   - rid: 1261838176824590486
   - rid: 1261838176824590487
   - rid: 1261838176824590488
@@ -2503,6 +2511,166 @@ MonoBehaviour:
         ScriptDriven: 0
         AutoResume: 0
         AutoResumeAfter: 0.25
+    - rid: 6001494230130491492
+      type: {class: MMF_PlayCharonAudio, ns: MoreMountains.Feedbacks, asm: CharonsCorner.Runtime}
+      data:
+        Active: 1
+        UniqueID: 1478385715
+        Label: Audio Skull table jump
+        OriginalLabel: Play Charon Audio
+        ChannelMode: 0
+        Channel: 0
+        MMChannelDefinition: {fileID: 0}
+        Chance: 100
+        Timing:
+          TimescaleMode: 0
+          ExcludeFromHoldingPauses: 0
+          ContributeToTotalDuration: 1
+          InitialDelay: 0
+          CooldownDuration: 0
+          InterruptsOnStop: 1
+          NumberOfRepeats: 0
+          RepeatForever: 0
+          DelayBetweenRepeats: 1
+          PlayCount: 0
+          LimitPlayCount: 0
+          MaxPlayCount: 3
+          SetPlayCountToZeroOnReset: 0
+          MMFeedbacksDirectionCondition: 0
+          PlayDirection: 0
+          ConstantIntensity: 0
+          UseIntensityInterval: 0
+          IntensityIntervalMin: 0
+          IntensityIntervalMax: 0
+          Sequence: {fileID: 0}
+          TrackID: 0
+          Quantized: 0
+          TargetBPM: 120
+        AutomatedTargetAcquisition:
+          Mode: 0
+          ChildIndex: 0
+        RandomizeOutput: 0
+        RandomMultiplier: {x: 0.8, y: 1}
+        RandomizeDuration: 0
+        RandomDurationMultiplier: {x: 0.5, y: 2}
+        UseRange: 0
+        RangeDistance: 5
+        UseRangeFalloff: 0
+        RangeFalloff:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          - serializedVersion: 3
+            time: 1
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        RemapRangeFalloff: {x: 0, y: 1}
+        AutomaticShakerSetupButton:
+          ButtonText: 
+        Owner: {fileID: 7065800808470052694}
+        DebugActive: 0
+        AudioId: {fileID: 11400000, guid: f0eb1ce4ff95e08479fcce26ddaac921, type: 2}
+        RandomAudioIds: []
+        MixerOverride: 1
+        Pitch: 1
+        PlayAtPosition: 1
+        Range: 100
+    - rid: 6001494230130491493
+      type: {class: MMF_PlayCharonAudio, ns: MoreMountains.Feedbacks, asm: CharonsCorner.Runtime}
+      data:
+        Active: 1
+        UniqueID: 1645428135
+        Label: Audio Skull table jump
+        OriginalLabel: Play Charon Audio
+        ChannelMode: 0
+        Channel: 0
+        MMChannelDefinition: {fileID: 0}
+        Chance: 100
+        Timing:
+          TimescaleMode: 0
+          ExcludeFromHoldingPauses: 0
+          ContributeToTotalDuration: 1
+          InitialDelay: 0
+          CooldownDuration: 0
+          InterruptsOnStop: 1
+          NumberOfRepeats: 0
+          RepeatForever: 0
+          DelayBetweenRepeats: 1
+          PlayCount: 0
+          LimitPlayCount: 0
+          MaxPlayCount: 3
+          SetPlayCountToZeroOnReset: 0
+          MMFeedbacksDirectionCondition: 0
+          PlayDirection: 0
+          ConstantIntensity: 0
+          UseIntensityInterval: 0
+          IntensityIntervalMin: 0
+          IntensityIntervalMax: 0
+          Sequence: {fileID: 0}
+          TrackID: 0
+          Quantized: 0
+          TargetBPM: 120
+        AutomatedTargetAcquisition:
+          Mode: 0
+          ChildIndex: 0
+        RandomizeOutput: 0
+        RandomMultiplier: {x: 0.8, y: 1}
+        RandomizeDuration: 0
+        RandomDurationMultiplier: {x: 0.5, y: 2}
+        UseRange: 0
+        RangeDistance: 5
+        UseRangeFalloff: 0
+        RangeFalloff:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          - serializedVersion: 3
+            time: 1
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        RemapRangeFalloff: {x: 0, y: 1}
+        AutomaticShakerSetupButton:
+          ButtonText: 
+        Owner: {fileID: 7065800808470052694}
+        DebugActive: 0
+        AudioId: {fileID: 11400000, guid: f0eb1ce4ff95e08479fcce26ddaac921, type: 2}
+        RandomAudioIds: []
+        MixerOverride: 1
+        Pitch: 1
+        PlayAtPosition: 1
+        Range: 100
 --- !u!114 &2522400816689849167
 MonoBehaviour:
   m_ObjectHideFlags: 0

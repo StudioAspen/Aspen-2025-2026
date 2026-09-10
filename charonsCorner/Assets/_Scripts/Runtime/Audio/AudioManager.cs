@@ -47,7 +47,7 @@ namespace CharonsCorner.Runtime
             UI = MixerTarget.UI
         }
         
-        public void Play(StringAsset clip, MixerTarget mixerTarget = MixerTarget.Default, Vector3? position = null, float pitch = 1f, bool persistAcrossScenes = false)
+        public void Play(StringAsset clip, MixerTarget mixerTarget = MixerTarget.Default, Vector3? position = null, float pitch = 1f, bool persistAcrossScenes = false, float maxDistance = 20f)
         {
             // Prevent same sound from playing twice in the same frame
             int frame = Time.frameCount;
@@ -66,7 +66,7 @@ namespace CharonsCorner.Runtime
                     clipObject.transform.position = position.Value;
                     source.spatialBlend = 1;
                     source.rolloffMode = AudioRolloffMode.Linear;
-                    source.maxDistance = 20f;
+                    source.maxDistance = maxDistance;
                     source.dopplerLevel = 0f;
                 }
                 source.clip = entry.Clip;
