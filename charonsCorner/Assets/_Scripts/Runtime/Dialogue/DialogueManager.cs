@@ -134,6 +134,7 @@ namespace CharonsCorner.Runtime
                 MMGameEvent.Trigger("CharonTalk");
             else if (dialogue.SpeakerName == "Bowley")
                 MMGameEvent.Trigger("BowleyTalk");
+            
 
             CurrentDialogue = dialogue;
             CurrentLine = dialogue.Text;
@@ -191,6 +192,12 @@ namespace CharonsCorner.Runtime
                     break;
                 case Speaker.Bowley:
                     MMGameEvent.Trigger("BowleyTalk");
+                    break;
+                case Speaker.Unknown:
+                    MMGameEvent.Trigger("MementoTalk");
+                    break;
+                case Speaker.LostMemento:
+                    MMGameEvent.Trigger("LostMementoTalk");
                     break;
             }
         }

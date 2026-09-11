@@ -3088,7 +3088,8 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 561482167}
   m_Father: {fileID: 1915485615}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -3175,7 +3176,19 @@ MonoBehaviour:
       m_Calls: []
   onCharacterVisible:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 561482168}
+        m_TargetAssemblyTypeName: CharonsCorner.Runtime.PlayTextBlipAudio, CharonsCorner.Runtime
+        m_MethodName: PlayBlip
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   onCharacterWaitStarted:
     m_PersistentCalls:
       m_Calls: []
@@ -3248,6 +3261,9 @@ MonoBehaviour:
   flashbackText: {fileID: 221769710}
   charonColor: {r: 0.91194963, g: 0.45023924, b: 0.49352458, a: 1}
   bowleyColor: {r: 0.83426815, g: 0.9433962, b: 0.43609816, a: 1}
+  playerColor: {r: 1, g: 1, b: 1, a: 1}
+  mementoColor: {r: 1, g: 1, b: 1, a: 1}
+  miscColor: {r: 1, g: 1, b: 1, a: 1}
   typewriter: {fileID: 221769707}
 --- !u!114 &221769709
 MonoBehaviour:
@@ -4126,6 +4142,8 @@ MonoBehaviour:
     _prefab: Assets/_Prefabs/charon.prefab
   - _gameObject: {fileID: 1131137185}
     _prefab: Assets/_Art/models/characters/charon/charon.fbx
+  - _gameObject: {fileID: 561482169}
+    _prefab: Assets/Audio/BlipIDs/TextBlip.prefab
   - _gameObject: {fileID: 1699990492}
     _prefab: Assets/_Prefabs/FlashbackInputInteraction.prefab
 --- !u!4 &291013034
@@ -6201,6 +6219,9 @@ MonoBehaviour:
   flashbackText: {fileID: 461089661}
   charonColor: {r: 0.61635214, g: 0.2384003, b: 0.27367577, a: 1}
   bowleyColor: {r: 0.5334787, g: 0.6792453, b: 0.0021358482, a: 1}
+  playerColor: {r: 1, g: 1, b: 1, a: 1}
+  mementoColor: {r: 1, g: 1, b: 1, a: 1}
+  miscColor: {r: 1, g: 1, b: 1, a: 1}
   typewriter: {fileID: 461089658}
 --- !u!114 &461089660
 MonoBehaviour:
@@ -6813,6 +6834,124 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &561482166
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 221769704}
+    m_Modifications:
+    - target: {fileID: 2270220387250827073, guid: 4e7be4a7533094d418a939a1c2a5c686, type: 3}
+      propertyPath: m_Name
+      value: TextBlip
+      objectReference: {fileID: 0}
+    - target: {fileID: 4743467671536983048, guid: 4e7be4a7533094d418a939a1c2a5c686, type: 3}
+      propertyPath: m_Pivot.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4743467671536983048, guid: 4e7be4a7533094d418a939a1c2a5c686, type: 3}
+      propertyPath: m_Pivot.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4743467671536983048, guid: 4e7be4a7533094d418a939a1c2a5c686, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4743467671536983048, guid: 4e7be4a7533094d418a939a1c2a5c686, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4743467671536983048, guid: 4e7be4a7533094d418a939a1c2a5c686, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4743467671536983048, guid: 4e7be4a7533094d418a939a1c2a5c686, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4743467671536983048, guid: 4e7be4a7533094d418a939a1c2a5c686, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4743467671536983048, guid: 4e7be4a7533094d418a939a1c2a5c686, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4743467671536983048, guid: 4e7be4a7533094d418a939a1c2a5c686, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4743467671536983048, guid: 4e7be4a7533094d418a939a1c2a5c686, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4743467671536983048, guid: 4e7be4a7533094d418a939a1c2a5c686, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 1255.4832
+      objectReference: {fileID: 0}
+    - target: {fileID: 4743467671536983048, guid: 4e7be4a7533094d418a939a1c2a5c686, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4743467671536983048, guid: 4e7be4a7533094d418a939a1c2a5c686, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4743467671536983048, guid: 4e7be4a7533094d418a939a1c2a5c686, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4743467671536983048, guid: 4e7be4a7533094d418a939a1c2a5c686, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4743467671536983048, guid: 4e7be4a7533094d418a939a1c2a5c686, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -892.5325
+      objectReference: {fileID: 0}
+    - target: {fileID: 4743467671536983048, guid: 4e7be4a7533094d418a939a1c2a5c686, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -1304.4358
+      objectReference: {fileID: 0}
+    - target: {fileID: 4743467671536983048, guid: 4e7be4a7533094d418a939a1c2a5c686, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4743467671536983048, guid: 4e7be4a7533094d418a939a1c2a5c686, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4743467671536983048, guid: 4e7be4a7533094d418a939a1c2a5c686, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 4e7be4a7533094d418a939a1c2a5c686, type: 3}
+--- !u!224 &561482167 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 4743467671536983048, guid: 4e7be4a7533094d418a939a1c2a5c686, type: 3}
+  m_PrefabInstance: {fileID: 561482166}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &561482168 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8531761465713280708, guid: 4e7be4a7533094d418a939a1c2a5c686, type: 3}
+  m_PrefabInstance: {fileID: 561482166}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 561482169}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0174da19c02c498b8aa1520b4178a998, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: CharonsCorner.Runtime::CharonsCorner.Runtime.PlayTextBlipAudio
+--- !u!1 &561482169 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2270220387250827073, guid: 4e7be4a7533094d418a939a1c2a5c686, type: 3}
+  m_PrefabInstance: {fileID: 561482166}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &563994088
 GameObject:
   m_ObjectHideFlags: 0
@@ -25469,6 +25608,12 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  _flickerOnAudio: {fileID: 0}
+  _flickerOffAudio: {fileID: 0}
+  _lightingGrowAudio: {fileID: 0}
+  _lightingShrinkAudio: {fileID: 0}
+  _playAtPosition: 1
+  _audioRange: 20
 --- !u!1 &1656047217
 GameObject:
   m_ObjectHideFlags: 0
@@ -32268,6 +32413,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79cca880ed884e8585ecc30a2ebb9ead, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _isMementoBacklog: 0
   <ChapterDialogues>k__BackingField:
   - ChapterIndex: 0
     DialogueOpener: {fileID: 11400000, guid: de5daa7d045a5c0479739e3ac439bae1, type: 2}
@@ -32282,6 +32428,9 @@ MonoBehaviour:
   _overriddenSRankEntry:
     ChapterIndex: 0
     DialogueSequence: {fileID: 0}
+  _playMementoCutsceneAfterExitingThisDialogue: 0
+  _mementoTriggerEventName: TriggerMementoCutscene
+  _mementoCutscene: {fileID: 0}
   _alertEnterFeedback: {fileID: 0}
   _alertExitFeedback: {fileID: 0}
   <CurrentDialogueOpenerIndexFlag>k__BackingField: 5

@@ -12275,7 +12275,8 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 814953977}
   m_Father: {fileID: 2120491723}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -12363,7 +12364,19 @@ MonoBehaviour:
       m_Calls: []
   onCharacterVisible:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 814953979}
+        m_TargetAssemblyTypeName: CharonsCorner.Runtime.PlayTextBlipAudio, CharonsCorner.Runtime
+        m_MethodName: PlayBlip
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   onCharacterWaitStarted:
     m_PersistentCalls:
       m_Calls: []
@@ -18210,6 +18223,124 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: -7527954129569262175, guid: bc6ada02cb7a9e94eb04b8ca182f7c00, type: 3}
   m_PrefabInstance: {fileID: 677306793}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &814953976
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 461089655}
+    m_Modifications:
+    - target: {fileID: 2270220387250827073, guid: 4e7be4a7533094d418a939a1c2a5c686, type: 3}
+      propertyPath: m_Name
+      value: TextBlip
+      objectReference: {fileID: 0}
+    - target: {fileID: 4743467671536983048, guid: 4e7be4a7533094d418a939a1c2a5c686, type: 3}
+      propertyPath: m_Pivot.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4743467671536983048, guid: 4e7be4a7533094d418a939a1c2a5c686, type: 3}
+      propertyPath: m_Pivot.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4743467671536983048, guid: 4e7be4a7533094d418a939a1c2a5c686, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4743467671536983048, guid: 4e7be4a7533094d418a939a1c2a5c686, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4743467671536983048, guid: 4e7be4a7533094d418a939a1c2a5c686, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4743467671536983048, guid: 4e7be4a7533094d418a939a1c2a5c686, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4743467671536983048, guid: 4e7be4a7533094d418a939a1c2a5c686, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4743467671536983048, guid: 4e7be4a7533094d418a939a1c2a5c686, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4743467671536983048, guid: 4e7be4a7533094d418a939a1c2a5c686, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4743467671536983048, guid: 4e7be4a7533094d418a939a1c2a5c686, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4743467671536983048, guid: 4e7be4a7533094d418a939a1c2a5c686, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 1255.4832
+      objectReference: {fileID: 0}
+    - target: {fileID: 4743467671536983048, guid: 4e7be4a7533094d418a939a1c2a5c686, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4743467671536983048, guid: 4e7be4a7533094d418a939a1c2a5c686, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4743467671536983048, guid: 4e7be4a7533094d418a939a1c2a5c686, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4743467671536983048, guid: 4e7be4a7533094d418a939a1c2a5c686, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4743467671536983048, guid: 4e7be4a7533094d418a939a1c2a5c686, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -892.5325
+      objectReference: {fileID: 0}
+    - target: {fileID: 4743467671536983048, guid: 4e7be4a7533094d418a939a1c2a5c686, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -922.43585
+      objectReference: {fileID: 0}
+    - target: {fileID: 4743467671536983048, guid: 4e7be4a7533094d418a939a1c2a5c686, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4743467671536983048, guid: 4e7be4a7533094d418a939a1c2a5c686, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4743467671536983048, guid: 4e7be4a7533094d418a939a1c2a5c686, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 4e7be4a7533094d418a939a1c2a5c686, type: 3}
+--- !u!224 &814953977 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 4743467671536983048, guid: 4e7be4a7533094d418a939a1c2a5c686, type: 3}
+  m_PrefabInstance: {fileID: 814953976}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &814953978 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2270220387250827073, guid: 4e7be4a7533094d418a939a1c2a5c686, type: 3}
+  m_PrefabInstance: {fileID: 814953976}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &814953979 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8531761465713280708, guid: 4e7be4a7533094d418a939a1c2a5c686, type: 3}
+  m_PrefabInstance: {fileID: 814953976}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 814953978}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0174da19c02c498b8aa1520b4178a998, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: CharonsCorner.Runtime::CharonsCorner.Runtime.PlayTextBlipAudio
 --- !u!1 &816609445
 GameObject:
   m_ObjectHideFlags: 0
@@ -33263,6 +33394,8 @@ MonoBehaviour:
     _prefab: Assets/_Art/models/props/rug/rug.fbx
   - _gameObject: {fileID: 1897813056}
     _prefab: Assets/_Art/models/props/trophy_shelf/trophy_shelf.fbx
+  - _gameObject: {fileID: 814953978}
+    _prefab: Assets/Audio/BlipIDs/TextBlip.prefab
   - _gameObject: {fileID: 788840524}
     _prefab: Assets/_Prefabs/FlashbackInputInteraction.prefab
   - _gameObject: {fileID: 914918922}

@@ -161,12 +161,15 @@ public class FlashbackEventSubscriber : MonoBehaviour
                 break;
             case "PlayerTalk":
                 if (flashbackText != null) flashbackText.color = playerColor;
+                MMGameEvent.Trigger("PlayerTalk");
                 break;
             case "MementoTalk":
                 if (flashbackText != null) flashbackText.color = mementoColor;
+                MMGameEvent.Trigger("MementoTalk");
                 break;
             case "MiscTalk":
                 if (flashbackText != null) flashbackText.color = miscColor;
+                MMGameEvent.Trigger("BullyTalk");
                 break;
             case "CharonLooksAtPlayer":
                 cameraSwitcher.SwitchCamera(camCharonLooksAtPlayer);

@@ -256,7 +256,8 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1658720378}
   m_Father: {fileID: 42087703}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -367,7 +368,19 @@ MonoBehaviour:
       m_Calls: []
   onCharacterVisible:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1658720379}
+        m_TargetAssemblyTypeName: CharonsCorner.Runtime.PlayTextBlipAudio, CharonsCorner.Runtime
+        m_MethodName: PlayBlip
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   onCharacterWaitStarted:
     m_PersistentCalls:
       m_Calls: []
@@ -553,6 +566,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _scenePrefabInstances:
+  - _gameObject: {fileID: 1658720380}
+    _prefab: Assets/Audio/BlipIDs/TextBlip.prefab
   - _gameObject: {fileID: 2013754009}
     _prefab: Assets/_Prefabs/FlashbackInputInteraction.prefab
 --- !u!4 &591505251
@@ -995,6 +1010,124 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &1658720377
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 353682494}
+    m_Modifications:
+    - target: {fileID: 2270220387250827073, guid: 4e7be4a7533094d418a939a1c2a5c686, type: 3}
+      propertyPath: m_Name
+      value: TextBlip
+      objectReference: {fileID: 0}
+    - target: {fileID: 4743467671536983048, guid: 4e7be4a7533094d418a939a1c2a5c686, type: 3}
+      propertyPath: m_Pivot.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4743467671536983048, guid: 4e7be4a7533094d418a939a1c2a5c686, type: 3}
+      propertyPath: m_Pivot.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4743467671536983048, guid: 4e7be4a7533094d418a939a1c2a5c686, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4743467671536983048, guid: 4e7be4a7533094d418a939a1c2a5c686, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4743467671536983048, guid: 4e7be4a7533094d418a939a1c2a5c686, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4743467671536983048, guid: 4e7be4a7533094d418a939a1c2a5c686, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4743467671536983048, guid: 4e7be4a7533094d418a939a1c2a5c686, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4743467671536983048, guid: 4e7be4a7533094d418a939a1c2a5c686, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4743467671536983048, guid: 4e7be4a7533094d418a939a1c2a5c686, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4743467671536983048, guid: 4e7be4a7533094d418a939a1c2a5c686, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4743467671536983048, guid: 4e7be4a7533094d418a939a1c2a5c686, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 1255.4832
+      objectReference: {fileID: 0}
+    - target: {fileID: 4743467671536983048, guid: 4e7be4a7533094d418a939a1c2a5c686, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4743467671536983048, guid: 4e7be4a7533094d418a939a1c2a5c686, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4743467671536983048, guid: 4e7be4a7533094d418a939a1c2a5c686, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4743467671536983048, guid: 4e7be4a7533094d418a939a1c2a5c686, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4743467671536983048, guid: 4e7be4a7533094d418a939a1c2a5c686, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -892.5325
+      objectReference: {fileID: 0}
+    - target: {fileID: 4743467671536983048, guid: 4e7be4a7533094d418a939a1c2a5c686, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -540.43585
+      objectReference: {fileID: 0}
+    - target: {fileID: 4743467671536983048, guid: 4e7be4a7533094d418a939a1c2a5c686, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4743467671536983048, guid: 4e7be4a7533094d418a939a1c2a5c686, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4743467671536983048, guid: 4e7be4a7533094d418a939a1c2a5c686, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 4e7be4a7533094d418a939a1c2a5c686, type: 3}
+--- !u!224 &1658720378 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 4743467671536983048, guid: 4e7be4a7533094d418a939a1c2a5c686, type: 3}
+  m_PrefabInstance: {fileID: 1658720377}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1658720379 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8531761465713280708, guid: 4e7be4a7533094d418a939a1c2a5c686, type: 3}
+  m_PrefabInstance: {fileID: 1658720377}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1658720380}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0174da19c02c498b8aa1520b4178a998, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: CharonsCorner.Runtime::CharonsCorner.Runtime.PlayTextBlipAudio
+--- !u!1 &1658720380 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2270220387250827073, guid: 4e7be4a7533094d418a939a1c2a5c686, type: 3}
+  m_PrefabInstance: {fileID: 1658720377}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2013754007
 PrefabInstance:
   m_ObjectHideFlags: 0
