@@ -11771,6 +11771,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2508496972016842742}
   - component: {fileID: 8779244411550373960}
+  - component: {fileID: 7730803450827597517}
   m_Layer: 0
   m_Name: Ball
   m_TagString: Untagged
@@ -11815,6 +11816,22 @@ MonoBehaviour:
   _yarnFeedback: {fileID: 4872428521645849158}
   _triggerEventName: PlayerSkullChange
   _currentState: 1
+--- !u!114 &7730803450827597517
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2595288401967633962}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf94f62c91c54727a692be461d07cb41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: CharonsCorner.Runtime::CharonsCorner.Runtime.SetToBlack
+  _active: 0
+  _mmGameEvent: SetToBlack
+  _altColor: 1
+  _altColorValue: {r: 0.754717, g: 0.7339504, b: 0.0071198535, a: 1}
 --- !u!1 &2687119773417028948
 GameObject:
   m_ObjectHideFlags: 0
@@ -11826,6 +11843,7 @@ GameObject:
   - component: {fileID: 3315002951638149102}
   - component: {fileID: 8710363320864914836}
   - component: {fileID: 8749789398447415588}
+  - component: {fileID: 482554376042083167}
   m_Layer: 0
   m_Name: Model
   m_TagString: Untagged
@@ -11980,6 +11998,22 @@ MonoBehaviour:
   TestBumpAmount: {x: 75, y: 100, z: 50}
   BumpToToolbar: 0
   OtherControlsToToolbar: 0
+--- !u!114 &482554376042083167
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2687119773417028948}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf94f62c91c54727a692be461d07cb41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: CharonsCorner.Runtime::CharonsCorner.Runtime.SetToBlack
+  _active: 0
+  _mmGameEvent: SetToBlack
+  _altColor: 1
+  _altColorValue: {r: 0.754717, g: 0.7339504, b: 0.0071198535, a: 1}
 --- !u!1 &2767784174827327048
 GameObject:
   m_ObjectHideFlags: 0
@@ -12374,8 +12408,8 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 8abff5973dc013e4e98cafa4ab8d531e, type: 2}
-  - {fileID: 2100000, guid: cbf354ca074ec654ea6b58b5faca1c85, type: 2}
+  - {fileID: 2100000, guid: c5b741815edb8b44ea2f03ea2d9dfab7, type: 2}
+  - {fileID: 2100000, guid: 530b6dc5554202447802736cb1c13c96, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -19314,7 +19348,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &6538958472300453600
 Transform:
   m_ObjectHideFlags: 0
@@ -19363,7 +19397,8 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 8abff5973dc013e4e98cafa4ab8d531e, type: 2}
+  - {fileID: 2100000, guid: c5b741815edb8b44ea2f03ea2d9dfab7, type: 2}
+  - {fileID: 2100000, guid: 5c31719829a549e42849c3f74aab2807, type: 2}
   - {fileID: 2100000, guid: c5b741815edb8b44ea2f03ea2d9dfab7, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
@@ -30278,7 +30313,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &9184331233139160865
 Transform:
   m_ObjectHideFlags: 0
@@ -31026,9 +31061,7 @@ GameObject:
   - component: {fileID: 5103281777317776927}
   - component: {fileID: 372509622063346653}
   - component: {fileID: 2735643567496994440}
-  - component: {fileID: 7652520086304423693}
   - component: {fileID: 4746700428722777731}
-  - component: {fileID: 2649118187429363452}
   - component: {fileID: 4952317065721881467}
   m_Layer: 6
   m_Name: Player
@@ -31455,6 +31488,7 @@ MonoBehaviour:
   _extraRespawnHeight: 7
   _deathYThreshold: -1500
   _checkpointManager: {fileID: 0}
+  _deathAudioId: {fileID: 11400000, guid: a15329835021ef2408c4e22d0bb82937, type: 2}
 --- !u!82 &2735643567496994440
 AudioSource:
   m_ObjectHideFlags: 0
@@ -31552,24 +31586,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &7652520086304423693
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7899314738565538664}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ec491f3f00254f4aad032431f3fffcd9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _directionChecker: {fileID: 0}
-  _checkRate: 1
-  <IsWrongWay>k__BackingField: 0
-  <OnWrongWayChanged>k__BackingField:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!114 &4746700428722777731
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -31589,22 +31605,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1023
   minCollisionForce: 0.1
---- !u!114 &2649118187429363452
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7899314738565538664}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cf94f62c91c54727a692be461d07cb41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: CharonsCorner.Runtime::CharonsCorner.Runtime.SetToBlack
-  _active: 0
-  _mmGameEvent: SetToBlack
-  _altColor: 1
-  _altColorValue: {r: 0.754717, g: 0.7339504, b: 0.0071198535, a: 1}
 --- !u!114 &4952317065721881467
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -37773,10 +37773,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6881315818118246523, guid: 7347d621896547d4cb2a8e6734e8b7f1, type: 3}
-      propertyPath: _wrongWayDetector
-      value: 
-      objectReference: {fileID: 7652520086304423693}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

@@ -1,4 +1,5 @@
 using System.Collections;
+using Animancer;
 using UnityEngine;
 
 namespace CharonsCorner.Runtime
@@ -24,6 +25,9 @@ namespace CharonsCorner.Runtime
         [Header("Contingency Death")]
         [SerializeField] private float _deathYThreshold = -1500f;
         [SerializeField] private CheckpointManager _checkpointManager;
+
+        [Header("Audio")]
+        [SerializeField] private StringAsset _deathAudioId;
 
         private bool _isRespawning;
 
@@ -77,6 +81,11 @@ namespace CharonsCorner.Runtime
         {
             _isRespawning = true;
             OnPlayerDeath?.Invoke();
+
+            if (_deathAudioId != null && AudioManager.Instance != null)
+            {
+                AudioManager.Instance.Play(_deathAudioId);
+            }
 
             // freeze player
             _inputManager.DisableAllActions();

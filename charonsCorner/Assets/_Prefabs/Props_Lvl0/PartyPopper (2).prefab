@@ -52,6 +52,7 @@ MonoBehaviour:
   AutoChangeDirectionOnEnd: 0
   AutoPlayOnStart: 0
   AutoPlayOnEnable: 0
+  LogMissingTargets: 1
   ForceTimescaleMode: 0
   ForcedTimescaleMode: 1
   DurationMultiplier: 1
@@ -143,11 +144,14 @@ MonoBehaviour:
   - rid: 1261838176824590439
   - rid: 1261838176824590440
   - rid: 1261838176824590441
+  PlayMode: 0
+  SequentialDelay: 0
   KeepPlayModeChanges: 0
   PerformanceMode: 0
   RestoreInitialValuesOnDisable: 0
   StopFeedbacksOnDisable: 0
   PlayCount: 0
+  InPreviewMode: 0
   MMF_ChannelMode: 0
   MMF_Channel: 0
   MMF_ChannelDefinition: {fileID: 0}
@@ -864,6 +868,7 @@ MonoBehaviour:
         TargetRenderer: {fileID: 5184441879326617957}
         ExtraTargetRenderers: []
         MaterialID: 0
+        UseMaterialPropertyBlock: 0
         PropertyName: _Glow
         PropertyType: 1
         NewColor: {r: 1, g: 0, b: 0, a: 1}
@@ -5722,7 +5727,7 @@ ParticleSystem:
     vectorLabel1_3: W
 --- !u!199 &1511901516018710990
 ParticleSystemRenderer:
-  serializedVersion: 6
+  serializedVersion: 7
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -5741,6 +5746,8 @@ ParticleSystemRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -5762,9 +5769,11 @@ ParticleSystemRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_RenderMode: 4
   m_MeshDistribution: 0
   m_SortMode: 0
@@ -5796,7 +5805,6 @@ ParticleSystemRenderer:
   m_MeshWeighting1: 1
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
-  m_MaskInteraction: 0
 --- !u!1 &8179072800607515678
 GameObject:
   m_ObjectHideFlags: 0
@@ -5846,6 +5854,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _parentObject: {fileID: 8179072800607515678}
+  _turnOnEventName: 
+  _flickerOffEventName: 
+  _darkenOnAwake: 1
+  _flickerOn: 0
+  _flickerSettings: {fileID: 0}
+  _editShadowColorAsWell: 0
+  _targetShadowColor: {r: 0, g: 0, b: 0, a: 1}
 --- !u!1 &8549474839431617712
 GameObject:
   m_ObjectHideFlags: 0
@@ -5992,7 +6007,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: bf1bdcff4ed36dc4f9f1aa337df34836, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3244498178414415251}
   m_SourcePrefab: {fileID: 100100000, guid: bf1bdcff4ed36dc4f9f1aa337df34836, type: 3}
 --- !u!23 &5184441879326617957 stripped
 MeshRenderer:
@@ -6004,3 +6022,24 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: bf1bdcff4ed36dc4f9f1aa337df34836, type: 3}
   m_PrefabInstance: {fileID: 5779037283542461921}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &6697461893608788144 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: bf1bdcff4ed36dc4f9f1aa337df34836, type: 3}
+  m_PrefabInstance: {fileID: 5779037283542461921}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &3244498178414415251
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6697461893608788144}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf94f62c91c54727a692be461d07cb41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: CharonsCorner.Runtime::CharonsCorner.Runtime.SetToBlack
+  _active: 0
+  _mmGameEvent: SetToBlack
+  _altColor: 1
+  _altColorValue: {r: 1, g: 0.6042781, b: 0, a: 1}

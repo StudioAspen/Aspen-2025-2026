@@ -1,3 +1,5 @@
+using Animancer;
+using CharonsCorner.Runtime;
 using MoreMountains.Feedbacks;
 using MoreMountains.Tools;
 using UnityEngine;
@@ -7,6 +9,11 @@ public class AppearUponRadius : MonoBehaviour, MMEventListener<MMGameEvent>
     [SerializeField] private MMSpringScale _springScale;
     [SerializeField] private float _radius = 5f;
     [SerializeField] private LayerMask _playerLayer;
+
+    [Header("Audio")]
+    [SerializeField] private StringAsset _appearAudioId;
+    [SerializeField] private AudioManager.MixerTarget _mixerTarget = AudioManager.MixerTarget.SFX;
+    [SerializeField] private float _audioMaxDistance = 20f;
 
     [Header("Events")]
     [SerializeField] private string _eventName = "";
@@ -64,6 +71,12 @@ public class AppearUponRadius : MonoBehaviour, MMEventListener<MMGameEvent>
         if (_activated || _springScale == null) return;
 
         _springScale.MoveTo(_startingScale);
+
+        if (_appearAudioId != null && AudioManager.Instance != null)
+        {
+            AudioManager.Instance.Play(_appearAudioId, _mixerTarget, transform.position, maxDistance: _audioMaxDistance);
+        }
+
         _activated = true;
     }
 
