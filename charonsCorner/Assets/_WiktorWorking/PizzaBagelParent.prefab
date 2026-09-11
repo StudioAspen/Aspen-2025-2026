@@ -45,6 +45,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 70c2673cf8f3450299739ea433b52a3b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _setPosition: 0
+  _targetPosition: {x: 0, y: 0, z: 0}
+  _setRotation: 0
+  _targetRotation: {x: 0, y: 0, z: 0}
+  _setScale: 1
   _targetScale: {x: 0, y: 0, z: 0}
 --- !u!1 &1091347271103004256
 GameObject:
@@ -118,7 +123,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3762537477807316884}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6da43522623d4704e979466dc7650b65, type: 3}
   m_Name: 
@@ -131,6 +136,7 @@ MonoBehaviour:
   AutoChangeDirectionOnEnd: 0
   AutoPlayOnStart: 0
   AutoPlayOnEnable: 0
+  LogMissingTargets: 1
   ForceTimescaleMode: 0
   ForcedTimescaleMode: 1
   DurationMultiplier: 1
@@ -216,11 +222,15 @@ MonoBehaviour:
   FeedbacksList:
   - rid: 885602897506599005
   - rid: 885602897506599006
+  - rid: 6001494270605787250
+  PlayMode: 0
+  SequentialDelay: 0
   KeepPlayModeChanges: 0
   PerformanceMode: 0
   RestoreInitialValuesOnDisable: 0
   StopFeedbacksOnDisable: 0
   PlayCount: 0
+  InPreviewMode: 0
   MMF_ChannelMode: 0
   MMF_Channel: 0
   MMF_ChannelDefinition: {fileID: 0}
@@ -413,6 +423,86 @@ MonoBehaviour:
         MoveToScaleMax: {x: 1, y: 1, z: 1}
         BumpScaleMin: {x: 20, y: 20, z: 20}
         BumpScaleMax: {x: 30, y: 30, z: 30}
+    - rid: 6001494270605787250
+      type: {class: MMF_PlayCharonAudio, ns: MoreMountains.Feedbacks, asm: CharonsCorner.Runtime}
+      data:
+        Active: 1
+        UniqueID: -1711614235
+        Label: Play Charon Audio
+        OriginalLabel: Play Charon Audio
+        ChannelMode: 0
+        Channel: 0
+        MMChannelDefinition: {fileID: 0}
+        Chance: 100
+        Timing:
+          TimescaleMode: 0
+          ExcludeFromHoldingPauses: 0
+          ContributeToTotalDuration: 1
+          InitialDelay: 0
+          CooldownDuration: 0
+          InterruptsOnStop: 1
+          NumberOfRepeats: 0
+          RepeatForever: 0
+          DelayBetweenRepeats: 1
+          PlayCount: 0
+          LimitPlayCount: 0
+          MaxPlayCount: 3
+          SetPlayCountToZeroOnReset: 0
+          MMFeedbacksDirectionCondition: 0
+          PlayDirection: 0
+          ConstantIntensity: 0
+          UseIntensityInterval: 0
+          IntensityIntervalMin: 0
+          IntensityIntervalMax: 0
+          Sequence: {fileID: 0}
+          TrackID: 0
+          Quantized: 0
+          TargetBPM: 120
+        AutomatedTargetAcquisition:
+          Mode: 0
+          ChildIndex: 0
+        RandomizeOutput: 0
+        RandomMultiplier: {x: 0.8, y: 1}
+        RandomizeDuration: 0
+        RandomDurationMultiplier: {x: 0.5, y: 2}
+        UseRange: 0
+        RangeDistance: 5
+        UseRangeFalloff: 0
+        RangeFalloff:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          - serializedVersion: 3
+            time: 1
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        RemapRangeFalloff: {x: 0, y: 1}
+        AutomaticShakerSetupButton:
+          ButtonText: 
+        Owner: {fileID: 6989601320129666773}
+        DebugActive: 0
+        AudioId: {fileID: 11400000, guid: d046a07555102ba418b3ead9ba7ae8bd, type: 2}
+        RandomAudioIds: []
+        MixerOverride: 1
+        Pitch: 1
+        PlayAtPosition: 1
+        Range: 400
 --- !u!1 &6452845568634030879
 GameObject:
   m_ObjectHideFlags: 0
@@ -476,6 +566,8 @@ MeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -498,9 +590,11 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!114 &8524410581224934812
 MonoBehaviour:
@@ -530,6 +624,9 @@ MonoBehaviour:
   Mode: 0
   TargetTransform: {fileID: 7520574621582148599}
   TargetRectTransform: {fileID: 0}
+  UseMultiTargets: 0
+  MultiTargetTransforms: []
+  MultiTargetRectTransforms: []
   ShakeSpeed: 20
   ShakeRange: 20
   ShakeMainDirection: {x: 0, y: 0, z: 1}
@@ -604,6 +701,9 @@ MonoBehaviour:
   Mode: 0
   TargetTransform: {fileID: 7520574621582148599}
   TargetRectTransform: {fileID: 0}
+  UseMultiTargets: 0
+  MultiTargetTransforms: []
+  MultiTargetRectTransforms: []
   ShakeSpeed: 1
   ShakeRange: 3
   OscillationOffset: 0
