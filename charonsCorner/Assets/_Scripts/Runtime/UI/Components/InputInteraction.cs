@@ -17,9 +17,35 @@ namespace CharonsCorner.Runtime
 
         [Header("Blinking Effect")]
         [SerializeField] private TMP_Text _textComponent;
+        [SerializeField] private UnityEngine.InputSystem.InputActionReference _interactAction;
         [SerializeField] private Color _startColor = Color.white;
         [SerializeField] private Color _endColor = Color.white;
         [SerializeField] private float _blinkRate = 1f;
+
+        private void OnEnable()
+        {
+            if (InputManager.Instance != null)
+            {
+                InputManager.Instance.OnControlSchemeChanged += UpdateInputPrompt;
+                UpdateInputPrompt(InputManager.Instance.CurrentControlScheme);
+            }
+        }
+
+        private void OnDisable()
+        {
+            if (InputManager.Instance != null)
+            {
+                InputManager.Instance.OnControlSchemeChanged -= UpdateInputPrompt;
+            }
+        }
+
+        private void UpdateInputPrompt(InputManager.ControlScheme controlScheme)
+        {
+            if (_textComponent != null && _interactAction != null)
+            {
+                _textComponent.text = InputDisplayer.GetInputDisplayString(_interactAction, controlScheme);
+            }
+        }
 
         private void Update()
         {

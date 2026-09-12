@@ -223,7 +223,11 @@ namespace CharonsCorner.Runtime
             }
 
             if (_dialogueText != null) _dialogueText.color = targetColor;
-            if (_inputText != null) _inputText.outlineColor = targetColor;
+            if (_inputText != null)
+            {
+                _inputText.outlineColor = targetColor;
+                _inputText.fontSharedMaterial.SetColor(ShaderUtilities.ID_UnderlayColor, targetColor);
+            }
         }
 
         private void DialogueManager_OnDialogueSequenceEndReached(DialogueSequenceSO sequence, string line)

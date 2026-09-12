@@ -174,7 +174,6 @@ public class FlashbackText : MonoBehaviour
     {
         if (inputInteraction != null)
         {
-            UpdateInputPrompt(InputManager.Instance.CurrentControlScheme);
             inputInteraction.Appear();
         }
         else if (inputPromptObject != null)
