@@ -250,7 +250,7 @@ namespace CharonsCorner.Runtime
             }
 
             // 2. S-Rank Dialogues (if chapter is done or we are at the end)
-            if (SeenAllDialogueForThisChapter || sequencesToPlay.Count == 0)
+            if (!_isMementoBacklog && (SeenAllDialogueForThisChapter || sequencesToPlay.Count == 0))
             {
                 int tempSRankIndex = sRankIndex;
                 while (tempSRankIndex < sRankCount && tempSRankIndex < SRankDialogues.Count)
@@ -308,7 +308,7 @@ namespace CharonsCorner.Runtime
                         if (_showDebug) Debug.Log("[DialogueBacklog] All chapter sequences viewed. Setting SeenAllDialogueForThisChapter to true.");
                         SeenAllDialogueForThisChapter = true;
                         
-                        if (FlagManager.Get(ProgressFlag.CurrentSRankDialogueIndex) < FlagManager.Get(ProgressFlag.SRankCount))
+                        if (!_isMementoBacklog && FlagManager.Get(ProgressFlag.CurrentSRankDialogueIndex) < FlagManager.Get(ProgressFlag.SRankCount))
                         {
                             IsCurrentSequenceSRank = true;
                         }
@@ -320,7 +320,7 @@ namespace CharonsCorner.Runtime
             int currentSRankIndex = FlagManager.Get(ProgressFlag.CurrentSRankDialogueIndex);
             int sRankCount = FlagManager.Get(ProgressFlag.SRankCount);
             
-            if (currentSRankIndex < sRankCount)
+            if (!_isMementoBacklog && currentSRankIndex < sRankCount)
             {
                 if (_showDebug) Debug.Log($"[DialogueBacklog] Completed S-Rank sequence index {currentSRankIndex}");
                 FlagManager.Increment(ProgressFlag.CurrentSRankDialogueIndex);
@@ -343,7 +343,10 @@ namespace CharonsCorner.Runtime
 
         public void CompleteCurrentSRankDialogueSet()
         {
-            FlagManager.Increment(ProgressFlag.CurrentSRankDialogueIndex);
+            if (!_isMementoBacklog)
+            {
+                FlagManager.Increment(ProgressFlag.CurrentSRankDialogueIndex);
+            }
             CurrentSRankDialogue = null;
         }
 
@@ -356,7 +359,7 @@ namespace CharonsCorner.Runtime
             if (_overrideSaveData && (_overriddenDialogueEntry != null || _overriddenSRankEntry != null))
                 return true;
 
-            bool pending = !SeenAllDialogueForThisChapter || (FlagManager.Get(ProgressFlag.CurrentSRankDialogueIndex) < FlagManager.Get(ProgressFlag.SRankCount));
+            bool pending = !SeenAllDialogueForThisChapter || (!_isMementoBacklog && (FlagManager.Get(ProgressFlag.CurrentSRankDialogueIndex) < FlagManager.Get(ProgressFlag.SRankCount)));
             
             if (_showDebug) Debug.Log($"[DialogueBacklog] HasPendingDialogue: {pending} (SeenAllChapter: {SeenAllDialogueForThisChapter}, SRankIndex: {FlagManager.Get(ProgressFlag.CurrentSRankDialogueIndex)}, SRankCount: {FlagManager.Get(ProgressFlag.SRankCount)})");
             
@@ -373,6 +376,9 @@ namespace CharonsCorner.Runtime
 
         public bool HasPendingSRankDialogue()
         {
+            if (_isMementoBacklog)
+                return false;
+
             if (_overrideSaveData)
                 return _overriddenSRankEntry != null;
 
