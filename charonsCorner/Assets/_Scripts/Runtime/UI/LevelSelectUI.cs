@@ -80,7 +80,7 @@ namespace CharonsCorner.Runtime
         }
 
         /// <summary>
-        /// Plays the scale down feedback for the entire Level Select UI.
+        /// Plays the scale down feedback for the entire Level Select UI and exits both arrows.
         /// </summary>
         public void PlayScaleDownFeedback()
         {
@@ -88,6 +88,10 @@ namespace CharonsCorner.Runtime
             {
                 _scaleDownFeedback.PlayFeedbacks();
             }
+
+            // Also exit arrows
+            SetLeftArrowState(false);
+            SetRightArrowState(false);
         }
     }
 }

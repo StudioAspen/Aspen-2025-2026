@@ -20,6 +20,8 @@ namespace CharonsCorner.Runtime
         [field: SerializeField] public SplineContainer SplinePath { get; private set; }
         [field: SerializeField] public float MoveDistance { get; private set; } = 10f;
         [field: SerializeField] public float Speed { get; private set; } = 10f;
+        [SerializeField] private float _catchUpSpeed = 20f;
+        [SerializeField] private float _leadDistance = 5f;
         [SerializeField] private MMSpringScale _orbSpringScale;
         [SerializeField] private float _transitionDuration = 0.5f; // Duration for smoothing between splines
 
@@ -98,7 +100,43 @@ namespace CharonsCorner.Runtime
                 if (_cachedSplineLength == 0f)
                     _cachedSplineLength = SplineUtility.CalculateLength(currentSpline, SplinePath.transform.localToWorldMatrix);
 
-                _progress += (Speed * Time.deltaTime) / _cachedSplineLength;
+                float currentSpeed = Speed;
+
+                // Check if player is ahead on the spline
+                if (Player != null)
+                {
+                    float minDistance = float.MaxValue;
+                    float playerProgress = 0f;
+                    int playerSplineIndex = -1;
+
+                    for (int i = 0; i < SplinePath.Splines.Count; i++)
+                    {
+                        SplineUtility.GetNearestPoint(SplinePath.Splines[i], SplinePath.transform.InverseTransformPoint(Player.position), out var nearestPoint, out var t);
+                        float dist = Vector3.Distance(Player.position, SplinePath.transform.TransformPoint(nearestPoint));
+                        if (dist < minDistance)
+                        {
+                            minDistance = dist;
+                            playerProgress = t;
+                            playerSplineIndex = i;
+                        }
+                    }
+
+                    bool playerIsAhead = playerSplineIndex > _currentSplineIndex || (playerSplineIndex == _currentSplineIndex && playerProgress > _progress);
+                    
+                    if (playerIsAhead)
+                    {
+                        // Calculate lead progress based on _leadDistance
+                        float leadProgress = _leadDistance / _cachedSplineLength;
+                        
+                        // If we are still behind (playerProgress + leadProgress), use catch up speed
+                        if (playerSplineIndex > _currentSplineIndex || _progress < (playerProgress + leadProgress))
+                        {
+                            currentSpeed = _catchUpSpeed;
+                        }
+                    }
+                }
+
+                _progress += (currentSpeed * Time.deltaTime) / _cachedSplineLength;
 
                 if (_progress > 1f)
                 {
@@ -156,76 +194,6 @@ namespace CharonsCorner.Runtime
 
             UpdateShader();
         }
-
-        /*
-        // PLAYER-RELATIVE PROJECTION LOGIC (Work in Progress)
-        private void UpdatePlayerRelative()
-        {
-            if (SplinePath == null || SplinePath.Splines.Count == 0 || Player == null)
-            {
-                UpdateShader();
-                return;
-            }
-
-            if (_isTransitioning)
-            {
-                _transitionTimer += Time.deltaTime;
-                float t = Mathf.Clamp01(_transitionTimer / _transitionDuration);
-                transform.position = Vector3.Lerp(_transitionStartPos, _transitionEndPos, t);
-                transform.rotation = Quaternion.Slerp(_transitionStartRot, _transitionEndRot, t);
-                if (t >= 1f)
-                    _isTransitioning = false;
-
-                UpdateShader();
-                return;
-            }
-
-            // 1. Find where the player is on the current spline
-            Spline currentSpline = SplinePath.Splines[_currentSplineIndex];
-            Vector3 localPlayerPos = SplinePath.transform.InverseTransformPoint(Player.position);
-            
-            SplineUtility.GetNearestPoint(currentSpline, localPlayerPos, out _, out float playerT);
-
-            if (_cachedSplineLength <= 0f)
-                _cachedSplineLength = SplineUtility.CalculateLength(currentSpline, SplinePath.transform.localToWorldMatrix);
-
-            // 2. Calculate target progress (player progress + look ahead)
-            float lookAheadT = _lookAheadDistance / _cachedSplineLength;
-            float targetT = Mathf.Clamp01(playerT + lookAheadT);
-
-            // 3. Smoothly move orb progress towards target
-            _progress = Mathf.Lerp(_progress, targetT, Time.deltaTime * _followSpeed);
-
-            // 4. Handle spline transitions
-            if (_progress > 0.99f && playerT > 0.95f)
-            {
-                int nextSplineIndex = _currentSplineIndex + 1;
-                if (nextSplineIndex < SplinePath.Splines.Count)
-                {
-                    PrepareTransition(nextSplineIndex);
-                    UpdateShader();
-                    return;
-                }
-                else
-                {
-                    // End of all splines
-                    if (_orbSpringScale != null && _progress > 0.999f)
-                    {
-                        _orbSpringScale.MoveTo(Vector3.zero);
-                    }
-                }
-            }
-
-            // 5. Update Orb Position and Rotation
-            Vector3 position = currentSpline.EvaluatePosition(_progress);
-            Vector3 tangent = currentSpline.EvaluateTangent(_progress);
-
-            transform.position = SplinePath.transform.TransformPoint(position);
-            transform.rotation = Quaternion.LookRotation(SplinePath.transform.TransformDirection(tangent));
-
-            UpdateShader();
-        }
-        */
 
         private void PrepareTransition(int nextSplineIndex)
         {
