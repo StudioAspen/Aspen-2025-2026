@@ -24,6 +24,7 @@ namespace CharonsCorner.Runtime
         private bool _isSelected;
         private bool _wasActive;
         private string _baseText;
+        private bool _isInitialized;
 
         private void Awake()
         {
@@ -40,13 +41,44 @@ namespace CharonsCorner.Runtime
             {
                 _rotationShaker.TimescaleMode = TimescaleModes.Unscaled;
             }
+
+            if (_button != null)
+            {
+                _button.onClick.AddListener(HandleClick);
+            }
+
+            Initialize();
+        }
+
+        private void HandleClick()
+        {
+            if (_rotationShaker != null)
+            {
+                _rotationShaker.Stop();
+            }
+
+            if (_springScale != null)
+            {
+                _springScale.MoveTo(_normalScale);
+            }
+        }
+
+        private void Initialize()
+        {
+            if (_isInitialized) return;
+
+            if (_textAnimator != null && _textAnimator.TMProComponent != null)
+            {
+                _baseText = _textAnimator.TMProComponent.text;
+                _isInitialized = true;
+            }
         }
 
         private void Start()
         {
-            if (_textAnimator != null)
+            Initialize();
+            if (_isInitialized)
             {
-                _baseText = _textAnimator.TMProComponent.text;
                 ApplyTags(_isHovered || _isSelected);
             }
         }
@@ -54,6 +86,8 @@ namespace CharonsCorner.Runtime
         private void ApplyTags(bool active)
         {
             if (_textAnimator == null) return;
+            
+            Initialize();
 
             string tags = active ? _hoverTags : _startTags;
             _textAnimator.TMProComponent.text = (tags ?? string.Empty) + _baseText;
@@ -134,6 +168,7 @@ namespace CharonsCorner.Runtime
         public void UpdateText(string newText)
         {
             _baseText = newText;
+            _isInitialized = true;
             if (_textAnimator != null)
             {
                 ApplyTags(_isHovered || _isSelected);
