@@ -7,6 +7,7 @@ public class CreditsController : MonoBehaviour
 {    
     [Header("Settings"), Range(10f, 100f)]
     [SerializeField] float _scrollSpeed = 40f;
+    [SerializeField] float _endY = 1000f;
 
     [Header("Skip Settings")]
     [SerializeField] GameObject _skipButton;
@@ -14,6 +15,8 @@ public class CreditsController : MonoBehaviour
     [SerializeField] GameState _nextGameState = GameState.Gameplay;
 
     RectTransform _rectTransform;
+
+    bool _isSkipping = false;
 
     private void OnEnable()
     {
@@ -45,8 +48,11 @@ public class CreditsController : MonoBehaviour
 
     private void SkipSequence()
     {
+        if (_isSkipping) return;
+
         if (_nextScene != null && !string.IsNullOrEmpty(_nextScene.Name))
         {
+            _isSkipping = true;
             GameManager.Instance.SwitchScenes(_nextScene, _nextGameState).Forget();
         }
     }
@@ -65,5 +71,10 @@ public class CreditsController : MonoBehaviour
     void Update()
     {
         _rectTransform.anchoredPosition += new Vector2(0f, _scrollSpeed * Time.deltaTime);
+
+        if (_rectTransform.anchoredPosition.y >= _endY)
+        {
+            SkipSequence();
+        }
     }
 }

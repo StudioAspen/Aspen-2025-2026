@@ -2,10 +2,14 @@
 using System.Collections.Generic;
 using MoreMountains.Tools;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.Scripting.APIUpdating;
 
 namespace MoreMountains.Feedbacks
 {
+	[System.Serializable]
+	public class MMF_DestinationTransformTargetEvent : UnityEvent<Transform> { }
+
 	/// <summary>
 	/// This feedback will let you animate the position/rotation/scale of a target transform to match the one of a destination transform.
 	/// </summary>
@@ -75,6 +79,20 @@ namespace MoreMountains.Feedbacks
 		[Tooltip("the list of destination transforms whose properties we want to match")]
 		[MMFCondition("UseMultiTargets", true)]
 		public List<Transform> MultiDestinations;
+
+		/// if true, each target will wait for a delay after the previous one started before starting its own movement
+		[Tooltip("if true, each target will wait for a delay after the previous one started before starting its own movement")]
+		[MMFCondition("UseMultiTargets", true)]
+		public bool DelayBetweenTargets = false;
+		/// the delay to apply between each target movement
+		[Tooltip("the delay to apply between each target movement")]
+		[MMFCondition("DelayBetweenTargets", true)]
+		public float DelayBetweenTargetsValue = 0.1f;
+
+		[MMFInspectorGroup("Events", true, 66)]
+		/// the event to call each time a transform reaches its destination
+		[Tooltip("the event to call each time a transform reaches its destination")]
+		public MMF_DestinationTransformTargetEvent EventOnCompletion;
         
 		/// whether or not we want to force an origin transform. If not, the current position of the target transform will be used as origin instead
 		[Tooltip("whether or not we want to force an origin transform. If not, the current position of the target transform will be used as origin instead")]
@@ -155,7 +173,18 @@ namespace MoreMountains.Feedbacks
 		public MMTweenType AnimateScaleTween = new MMTweenType( new AnimationCurve(new Keyframe(0, 0), new Keyframe(0.3f, 1f), new Keyframe(1, 0)), "SeparateScaleCurve");
         
 		/// the duration of this feedback is the duration of the movement
-		public override float FeedbackDuration { get { return ApplyTimeMultiplier(Duration); } set { Duration = value; } }
+		public override float FeedbackDuration
+		{
+			get
+			{
+				if (UseMultiTargets && DelayBetweenTargets)
+				{
+					return ApplyTimeMultiplier(Duration + (MultiTargetTransforms.Count - 1) * DelayBetweenTargetsValue);
+				}
+				return ApplyTimeMultiplier(Duration);
+			}
+			set { Duration = value; }
+		}
 
 		/// a global curve to animate all properties on, unless dedicated ones are specified
 		[HideInInspector] public AnimationCurve GlobalAnimationCurve = null;
@@ -191,6 +220,7 @@ namespace MoreMountains.Feedbacks
 		protected List<Quaternion> _pointBRotations;
 		protected List<Vector3> _pointAScales;
 		protected List<Vector3> _pointBScales;
+		protected bool[] _targetCompleted;
         
 		/// <summary>
 		/// On Play we animate the pos/rotation/scale of the target transform towards its destination
@@ -232,6 +262,7 @@ namespace MoreMountains.Feedbacks
 			if (UseMultiTargets)
 			{
 				PrepareMultiTargets();
+				_targetCompleted = new bool[MultiTargetTransforms.Count];
 			}
 			else
 			{
@@ -242,6 +273,7 @@ namespace MoreMountains.Feedbacks
 				_pointAPosition = ForceOrigin ? Origin.transform.position : TargetTransform.position;
 				_pointARotation = ForceOrigin ? Origin.transform.rotation : TargetTransform.rotation;
 				_pointAScale = ForceOrigin ? Origin.transform.localScale : TargetTransform.localScale;
+				_targetCompleted = new bool[1];
 			}
 			
 			CacheDestinationValues();
@@ -254,14 +286,91 @@ namespace MoreMountains.Feedbacks
 				{
 					CacheDestinationValues();
 				}
-				float percent = Mathf.Clamp01(journey / FeedbackDuration);
-				ChangeTransformValues(percent);
+				
+				if (UseMultiTargets && DelayBetweenTargets)
+				{
+					for (int i = 0; i < MultiTargetTransforms.Count; i++)
+					{
+						float targetJourney = journey - (i * ApplyTimeMultiplier(DelayBetweenTargetsValue));
+						float percent = Mathf.Clamp01(targetJourney / ApplyTimeMultiplier(Duration));
+						ChangeTransformValue(i, percent);
+						
+						if (percent >= 1f && !_targetCompleted[i])
+						{
+							_targetCompleted[i] = true;
+							EventOnCompletion?.Invoke(MultiTargetTransforms[i]);
+						}
+					}
+				}
+				else
+				{
+					float percent = Mathf.Clamp01(journey / FeedbackDuration);
+					ChangeTransformValues(percent);
+
+					if (percent >= 1f)
+					{
+						if (UseMultiTargets)
+						{
+							for (int i = 0; i < MultiTargetTransforms.Count; i++)
+							{
+								if (!_targetCompleted[i])
+								{
+									_targetCompleted[i] = true;
+									EventOnCompletion?.Invoke(MultiTargetTransforms[i]);
+								}
+							}
+						}
+						else
+						{
+							if (!_targetCompleted[0])
+							{
+								_targetCompleted[0] = true;
+								EventOnCompletion?.Invoke(TargetTransform);
+							}
+						}
+					}
+				}
+
 				journey += NormalPlayDirection ? FeedbackDeltaTime : -FeedbackDeltaTime;
 				yield return null;
 			}
 
 			// set final position
-			ChangeTransformValues(1f);
+			if (UseMultiTargets && DelayBetweenTargets)
+			{
+				for (int i = 0; i < MultiTargetTransforms.Count; i++)
+				{
+					ChangeTransformValue(i, 1f);
+					if (!_targetCompleted[i])
+					{
+						_targetCompleted[i] = true;
+						EventOnCompletion?.Invoke(MultiTargetTransforms[i]);
+					}
+				}
+			}
+			else
+			{
+				ChangeTransformValues(1f);
+				if (UseMultiTargets)
+				{
+					for (int i = 0; i < MultiTargetTransforms.Count; i++)
+					{
+						if (!_targetCompleted[i])
+						{
+							_targetCompleted[i] = true;
+							EventOnCompletion?.Invoke(MultiTargetTransforms[i]);
+						}
+					}
+				}
+				else
+				{
+					if (!_targetCompleted[0])
+					{
+						_targetCompleted[0] = true;
+						EventOnCompletion?.Invoke(TargetTransform);
+					}
+				}
+			}
 			
 			IsPlaying = false;
 			_coroutine = null;
@@ -414,20 +523,7 @@ namespace MoreMountains.Feedbacks
 			{
 				for (int i = 0; i < MultiTargetTransforms.Count; i++)
 				{
-					if (MultiTargetTransforms[i] == null) { continue; }
-
-					_animationTweenType = SeparatePositionCurve ? AnimatePositionTween : GlobalAnimationTween;
-					_newPosition = Vector3.LerpUnclamped(_pointAPositions[i], _pointBPositions[i], _animationTweenType.Evaluate(percent));
-                
-					_animationTweenType = SeparateRotationCurve ? AnimateRotationTween : GlobalAnimationTween;
-					_newRotation = Quaternion.LerpUnclamped(_pointARotations[i], _pointBRotations[i], _animationTweenType.Evaluate(percent));
-                
-					_animationTweenType = SeparateScaleCurve ? AnimateScaleTween : GlobalAnimationTween;
-					_newScale = Vector3.LerpUnclamped(_pointAScales[i], _pointBScales[i], _animationTweenType.Evaluate(percent));
-			
-					MultiTargetTransforms[i].position = _newPosition;
-					MultiTargetTransforms[i].rotation = _newRotation;
-					MultiTargetTransforms[i].localScale = _newScale;
+					ChangeTransformValue(i, percent);
 				}
 			}
 			else
@@ -445,6 +541,24 @@ namespace MoreMountains.Feedbacks
 				TargetTransform.rotation = _newRotation;
 				TargetTransform.localScale = _newScale;
 			}
+		}
+
+		protected virtual void ChangeTransformValue(int i, float percent)
+		{
+			if (MultiTargetTransforms[i] == null) { return; }
+
+			_animationTweenType = SeparatePositionCurve ? AnimatePositionTween : GlobalAnimationTween;
+			_newPosition = Vector3.LerpUnclamped(_pointAPositions[i], _pointBPositions[i], _animationTweenType.Evaluate(percent));
+
+			_animationTweenType = SeparateRotationCurve ? AnimateRotationTween : GlobalAnimationTween;
+			_newRotation = Quaternion.LerpUnclamped(_pointARotations[i], _pointBRotations[i], _animationTweenType.Evaluate(percent));
+
+			_animationTweenType = SeparateScaleCurve ? AnimateScaleTween : GlobalAnimationTween;
+			_newScale = Vector3.LerpUnclamped(_pointAScales[i], _pointBScales[i], _animationTweenType.Evaluate(percent));
+
+			MultiTargetTransforms[i].position = _newPosition;
+			MultiTargetTransforms[i].rotation = _newRotation;
+			MultiTargetTransforms[i].localScale = _newScale;
 		}
 
 		/// <summary>
