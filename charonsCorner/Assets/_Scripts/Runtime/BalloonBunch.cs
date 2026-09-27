@@ -10,8 +10,9 @@ public class BalloonBunch : MonoBehaviour
     [SerializeField] private bool _playOnce = true;
 
     [Header("Balloons")]
-    [SerializeField] private GameObject[] _balloonModels; // Expects 4 models
-    [SerializeField] private Material[] _balloonMaterials; // Expects 3 materials
+    [SerializeField] private GameObject[] _balloonModels;
+    [SerializeField] private Material[] _balloonMaterials;
+    [SerializeField] private bool _deactivateModel = true;
     
     private bool _hasPlayed = false;
     private GameplayPlayerController _player;
@@ -29,16 +30,20 @@ public class BalloonBunch : MonoBehaviour
 
     private void SetupBalloons()
     {
-        if (_balloonModels == null || _balloonModels.Length < 4) return;
-        if (_balloonMaterials == null || _balloonMaterials.Length < 3) return;
+        if (_balloonModels == null || _balloonModels.Length == 0) return;
+        if (_balloonMaterials == null || _balloonMaterials.Length == 0) return;
 
-        // Randomly determine between model three and four (indices 2 and 3) deactivate its gameobject
-        int modelToDeactivate = Random.Range(2, 4);
-        _balloonModels[modelToDeactivate].SetActive(false);
+        int modelToDeactivate = -1;
+        if (_deactivateModel && _balloonModels.Length > 0)
+        {
+            // Randomly determine a model to deactivate
+            modelToDeactivate = Random.Range(0, _balloonModels.Length);
+            _balloonModels[modelToDeactivate].SetActive(false);
+        }
 
-        // Collect remaining 3 active balloons
+        // Collect active balloons
         System.Collections.Generic.List<GameObject> activeBalloons = new System.Collections.Generic.List<GameObject>();
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < _balloonModels.Length; i++)
         {
             if (i != modelToDeactivate)
             {
@@ -46,7 +51,7 @@ public class BalloonBunch : MonoBehaviour
             }
         }
 
-        // Randomly set their materials using the three assigned ones, such that each balloon is using a different material
+        // Randomly set their materials using the assigned ones
         // Shuffle the materials
         System.Collections.Generic.List<Material> shuffledMaterials = new System.Collections.Generic.List<Material>(_balloonMaterials);
         for (int i = 0; i < shuffledMaterials.Count; i++)
@@ -57,8 +62,8 @@ public class BalloonBunch : MonoBehaviour
             shuffledMaterials[randomIndex] = temp;
         }
 
-        // Assign materials to the 3 active balloons
-        for (int i = 0; i < 3; i++)
+        // Assign materials to the active balloons
+        for (int i = 0; i < activeBalloons.Count; i++)
         {
             Renderer renderer = activeBalloons[i].GetComponent<Renderer>();
             if (renderer == null)
@@ -69,7 +74,8 @@ public class BalloonBunch : MonoBehaviour
 
             if (renderer != null)
             {
-                renderer.material = shuffledMaterials[i];
+                // Use modulo to wrap around if there are more balloons than materials
+                renderer.material = shuffledMaterials[i % shuffledMaterials.Count];
             }
         }
     }

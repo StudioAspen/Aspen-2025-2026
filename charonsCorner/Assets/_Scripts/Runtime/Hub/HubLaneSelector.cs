@@ -29,6 +29,10 @@ namespace CharonsCorner.Runtime
         [Header("Input Prompt")]
         [SerializeField] private InputInteraction _inputInteraction;
 
+        [Header("S-Rank Requirements")]
+        [SerializeField] private bool _sRankRequirementForFinalLevel;
+        [SerializeField] private int _requiredSRanksForFinalLevel = 3;
+
         private InputManager _input;
         private InputAction _moveAction;
         private Coroutine _moveCoroutine;
@@ -60,7 +64,8 @@ namespace CharonsCorner.Runtime
             
             // Find the last unlocked lane
             int lastUnlockedIndex = 0;
-            for (int i = LaneData.Count - 1; i >= 0; i--)
+            int effectiveCount = GetEffectiveLaneCount();
+            for (int i = effectiveCount - 1; i >= 0; i--)
             {
                 if (LaneData[i].ChapterInWhichUnlocked <= currentChapterIndex)
                 {
@@ -194,7 +199,7 @@ namespace CharonsCorner.Runtime
 
         public void SelectLane(int index)
         {
-            if (index < 0 || index >= LaneData.Count)
+            if (index < 0 || index >= GetEffectiveLaneCount())
                 return;
 
             CurrentLaneIndex = index;
@@ -228,7 +233,8 @@ namespace CharonsCorner.Runtime
             // In this case, the player should not be able to go further right.
             if (LaneData[CurrentLaneIndex].ChapterInWhichUnlocked < currentChapterIndex)
             {
-                for (int i = CurrentLaneIndex + 1; i < LaneData.Count; i++)
+                int effectiveCount = GetEffectiveLaneCount();
+                for (int i = CurrentLaneIndex + 1; i < effectiveCount; i++)
                 {
                     if (LaneData[i].ChapterInWhichUnlocked <= currentChapterIndex)
                     {
@@ -248,7 +254,8 @@ namespace CharonsCorner.Runtime
             int currentChapterIndex = FlagManager.Get(ProgressFlag.CurrentChapterIndex);
 
             int targetIndex = -1;
-            while (nextIndex < LaneData.Count)
+            int effectiveCount = GetEffectiveLaneCount();
+            while (nextIndex < effectiveCount)
             {
                 if (LaneData[nextIndex].ChapterInWhichUnlocked <= currentChapterIndex)
                 {
@@ -307,5 +314,17 @@ namespace CharonsCorner.Runtime
         }
 
         public LevelDataSO GetCurrentLevelData() => LaneData[CurrentLaneIndex];
+
+        private int GetEffectiveLaneCount()
+        {
+            if (!_sRankRequirementForFinalLevel || LaneData.Count == 0)
+                return LaneData.Count;
+
+            int sRankCount = FlagManager.Get(ProgressFlag.SRankCount);
+            if (sRankCount >= _requiredSRanksForFinalLevel)
+                return LaneData.Count;
+
+            return LaneData.Count - 1;
+        }
     }
 }

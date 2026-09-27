@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 2100000, guid: ae0f694050fa35347856100907203f9d, type: 2}
+  m_SkyboxMaterial: {fileID: 2100000, guid: f5411020537c5fb40aca6db279012b5d, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -21826,7 +21826,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &829016974
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -26914,7 +26914,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1110041088}
-  - component: {fileID: 1110041091}
   - component: {fileID: 1110041090}
   - component: {fileID: 1110041089}
   m_Layer: 8
@@ -26993,19 +26992,6 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
---- !u!114 &1110041091
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1110041087}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6edfd8fb992098b499429e9046d81831, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _targetCamera: {fileID: 2102514287}
 --- !u!1 &1117943610
 GameObject:
   m_ObjectHideFlags: 0
@@ -44025,7 +44011,6 @@ GameObject:
   - component: {fileID: 1835923263}
   - component: {fileID: 1835923262}
   - component: {fileID: 1835923261}
-  - component: {fileID: 1835923260}
   m_Layer: 3
   m_Name: Book11
   m_TagString: Untagged
@@ -44033,55 +44018,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1835923260
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1835923259}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2b4347e5484948cc8ea0e9da6ac7f169, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CharonsCorner.Runtime.PulseMaterial
-  _pulseEventName: Pulse
-  _pulseCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 0.5
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  _targetRenderer: {fileID: 1835923261}
-  _materialIndex: 0
-  _glowPropertyName: _Glow
 --- !u!23 &1835923261
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -47696,7 +47632,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 35
+  field of view: 60.000004
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -47723,7 +47659,7 @@ Transform:
   m_GameObject: {fileID: 2102514284}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.95, y: 2.46, z: -0.4000001}
+  m_LocalPosition: {x: 5.813, y: 3.44, z: 7.427}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -51255,6 +51191,14 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1966611347}
     - target: {fileID: 573634015020855248, guid: 71cf77e8e8c169f47b9bb6a4526f7498, type: 3}
+      propertyPath: _requiredSRanksForFinalLevel
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 573634015020855248, guid: 71cf77e8e8c169f47b9bb6a4526f7498, type: 3}
+      propertyPath: _sRankRequirementForFinalLevel
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 573634015020855248, guid: 71cf77e8e8c169f47b9bb6a4526f7498, type: 3}
       propertyPath: <LaneData>k__BackingField.Array.size
       value: 5
       objectReference: {fileID: 0}
@@ -51376,7 +51320,7 @@ PrefabInstance:
       objectReference: {fileID: 273011498}
     - target: {fileID: 1207743005775883785, guid: 71cf77e8e8c169f47b9bb6a4526f7498, type: 3}
       propertyPath: m_VersionIndex
-      value: 5571
+      value: 5574
       objectReference: {fileID: 0}
     - target: {fileID: 1218423375257724636, guid: 71cf77e8e8c169f47b9bb6a4526f7498, type: 3}
       propertyPath: _bowlingStarter
@@ -51400,7 +51344,7 @@ PrefabInstance:
       objectReference: {fileID: 1126341552}
     - target: {fileID: 1759988356794107773, guid: 71cf77e8e8c169f47b9bb6a4526f7498, type: 3}
       propertyPath: m_VersionIndex
-      value: 5571
+      value: 5574
       objectReference: {fileID: 0}
     - target: {fileID: 1796546930426191999, guid: 71cf77e8e8c169f47b9bb6a4526f7498, type: 3}
       propertyPath: m_Enabled
@@ -51896,7 +51840,7 @@ PrefabInstance:
       objectReference: {fileID: 1261864338}
     - target: {fileID: 3794611647743476311, guid: 71cf77e8e8c169f47b9bb6a4526f7498, type: 3}
       propertyPath: m_VersionIndex
-      value: 6817
+      value: 6820
       objectReference: {fileID: 0}
     - target: {fileID: 3973872935529779239, guid: 71cf77e8e8c169f47b9bb6a4526f7498, type: 3}
       propertyPath: _targetCamera
@@ -52236,7 +52180,7 @@ PrefabInstance:
       objectReference: {fileID: 1955602252}
     - target: {fileID: 4530241612959355687, guid: 71cf77e8e8c169f47b9bb6a4526f7498, type: 3}
       propertyPath: m_VersionIndex
-      value: 6808
+      value: 6811
       objectReference: {fileID: 0}
     - target: {fileID: 4798805902141558444, guid: 71cf77e8e8c169f47b9bb6a4526f7498, type: 3}
       propertyPath: m_Enabled
@@ -52248,7 +52192,7 @@ PrefabInstance:
       objectReference: {fileID: 719547932}
     - target: {fileID: 4919077535492367332, guid: 71cf77e8e8c169f47b9bb6a4526f7498, type: 3}
       propertyPath: m_VersionIndex
-      value: 5571
+      value: 5574
       objectReference: {fileID: 0}
     - target: {fileID: 5420125838380852685, guid: 71cf77e8e8c169f47b9bb6a4526f7498, type: 3}
       propertyPath: m_Enabled
@@ -52268,7 +52212,7 @@ PrefabInstance:
       objectReference: {fileID: 36033634}
     - target: {fileID: 5635022906159116948, guid: 71cf77e8e8c169f47b9bb6a4526f7498, type: 3}
       propertyPath: m_VersionIndex
-      value: 6068
+      value: 6071
       objectReference: {fileID: 0}
     - target: {fileID: 5925108388686965594, guid: 71cf77e8e8c169f47b9bb6a4526f7498, type: 3}
       propertyPath: _levelColorSettings.Array.size
@@ -52580,7 +52524,7 @@ PrefabInstance:
       objectReference: {fileID: 1921026162}
     - target: {fileID: 6931033341102968762, guid: 71cf77e8e8c169f47b9bb6a4526f7498, type: 3}
       propertyPath: m_VersionIndex
-      value: 6817
+      value: 6820
       objectReference: {fileID: 0}
     - target: {fileID: 7148133974731388528, guid: 71cf77e8e8c169f47b9bb6a4526f7498, type: 3}
       propertyPath: m_Enabled
@@ -52604,7 +52548,7 @@ PrefabInstance:
       objectReference: {fileID: 1019714643}
     - target: {fileID: 7530447186621261518, guid: 71cf77e8e8c169f47b9bb6a4526f7498, type: 3}
       propertyPath: m_VersionIndex
-      value: 6817
+      value: 6820
       objectReference: {fileID: 0}
     - target: {fileID: 7692017061239100756, guid: 71cf77e8e8c169f47b9bb6a4526f7498, type: 3}
       propertyPath: m_Enabled
