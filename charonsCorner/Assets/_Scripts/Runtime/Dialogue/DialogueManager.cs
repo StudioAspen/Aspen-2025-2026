@@ -116,10 +116,18 @@ namespace CharonsCorner.Runtime
                 Speaker.Bowley => "Bowley",
                 Speaker.Unknown => "???",
                 Speaker.LostMemento => "???",
+                Speaker.WifeMemento => "???",
                 _ => "???"
             };
 
-            return $"<?ChangeSpeakerName={speakerName}>{line.text}";
+            string processedLine = $"<?ChangeSpeakerName={speakerName}>{line.text}";
+
+            if (line.cameraShake)
+            {
+                processedLine = "<?CameraShake>" + processedLine;
+            }
+
+            return processedLine;
         }
 
         public void StartDialogue(DialogueSO dialogue)
@@ -198,6 +206,9 @@ namespace CharonsCorner.Runtime
                     break;
                 case Speaker.LostMemento:
                     MMGameEvent.Trigger("LostMementoTalk");
+                    break;
+                case Speaker.WifeMemento:
+                    MMGameEvent.Trigger("WifeMementoTalk");
                     break;
             }
         }

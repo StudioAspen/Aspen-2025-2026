@@ -21,6 +21,7 @@ public class FlashbackEventSubscriber : MonoBehaviour
     [SerializeField] private SceneReference level4;
     [SerializeField] private SceneReference level5;
     [SerializeField] private SceneReference level6;
+    [SerializeField] private SceneReference level7;
     [SerializeField] private SceneReference hubScene;
     [SerializeField] private SceneReference creditsScene;
     [SerializeField] private CameraSwitcher cameraSwitcher;
@@ -60,6 +61,7 @@ public class FlashbackEventSubscriber : MonoBehaviour
     [SerializeField] private Color playerColor = Color.white;
     [SerializeField] private Color mementoColor = Color.white;
     [SerializeField] private Color miscColor = Color.white;
+    [SerializeField] private Color mementoTwoColor = Color.white;
 
 
     
@@ -134,6 +136,9 @@ public class FlashbackEventSubscriber : MonoBehaviour
             case "GoToLevel6":
                 SwitchToLevel(level6);
                 break;
+            case "GoToLevel7":
+                SwitchToLevel(level6);
+                break;
             case "GoToHubScene":
                 SwitchToLevel(hubScene);
                 break;
@@ -170,6 +175,10 @@ public class FlashbackEventSubscriber : MonoBehaviour
             case "MiscTalk":
                 if (flashbackText != null) flashbackText.color = miscColor;
                 MMGameEvent.Trigger("BullyTalk");
+                break;
+            case "MementoTwoTalk":
+                if (flashbackText != null) flashbackText.color = mementoTwoColor;
+                MMGameEvent.Trigger("MementoTwoTalk");
                 break;
             case "CharonLooksAtPlayer":
                 cameraSwitcher.SwitchCamera(camCharonLooksAtPlayer);

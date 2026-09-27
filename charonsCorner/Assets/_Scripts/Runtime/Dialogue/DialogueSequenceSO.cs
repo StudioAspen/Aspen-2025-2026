@@ -10,7 +10,8 @@ namespace CharonsCorner.Runtime
         Charon,
         Bowley,
         Unknown, // Mapping ??? to Unknown in code for better naming, but will display as ??? in inspector if possible or just use string mapping
-        LostMemento
+        LostMemento,
+        WifeMemento
     }
 
     [System.Serializable]
@@ -27,6 +28,8 @@ namespace CharonsCorner.Runtime
 
         [ValueDropdown("GetBowleyAnimations")]
         public string bowleyAnimation;
+
+        public bool cameraShake;
 
         [HideLabel]
         [TextArea(3, 10)]

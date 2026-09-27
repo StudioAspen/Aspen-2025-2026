@@ -15,39 +15,39 @@ MonoBehaviour:
   <SequenceName>k__BackingField: 2-3 B
   lines:
   - speaker: 0
-    charonAnimation: 
-    bowleyAnimation: 
-    text: <wiggle>Ok that might've been too far</wiggle>
+    charonAnimation: CharonComeOn
+    charonStareAnimation: CharonStareAtBowley
+    bowleyAnimation: BowleyIdle
+    cameraShake: 0
+    text: <wiggle a*.5>I am <shake>REALLLLLLLLY</shake> tempted to throw <incr>YOU</incr>
+      down the lane next
   - speaker: 0
-    charonAnimation: 
-    bowleyAnimation: 
-    text: <shake>I am <shake>REALLLLLLLLY</shake> tempted to throw <incr>YOU</incr>
-      down the lane next</shake>
-  - speaker: 0
-    charonAnimation: 
-    bowleyAnimation: 
+    charonAnimation: CharonSeatedIdle
+    charonStareAnimation: CharonStareAtBowley
+    bowleyAnimation: BowleyNo
+    cameraShake: 0
     text: <shake>Don't you remember what happened the last time you did that?!</shake>
   - speaker: 0
-    charonAnimation: 
-    bowleyAnimation: 
+    charonAnimation: CharonTalkingToBowley
+    charonStareAnimation: CharonStareUp
+    bowleyAnimation: BowleyNo
+    cameraShake: 0
     text: "<wave>Hmm, you're right about that\u2026</wave>"
-  - speaker: 0
-    charonAnimation: 
-    bowleyAnimation: 
-    text: <wiggle>Good, now that you've calmed down- </wiggle><shake>WAIT WAIT WAIT-</shake>
   - speaker: 1
-    charonAnimation: 
-    bowleyAnimation: 
-    text: <shake>I'M SORRY, I'M SORRY. I'M SORRY</shake>
+    charonAnimation: CharonTalkingToBowley
+    charonStareAnimation: CharonStareAtBowley
+    bowleyAnimation: BowleyYes
+    cameraShake: 0
+    text: <wiggle a*.5>Good, now that you've calmed down-
   - speaker: 1
-    charonAnimation: 
-    bowleyAnimation: 
-    text: <shake>IT STINKS IN HERE</shake>
-  - speaker: 0
-    charonAnimation: 
-    bowleyAnimation: 
-    text: <wiggle>I'll move you once I get a proper apology</wiggle>
+    charonAnimation: CharonSeatedIdle
+    charonStareAnimation: CharonStareAtPlayer
+    bowleyAnimation: BowleyIdleSlow
+    cameraShake: 1
+    text: <?GE=BowleyFall><shake>WAIT WAIT WAIT-</shake>
   - speaker: 1
-    charonAnimation: 
-    bowleyAnimation: 
-    text: <shake>AHHHHHHHHHHHHHHH</shake>
+    charonAnimation: CharonTalkingToBowley
+    charonStareAnimation: CharonStareUp
+    bowleyAnimation: BowleyIdleFast
+    cameraShake: 1
+    text: <?GE=BowleyJump><shake>I'M SORRY, I'M SORRY. I'M SORRY!</shake>

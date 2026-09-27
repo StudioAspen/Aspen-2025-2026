@@ -32,6 +32,7 @@ namespace CharonsCorner.Runtime
         [SerializeField] private Color _bowleyColor;
         [SerializeField] private Color _mementoColor;
         [SerializeField] private Color _lostMementoColor;
+        [SerializeField] private Color _wifeMementoColor;
 
         [Header("Feedbacks")]
         [SerializeField] private MMF_Player _dialogueNextFeedback;
@@ -162,6 +163,7 @@ namespace CharonsCorner.Runtime
                     Speaker.Bowley => "Bowley",
                     Speaker.Unknown => "???",
                     Speaker.LostMemento => "???",
+                    Speaker.WifeMemento => "???",
                     _ => "???"
                 };
             }
@@ -203,6 +205,7 @@ namespace CharonsCorner.Runtime
                     Speaker.Bowley => _bowleyColor,
                     Speaker.Unknown => _mementoColor,
                     Speaker.LostMemento => _lostMementoColor,
+                    Speaker.WifeMemento => _wifeMementoColor,
                     _ => _recoloredImages[0].color
                 };
             }
