@@ -17,6 +17,8 @@ public class BalloonBunch : MonoBehaviour
     private bool _hasPlayed = false;
     private GameplayPlayerController _player;
 
+    public bool IsInitialized { get; private set; }
+
     void Start()
     {
         _player = FindFirstObjectByType<GameplayPlayerController>();
@@ -26,6 +28,7 @@ public class BalloonBunch : MonoBehaviour
         }
 
         SetupBalloons();
+        IsInitialized = true;
     }
 
     private void SetupBalloons()
@@ -69,7 +72,7 @@ public class BalloonBunch : MonoBehaviour
             if (renderer == null)
             {
                 // In case renderer is on a child object
-                renderer = activeBalloons[i].GetComponentInChildren<Renderer>();
+                renderer = activeBalloons[i].GetComponentInChildren<Renderer>(true);
             }
 
             if (renderer != null)

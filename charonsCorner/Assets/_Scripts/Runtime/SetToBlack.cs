@@ -10,6 +10,7 @@ namespace CharonsCorner.Runtime
         [SerializeField] private string _mmGameEvent = "SetToBlack";
         [SerializeField] private bool _altColor = false;
         [SerializeField] private Color _altColorValue = Color.white;
+        [SerializeField] private BalloonBunch _balloonBunch;
 
         private struct RendererData
         {
@@ -30,6 +31,7 @@ namespace CharonsCorner.Runtime
         private int _outlineColorId;
 
         private bool _wasActive = false;
+        private bool _initialized = false;
 
         public bool Active
         {
@@ -61,15 +63,24 @@ namespace CharonsCorner.Runtime
             _baseColorId = Shader.PropertyToID("_BaseColor");
             _outlineColorId = Shader.PropertyToID("_OutlineColor");
 
+            if (_balloonBunch == null)
+            {
+                _balloonBunch = GetComponent<BalloonBunch>();
+            }
+        }
+
+        private void Initialize()
+        {
             InitializeRenderers();
             
+            _initialized = true;
             _wasActive = _active;
             ApplyState();
         }
 
         private void InitializeRenderers()
         {
-            Renderer[] renderers = GetComponentsInChildren<Renderer>();
+            Renderer[] renderers = GetComponentsInChildren<Renderer>(true);
             foreach (Renderer renderer in renderers)
             {
                 RendererData data = new RendererData();
@@ -100,6 +111,15 @@ namespace CharonsCorner.Runtime
 
         private void Update()
         {
+            if (!_initialized)
+            {
+                if (_balloonBunch == null || _balloonBunch.IsInitialized)
+                {
+                    Initialize();
+                }
+                return;
+            }
+
             if (_active != _wasActive)
             {
                 ApplyState();
