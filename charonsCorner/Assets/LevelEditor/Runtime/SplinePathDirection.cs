@@ -52,7 +52,6 @@ namespace CharonsCorner.LevelEditor
         [Header("Detection")]
         [SerializeField, Range(0f, 1f)] private float _dotThreshold = 0.0f;
 
-        private SplinePath _splinePath;
         private SplineContainer _splineContainer;
 
         public RoadDirection DefaultDirection => _defaultDirection;
@@ -75,9 +74,7 @@ namespace CharonsCorner.LevelEditor
             for (int i = 0; i < count; i++)
             {
                 // Preserve existing direction if an entry already exists for this index
-                RoadDirection existingDir = _defaultDirection;
-                if (i < _splineDirections.Count)
-                    existingDir = _splineDirections[i].Direction;
+                RoadDirection existingDir = GetDirectionForSpline(i);
 
                 newList.Add(new SplineDirectionEntry
                 {
@@ -133,11 +130,8 @@ namespace CharonsCorner.LevelEditor
 
         private void EnsureReferences()
         {
-            if (_splinePath == null)
-                _splinePath = GetComponent<SplinePath>();
-
-            if (_splinePath != null && _splineContainer == null)
-                _splineContainer = _splinePath.splineContainer;
+            if (_splineContainer == null)
+                _splineContainer = GetComponent<SplineContainer>();
         }
 
         /// <summary>
@@ -146,8 +140,14 @@ namespace CharonsCorner.LevelEditor
         /// </summary>
         private RoadDirection GetDirectionForSpline(int splineIndex)
         {
-            if (_splineDirections != null && splineIndex < _splineDirections.Count)
-                return _splineDirections[splineIndex].Direction;
+            if (_splineDirections != null)
+            {
+                foreach (SplineDirectionEntry entry in _splineDirections)
+                {
+                    if (entry != null && entry.SplineIndex == splineIndex)
+                        return entry.Direction;
+                }
+            }
 
             return _defaultDirection;
         }
@@ -158,7 +158,8 @@ namespace CharonsCorner.LevelEditor
         /// </summary>
         public bool CheckWrongWay(int splineIndex, float t, Vector3 velocity)
         {
-            if (_splineContainer == null || velocity.sqrMagnitude < 0.001f)
+            EnsureReferences();
+            if (_splineContainer == null || splineIndex < 0 || splineIndex >= _splineContainer.Splines.Count)
                 return false;
 
             Vector3 splineForward = SampleSplineForward(splineIndex, t);
@@ -166,7 +167,9 @@ namespace CharonsCorner.LevelEditor
             if (GetDirectionForSpline(splineIndex) == RoadDirection.Backward)
                 splineForward = -splineForward;
 
-            Vector3 flatVelocity = new Vector3(velocity.x, 0f, velocity.z).normalized;
+            Vector3 flatVelocity = Vector3.ProjectOnPlane(velocity, Vector3.up).normalized;
+            if (flatVelocity.sqrMagnitude < 0.001f || splineForward.sqrMagnitude < 0.001f)
+                return false;
 
             return Vector3.Dot(flatVelocity, splineForward) < _dotThreshold;
         }
@@ -177,34 +180,11 @@ namespace CharonsCorner.LevelEditor
         /// </summary>
         public bool CheckWrongWayFromPosition(Vector3 worldPosition, Vector3 velocity)
         {
-            if (_splineContainer == null)
+            if (!TryGetTravelDirectionAtPosition(worldPosition, out Vector3 direction, out _))
                 return false;
 
-            float3 localPosition = _splineContainer.transform.InverseTransformPoint(worldPosition);
-
-            float nearestDist = float.MaxValue;
-            int nearestSplineIndex = 0;
-            float nearestT = 0f;
-
-            for (int i = 0; i < _splineContainer.Splines.Count; i++)
-            {
-                SplineUtility.GetNearestPoint(
-                    _splineContainer.Splines[i],
-                    localPosition,
-                    out float3 nearestPoint,
-                    out float t
-                );
-
-                float dist = math.distancesq(localPosition, nearestPoint);
-                if (dist < nearestDist)
-                {
-                    nearestDist = dist;
-                    nearestSplineIndex = i;
-                    nearestT = t;
-                }
-            }
-
-            return CheckWrongWay(nearestSplineIndex, nearestT, velocity);
+            Vector3 flatVelocity = Vector3.ProjectOnPlane(velocity, Vector3.up).normalized;
+            return flatVelocity.sqrMagnitude > 0.001f && Vector3.Dot(flatVelocity, direction) < _dotThreshold;
         }
 
         /// <summary>
@@ -222,7 +202,7 @@ namespace CharonsCorner.LevelEditor
 
                 _splineContainer.Evaluate(splineIndex, t0, out float3 p0, out _, out _);
                 _splineContainer.Evaluate(splineIndex, t1, out float3 p1, out _, out _);
-                forward = math.normalize(p1 - p0);
+                forward = p1 - p0;
             }
 
             Vector3 flat = new Vector3(forward.x, 0f, forward.z);
@@ -235,16 +215,58 @@ namespace CharonsCorner.LevelEditor
         /// </summary>
         public Vector3 GetTravelDirectionAtPosition(Vector3 worldPosition)
         {
-            if (_splineContainer == null) return Vector3.zero;
+            return TryGetTravelDirectionAtPosition(worldPosition, out Vector3 direction, out _)
+                ? direction
+                : Vector3.zero;
+        }
+
+        /// <summary>
+        /// Uses the actual road triangle under the player, so nearby branches and
+        /// overlapping parts of the same spline cannot steal the direction sample.
+        /// </summary>
+        public bool TryGetTravelDirectionAtHit(RaycastHit hit, out Vector3 direction, out int splineIndex)
+        {
+            direction = Vector3.zero;
+            splineIndex = -1;
+            EnsureReferences();
+            SplinePath path = GetComponent<SplinePath>();
+            if (_splineContainer == null || hit.collider != GetComponent<MeshCollider>() ||
+                !path.TryGetSplineSegment(hit.triangleIndex, out splineIndex, out float startT, out float endT))
+                return false;
+
+            _splineContainer.Evaluate(splineIndex, startT, out float3 a, out _, out _);
+            _splineContainer.Evaluate(splineIndex, endT, out float3 b, out _, out _);
+            Vector3 segment = (Vector3)(b - a);
+            float fraction = segment.sqrMagnitude > 0.000001f
+                ? Mathf.Clamp01(Vector3.Dot(hit.point - (Vector3)a, segment) / segment.sqrMagnitude)
+                : 0f;
+            direction = SampleSplineForward(splineIndex, Mathf.Lerp(startT, endT, fraction));
+            if (GetDirectionForSpline(splineIndex) == RoadDirection.Backward)
+                direction = -direction;
+            return direction.sqrMagnitude > 0.001f;
+        }
+
+        /// <summary>
+        /// Samples the nearest spline in this path. Distance is measured in world space so
+        /// rotated or scaled paths can be compared with other paths in the scene.
+        /// </summary>
+        public bool TryGetTravelDirectionAtPosition(Vector3 worldPosition, out Vector3 direction, out float sqrDistance)
+        {
+            direction = Vector3.zero;
+            sqrDistance = float.PositiveInfinity;
+            EnsureReferences();
+            if (_splineContainer == null)
+                return false;
 
             float3 localPosition = _splineContainer.transform.InverseTransformPoint(worldPosition);
-
-            float nearestDist = float.MaxValue;
             int nearestSplineIndex = 0;
             float nearestT = 0f;
 
             for (int i = 0; i < _splineContainer.Splines.Count; i++)
             {
+                if (_splineContainer.Splines[i].Count < 2)
+                    continue;
+
                 SplineUtility.GetNearestPoint(
                     _splineContainer.Splines[i],
                     localPosition,
@@ -252,21 +274,25 @@ namespace CharonsCorner.LevelEditor
                     out float t
                 );
 
-                float dist = math.distancesq(localPosition, nearestPoint);
-                if (dist < nearestDist)
+                Vector3 nearestWorldPoint = _splineContainer.transform.TransformPoint(nearestPoint);
+                float dist = (worldPosition - nearestWorldPoint).sqrMagnitude;
+                if (dist < sqrDistance)
                 {
-                    nearestDist = dist;
+                    sqrDistance = dist;
                     nearestSplineIndex = i;
                     nearestT = t;
                 }
             }
 
-            Vector3 forward = SampleSplineForward(nearestSplineIndex, nearestT);
+            if (float.IsPositiveInfinity(sqrDistance))
+                return false;
+
+            direction = SampleSplineForward(nearestSplineIndex, nearestT);
 
             if (GetDirectionForSpline(nearestSplineIndex) == RoadDirection.Backward)
-                forward = -forward;
+                direction = -direction;
 
-            return forward;
+            return direction.sqrMagnitude > 0.001f;
         }
         
 #if UNITY_EDITOR

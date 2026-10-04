@@ -1,4 +1,3 @@
-using System;
 using DG.Tweening;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -29,16 +28,28 @@ namespace CharonsCorner.Runtime
 
         private void OnEnable()
         {
-            _wrongWayDetector.OnWrongWayChanged.AddListener(OnWrongWayChanged);
+            _animTween?.Kill();
+            _uiIsShowing = false;
+            _wrongWayTimer = 0f;
+            if (_indicatorTransform != null && _notVisiblePositionTransform != null)
+                _indicatorTransform.localPosition = _notVisiblePositionTransform.localPosition;
+
+            TryBindDetector();
         }
 
         private void OnDisable()
         {
-            _wrongWayDetector.OnWrongWayChanged.RemoveListener(OnWrongWayChanged);
+            if (_wrongWayDetector != null)
+                _wrongWayDetector.OnWrongWayChanged.RemoveListener(OnWrongWayChanged);
+            _animTween?.Kill();
+            _wrongWayTimer = 0f;
         }
 
         private void Update()
         {
+            if (_wrongWayDetector == null)
+                TryBindDetector();
+
             if (_wrongWayTimer <= 0f) return;
 
             _wrongWayTimer -= Time.deltaTime;
@@ -48,6 +59,24 @@ namespace CharonsCorner.Runtime
                 _wrongWayTimer = 0f;
                 ShowIndicator();
             }
+        }
+
+        private void TryBindDetector()
+        {
+            if (_wrongWayDetector == null)
+            {
+                // The canvas and player are siblings in PlayerWithCamera.
+                _wrongWayDetector = transform.parent != null
+                    ? transform.parent.GetComponentInChildren<PlayerWrongWayDetector>(true)
+                    : FindAnyObjectByType<PlayerWrongWayDetector>();
+            }
+
+            if (_wrongWayDetector == null)
+                return;
+
+            _wrongWayDetector.OnWrongWayChanged.RemoveListener(OnWrongWayChanged);
+            _wrongWayDetector.OnWrongWayChanged.AddListener(OnWrongWayChanged);
+            OnWrongWayChanged(_wrongWayDetector.IsWrongWay);
         }
 
         private void OnWrongWayChanged(bool isWrongWay)

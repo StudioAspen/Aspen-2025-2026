@@ -47,6 +47,95 @@ namespace CharonsCorner.LevelEditor
 
         [SerializeField] private List<Intersection> _intersections = new List<Intersection>();
 
+        private Mesh _directionMesh;
+        private readonly List<MeshSplineRange> _directionRanges = new List<MeshSplineRange>();
+
+        private struct MeshSplineRange
+        {
+            public int SplineIndex;
+            public int FirstTriangle;
+            public int Segments;
+        }
+
+        /// <summary>
+        /// Maps a cooked road triangle to its spline and segment. Keep this layout in sync
+        /// with RebuildMesh: two front triangles, eight per segment, two back triangles.
+        /// Intersection triangles have no single travel direction and return false.
+        /// </summary>
+        public bool TryGetSplineSegment(int triangleIndex, out int splineIndex, out float startT, out float endT)
+        {
+            splineIndex = -1;
+            startT = endT = 0f;
+            if (triangleIndex < 0) return false;
+            if (splineContainer == null) splineContainer = GetComponent<SplineContainer>();
+            if (splineContainer == null) return false;
+
+            if (!CacheDirectionRanges()) return false;
+            foreach (MeshSplineRange range in _directionRanges)
+            {
+                int localTriangle = triangleIndex - range.FirstTriangle;
+                if (localTriangle >= 0 && localTriangle < 4 + range.Segments * 8)
+                {
+                    int segment = Mathf.Clamp((localTriangle - 2) / 8, 0, range.Segments - 1);
+                    splineIndex = range.SplineIndex;
+                    startT = segment / (float)range.Segments;
+                    endT = (segment + 1) / (float)range.Segments;
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private bool CacheDirectionRanges()
+        {
+            Mesh mesh = GetComponent<MeshFilter>().sharedMesh;
+            if (mesh == null) return false;
+            if (_directionMesh == mesh) return _directionRanges.Count > 0;
+            _directionRanges.Clear();
+
+            // Recover segment counts from the cooked caps, rather than recalculating
+            // world lengths. Animated/scaled roads retain the original mesh topology.
+            Vector3[] vertices = mesh.vertices;
+            int vertexOffset = 0;
+            int triangleOffset = 0;
+            for (int i = 0; i < splineContainer.Splines.Count; i++)
+            {
+                Spline spline = splineContainer.Splines[i];
+                if (spline.Count < 2) continue;
+                Vector3 end = spline[spline.Closed ? 0 : spline.Count - 1].Position;
+                int segments = 1;
+                int cap;
+                for (cap = vertexOffset + 20; cap + 3 < vertices.Length; cap += 16, segments++)
+                {
+                    Vector3 edge = vertices[cap + 1] - vertices[cap];
+                    Vector3 center = (vertices[cap] + vertices[cap + 2]) * 0.5f;
+                    Vector3 legacyEdge = vertices[cap + 2] - vertices[cap];
+                    Vector3 legacyCenter = (vertices[cap] + vertices[cap + 1]) * 0.5f;
+                    // Existing saved meshes use top-right/top-left/bottom-right/bottom-left.
+                    bool currentCap = edge.x * edge.x + edge.z * edge.z < 0.000001f &&
+                        (center - end).sqrMagnitude < 0.0001f;
+                    bool legacyCap = legacyEdge.x * legacyEdge.x + legacyEdge.z * legacyEdge.z < 0.000001f &&
+                        (legacyCenter - end).sqrMagnitude < 0.0001f;
+                    if (currentCap || legacyCap)
+                        break;
+                }
+                if (cap + 3 >= vertices.Length)
+                {
+                    _directionRanges.Clear();
+                    _directionMesh = mesh;
+                    return false;
+                }
+                _directionRanges.Add(new MeshSplineRange
+                {
+                    SplineIndex = i, FirstTriangle = triangleOffset, Segments = segments
+                });
+                vertexOffset = cap + 4;
+                triangleOffset += 4 + segments * 8;
+            }
+            _directionMesh = mesh;
+            return _directionRanges.Count > 0;
+        }
+
         /// <summary>
         /// Add an intersection to the spline path
         /// </summary>
@@ -183,6 +272,7 @@ namespace CharonsCorner.LevelEditor
         /// </summary>
         private void RebuildMesh()
         {
+            _directionMesh = null;
             // --------------------------------------------------------------------------------
             // Initialize mesh
             
