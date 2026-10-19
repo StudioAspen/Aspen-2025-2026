@@ -15,6 +15,7 @@ public class RankingSystem : MonoBehaviour
     [SerializeField] GameObject _endCheck;
     [SerializeField] float _radius;
     [SerializeField] bool _useAlternativeEndScene;
+    [SerializeField] bool _alwaysUseAlternativeEndScene = false;
     [SerializeField] Eflatun.SceneReference.SceneReference _alternativeEndScene;
 
     [Header("UI Settings")]
@@ -124,9 +125,13 @@ public class RankingSystem : MonoBehaviour
 
         if (_useAlternativeEndScene && _alternativeEndScene != null && !string.IsNullOrEmpty(_alternativeEndScene.Name))
         {
-            if (FlagManager.Get(ProgressFlag.SeenAlternativeEndScene) == 0)
+            if (_alwaysUseAlternativeEndScene || FlagManager.Get(ProgressFlag.SeenAlternativeEndScene) == 0)
             {
-                FlagManager.Set(ProgressFlag.SeenAlternativeEndScene, 1);
+                if (FlagManager.Get(ProgressFlag.SeenAlternativeEndScene) == 0)
+                {
+                    FlagManager.Set(ProgressFlag.SeenAlternativeEndScene, 1);
+                }
+                
                 GameManager.Instance.SwitchScenes(_alternativeEndScene, GameState.Gameplay, Color.white).Forget();
             }
             else
