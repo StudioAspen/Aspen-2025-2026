@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 2100000, guid: cca725c9a0a802946bfb133e4af33fe2, type: 2}
+  m_SkyboxMaterial: {fileID: 2100000, guid: 717beca4694cf9745a33a2c7d2ae7e74, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -13371,6 +13371,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1060234916}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &418804914 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4275000350162306673, guid: dc35fd802e6c99c4cb00ca28cc296a44, type: 3}
+  m_PrefabInstance: {fileID: 2669064048549379044}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &419815357
 GameObject:
   m_ObjectHideFlags: 0
@@ -22179,7 +22184,6 @@ GameObject:
   - component: {fileID: 829016976}
   - component: {fileID: 829016975}
   - component: {fileID: 829016974}
-  - component: {fileID: 829016978}
   m_Layer: 0
   m_Name: LevelSelectCinemachineCamera
   m_TagString: Untagged
@@ -22242,7 +22246,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Priority:
     Enabled: 1
-    m_Value: 181
+    m_Value: 1913
   OutputChannel: 1
   StandbyUpdate: 2
   m_StreamingVersion: 20241001
@@ -22286,18 +22290,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &829016978
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 829016973}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3ddbf599456d45d6ad7a9020dbc20596, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DeactivateOnStart
 --- !u!1 &831475689 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3534169416802914884, guid: ae903770b24575549bc723bb479cebe4, type: 3}
@@ -32031,6 +32023,16 @@ Mesh:
       - serializedVersion: 1
         m_IndexStart: 0
         m_IndexCount: 0
+--- !u!1 &1290759924 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 277138727290573412, guid: dc35fd802e6c99c4cb00ca28cc296a44, type: 3}
+  m_PrefabInstance: {fileID: 2669064048549379044}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1301944867 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2801507439933628720, guid: dc35fd802e6c99c4cb00ca28cc296a44, type: 3}
+  m_PrefabInstance: {fileID: 2669064048549379044}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1302839143 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8700779447265564974, guid: 71cf77e8e8c169f47b9bb6a4526f7498, type: 3}
@@ -40594,6 +40596,14 @@ MonoBehaviour:
     _prefab: Assets/_Prefabs/Level2-1Diorama.prefab
   - _gameObject: {fileID: 5349226009531698445}
     _prefab: Assets/_Prefabs/Level2-2Diorama.prefab
+  - _gameObject: {fileID: 418804914}
+    _prefab: Assets/_Art/Materials/Lvl2_Materials/Color Scheme/2-2/WardrobeParent.prefab
+  - _gameObject: {fileID: 1301944867}
+    _prefab: Assets/_Art/Materials/Lvl2_Materials/Color Scheme/2-2/WardrobeParent.prefab
+  - _gameObject: {fileID: 1290759924}
+    _prefab: Assets/_Art/Materials/Lvl2_Materials/Color Scheme/2-2/WardrobeParent.prefab
+  - _gameObject: {fileID: 2036703920}
+    _prefab: Assets/_Art/models/props/PL_Sunglasses/source/PL_Sunglasses.fbx
   - _gameObject: {fileID: 1152586964}
     _prefab: Assets/_Prefabs/Level2-3Diorama.prefab
   - _gameObject: {fileID: 129730488}
@@ -48067,6 +48077,11 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: f2650acfe232f884c853270dd72d3629, type: 3}
   m_PrefabInstance: {fileID: 1971065724}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &2036703920 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8177268951983955199, guid: dc35fd802e6c99c4cb00ca28cc296a44, type: 3}
+  m_PrefabInstance: {fileID: 2669064048549379044}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2042949628
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -54138,7 +54153,7 @@ PrefabInstance:
     - target: {fileID: 514134026931972698, guid: 71cf77e8e8c169f47b9bb6a4526f7498, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: f667ac1ee1dc6f849a85b68d2787a8a1, type: 2}
+      objectReference: {fileID: 2100000, guid: d58f8ba4274fbd94c86c71b0bfb6d167, type: 2}
     - target: {fileID: 573634015020855248, guid: 71cf77e8e8c169f47b9bb6a4526f7498, type: 3}
       propertyPath: _inputInteraction
       value: 
@@ -54190,7 +54205,7 @@ PrefabInstance:
     - target: {fileID: 630680329641098278, guid: 71cf77e8e8c169f47b9bb6a4526f7498, type: 3}
       propertyPath: 'm_Materials.Array.data[1]'
       value: 
-      objectReference: {fileID: 2100000, guid: dba6f2551e7f15d4a9389d37badc2208, type: 2}
+      objectReference: {fileID: 2100000, guid: bbf1bfebe7efd4e43994ffe722aade7a, type: 2}
     - target: {fileID: 673551612267558972, guid: 71cf77e8e8c169f47b9bb6a4526f7498, type: 3}
       propertyPath: m_Enabled
       value: 0
@@ -54357,7 +54372,7 @@ PrefabInstance:
       objectReference: {fileID: 663561853}
     - target: {fileID: 1207743005775883785, guid: 71cf77e8e8c169f47b9bb6a4526f7498, type: 3}
       propertyPath: m_VersionIndex
-      value: 6522
+      value: 6669
       objectReference: {fileID: 0}
     - target: {fileID: 1218423375257724636, guid: 71cf77e8e8c169f47b9bb6a4526f7498, type: 3}
       propertyPath: _bowlingStarter
@@ -54381,7 +54396,7 @@ PrefabInstance:
       objectReference: {fileID: 1283577731}
     - target: {fileID: 1759988356794107773, guid: 71cf77e8e8c169f47b9bb6a4526f7498, type: 3}
       propertyPath: m_VersionIndex
-      value: 6522
+      value: 6669
       objectReference: {fileID: 0}
     - target: {fileID: 1796546930426191999, guid: 71cf77e8e8c169f47b9bb6a4526f7498, type: 3}
       propertyPath: m_Enabled
@@ -54702,11 +54717,11 @@ PrefabInstance:
     - target: {fileID: 2309931802882651451, guid: 71cf77e8e8c169f47b9bb6a4526f7498, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: f667ac1ee1dc6f849a85b68d2787a8a1, type: 2}
+      objectReference: {fileID: 2100000, guid: d58f8ba4274fbd94c86c71b0bfb6d167, type: 2}
     - target: {fileID: 2309931802882651451, guid: 71cf77e8e8c169f47b9bb6a4526f7498, type: 3}
       propertyPath: 'm_Materials.Array.data[1]'
       value: 
-      objectReference: {fileID: 2100000, guid: dba6f2551e7f15d4a9389d37badc2208, type: 2}
+      objectReference: {fileID: 2100000, guid: bbf1bfebe7efd4e43994ffe722aade7a, type: 2}
     - target: {fileID: 2574007905964957690, guid: 71cf77e8e8c169f47b9bb6a4526f7498, type: 3}
       propertyPath: m_Enabled
       value: 0
@@ -54877,7 +54892,7 @@ PrefabInstance:
       objectReference: {fileID: 234320787}
     - target: {fileID: 3794611647743476311, guid: 71cf77e8e8c169f47b9bb6a4526f7498, type: 3}
       propertyPath: m_VersionIndex
-      value: 7768
+      value: 7915
       objectReference: {fileID: 0}
     - target: {fileID: 3973872935529779239, guid: 71cf77e8e8c169f47b9bb6a4526f7498, type: 3}
       propertyPath: _targetCamera
@@ -55217,7 +55232,7 @@ PrefabInstance:
       objectReference: {fileID: 306032115}
     - target: {fileID: 4530241612959355687, guid: 71cf77e8e8c169f47b9bb6a4526f7498, type: 3}
       propertyPath: m_VersionIndex
-      value: 7759
+      value: 7906
       objectReference: {fileID: 0}
     - target: {fileID: 4798805902141558444, guid: 71cf77e8e8c169f47b9bb6a4526f7498, type: 3}
       propertyPath: m_Enabled
@@ -55229,7 +55244,7 @@ PrefabInstance:
       objectReference: {fileID: 1812802186}
     - target: {fileID: 4919077535492367332, guid: 71cf77e8e8c169f47b9bb6a4526f7498, type: 3}
       propertyPath: m_VersionIndex
-      value: 6522
+      value: 6669
       objectReference: {fileID: 0}
     - target: {fileID: 5420125838380852685, guid: 71cf77e8e8c169f47b9bb6a4526f7498, type: 3}
       propertyPath: m_Enabled
@@ -55249,7 +55264,7 @@ PrefabInstance:
       objectReference: {fileID: 883700115}
     - target: {fileID: 5635022906159116948, guid: 71cf77e8e8c169f47b9bb6a4526f7498, type: 3}
       propertyPath: m_VersionIndex
-      value: 7019
+      value: 7166
       objectReference: {fileID: 0}
     - target: {fileID: 5925108388686965594, guid: 71cf77e8e8c169f47b9bb6a4526f7498, type: 3}
       propertyPath: _levelColorSettings.Array.size
@@ -55729,7 +55744,7 @@ PrefabInstance:
       objectReference: {fileID: 1239285064}
     - target: {fileID: 6931033341102968762, guid: 71cf77e8e8c169f47b9bb6a4526f7498, type: 3}
       propertyPath: m_VersionIndex
-      value: 7768
+      value: 7915
       objectReference: {fileID: 0}
     - target: {fileID: 7148133974731388528, guid: 71cf77e8e8c169f47b9bb6a4526f7498, type: 3}
       propertyPath: m_Enabled
@@ -55753,7 +55768,7 @@ PrefabInstance:
       objectReference: {fileID: 2052873835}
     - target: {fileID: 7530447186621261518, guid: 71cf77e8e8c169f47b9bb6a4526f7498, type: 3}
       propertyPath: m_VersionIndex
-      value: 7768
+      value: 7915
       objectReference: {fileID: 0}
     - target: {fileID: 7692017061239100756, guid: 71cf77e8e8c169f47b9bb6a4526f7498, type: 3}
       propertyPath: m_Enabled
