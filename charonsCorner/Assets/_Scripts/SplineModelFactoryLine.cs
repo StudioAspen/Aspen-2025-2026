@@ -24,6 +24,8 @@ public class SplineModelFactoryLine : MonoBehaviour, MMEventListener<MMGameEvent
     [SerializeField] private bool randomizeIfPossible = false;
     [SerializeField] private bool useObjectPooling = true;
     [SerializeField] private bool useSetToBlack = false;
+    [SerializeField] private bool useSetToBlackInChildren = false;
+    [SerializeField] private Vector3 prefabRotationOffset = Vector3.zero;
 
     [Header("Start Scaling")]
     [SerializeField] private bool useStartScaling = false;
@@ -319,6 +321,30 @@ public class SplineModelFactoryLine : MonoBehaviour, MMEventListener<MMGameEvent
             }
         }
 
+        if (useSetToBlackInChildren)
+        {
+            SetToBlack[] components = instance.GetComponentsInChildren<SetToBlack>();
+            
+            Color? sharedColor = null;
+            foreach (var component in components)
+            {
+                if (component.RandomizedAltColor && component.RandomizedAltColors != null && component.RandomizedAltColors.Count > 0)
+                {
+                    sharedColor = component.RandomizedAltColors[Random.Range(0, component.RandomizedAltColors.Count)];
+                    break;
+                }
+            }
+
+            foreach (var component in components)
+            {
+                if (sharedColor.HasValue)
+                {
+                    component.SetExternalAltColor(sharedColor.Value);
+                }
+                component.Active = true;
+            }
+        }
+
         MovingObject obj = new MovingObject { Instance = instance, Distance = distance, Container = container, BaseScale = instanceScale, Poolable = poolable };
         _activeObjects.Add(obj);
         
@@ -383,7 +409,7 @@ public class SplineModelFactoryLine : MonoBehaviour, MMEventListener<MMGameEvent
         obj.Instance.transform.position = position;
         if (forward != Vector3.zero)
         {
-            obj.Instance.transform.rotation = Quaternion.LookRotation(forward, up);
+            obj.Instance.transform.rotation = Quaternion.LookRotation(forward, up) * Quaternion.Euler(prefabRotationOffset);
         }
 
         float currentScaleMultiplier = 1f;

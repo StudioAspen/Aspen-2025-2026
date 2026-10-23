@@ -10,7 +10,11 @@ namespace CharonsCorner.Runtime
         [SerializeField] private string _mmGameEvent = "SetToBlack";
         [SerializeField] private bool _altColor = false;
         [SerializeField] private Color _altColorValue = Color.white;
+        [SerializeField] private bool _randomizedAltColor = false;
+        [SerializeField] private List<Color> _randomizedAltColors = new List<Color>();
         [SerializeField] private BalloonBunch _balloonBunch;
+
+        private Color? _externalAltColor = null;
 
         private struct RendererData
         {
@@ -37,6 +41,18 @@ namespace CharonsCorner.Runtime
         {
             get => _active;
             set => _active = value;
+        }
+
+        public bool RandomizedAltColor => _randomizedAltColor;
+        public List<Color> RandomizedAltColors => _randomizedAltColors;
+
+        public void SetExternalAltColor(Color color)
+        {
+            _externalAltColor = color;
+            if (_initialized)
+            {
+                ApplyState();
+            }
         }
 
         private void OnEnable()
@@ -143,7 +159,29 @@ namespace CharonsCorner.Runtime
                     {
                         if (data.Material1.HasProperty(_outlineColorId))
                         {
-                            Color targetColor = _altColor ? _altColorValue : Color.white;
+                            Color targetColor = Color.white;
+                            
+                            if (_externalAltColor.HasValue)
+                            {
+                                targetColor = _externalAltColor.Value;
+                            }
+                            else if (_randomizedAltColor && _randomizedAltColors != null && _randomizedAltColors.Count > 0)
+                            {
+                                // If not set externally, pick one now (though it might vary between renderers if not careful)
+                                // Actually, since we iterate through renderers here, we should pick it once per ApplyState call
+                                // But usually it's better if it's set externally for consistency.
+                                // Let's cache it if we pick it here.
+                                if (!_externalAltColor.HasValue)
+                                {
+                                    _externalAltColor = _randomizedAltColors[Random.Range(0, _randomizedAltColors.Count)];
+                                }
+                                targetColor = _externalAltColor.Value;
+                            }
+                            else
+                            {
+                                targetColor = _altColor ? _altColorValue : Color.white;
+                            }
+                            
                             data.Material1.SetColor(_outlineColorId, targetColor);
                         }
                     }
