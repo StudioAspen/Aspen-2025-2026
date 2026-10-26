@@ -15,6 +15,7 @@ namespace CharonsCorner.Runtime
         [field: SerializeField] public string CheckpointName { get; private set; }
         [field: SerializeField, Required] public Transform RespawnPoint { get; private set; }
         
+        [SerializeField] private Material _newSkybox;
         [SerializeField] private UnityEvent OnThisCheckpoint;
 
         public static event Action<Checkpoint> OnCheckpointHit;
@@ -40,6 +41,12 @@ namespace CharonsCorner.Runtime
             if (_hasActivated) return;
             
             _hasActivated = true;
+
+            if (_newSkybox != null)
+            {
+                RenderSettings.skybox = _newSkybox;
+            }
+
             OnCheckpointHit?.Invoke(this);
             OnThisCheckpoint?.Invoke();
         }
